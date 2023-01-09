@@ -1,0 +1,226 @@
+\documentclass[expose, en]{thesis}
+
+\thesissetup{%
+  name={Foo Bar}, %
+  id={1337}, %
+  mail={foo@student.kit.edu}, %
+  titlede={Mein Titel}, %
+  titleen={My Title}, %
+  thesis=BSc, %MSc
+  registration={1. February 2020}, %
+  submission={31. July}, %
+  degree={Informatik}, %
+  supervisor={Jun.-Prof. Dr. Christian Wressnegger},
+  cosupervisor={Prof. Dr. N.N}
+}
+
+\usepackage{lipsum}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{pgfgantt}
+\usepackage{pifont}
+\usepackage{tabularx}
+\usepackage{tikz}
+\usepackage{wasysym}
+\usepackage{xcolor}
+
+
+\begin{document}
+\maketitle
+
+
+\section{Introduction}
+Some intro to the topic: What is it about? What is the specific problem
+that should be addressed in this work?
+
+\subsection{Motivation}
+What is the motivation for this work? Why should this topic be
+elaborated?
+
+\subsection{Scope}
+Since you cannot solve all problems, what is the particular scope of
+your research? Which methods/approaches should be applied or
+implemented?
+
+
+\section{Related Work}
+Describe the state of the art with \num{5}-\num{10} references from the
+field of research and add the corresponding
+cites~\cite{website:google}.
+
+
+\section{Evaluation}
+How can the required data be obtained/acquired? How can the results of
+the topic be evaluated?
+
+\clearpage
+\section{Schedule}
+
+% THIS IS AN EXAMPLE, I.E. ADAPT THE TASKS TO YOUR NEEDS
+
+\ifthenelse{\equal{\mythesistype}{BSc}}
+{ % for BSc Thesis
+  \begin{figure}[h!]
+    \centering
+    \begin{ganttchart}[hgrid, vgrid,]{1}{12}
+      \gantttitle{Week}{12} \\
+      \gantttitlelist{1,...,12}{1} \\
+      \ganttbar{\nameref{sec:task1}}{1}{4} \\
+      \ganttbar{\nameref{sec:task2}}{5}{9} \\
+      \ganttmilestone{Status Presentation}{6} \\
+      \ganttbar{\nameref{sec:task3}}{7}{11} \\
+      \ganttbar{Print and Submit}{12}{12} \\
+      \ganttmilestone{Final Presentation}{12}
+    \end{ganttchart}
+    \caption{Schedule of the Bachelor's thesis}
+    \label{fig:timeschedule}
+  \end{figure}
+}
+{% for MSc Thesis
+  \begin{figure}[htbp]
+    \centering
+    \begin{ganttchart}[hgrid, vgrid,]{1}{24}
+      \gantttitle{Week}{24} \\
+      \gantttitlelist{1,...,24}{1} \\
+      \ganttbar{\nameref{sec:task1}}{1}{4} \\
+      \ganttbar{\nameref{sec:task2}}{5}{9} \\
+      \ganttmilestone{Status Presentation}{6} \\
+      \ganttbar{\nameref{sec:task3}}{7}{17} \\
+      \ganttbar{\nameref{sec:task4}}{18}{23} \\
+      \ganttbar{Print and Submission}{24}{24} \\
+      \ganttmilestone{Final Presentation}{24}
+    \end{ganttchart}
+    \caption{Schedule of the Master's thesis}
+    \label{fig:timeschedule}
+  \end{figure}
+}
+
+Describe each task (work package) in detail. Additionally, every work package
+contains a list of must-haves and nice-to-haves that are checked off at the end
+of the thesis. Do not forget to address the time schedule
+(\fig{fig:timeschedule}) above and give a brief overview of the tasks in this
+section.
+
+\subsection{Milestone 1: Collect data}
+\label{sec:milestone1}
+
+Give an overview of what tasks are necessary to reach that milestone.
+
+\subsubsection{Setup Crawler}
+\label{sec:task1}
+\lipsum[1]\\
+
+\paragraph{Must-haves:}
+\begin{itemize}
+    \item X
+    \item Y
+    \item Z
+\end{itemize}
+
+\paragraph{Nice-to-haves:}
+\begin{itemize}
+    \item X
+    \item Y
+    \item Z
+\end{itemize}
+
+\subsubsection{Gather data}
+\label{sec:task2}
+\lipsum[1]
+
+\subsection{Milestone 2}
+
+Group all your tasks in individual milestones.
+
+\subsubsection{Do more work}
+\label{sec:task3}
+\lipsum[1]
+
+\paragraph{Must-haves:}
+\begin{itemize}
+    \item X
+    \item Y
+    \item Z
+\end{itemize}
+
+\paragraph{Nice-to-haves:}
+\begin{itemize}
+    \item X
+    \item Y
+    \item Z
+\end{itemize}
+
+
+\subsubsection{Do even more work}
+\label{sec:task4}
+\lipsum[1]
+
+\paragraph{Must-haves:}
+\begin{itemize}
+    \item X
+    \item Y
+    \item Z
+\end{itemize}
+
+\paragraph{Nice-to-haves:}
+\begin{itemize}
+    \item X
+    \item Y
+    \item Z
+\end{itemize}
+\clearpage
+
+\subsection{Milestone 3: Finalize Thesis}
+
+Probably it would be best to schedule writing across the entire duration
+of the thesis.
+
+\subsubsection{Fix Gantt Width}
+\label{sec:task5}
+\lipsum[1]
+
+\paragraph{Must-haves:}
+\begin{itemize}
+    \item X
+    \item Y
+    \item Z
+\end{itemize}
+
+\paragraph{Nice-to-haves:}
+\begin{itemize}
+    \item X
+    \item Y
+    \item Z
+\end{itemize}
+
+
+\newpage
+\bibliographystyle{plain}
+\bibliography{expose}
+
+
+\newpage
+\section*{Implementation}
+
+This document is the foundation for the implementation of the
+\emph{\thesistype} and describes the contents and goals that must be fulfilled.
+Please consider the general \emph{\thesistype} requirements of your examination
+regulations. If you are in doubt please contact the
+\href{https://www.informatik.kit.edu/sul.php}{examination office}.
+
+\subsubsection*{Task Definition and Supervision}
+\vspace*{5mm}
+\begin{tabularx}{\textwidth}{@{}XX}
+    \mysupervisor & \rule[-0.5ex]{\linewidth}
+    {1pt}\newline\itshape(Date, Signature)\\[5ex]
+\end{tabularx}
+
+\vspace*{10mm}
+
+\subsubsection*{Student}
+\vspace*{5mm}
+\begin{tabularx}{\textwidth}{@{}XX}
+    \myname & \rule[-0.5ex]{\linewidth}{1pt}\newline\itshape(Date, Signature)
+\end{tabularx}
+
+\end{document}

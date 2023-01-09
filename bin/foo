@@ -1,0 +1,9 @@
+#!/bin/bash
+my_dir=$(cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
+
+source "$my_dir/env.sh"
+
+if [[ $? = 0 ]]
+then
+	"$my_dir/../src/foo.py" "$@"
+fi 
