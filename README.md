@@ -1,4 +1,4 @@
-Thesis: My Thesis Titel
+Thesis: Continual Active Learning for Effective Model Stealing attacks
 --
 
 # TOC
@@ -20,7 +20,7 @@ Thesis: My Thesis Titel
 General project description
 
 | Start date | End date | ... |
-| ---        | ---      | --- |
+| 10.01.23   | 10.05.23 | --- |
 |            |          |     |
 
 Repository: `ssh://intellisec@git.intellisec.de:2222/students/fmoeller.git`
