@@ -1,17 +1,17 @@
 \documentclass[expose, en]{thesis}
 
 \thesissetup{%
-  name={Foo Bar}, %
-  id={1337}, %
-  mail={foo@student.kit.edu}, %
-  titlede={Mein Titel}, %
-  titleen={My Title}, %
+  name={Felix Möller}, %
+  id={2287872}, %
+  mail={utywh@student.kit.edu}, %
+  titlede={/}, %
+  titleen={Continual Active Learning for Effective Model Stealing Attacks}, %
   thesis=BSc, %MSc
-  registration={1. February 2020}, %
-  submission={31. July}, %
+  registration={January 6th, 2023}, %
+  submission={April 28th, 2023}, %
   degree={Informatik}, %
   supervisor={Jun.-Prof. Dr. Christian Wressnegger},
-  cosupervisor={Prof. Dr. N.N}
+  cosupervisor={Prof. Dr. Thorsten Strufe}
 }
 
 \usepackage{lipsum}
@@ -30,28 +30,96 @@
 
 
 \section{Introduction}
-Some intro to the topic: What is it about? What is the specific problem
-that should be addressed in this work?
-
+%Some intro to the topic: What is it about? What is the specific problem
+%that should be addressed in this work?
+Machine Learning, especially Deep Learning, is a resource-intensive task. Modern models can have millions of parameters
+ and require a lot of data to be trained. This makes model development difficult for small companies or individuals.
+ Big-tech companies like Google, Amazon and Microsoft however have access to a lot of computing power which they
+ now monetize by offering Machine-Learning as a Service (MLaaS). MLaaS-Plattforms allow users to train their models in the cloud
+ and query them for predictions. While MLaaS makes Machine Learning more accessible it also poses a security risk. Numerous works
+ have shown that it is possible to steal models from MLaaS-Plattforms by consecutively querying the target model, i.e. the model which 
+ runs on the cloud and can be queried \cite{tramer2016stealing} \cite{reith2019efficiently}. The queries are then used to train a local model, also called the substitute model which is
+ intended to approximate the target model as good as possible.
+ The aim of this bachelor thesis is to further improve upon the Model Stealing process. Most recent works in the area of Model Stealing
+ have made use of Active Learning to improve the quality of the substitute model and ultimately reduce the number of queries needed to approximate
+ the target model sufficiently. However, in each iteration of the Active Learning process, an entirely new model has to be trained. This thesis aims to
+ combine Active Learning with Continual Learning to speed up the training process of the substitute model and make it approximate the target model
+ better.
 \subsection{Motivation}
-What is the motivation for this work? Why should this topic be
-elaborated?
+%What is the motivation for this work? Why should this topic be
+%elaborated?
+The main motivation for this work is that there are still opportunities to further improve the Model Stealing process.
+Namely, Continual Learning has not been brought into the context of Model Stealing yet (to the best of our knowledge).
+Continual Learning is different from traditional Machine Learning in that it aims to learn new tasks while retaining knowledge
+of old tasks. That way, when the distribution of the data changes, the existing model can be adapted to the new distribution
+instead of having to train a new model from scratch as it would be the case in traditional Machine Learning.
+Given that Continual Learning has been shown to be effective in other domains, it is reasonable to assume that it can
+lead to significant improvements in the Model Stealing process as well.
 
 \subsection{Scope}
-Since you cannot solve all problems, what is the particular scope of
-your research? Which methods/approaches should be applied or
-implemented?
-
+%Since you cannot solve all problems, what is the particular scope of
+%your research? Which methods/approaches should be applied or
+%implemented?
+The particular scope of this thesis is to implement and evaluate a continual Active Learning approach for Model Stealing.
+More concretely, the Active Learning strategies CoreSet \cite{sener2017active}, LC \cite{lewis1995sequential}, BALD \cite{gal2017deep} 
+and BADGE \cite{ash2019deep} should be implemented in combination
+with the Continual Learning strategies MAS \cite{aljundi2018memory}, EWC \cite{kirkpatrick2017overcoming}, ALASSO \cite{park2019continual}
+and IMM \cite{lee2017overcoming}. These combinations of Active Learning and Continual Learning should 
+then be transferred to the Model Stealing process and evaluated on the MNIST,CIFAR-10, CIFAR-100 and (optionally) ImageNet datasets.
+The focus of the evaluation should be to test how well Deep Neural Networks for image classification can be extracted using
+this continual Active Learning approach.
 
 \section{Related Work}
-Describe the state of the art with \num{5}-\num{10} references from the
-field of research and add the corresponding
-cites~\cite{website:google}.
+The related work has to be divided into three parts: The first part is focused on Model Stealing,
+the second part is focused on Active Learning and the third part is focused on Continual Learning.
+
+\subsection{Model Stealing}
+For the Model Stealing and the Active Learning part, \cite{chandrasekaran2020exploring} draws important
+conclusions between Model Stealing and Active Learning. It therefore follows that the Active Learning
+domain should be closely followed by researchers in the Model Stealing domain and vice versa because the 
+two domains are closely related. \cite{pal2020activethief} provide a more practical approach by developing
+a model extraction framework for Deep Neural Networks based on Active Learning. Their framework which is called
+ActiveThief is able to extract a model simply by providing an unlabeled thief dataset. The use of Active Learning to
+select which points to label next showed to be effective because it significantly reduced the number of queries
+needed to extract the model. Given that Model Stealing can have tremendous negative consequences, there has been research on
+how to prevent it. One approach which is called Protecting against DNN Model Stealing Attacks (PRADA) \cite{juuti2019prada},
+aims to detect Model Stealing attacks by observing the distribution of the queried data and raising an alarm when it deviates
+significantly from the distribution that would be expected from a legitimate user. Rather than passively detecting Model Stealing
+attacks, another approach named Prediction Poisoning \cite{orekondy2019prediction} actively adds noise to the model's predictions. 
+
+
+\subsection{Active Learning}
+% Talk about CoreSet, LC, BALD and BADGE
+For the Active Learning part we will focus on the Active Learning approaches that will be used in the evaluation. These are
+CoreSet \cite{sener2017active}, LC \cite{lewis1995sequential}, Bayesian Active Learning by disagreement (BALD) \cite{gal2017deep} 
+and Batch Active Learning by Diverse Gradient Embeddings (BADGE) \cite{ash2019deep}. The CoreSet strategy \cite{sener2017active}
+proposes that the model should be learned by the subset which will be able to classify the remaining points best. LC Active Learning \cite{lewis1995sequential}
+iteratively labels the samples where the current model is most uncertain of the classes they belong to. The third strategy called BALD is a specific Bayesian
+Active Learning strategy that makes use of Monte Carlo Dropout \cite{gal2016dropout} to approximate the uncertainty of the model. The final approach,
+BADGE computes the gradient embedding of the current model's output layer and uses them to extend the labeled dataset.
+%TODO: Insert explanation of LC here
+
+\subsection{Continual Learning}
+% Talk about MAS, EWC, ALASSO and IMM
+As for the Active Learning part, we will focus on Related Work on the Continual Learning approaches that will be used in the evaluation.
+These are Memory Aware Synapses (MAS) \cite{aljundi2018memory}, Elastic Weight Consolidation (EWC) \cite{kirkpatrick2017overcoming},
+asymmetric loss approximation with single-side overestimation (ALASSO) \cite{park2019continual} and 
+Incremental Moment Matching (IMM) \cite{lee2017overcoming}. The first Continual Learning strategy, MAS \cite{aljundi2018memory}, continually computes the importance of
+a neural network's parameter via the gradient of the learned function with respect to that parameter. When learning a new task, changes to the important parameters
+of the network are penalized, which enables the learning of new tasks without forgetting previously learned ones. The second strategy, EWC \cite{kirkpatrick2017overcoming},
+uses a similar approach, however the importance of the parameters is computed by the Fisher Information Matrix. The third approach, ALASSO \cite{park2019continual},
+uses a loss function that overestimates the loss in areas where the true loss cannot be observed and behaves like a regular loss function in areas where it can.
+The final approach, IMM \cite{lee2017overcoming}, uses Bayesian Neural Networks to match the moments of tasks' posterior distributions.
+A more detailed overview, including even more Continual Learning approaches, can be found in \cite{mundt2020wholistic}. They provide a good summary of the existing
+Continual Learning approaches and how they link together with Active Learning. 
 
 
 \section{Evaluation}
-How can the required data be obtained/acquired? How can the results of
-the topic be evaluated?
+For the evaluation the datasets CIFAR-10, CIFAR-100, MNIST and optionally ImageNet will be used. The Active Learning strategies that will be used are
+CoreSet \cite{sener2017active}, LC \cite{lewis1995sequential}, BALD \cite{gal2017deep} and BADGE. The Continual Learning strategies that will be used are MAS \cite{aljundi2018memory},
+EWC \cite{kirkpatrick2017overcoming}, ALASSO \cite{park2019continual} and IMM \cite{lee2017overcoming}. The baseline of our evaluation will be the ActiveThief
+framework proposed in \cite{pal2020activethief}. If there is enough time to do so, then we will also evaluate how our Continual Learning approach performs
+when Model Stealing defense mechanisms like \cite{juuti2019prada} and \cite{orekondy2019prediction} are used.
 
 \clearpage
 \section{Schedule}
@@ -62,15 +130,18 @@ the topic be evaluated?
 { % for BSc Thesis
   \begin{figure}[h!]
     \centering
-    \begin{ganttchart}[hgrid, vgrid,]{1}{12}
-      \gantttitle{Week}{12} \\
-      \gantttitlelist{1,...,12}{1} \\
-      \ganttbar{\nameref{sec:task1}}{1}{4} \\
-      \ganttbar{\nameref{sec:task2}}{5}{9} \\
-      \ganttmilestone{Status Presentation}{6} \\
-      \ganttbar{\nameref{sec:task3}}{7}{11} \\
-      \ganttbar{Print and Submit}{12}{12} \\
-      \ganttmilestone{Final Presentation}{12}
+    \begin{ganttchart}[hgrid, vgrid,]{1}{16}
+      \gantttitle{Week}{16} \\
+      \gantttitlelist{1,...,16}{1} \\
+      \ganttbar{\nameref{sec:task1}}{1}{5} \\
+      \ganttbar{Implement Model Stealing workflow}{6}{7} \\
+      \ganttbar{Run experiments}{8}{10} \\
+      \ganttmilestone{Status Presentation}{8} \\
+      \ganttbar{Rehearsal + Representation-based AL}{10}{12} \\
+      \ganttbar{Write thesis}{13}{16} \\
+      \ganttmilestone{Submit first draft}{14} \\
+      \ganttbar{Print and Submit}{16}{16} \\
+      \ganttmilestone{Final Presentation}{16}
     \end{ganttchart}
     \caption{Schedule of the Bachelor's thesis}
     \label{fig:timeschedule}
@@ -95,102 +166,70 @@ the topic be evaluated?
   \end{figure}
 }
 
-Describe each task (work package) in detail. Additionally, every work package
-contains a list of must-haves and nice-to-haves that are checked off at the end
-of the thesis. Do not forget to address the time schedule
-(\fig{fig:timeschedule}) above and give a brief overview of the tasks in this
-section.
 
-\subsection{Milestone 1: Collect data}
+\subsection{Combine Active Learning with Continual Learning strategy}
 \label{sec:milestone1}
 
-Give an overview of what tasks are necessary to reach that milestone.
+The first large milestone is to combine Active Learning with Continual Learning. Currently, the
+problem is that Active Learning strategies train a new model from scratch in each iteration. Given that these models
+are often Deep Neural Networks, this is a time and resource consuming process. To solve this problem,
+Continual Learning strategies should be used to train a single model which can be updated in each iteration
+of the Active Learning process. Doing exactly this will be the goal of the first milestone.
 
-\subsubsection{Setup Crawler}
+\subsubsection{Implement AL + CL strategies} 
 \label{sec:task1}
-\lipsum[1]\\
-
+The goal of this task is to implement the Active Learning strategies CoreSet \cite{sener2017active}, LC \cite{lewis1995sequential}, BALD \cite{gal2017deep}
+ and BADGE \cite{ash2019deep} as well as the Continual Learning strategies MAS \cite{aljundi2018memory},
+ EWC \cite{kirkpatrick2017overcoming}, ALASSO \cite{park2019continual} and IMM \cite{lee2017overcoming}. Since the chair's framework has already implemented
+ the four Active Learning strategies, we will only need to implement the Continual Learning strategies. For the
+implementation of each method, one needs to check whether the papers which introduced the method provide an implementation. If they
+do then it needs to be tested whether it works as intended. If it does not work as intended or no implementation
+is provided, then the methods need to be implemented from scratch.
 \paragraph{Must-haves:}
 \begin{itemize}
-    \item X
-    \item Y
-    \item Z
+    \item Implement MAS Continual Learning strategy
+    \item Implement EWC Continual Learning strategy
+    \item Implement ALASSO Continual Learning strategy
+    \item Implement IMM Continual Learning strategy
 \end{itemize}
 
 \paragraph{Nice-to-haves:}
 \begin{itemize}
-    \item X
-    \item Y
-    \item Z
+    \item Potentially implement more Active Learning and/or Continual Learning strategies
 \end{itemize}
 
-\subsubsection{Gather data}
+
+\subsection{Transfer Continual Active Learning to Model Stealing}
+Transferring the Continual Active Learning approach to the Model Stealing domain will be the
+second milestone. The goal of this step is to speed up the process of Model Stealing. This shall be achieved by updating
+the current substitute model in each iteration of the Active Learning process instead of training a new model from scratch.
+For this to work we need to integrate the Continual Active Learning strategies into the ActiveThief \cite{pal2020activethief} framework.
+After the new Model Stealing workflow is implemented we can run experiments to determine how well our new approach
+performs. To run the experiments, we will use the datasets CIFAR-10, CIFAR-100 and MNIST . If there is enough 
+time we will also run experiments on ImageNet and we will see how effective Model Stealing defense methods like
+ \cite{orekondy2019prediction} and \cite{juuti2019prada} are against our new approach. Another nice-to-have would be to
+insert Exemplar Rehearsal \cite{gepperth2016bio} and Representation-based Active Learning \cite{ren2021survey} into the ActiveThief framework
+and see how well they perform.
+
+\subsubsection{Implement Model Stealing workflow and run experiments}
 \label{sec:task2}
-\lipsum[1]
-
-\subsection{Milestone 2}
-
-Group all your tasks in individual milestones.
-
-\subsubsection{Do more work}
-\label{sec:task3}
-\lipsum[1]
 
 \paragraph{Must-haves:}
 \begin{itemize}
-    \item X
-    \item Y
-    \item Z
+    \item Integrate the Continual Active Learning strategies into ActiveThief framework
+    \item Well-formatted output for Model Stealing workflow (like in training phase of Tensorflow models)
+    \item Run experiments on CIFAR-10 dataset
+    \item Run experiments on CIFAR-100 dataset
+    \item Run experiments on MNIST dataset
 \end{itemize}
 
 \paragraph{Nice-to-haves:}
 \begin{itemize}
-    \item X
-    \item Y
-    \item Z
-\end{itemize}
-
-
-\subsubsection{Do even more work}
-\label{sec:task4}
-\lipsum[1]
-
-\paragraph{Must-haves:}
-\begin{itemize}
-    \item X
-    \item Y
-    \item Z
-\end{itemize}
-
-\paragraph{Nice-to-haves:}
-\begin{itemize}
-    \item X
-    \item Y
-    \item Z
-\end{itemize}
-\clearpage
-
-\subsection{Milestone 3: Finalize Thesis}
-
-Probably it would be best to schedule writing across the entire duration
-of the thesis.
-
-\subsubsection{Fix Gantt Width}
-\label{sec:task5}
-\lipsum[1]
-
-\paragraph{Must-haves:}
-\begin{itemize}
-    \item X
-    \item Y
-    \item Z
-\end{itemize}
-
-\paragraph{Nice-to-haves:}
-\begin{itemize}
-    \item X
-    \item Y
-    \item Z
+  \item Run experiments on ImageNet dataset
+  \item Run experiments with Model Stealing defense mechanisms (PRADA \cite{juuti2019prada} and Prediction Poisoning \cite{orekondy2019prediction})
+  \item Insert Exemplar Rehearsal into Continual Learning framework
+  \item Insert Representation-based Active Learning into Active Learning framework
+  \item Run experiments with Exemplar Rehearsal Continual Learning and Representation-based Active Learning
 \end{itemize}
 
 
