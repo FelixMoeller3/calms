@@ -1,18 +1,11 @@
-#!/usr/bin/env python3
+from models.test_model import testNN
+from continual_learning_strategies.mas import MAS
+from torch.optim import SGD
 
-import argparse
-import sys
+model = testNN(100,10,8,2)
+mas_strat = MAS(model)
+optim = SGD(model.parameters(),lr=0.01)
+print(optim.param_groups)
 
-
-def main(s):
-    print(f"Your input string: {s}")
-    return 0
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument("input", action="store",
-                        help="any string as positional argument")
-
-    args = parser.parse_args()
-    sys.exit(main(args.input))
+for key in mas_strat.omegas:
+    print(mas_strat.omegas[key])
