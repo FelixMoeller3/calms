@@ -9,7 +9,6 @@ class ContinualLearningStrategy(ABC):
     '''
     def __init__(self, model:nn.Module,crit,lr:float=0.001):
         self.model = model
-        pass
 
     @abstractmethod
     def train(self, dataloader: DataLoader):
