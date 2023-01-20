@@ -5,6 +5,7 @@ import torch.optim as optim
 from torch import autograd
 from torch.utils.data import DataLoader,Dataset
 from .cl_base import ContinualLearningStrategy
+import time
 
 class ElasticWeightConsolidation(ContinualLearningStrategy):
     '''
@@ -14,18 +15,73 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
         https://github.com/shivamsaboo17/Overcoming-Catastrophic-forgetting-in-Neural-Networks
     '''
 
-    def __init__(self,model:nn.Module,crit: nn.CrossEntropyLoss,lr:float=0.001,weight:int=100000):
+    def __init__(self,model:nn.Module,optim: torch.optim.Optimizer,crit: nn.CrossEntropyLoss,weight:int=100000):
         self.model = model
         self.weight = weight
         self.crit = crit
-        self.optimizer = optim.SGD(self.model.parameters(),lr)
+        self.optimizer = optim
 
-    def train(self, dataloader: DataLoader, num_epochs: int):
-        for _ in range(num_epochs):
-            for inputs, labels in dataloader:
-                self.model.train(True)
-                self.forward_backward_update(inputs, labels)
+    def train(self, dataloaders: dict[str,DataLoader], dataset_sizes: dict[str, int], num_epochs: int):
+        '''
+            Trains the model for num_epoch epochs using the dataloaders 'train' and 'val' in the dataloaders dict
+            which have the sizes dataset_sizes['train'] and dataset_sizes['val'] respectively.
+        '''
+        start_time = time.time()
+        for epoch in range(num_epochs):
+            print(f"Running epoch {epoch+1}/{num_epochs}")
+            self._run_train_epoch(dataloaders['train'], dataset_sizes['train'])
+            self._run_val_epoch(dataloaders['val'], dataset_sizes['val'])
+        time_elapsed = time.time() - start_time
+        print('Training complete in {:.0f}m {:.0f}s'.format(
+        time_elapsed // 60, time_elapsed % 60))
 
+    def _run_train_epoch(self,dataloader: DataLoader,dataset_size: int) -> None:
+        '''
+            Runs one epoch of the training procedure with the data given by the dataloader.
+        '''
+        self.model.train(True)
+        total_loss = 0.0
+        correct_predictions = 0
+        for data in dataloader:
+
+            inputs, labels = data
+
+            self.optimizer.zero_grad()
+            
+            outputs = self.model(inputs)
+            loss = self._compute_consolidation_loss() + self.crit(outputs, labels)
+            self.optimizer.zero_grad()
+            loss.backward()
+            self.optimizer.step()
+            _, preds = torch.max(outputs.data, 1)
+            total_loss += loss.item()
+            correct_predictions += torch.sum(preds == labels.data).item()
+        
+        epoch_loss = total_loss / dataset_size
+        epoch_acc = correct_predictions / dataset_size
+
+        print('Training Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
+
+    def _run_val_epoch(self,dataloader: DataLoader, dataset_size: int):
+        '''
+            Runs one validation epoch using the dataloader which contains the validation data. 
+        '''
+        total_loss = 0.0
+        correct_predictions = 0
+        self.model.train(False)
+        for data in dataloader:
+            inputs, labels = data
+
+            outputs = self.model(inputs)
+            _, preds = torch.max(outputs.data,1)
+            loss = self.crit(outputs,labels)
+            total_loss += loss.item()
+            correct_predictions += torch.sum(preds == labels.data).item()
+
+        epoch_loss = total_loss / dataset_size
+        epoch_acc = correct_predictions / dataset_size
+        
+        print('Validation Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
 
     def _update_mean_params(self):
         '''

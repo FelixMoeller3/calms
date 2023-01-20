@@ -3,11 +3,9 @@ import torch.nn as nn
 import torch.optim as optim
 import time
 from torch.utils.data import DataLoader
-
 from typing import List
 
-IMPORTANCE_WEIGHT_NAME = 'omega'
-PREVIOUS_PARAMS_NAME = 'previous'
+
 
 class MAS:
     '''
@@ -37,20 +35,31 @@ class MAS:
         self.weight = weight
         self.criterion = criterion
         self.freeze_layers = freeze_layers
-        self.n_samples = 0
-        self.regularization_params = {}
+        # The total number of samples that have been classified before training the current task
+        self.n_samples_prev = 0
+        self.regularization_params_prev = {}
+        # The number of samples from the current task that is learned that have been classified until now
+        self.n_samples_cur = 0
+        self.regularization_params_cur = {}
+        
         self.prev_params = {}
         self.device = torch.device("cuda:0" if use_gpu and torch.cuda.is_available() else "cpu")
         self._init_regularization_params()
 
     def _init_regularization_params(self) -> None:
         '''
-        Initialize the importance weight omega for each parameter of the nn
+            Initialize the importance weight omega for each parameter of the nn
         '''
+        if self.n_samples_prev == 0:
+            for name, param in self.model.named_parameters():
+                if name in self.freeze_layers:
+                    continue
+                self.regularization_params_prev[name] = torch.zeros(param.size())
+        # return if the current parameters have already been set to zero
         for name, param in self.model.named_parameters():
             if name in self.freeze_layers:
                 continue
-            self.regularization_params[name] = torch.zeros(param.size())
+            self.regularization_params_cur[name] = torch.zeros(param.size())
 
     def train(self, dataloaders: dict[str,DataLoader], dataset_sizes: dict[str, int], num_epochs:int) -> None:
         '''
@@ -59,30 +68,49 @@ class MAS:
         start_time = time.time()
         self._save_prev_params()
         for epoch in range(num_epochs):
-            print(f"Running epoch {epoch}/{num_epochs}")
+            print(f"Running epoch {epoch+1}/{num_epochs}")
 
             self._run_train_epoch(dataloaders['train'], dataset_sizes['train'])
             self._run_val_epoch(dataloaders['val'], dataset_sizes['val'])
+        self._update_regularization_params()
         time_elapsed = time.time() - start_time
         print('Training complete in {:.0f}m {:.0f}s'.format(
         time_elapsed // 60, time_elapsed % 60))
 
 
-    def _save_prev_params(self):
+    def _save_prev_params(self) -> None:
+        '''
+            Saves the parameters of the model before training the next task
+        '''
         for name, param in self.model.named_parameters():
             if name in self.freeze_layers:
                 continue
             self.prev_params[name] = param.data.detach().clone()
 
+    def _update_regularization_params(self) -> None:
+        '''
+            Updates the regularization omegas with the information of the task that was just learned.
+            Should be called after a new task is trained.
+        '''
+        total = self.n_samples_prev + self.n_samples_cur
+        for name, _ in self.model.named_parameters():
+            if name in self.freeze_layers:
+                continue
+            prev_total = self.regularization_params_prev[name] * self.n_samples_prev
+            cur_total = self.regularization_params_cur[name] * self.n_samples_cur
+            self.regularization_params_prev[name] = (prev_total + cur_total) / total
+        self.n_samples_prev += self.n_samples_cur
+        self.n_samples_cur = 0
+        self._init_regularization_params()
+
+
     def _run_train_epoch(self,dataloader: DataLoader, dataset_size:int):
         '''
             Runs one train epoch
-            TODO: regularization_params dict has changed. Adapt code to it
         '''
         self.model.train(True)
         total_loss = 0.0
         correct_predictions = 0
-        self._init_regularization_params()
         for data in dataloader:
 
             inputs, labels = data
@@ -90,14 +118,15 @@ class MAS:
             self.optimizer.zero_grad()
 
             outputs = self.model(inputs)
-            self._update_reg_params(outputs,labels.size(0))
+            # Stop updating the regularization params during training
+            #self._update_reg_params(outputs,labels.size(0))
             _, preds = torch.max(outputs.data, 1)
             loss = self.criterion(outputs, labels) + self._compute_reg_loss()
 
             loss.backward()
             self.optimizer.step()
             total_loss += loss.item()
-            correct_predictions += torch.sum(preds == labels.data)
+            correct_predictions += torch.sum(preds == labels.data).item()
         
         epoch_loss = total_loss / dataset_size
         epoch_acc = correct_predictions / dataset_size
@@ -106,45 +135,49 @@ class MAS:
 
     def _update_reg_params(self, outputs: torch.Tensor, batch_size: int) -> None:
         '''
-            Updates the importance weight of each parameter.
+            Updates the importance weight omega of each parameter. 
+            Should be called whenever the model is evaluated
         '''
         output_l2 = nn.MSELoss(reduction='sum')
         targets = output_l2(outputs,torch.zeros(outputs.size()))
         targets.backward(retain_graph=True)
         for name, param in self.model.named_parameters():
-            if name not in self.regularization_params:
+            if name not in self.regularization_params_prev:
                 continue
-            self.regularization_params[name] = self._update_weights(self.regularization_params[name],param,batch_size)
+            self.regularization_params_cur[name] = self._update_weights(self.regularization_params_cur[name],param,batch_size)
 
     def _update_weights(self,cur_param: torch.Tensor,p:torch.Tensor, batch_size:int):
+        '''
+            Updates the importance weight omega for a given parameter.
+        '''
         cur_param = cur_param.to(self.device)
-        prev_size = self.n_samples
-        self.n_samples += batch_size
+        prev_size = self.n_samples_cur
+        self.n_samples_cur += batch_size
         cur_param.mul_(prev_size)
         cur_param.add_(p.grad.data.abs())
-        cur_param.div_(self.n_samples)
+        cur_param.div_(self.n_samples_cur)
         return cur_param
 
     def _compute_reg_loss(self) -> float:
         '''
             Computes the regularization loss for one batch
         '''
-        reg_loss = torch.Tensor(0.0)
+        reg_loss = torch.tensor(0.0)
         for name,param in self.model.named_parameters():
             if name in self.freeze_layers:
                 continue
             newP = param.detach().clone()
             diff = newP - self.prev_params[name] 
             diff.mul_(diff)
-            diff.mul_(self.regularization_params[name])
+            diff.mul_(self.regularization_params_prev[name])
             reg_loss += diff.sum()
-        return reg_loss
+        return self.weight * reg_loss
 
             
 
     def _run_val_epoch(self,dataloader: DataLoader, dataset_size: int):
         '''
-            Runs one validation epoch using the dataloader which contains 
+            Runs one validation epoch using the dataloader which contains the validation set and has dataset_size elements
         '''
         total_loss = 0.0
         correct_predictions = 0
@@ -157,7 +190,7 @@ class MAS:
             loss = self.criterion(outputs,labels)
             self._update_reg_params(outputs,labels.size(0))
             total_loss += loss.item()
-            correct_predictions += torch.sum(preds == labels.data)
+            correct_predictions += torch.sum(preds == labels.data).item()
 
         epoch_loss = total_loss / dataset_size
         epoch_acc = correct_predictions / dataset_size
