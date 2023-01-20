@@ -37,6 +37,7 @@ class MAS:
         self.weight = weight
         self.criterion = criterion
         self.freeze_layers = freeze_layers
+        self.n_samples = 0
         self.regularization_params = {}
         self.prev_params = {}
         self.device = torch.device("cuda:0" if use_gpu and torch.cuda.is_available() else "cpu")
@@ -51,7 +52,7 @@ class MAS:
                 continue
             self.regularization_params[name] = torch.zeros(param.size())
 
-    def train(self, dataloaders: dict[str,DataLoader], num_epochs:int) -> None:
+    def train(self, dataloaders: dict[str,DataLoader], dataset_sizes: dict[str, int], num_epochs:int) -> None:
         '''
             Trains the model for num_epochs with the data given by the dataloader
         '''
@@ -60,8 +61,8 @@ class MAS:
         for epoch in range(num_epochs):
             print(f"Running epoch {epoch}/{num_epochs}")
 
-            self._run_train_epoch(dataloaders['train'])
-            self._run_val_epoch(dataloaders['val'])
+            self._run_train_epoch(dataloaders['train'], dataset_sizes['train'])
+            self._run_val_epoch(dataloaders['val'], dataset_sizes['val'])
         time_elapsed = time.time() - start_time
         print('Training complete in {:.0f}m {:.0f}s'.format(
         time_elapsed // 60, time_elapsed % 60))
@@ -71,7 +72,7 @@ class MAS:
         for name, param in self.model.named_parameters():
             if name in self.freeze_layers:
                 continue
-            self.regularization_params[name] = param.copy_()
+            self.prev_params[name] = param.data.detach().clone()
 
     def _run_train_epoch(self,dataloader: DataLoader, dataset_size:int):
         '''
@@ -81,7 +82,6 @@ class MAS:
         self.model.train(True)
         total_loss = 0.0
         correct_predictions = 0
-        batch_index = 0
         self._init_regularization_params()
         for data in dataloader:
 
@@ -90,51 +90,51 @@ class MAS:
             self.optimizer.zero_grad()
 
             outputs = self.model(inputs)
+            self._update_reg_params(outputs,labels.size(0))
             _, preds = torch.max(outputs.data, 1)
             loss = self.criterion(outputs, labels) + self._compute_reg_loss()
 
             loss.backward()
-            self.optimizer.step(self.regularization_params)
-            total_loss += loss.data[0]
+            self.optimizer.step()
+            total_loss += loss.item()
             correct_predictions += torch.sum(preds == labels.data)
-            self._update_reg_params(outputs,batch_index,labels.size(0))
-            batch_index += 1
         
         epoch_loss = total_loss / dataset_size
         epoch_acc = correct_predictions / dataset_size
 
         print('Training Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
 
-    def _update_reg_params(self, outputs: torch.Tensor, batch_index: int, batch_size: int) -> None:
+    def _update_reg_params(self, outputs: torch.Tensor, batch_size: int) -> None:
         '''
             Updates the importance weight of each parameter.
         '''
-        output_l2 = nn.MSELoss(reduction='none')
+        output_l2 = nn.MSELoss(reduction='sum')
         targets = output_l2(outputs,torch.zeros(outputs.size()))
-        targets.backward()
+        targets.backward(retain_graph=True)
         for name, param in self.model.named_parameters():
-            if not param.grad or param not in self.regularization_params:
+            if name not in self.regularization_params:
                 continue
-            self.regularization_params[name] = self._update_weights(self.regularization_params[name],param,batch_index,batch_size)
+            self.regularization_params[name] = self._update_weights(self.regularization_params[name],param,batch_size)
 
-    def _update_weights(self,cur_param: torch.Tensor,p:torch.Tensor,batch_index:int, batch_size:int):
+    def _update_weights(self,cur_param: torch.Tensor,p:torch.Tensor, batch_size:int):
         cur_param = cur_param.to(self.device)
-        prev_size = batch_index*batch_size
-        cur_size = (batch_index + 1) * batch_size
+        prev_size = self.n_samples
+        self.n_samples += batch_size
         cur_param.mul_(prev_size)
         cur_param.add_(p.grad.data.abs())
-        cur_param.div_(cur_size)
+        cur_param.div_(self.n_samples)
         return cur_param
 
     def _compute_reg_loss(self) -> float:
         '''
             Computes the regularization loss for one batch
         '''
-        reg_loss = 0.0
+        reg_loss = torch.Tensor(0.0)
         for name,param in self.model.named_parameters():
             if name in self.freeze_layers:
                 continue
-            diff:torch.Tensor = param - self.prev_params[name] 
+            newP = param.detach().clone()
+            diff = newP - self.prev_params[name] 
             diff.mul_(diff)
             diff.mul_(self.regularization_params[name])
             reg_loss += diff.sum()
@@ -155,8 +155,8 @@ class MAS:
             outputs = self.model(inputs)
             _, preds = torch.max(outputs.data,1)
             loss = self.criterion(outputs,labels)
-
-            total_loss += loss.data[0]
+            self._update_reg_params(outputs,labels.size(0))
+            total_loss += loss.item()
             correct_predictions += torch.sum(preds == labels.data)
 
         epoch_loss = total_loss / dataset_size

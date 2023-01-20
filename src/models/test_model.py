@@ -10,7 +10,8 @@ class testNN(nn.Module):
         self.fc3 = nn.Linear(hidden2_size,num_classes)
 
     def forward(self, x):
-        out = self.fc1(x)
+        out = x.view(x.shape[0],-1)
+        out = self.fc1(out)
         out = self.relu1(out)
         out = self.fc2(out)
         out = self.relu2(out)
