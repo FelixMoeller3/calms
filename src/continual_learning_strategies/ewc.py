@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import torch.optim as optim
+#from avalanche.training import EWC
 from torch import autograd
 from torch.utils.data import DataLoader,Dataset
 from .cl_base import ContinualLearningStrategy
@@ -12,7 +12,8 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
         Implementation of Elastic Weight Consolidation (EWC) as proposed in the following paper:
         https://www.pnas.org/doi/epdf/10.1073/pnas.1611835114
         The code is heavily based on the following implementation:
-        https://github.com/shivamsaboo17/Overcoming-Catastrophic-forgetting-in-Neural-Networks
+        https://github.com/shivamsaboo17/Overcoming-Catastrophic-forgetting-in-Neural-Networks and
+        https://github.com/thuyngch/Overcoming-Catastrophic-Forgetting
     '''
 
     def __init__(self,model:nn.Module,optim: torch.optim.Optimizer,crit: nn.CrossEntropyLoss,weight:int=100000):
@@ -31,6 +32,7 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
             print(f"Running epoch {epoch+1}/{num_epochs}")
             self._run_train_epoch(dataloaders['train'], dataset_sizes['train'])
             self._run_val_epoch(dataloaders['val'], dataset_sizes['val'])
+        self.register_ewc_params(dataloaders['val'])
         time_elapsed = time.time() - start_time
         print('Training complete in {:.0f}m {:.0f}s'.format(
         time_elapsed // 60, time_elapsed % 60))
@@ -91,28 +93,28 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
             _buff_param_name = param_name.replace('.', '__')
             self.model.register_buffer(_buff_param_name+'_estimated_mean', param.data.clone())
 
-    def _update_fisher_params(self, current_ds: Dataset, batch_size:int, num_batch:int):
+    def _update_fisher_params(self, dataloader: DataLoader):
         '''
             TODO: Add method description
         '''
-        dl = DataLoader(current_ds, batch_size, shuffle=True)
-        log_liklihoods = []
-        for i, (input, target) in enumerate(dl):
-            if i > num_batch:
+        log_likelihoods = []
+        for i, (input, target) in enumerate(dataloader):
+            input = input.view(input.shape[0],-1)
+            if i> 0 and input.shape[0] != log_likelihoods[0].shape[0]:
                 break
             output = F.log_softmax(self.model(input), dim=1)
-            log_liklihoods.append(output[:, target])
+            log_likelihoods.append(output[:, target])
         # TODO: fix calculation in line below 
         # (see https://github.com/shivamsaboo17/Overcoming-Catastrophic-forgetting-in-Neural-Networks/issues/6)
         # for more details
-        log_likelihood = torch.cat(log_liklihoods).mean()
+        log_likelihood = torch.cat(log_likelihoods).mean()
         grad_log_liklihood = autograd.grad(log_likelihood, self.model.parameters())
         _buff_param_names = [param[0].replace('.', '__') for param in self.model.named_parameters()]
         for _buff_param_name, param in zip(_buff_param_names, grad_log_liklihood):
             self.model.register_buffer(_buff_param_name+'_estimated_fisher', param.data.clone() ** 2)
 
-    def register_ewc_params(self, dataset: Dataset, batch_size:int, num_batches:int):
-        self._update_fisher_params(dataset, batch_size, num_batches)
+    def register_ewc_params(self, dataloader: DataLoader):
+        self._update_fisher_params(dataloader)
         self._update_mean_params()
 
     def _compute_consolidation_loss(self):

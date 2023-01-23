@@ -1,13 +1,72 @@
 import torch
 import torch.nn as nn
+from torch.nn.parameter import Parameter
 import torch.optim as optim
 import time
 from torch.utils.data import DataLoader
-from typing import List
+from typing import List, Union
+from .cl_base import ContinualLearningStrategy
+
+class Weight_Regularized_SGD(optim.SGD):
+    '''
+    Implements SGD training with importance params regularization.
+    '''
+    def __init__(self, params, lr:float=0.001, momentum:float=0, dampening:float=0,
+                 weight_decay:float=0, nesterov:bool=False,weight:float=1.0):
+        self.weight = weight
+        super(Weight_Regularized_SGD, self).__init__(params, lr,momentum,dampening,weight_decay,nesterov)
+
+    def __setstate__(self, state):
+        super(Weight_Regularized_SGD, self).__setstate__(state)
+
+    def step(self, reg_params:dict[str,Parameter],prev_params: dict[str,Parameter]):
+        """Performs a single optimization step.
+        Arguments:
+            reg_params: omega of all the params
+            closure (callable, optional): A closure that reevaluates the model
+                and returns the loss.
+        """
+        for group in self.param_groups:
+            momentum = group['momentum']
+            dampening = group['dampening']
+           
+            for param in group['params']:
+                if param.grad is None:
+                    continue
+                d_p = param.grad.data
+               
+                #MAS PART CODE GOES HERE
+                #if this param has an omega to use for regulization
+                if param in reg_params:
+                    d_p = self._update_gradient(param,d_p,reg_params[param],prev_params[param],self.weight)
+                #MAS PARAT CODE ENDS
+                if momentum != 0:
+                    d_p = self._add_momentum(param,d_p,self.state[param],momentum,dampening)
+                param.data.add_(-group['lr'], d_p)
 
 
+    def _update_gradient(self,param: Parameter,grad: torch.Tensor,reg_param: torch.Tensor,prev_param: torch.Tensor,reg_lambda:float):
+        #initial value when the training start
+        curr_weight_val=param.data
+        #get the difference
+        weight_dif=curr_weight_val.add(-1,prev_param)
+        #compute the MAS penalty
+        regulizer=weight_dif.mul(2*reg_lambda*reg_param)
+        #add the MAS regulizer to the gradient
+        grad.add_(regulizer)
+        return grad
 
-class MAS:
+    def _add_momentum(self, param, grad, param_state, momentum: float, dampening: float):
+        param_state = self.state[param]
+        if 'momentum_buffer' not in param_state:
+            param_state['momentum_buffer'] = grad.clone()
+            buf = param_state['momentum_buffer']
+        else:
+            buf = param_state['momentum_buffer']
+            buf.mul_(momentum).add_(1 - dampening, grad)
+        return buf
+
+class MAS(ContinualLearningStrategy):
     '''
     Mas implementation as proposed by the following paper: 
     https://openaccess.thecvf.com/content_ECCV_2018/papers/Rahaf_Aljundi_Memory_Aware_Synapses_ECCV_2018_paper.pdf,
@@ -16,8 +75,8 @@ class MAS:
         - https://github.com/rahafaljundi/MAS-Memory-Aware-Synapses
     '''
 
-    def __init__(self,model:nn.Module,optimizer: torch.optim.Optimizer, weight: float, criterion: torch.nn.CrossEntropyLoss,
-                 freeze_layers:List[str]=[],use_gpu:bool=False):
+    def __init__(self,model:nn.Module,optimizer: Weight_Regularized_SGD, weight: float, criterion: torch.nn.CrossEntropyLoss,
+                 freeze_layers:List[str]=[],lr:float=0.001,momentum:float=0,use_gpu:bool=False):
         '''
         Initializes the Memory Aware Synapses (MAS) class.
 
@@ -31,7 +90,7 @@ class MAS:
 
         '''
         self.model = model
-        self.optimizer = optimizer
+        self.optimizer = Weight_Regularized_SGD(model.parameters(),lr,momentum,weight)
         self.weight = weight
         self.criterion = criterion
         self.freeze_layers = freeze_layers
@@ -61,7 +120,7 @@ class MAS:
                 continue
             self.regularization_params_cur[name] = torch.zeros(param.size())
 
-    def train(self, dataloaders: dict[str,DataLoader], dataset_sizes: dict[str, int], num_epochs:int) -> None:
+    def train(self, dataloaders: dict[str,DataLoader], num_epochs:int) -> None:
         '''
             Trains the model for num_epochs with the data given by the dataloader
         '''
@@ -70,8 +129,8 @@ class MAS:
         for epoch in range(num_epochs):
             print(f"Running epoch {epoch+1}/{num_epochs}")
 
-            self._run_train_epoch(dataloaders['train'], dataset_sizes['train'])
-            self._run_val_epoch(dataloaders['val'], dataset_sizes['val'])
+            self._run_train_epoch(dataloaders['train'])
+            self._run_val_epoch(dataloaders['val'])
         self._update_regularization_params()
         time_elapsed = time.time() - start_time
         print('Training complete in {:.0f}m {:.0f}s'.format(
@@ -104,7 +163,7 @@ class MAS:
         self._init_regularization_params()
 
 
-    def _run_train_epoch(self,dataloader: DataLoader, dataset_size:int):
+    def _run_train_epoch(self,dataloader: DataLoader):
         '''
             Runs one train epoch
         '''
@@ -116,20 +175,19 @@ class MAS:
             inputs, labels = data
 
             self.optimizer.zero_grad()
-
+            self.model.zero_grad()
             outputs = self.model(inputs)
             # Stop updating the regularization params during training
             #self._update_reg_params(outputs,labels.size(0))
             _, preds = torch.max(outputs.data, 1)
-            loss = self.criterion(outputs, labels) + self._compute_reg_loss()
+            loss = self.criterion(outputs, labels)
 
             loss.backward()
-            self.optimizer.step()
+            self.optimizer.step(self.regularization_params_prev,self.prev_params)
             total_loss += loss.item()
             correct_predictions += torch.sum(preds == labels.data).item()
-        
-        epoch_loss = total_loss / dataset_size
-        epoch_acc = correct_predictions / dataset_size
+        epoch_loss = total_loss / len(dataloader.dataset)
+        epoch_acc = correct_predictions / len(dataloader.dataset)
 
         print('Training Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
 
@@ -154,7 +212,8 @@ class MAS:
         prev_size = self.n_samples_cur
         self.n_samples_cur += batch_size
         cur_param.mul_(prev_size)
-        cur_param.add_(p.grad.data.abs())
+        gradient = p.grad.data.clone()
+        cur_param.add_(gradient.abs())
         cur_param.div_(self.n_samples_cur)
         return cur_param
 
@@ -175,7 +234,7 @@ class MAS:
 
             
 
-    def _run_val_epoch(self,dataloader: DataLoader, dataset_size: int):
+    def _run_val_epoch(self,dataloader: DataLoader):
         '''
             Runs one validation epoch using the dataloader which contains the validation set and has dataset_size elements
         '''
@@ -184,15 +243,16 @@ class MAS:
         self.model.train(False)
         for data in dataloader:
             inputs, labels = data
-
+            self.model.zero_grad()
             outputs = self.model(inputs)
             _, preds = torch.max(outputs.data,1)
             loss = self.criterion(outputs,labels)
-            self._update_reg_params(outputs,labels.size(0))
+            batch_size = labels.size(0)
+            self._update_reg_params(outputs,batch_size)
             total_loss += loss.item()
             correct_predictions += torch.sum(preds == labels.data).item()
 
-        epoch_loss = total_loss / dataset_size
-        epoch_acc = correct_predictions / dataset_size
+        epoch_loss = total_loss / len(dataloader.dataset)
+        epoch_acc = correct_predictions / len(dataloader.dataset)
         
         print('Validation Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
