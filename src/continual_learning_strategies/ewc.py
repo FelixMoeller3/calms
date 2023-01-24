@@ -1,11 +1,14 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-#from avalanche.training import EWC
+from avalanche.training import EWC
+from avalanche.benchmarks import dataset_benchmark
 from torch import autograd
 from torch.utils.data import DataLoader,Dataset
 from .cl_base import ContinualLearningStrategy
-import time
+from torchvision.transforms import Compose
+from typing import List
+
 
 class ElasticWeightConsolidation(ContinualLearningStrategy):
     '''
@@ -21,21 +24,29 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
         self.weight = weight
         self.crit = crit
         self.optimizer = optim
+        self.ewc = EWC(self.model,self.optimizer,self.crit,self.weight,'separate')
 
-    def train(self, dataloaders: dict[str,DataLoader], dataset_sizes: dict[str, int], num_epochs: int):
+    def train(self, train_datasets: List[Dataset], test_datasets: List[Dataset], num_epochs: int, batch_size:int=100 ,transform: Compose=None):
         '''
             Trains the model for num_epoch epochs using the dataloaders 'train' and 'val' in the dataloaders dict
-            which have the sizes dataset_sizes['train'] and dataset_sizes['val'] respectively.
+        '''
+        self.ewc.train_epochs = num_epochs
+        self.ewc.train_mb_size = batch_size
+        self.ewc.eval_mb_size = batch_size
+        scenario = dataset_benchmark(train_datasets,test_datasets,train_transform=transform,eval_transform=transform)
+        self.ewc.train(scenario.train_stream)
+        self.ewc.eval(scenario.test_stream)
         '''
         start_time = time.time()
         for epoch in range(num_epochs):
             print(f"Running epoch {epoch+1}/{num_epochs}")
-            self._run_train_epoch(dataloaders['train'], dataset_sizes['train'])
-            self._run_val_epoch(dataloaders['val'], dataset_sizes['val'])
-        self.register_ewc_params(dataloaders['val'])
+            self.ewc.train()
+            self._run_train_epoch(dataloaders['train'])
+            self._run_val_epoch(dataloaders['val'])
         time_elapsed = time.time() - start_time
         print('Training complete in {:.0f}m {:.0f}s'.format(
         time_elapsed // 60, time_elapsed % 60))
+        '''
 
     def _run_train_epoch(self,dataloader: DataLoader,dataset_size: int) -> None:
         '''
@@ -142,3 +153,7 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
         loss.backward()
         self.optimizer.step()
     
+
+    def eval(self,evalset: Dataset, transform: Compose=None):
+        scenario = dataset_benchmark([],[evalset],train_transform=transform,eval_transform=transform)
+        self.ewc.eval(scenario.test_stream[0])

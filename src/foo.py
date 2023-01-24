@@ -1,16 +1,60 @@
-from models.test_model import testNN
+from models.test_model import testNN, testConv
 import continual_learning_strategies as cl_strat
 from continual_learning_strategies.ewc import ElasticWeightConsolidation
 from torch.optim import SGD
 import torch.nn as nn
+import torch
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader,Subset
+from torchvision.datasets import MNIST
+from avalanche.benchmarks import nc_benchmark,SplitMNIST
+from avalanche.training import MAS,Replay,EWC
+from avalanche.models import IncrementalClassifier,MultiHeadClassifier
+from avalanche.evaluation.metrics import (
+    forgetting_metrics,
+    accuracy_metrics,
+    loss_metrics,
+    bwt_metrics,
+)
+from avalanche.training.plugins import EvaluationPlugin
 
-model = testNN(28*28,400,400,10)
-optim = SGD(model.parameters(),lr=0.001)
-mas_optim = cl_strat.mas.Weight_Regularized_SGD(model.parameters(),0.001,momentum=0.9)
-mas_strat = cl_strat.mas.MAS(model,optim,10.0,nn.CrossEntropyLoss(),[])
-#ewc_strat = cl_strat.ElasticWeightConsolidation(model,optim,nn.CrossEntropyLoss(),10.0)
+mnist_train = MNIST(
+        root='./data',
+        train=True,
+        download=True,
+        transform=transforms.ToTensor(),
+    )
+mnist_test = MNIST(
+        root='./data',
+        train=False,
+        download=True,
+        transform=transforms.ToTensor(),
+    )
+benchmark = SplitMNIST(5,shuffle=False,return_task_id=True,class_ids_from_zero_in_each_exp=True,
+train_transform=transforms.Compose([lambda x: x.view(784)]),eval_transform=transforms.Compose([lambda x: x.view(784)]))
+
+eval_plugin = EvaluationPlugin(
+        accuracy_metrics(
+            minibatch=True, epoch=True, experience=True, stream=True
+        ),
+        loss_metrics(minibatch=True, epoch=True, experience=True, stream=True),
+        forgetting_metrics(experience=True, stream=True),
+        bwt_metrics(experience=True, stream=True),
+        #loggers=[interactive_logger, tensorboard_logger],
+    )
+
+#model = testNN(28*28,1,400,0.2,0.5,10)
+#model = testConv(1,10)
+model = MultiHeadClassifier(in_features=784)
+optim = SGD(model.parameters(),lr=0.005)
+#mas_optim = cl_strat.mas.Weight_Regularized_SGD(model.parameters(),0.001,momentum=0.9)
+#mas_strat = cl_strat.mas.MAS(model,optim,10.0,nn.CrossEntropyLoss(),[])
+
+#ewc_strat = cl_strat.ElasticWeightConsolidation(model,optim,nn.CrossEntropyLoss(),100)
+strat = EWC(model,optim,nn.CrossEntropyLoss(),1.0,train_epochs=10)
+#strat = MAS(model,optim,nn.CrossEntropyLoss(),train_epochs=15,train_mb_size=64)
+#mas_strat = Replay(model,optim,nn.CrossEntropyLoss(),train_mb_size=100,train_epochs=10)
+'''
 mnist_train = datasets.MNIST('./data', train=True,download=True, transform=transforms.Compose([
                        transforms.ToTensor(),
                        transforms.Normalize((0.1307,), (0.3081,))
@@ -21,54 +65,38 @@ mnist_test = datasets.MNIST('./data', train=False,download=True, transform=trans
                    ]))
 indices_first_train = []
 indices_second_train = []
+all_digits = [[0,1],[2,3],[4,5],[6,7],[8,9]]
+train_datasets = []
+test_datasets = []
+indices = [[],[],[],[],[]]
 
 for i in range(len(mnist_train)):
-    if mnist_train.targets[i] in [0,2,4,6,8]:
-        indices_first_train.append(i)
-    else:
-        indices_second_train.append(i)
-
-mnist_train_first = Subset(mnist_train,indices_first_train)
-mnist_train_second = Subset(mnist_train,indices_second_train)
-
-indices_first_test = []
-indices_second_test = []
+    cur_target = mnist_train.targets[i]
+    indices[cur_target//2].append(i)
+for i in range(len(indices)):
+    train_datasets.append(Subset(mnist_train,indices[i]))
+indices = [[],[],[],[],[]]
 for i in range(len(mnist_test)):
-    if mnist_test.targets[i] in [0,2,4,6,8]:
-        indices_first_test.append(i)
-    else:
-        indices_second_test.append(i)
+    cur_target = mnist_test.targets[i]
+    indices[cur_target//2].append(i)
+for i in range(len(indices)):
+    test_datasets.append(Subset(mnist_test,indices[i]))
+    
 
-mnist_test_first = Subset(mnist_test,indices_first_test)
-mnist_test_second = Subset(mnist_test,indices_second_test)
- 
+#for i in range(len(train_datasets)):
+#    ewc_strat.train(train_datasets[i],test_datasets[i],5)
+ewc_strat.train(train_datasets,test_datasets,5)
 
-mnist_train_first_loader = DataLoader(mnist_train_first, batch_size = 100, shuffle=True)
-mnist_test_first_loader = DataLoader(mnist_test_first, batch_size = 100, shuffle=False)
-mnist_first_loaders = {'train': mnist_train_first_loader, 'val': mnist_test_first_loader}
-mas_strat.train(mnist_first_loaders,5)
-#ewc_strat.train(mnist_first_loaders,mnist_first_dset_sizes,20)
-print('First five digits of MNIST done. Starting with second five digits of MNIST')
+
+for i in range(len(train_datasets)):
+    ewc_strat.eval(test_datasets[i])
 '''
-fashion_mnist_train = datasets.FashionMNIST('./data', train=True,download=True, transform=transforms.ToTensor())
-fashion_mnist_test = datasets.FashionMNIST('./data', train=False,download=True, transform=transforms.ToTensor())
-fashion_mnist_train_loader = DataLoader(fashion_mnist_train, batch_size = 100, shuffle=True)
-fashion_mnist_test_loader = DataLoader(fashion_mnist_test, batch_size = 100, shuffle=False)
-fashion_mnist_loaders = {'train': fashion_mnist_train_loader, 'val': fashion_mnist_test_loader}
-fashion_mnist_dset_sizes = {'train': len(fashion_mnist_train), 'val': len(fashion_mnist_test)}
-'''
-mnist_train_second_loader = DataLoader(mnist_train_second, batch_size = 100, shuffle=True)
-mnist_test_second_loader = DataLoader(mnist_test_second, batch_size = 100, shuffle=False)
-mnist_second_loaders = {'train': mnist_train_second_loader, 'val': mnist_test_second_loader}
-mnist_second_dset_sizes = {'train': len(mnist_train_second), 'val': len(mnist_test_second)}
-
-mas_strat.train(mnist_second_loaders,5)
-#ewc_strat.train(mnist_second_loaders, mnist_second_dset_sizes,20)
-print('Testing first digits of MNIST after training all digits')
-mas_strat._run_val_epoch(mnist_test_first_loader)
-#ewc_strat._run_val_epoch(mnist_test_first_loader,len(mnist_test_first))
-print('Testing second digits of MNIST after training all digits')
-mas_strat._run_val_epoch(mnist_test_second_loader)
-#ewc_strat._run_val_epoch(mnist_test_second_loader,len(mnist_test_second))
-
-# Print gradient and parameters of network in each epoch
+for i in range(len(benchmark.train_stream)):
+    cur_exp = benchmark.train_stream[i]
+    print("Start training on experience ", cur_exp.current_experience)
+    strat.train_mb_size = 100
+    strat.eval_mb_size = 100
+    strat.train(cur_exp)
+    print("End training on experience", cur_exp.current_experience)
+    print("Computing accuracy on the test set")
+    strat.eval(benchmark.test_stream[:])
