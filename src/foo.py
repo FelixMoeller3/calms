@@ -5,18 +5,8 @@ from torch.optim import SGD
 import torch.nn as nn
 import torch
 from torchvision import datasets, transforms
-from torch.utils.data import DataLoader,Subset
+from torch.utils.data import DataLoader,Subset,random_split
 from torchvision.datasets import MNIST
-from avalanche.benchmarks import nc_benchmark,SplitMNIST
-from avalanche.training import MAS,Replay,EWC
-from avalanche.models import IncrementalClassifier,MultiHeadClassifier
-from avalanche.evaluation.metrics import (
-    forgetting_metrics,
-    accuracy_metrics,
-    loss_metrics,
-    bwt_metrics,
-)
-from avalanche.training.plugins import EvaluationPlugin
 
 mnist_train = MNIST(
         root='./data',
@@ -30,31 +20,20 @@ mnist_test = MNIST(
         download=True,
         transform=transforms.ToTensor(),
     )
-benchmark = SplitMNIST(5,shuffle=False,return_task_id=True,class_ids_from_zero_in_each_exp=True,
-train_transform=transforms.Compose([lambda x: x.view(784)]),eval_transform=transforms.Compose([lambda x: x.view(784)]))
 
-eval_plugin = EvaluationPlugin(
-        accuracy_metrics(
-            minibatch=True, epoch=True, experience=True, stream=True
-        ),
-        loss_metrics(minibatch=True, epoch=True, experience=True, stream=True),
-        forgetting_metrics(experience=True, stream=True),
-        bwt_metrics(experience=True, stream=True),
-        #loggers=[interactive_logger, tensorboard_logger],
-    )
 
-#model = testNN(28*28,1,400,0.2,0.5,10)
+
+model = testNN(28*28,1,400,0.2,0.5,10)
 #model = testConv(1,10)
-model = MultiHeadClassifier(in_features=784)
-optim = SGD(model.parameters(),lr=0.005)
+optim = SGD(model.parameters(),lr=0.01)
 #mas_optim = cl_strat.mas.Weight_Regularized_SGD(model.parameters(),0.001,momentum=0.9)
-#mas_strat = cl_strat.mas.MAS(model,optim,10.0,nn.CrossEntropyLoss(),[])
+mas_strat = cl_strat.MAS(model,optim,0.0,nn.CrossEntropyLoss(),[])
+#mas_strat = cl_strat.Naive(model,optim,nn.CrossEntropyLoss())
 
 #ewc_strat = cl_strat.ElasticWeightConsolidation(model,optim,nn.CrossEntropyLoss(),100)
-strat = EWC(model,optim,nn.CrossEntropyLoss(),1.0,train_epochs=10)
+#strat = EWC(model,optim,nn.CrossEntropyLoss(),1.0,train_epochs=10)
 #strat = MAS(model,optim,nn.CrossEntropyLoss(),train_epochs=15,train_mb_size=64)
 #mas_strat = Replay(model,optim,nn.CrossEntropyLoss(),train_mb_size=100,train_epochs=10)
-'''
 mnist_train = datasets.MNIST('./data', train=True,download=True, transform=transforms.Compose([
                        transforms.ToTensor(),
                        transforms.Normalize((0.1307,), (0.3081,))
@@ -63,6 +42,17 @@ mnist_test = datasets.MNIST('./data', train=False,download=True, transform=trans
                        transforms.ToTensor(),
                        transforms.Normalize((0.1307,), (0.3081,))
                    ]))
+mnist_train_first, mnist_train_second = random_split(mnist_train,(30000,30000))
+train_loader_one = DataLoader(mnist_train_first,100,shuffle=True)
+train_loader_two = DataLoader(mnist_train_second,100,shuffle=True)
+test_loader = DataLoader(mnist_test,100,shuffle=True)
+d1 = {'train': train_loader_one,'val': test_loader}
+d2 = {'train': train_loader_two,'val': test_loader}
+mas_strat.train(d1,5)
+mas_strat.train(d2,5)
+
+mas_strat._run_val_epoch(train_loader_one)
+'''
 indices_first_train = []
 indices_second_train = []
 all_digits = [[0,1],[2,3],[4,5],[6,7],[8,9]]
@@ -85,12 +75,6 @@ for i in range(len(indices)):
 
 #for i in range(len(train_datasets)):
 #    ewc_strat.train(train_datasets[i],test_datasets[i],5)
-ewc_strat.train(train_datasets,test_datasets,5)
-
-
-for i in range(len(train_datasets)):
-    ewc_strat.eval(test_datasets[i])
-'''
 for i in range(len(benchmark.train_stream)):
     cur_exp = benchmark.train_stream[i]
     print("Start training on experience ", cur_exp.current_experience)
@@ -100,3 +84,4 @@ for i in range(len(benchmark.train_stream)):
     print("End training on experience", cur_exp.current_experience)
     print("Computing accuracy on the test set")
     strat.eval(benchmark.test_stream[:])
+'''

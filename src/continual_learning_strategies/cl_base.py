@@ -5,7 +5,7 @@ from torch.utils.data import DataLoader
 
 class ContinualLearningStrategy(ABC):
     '''
-        This is the base class for all continual 
+        This is the base class for all continual learning strategies
     '''
     def __init__(self, model:nn.Module,crit,lr:float=0.001):
         self.model = model

@@ -51,9 +51,9 @@ class Weight_Regularized_SGD(optim.SGD):
         #get the difference
         weight_dif=curr_weight_val.add(-1,prev_param)
         #compute the MAS penalty
-        regulizer=weight_dif.mul(2*reg_lambda*reg_param)
+        regularizer=weight_dif.mul(2*reg_lambda*reg_param)
         #add the MAS regulizer to the gradient
-        grad.add_(regulizer)
+        grad.add_(regularizer)
         return grad
 
     def _add_momentum(self, param, grad, param_state, momentum: float, dampening: float):
