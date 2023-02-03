@@ -4,7 +4,7 @@ from torch.nn.parameter import Parameter
 import torch.optim as optim
 import time
 from torch.utils.data import DataLoader
-from typing import List, Union
+from typing import List
 from .cl_base import ContinualLearningStrategy
 
 class Weight_Regularized_SGD(optim.SGD):

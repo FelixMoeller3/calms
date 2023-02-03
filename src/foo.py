@@ -1,11 +1,9 @@
-from models.test_model import testNN, testConv
+from models.test_model import testNN
 import continual_learning_strategies as cl_strat
-from continual_learning_strategies.ewc import ElasticWeightConsolidation
 from torch.optim import SGD
 import torch.nn as nn
-import torch
 from torchvision import datasets, transforms
-from torch.utils.data import DataLoader,Subset,random_split
+from torch.utils.data import DataLoader,random_split
 from torchvision.datasets import MNIST
 
 mnist_train = MNIST(
@@ -28,7 +26,8 @@ model = testNN(28*28,1,400,0.2,0.5,10)
 optim = SGD(model.parameters(),lr=0.01)
 #mas_optim = cl_strat.mas.Weight_Regularized_SGD(model.parameters(),0.001,momentum=0.9)
 #mas_strat = cl_strat.MAS(model,optim,0.0,nn.CrossEntropyLoss(),[])
-mas_strat = cl_strat.ElasticWeightConsolidation(model,optim,nn.CrossEntropyLoss(),1.0)
+#mas_strat = cl_strat.ElasticWeightConsolidation(model,optim,nn.CrossEntropyLoss(),1.0)
+mas_strat = cl_strat.IMM(model,optim,nn.CrossEntropyLoss(),alphas=[0.9,0.1],weight=0.01,mean=False)
 #mas_strat = cl_strat.Naive(model,optim,nn.CrossEntropyLoss())
 
 #ewc_strat = cl_strat.ElasticWeightConsolidation(model,optim,nn.CrossEntropyLoss(),100)
@@ -43,16 +42,20 @@ mnist_test = datasets.MNIST('./data', train=False,download=True, transform=trans
                        transforms.ToTensor(),
                        transforms.Normalize((0.1307,), (0.3081,))
                    ]))
-mnist_train_first, mnist_train_second = random_split(mnist_train,(30000,30000))
+mnist_train_first, mnist_train_second, mnist_train_third = random_split(mnist_train,(20000,20000,20000))
 train_loader_one = DataLoader(mnist_train_first,100,shuffle=True)
 train_loader_two = DataLoader(mnist_train_second,100,shuffle=True)
+train_loader_three = DataLoader(mnist_train_third,100,shuffle=True)
 test_loader = DataLoader(mnist_test,100,shuffle=True)
 d1 = {'train': train_loader_one,'val': test_loader}
 d2 = {'train': train_loader_two,'val': test_loader}
+d3 = {'train': train_loader_three,'val': test_loader}
 mas_strat.train(d1,5)
 mas_strat.train(d2,5)
+mas_strat.train(d3,5)
 
 mas_strat._run_val_epoch(train_loader_one)
+mas_strat._run_val_epoch(train_loader_two)
 '''
 indices_first_train = []
 indices_second_train = []

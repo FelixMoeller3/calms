@@ -97,7 +97,7 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
         print('Validation Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
 
 
-    def _update_fisher_params(self, train_dataset: Dataset=None, sample_size:float=0.5):
+    def _update_fisher_params(self, train_dataset: Dataset=None, sample_size:float=0.05):
         '''
             TODO: Add method description
         '''
