@@ -2,7 +2,6 @@ import numpy as np
 import torch.nn as nn
 from torch.utils.data import DataLoader
 # Custom
-from config import *
 # from influence_function import calc_influence_function
 # from Influence_function import calc_influence_function, calc_influence_function_param
 
@@ -10,7 +9,8 @@ class Strategy:
     '''
         Base class for continual learning strategies
     '''
-    def __init__(self, model:nn.Module, data_unlabeled, NO_CLASSES:int, test_loader: DataLoader, cfgs, device):
+    def __init__(self, model:nn.Module, data_unlabeled, NO_CLASSES:int, test_loader: DataLoader,
+     batch:int,budget:int, init_budget:int, device):
         self.model = model
         self.data_unlabeled = data_unlabeled
         self.subset = []
@@ -18,13 +18,12 @@ class Strategy:
         self.cycle = 0
         self.NO_CLASSES = NO_CLASSES
         self.test_loader = test_loader
-        self.cfgs = cfgs
         self.device = device
         self.init_set_seed = 0
 
-        self.BATCH = self.cfgs.BATCH
-        self.BUDGET = self.cfgs.BUDGET
-        self.INIT_BUDGET = self.cfgs.INIT_BUDGET
+        self.BATCH = batch
+        self.BUDGET = budget
+        self.INIT_BUDGET = init_budget
 
     def query(self):
         pass

@@ -42,7 +42,7 @@ class IMM(ContinualLearningStrategy):
         if self.alphas and len(self.prev_param_list) > len(self.alphas):
             self.prev_param_list.pop(0)
 
-    def train(self, dataloaders: dict[str,DataLoader], num_epochs: int) -> None:
+    def train(self, dataloaders: dict[str,DataLoader], num_epochs: int,result_list:List[float]=[]) -> None:
         '''
             Trains the model for num_epoch epochs using the dataloaders 'train' and 'val' in the dataloaders dict
         '''
@@ -51,7 +51,8 @@ class IMM(ContinualLearningStrategy):
         for epoch in range(num_epochs):
             print(f"Running epoch {epoch+1}/{num_epochs}")
             self._run_train_epoch(dataloaders['train'])
-            self._run_val_epoch(dataloaders['val'])
+            log_list = None if epoch < num_epochs-1 else result_list
+            self._run_val_epoch(dataloaders['val'],log_list)
         self._save_model_params()
         self._merge_models(dataloaders['train'].dataset)
         time_elapsed = time.time() - start_time
@@ -88,7 +89,7 @@ class IMM(ContinualLearningStrategy):
         print('Training Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
 
     
-    def _run_val_epoch(self,dataloader: DataLoader) -> None:
+    def _run_val_epoch(self,dataloader: DataLoader,log_list:List[float]=None) -> None:
         '''
             Runs one validation epoch using the dataloader which contains the validation data. 
         '''
@@ -106,7 +107,8 @@ class IMM(ContinualLearningStrategy):
 
         epoch_loss = total_loss / len(dataloader.dataset)
         epoch_acc = correct_predictions / len(dataloader.dataset)
-        
+        if log_list is not None:
+            log_list.append(epoch_acc)
         print('Validation Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
 
     def _compute_consolidation_loss(self) -> torch.Tensor:

@@ -44,6 +44,9 @@ class testNN(nn.Module):
         return out
         #return reduce(lambda x, l: l(x), self.layers,x.view(-1,self.input_size))
 
+    def get_embedding_dim(self) -> int:
+        return self.fc3.in_features
+
 class testConv(nn.Module):
     def __init__(self, numChannels, classes):
         super(testConv,self).__init__()

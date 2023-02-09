@@ -8,8 +8,13 @@ from data.sampler import SubsetSequentialSampler
 from .kCenterGreedy import kCenterGreedy
 
 class CoreSet(Strategy):
-    def __init__(self, model: nn.Module, data_unlabeled: Dataset, NO_CLASSES: int, test_loader: DataLoader, cfgs, device):
-        super(CoreSet, self).__init__(model, data_unlabeled, NO_CLASSES, test_loader, cfgs, device)
+    '''
+        Implements the strategy CoreSet as proposed
+        in the following paper: https://arxiv.org/pdf/1708.00489.pdf),
+    '''
+    def __init__(self, model: nn.Module, data_unlabeled: Dataset, NO_CLASSES: int, test_loader: DataLoader,
+        batch:int,budget:int, init_budget:int, device):
+        super(CoreSet, self).__init__(model, data_unlabeled, NO_CLASSES, test_loader,batch,budget,init_budget,device)
 
     def query(self):
         unlabeled_loader = DataLoader(self.data_unlabeled, batch_size=self.BATCH, 
@@ -21,15 +26,18 @@ class CoreSet(Strategy):
 
     def get_kcg(self, unlabeled_loader: DataLoader):
         labeled_data_size = self.BUDGET*self.cycle+self.INIT_BUDGET
-        self.model['backbone'].eval()
-        with torch.cuda.device(self.device):
-            features = torch.tensor([]).cuda()
+        self.model.eval()
+        #TODO: let this run on cuda when running on cluster
+        #with torch.cuda.device(self.device):
+        #    features = torch.tensor([]).cuda()
+        features = torch.tensor([])
 
         with torch.no_grad():
             for inputs, _, _ in unlabeled_loader:
-                with torch.cuda.device(self.device):
-                    inputs = inputs.cuda()
-                _, features_batch, _ = self.model['backbone'](inputs)
+                #TODO: let this run on cuda when running on cluster
+                #with torch.cuda.device(self.device):
+                #    inputs = inputs.cuda()
+                _, features_batch, _ = self.model(inputs)
                 features = torch.cat((features, features_batch), 0)
             feat = features.detach().cpu().numpy()
             new_av_idx = np.arange(len(self.subset),(len(self.subset) + labeled_data_size))

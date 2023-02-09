@@ -12,8 +12,13 @@ from .strategy import Strategy
 from data.sampler import SubsetSequentialSampler
 
 class Badge(Strategy):
-    def __init__(self, model: nn.Module, data_unlabeled: Dataset, NO_CLASSES: int, test_loader: DataLoader, cfgs, device):
-        super(Badge, self).__init__(model, data_unlabeled, NO_CLASSES, test_loader, cfgs, device)
+    '''
+        Implements the strategy Batch Active learning by Diverse Gradient Embeddings (BADGE) as proposed
+        in the following paper: https://arxiv.org/pdf/1906.03671.pdf
+    '''
+    def __init__(self, model: nn.Module, data_unlabeled: Dataset, NO_CLASSES: int, test_loader: DataLoader,
+        batch:int,budget:int, init_budget:int, device):
+        super(Badge, self).__init__(model, data_unlabeled, NO_CLASSES,test_loader,batch,budget,init_budget, device)
 
     def query(self) -> List[int]:
         unlabeled_loader = DataLoader(self.data_unlabeled, batch_size=self.BATCH, 
@@ -27,8 +32,8 @@ class Badge(Strategy):
         return arg
 
     def get_grad_embedding(self, unlabeled_loader: DataLoader, len_ulb: int) -> torch.Tensor:
-        embDim = self.model['backbone'].get_embedding_dim()
-        self.model['backbone'].eval()
+        embDim = self.model.get_embedding_dim()
+        self.model.eval()
         nLab = self.NO_CLASSES
         embedding = np.zeros([len_ulb, embDim*nLab])
         ind = 0
@@ -36,25 +41,26 @@ class Badge(Strategy):
         with torch.no_grad():
             for x, y, idxs in unlabeled_loader:
                 # print(idxs)
-                with torch.cuda.device(self.device):
-                    x = x.cuda()
-                    y = y.cuda()
-                    scores, features_batch, _ = self.model['backbone'](x)
-                    features_batch = features_batch.data.cpu().numpy()
-                    batchProbs = F.softmax(scores, dim=1).data.cpu().numpy()
-                    maxInds = np.argmax(batchProbs, 1)
-                    print('features:{}, batchProbs: {}'.format(features_batch.shape, batchProbs.shape))
-                    for j in range(len(y)):
+                #TODO: let this run on cuda when running on cluster
+                #with torch.cuda.device(self.device):
+                #    x = x.cuda()
+                #    y = y.cuda()
+                scores, features_batch, _ = self.model(x)
+                features_batch = features_batch.data.cpu().numpy()
+                batchProbs = F.softmax(scores, dim=1).data.cpu().numpy()
+                maxInds = np.argmax(batchProbs, 1)
+                print('features:{}, batchProbs: {}'.format(features_batch.shape, batchProbs.shape))
+                for j in range(len(y)):
+                    # print(idxs[j],ind)
+                    for c in range(nLab):
+                        # if j==0:
+                        #     print(c, idxs)
                         # print(idxs[j],ind)
-                        for c in range(nLab):
-                            # if j==0:
-                            #     print(c, idxs)
-                            # print(idxs[j],ind)
-                            if c == maxInds[j]:
-                                embedding[ind][embDim * c : embDim * (c+1)] = deepcopy(features_batch[j]) * (1 - batchProbs[j][c])
-                            else:
-                                embedding[ind][embDim * c : embDim * (c+1)] = deepcopy(features_batch[j]) * (-1 * batchProbs[j][c])
-                        ind += 1
+                        if c == maxInds[j]:
+                            embedding[ind][embDim * c : embDim * (c+1)] = deepcopy(features_batch[j]) * (1 - batchProbs[j][c])
+                        else:
+                            embedding[ind][embDim * c : embDim * (c+1)] = deepcopy(features_batch[j]) * (-1 * batchProbs[j][c])
+                    ind += 1
             # print(ind)
             return torch.Tensor(embedding)
 

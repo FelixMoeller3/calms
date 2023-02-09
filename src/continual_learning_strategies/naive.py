@@ -1,3 +1,4 @@
+from typing import List
 from .cl_base import ContinualLearningStrategy
 from torch import nn
 import torch
@@ -11,11 +12,13 @@ class Naive(ContinualLearningStrategy):
         self.optimizer = optimizer
         self.criterion = criterion
 
-    def train(self,train_loader: DataLoader,num_epochs:int) -> None:
+    def train(self,dataloaders: dict[str,DataLoader],num_epochs:int,result_list:List[float]=[]) -> None:
         self.model.train(True)
         for i in range(num_epochs):
             print(f'Running epoch {i+1}/{num_epochs}')
-            self._run_train_epoch(train_loader)
+            self._run_train_epoch(dataloaders["train"])
+            log_list = None if i < num_epochs-1 else result_list
+            self.eval(dataloaders["val"],log_list)
 
     def _run_train_epoch(self,train_loader: DataLoader) -> None:
         total_loss = 0.0
@@ -40,7 +43,7 @@ class Naive(ContinualLearningStrategy):
 
         print('Training Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
 
-    def eval(self,eval_loader: DataLoader) -> None:
+    def eval(self,eval_loader: DataLoader,log_list:List[str]=None) -> None:
         self.model.train(False)
         total_loss = 0.0
         correct_predictions = 0
@@ -57,6 +60,7 @@ class Naive(ContinualLearningStrategy):
             correct_predictions += torch.sum(preds == labels.data).item()
         epoch_loss = total_loss / len(eval_loader.dataset)
         epoch_acc = correct_predictions / len(eval_loader.dataset)
-
+        if log_list is not None:
+            log_list.append(epoch_acc)
         print('Validation Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
 
