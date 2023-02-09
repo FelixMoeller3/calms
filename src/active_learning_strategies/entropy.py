@@ -3,12 +3,12 @@ import torch
 import numpy as np
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
-#custom
+import torch.nn as nn
 from .strategy import Strategy
 from data.sampler import SubsetSequentialSampler
 
 class Entropy(Strategy):
-    def __init__(self, model, data_unlabeled, NO_CLASSES, test_loader, cfgs, device):
+    def __init__(self, model: nn.Module, data_unlabeled, NO_CLASSES: int, test_loader: DataLoader, cfgs, device):
         super(Entropy, self).__init__(model, data_unlabeled, NO_CLASSES, test_loader, cfgs, device)
 
     def query(self):
@@ -21,7 +21,7 @@ class Entropy(Strategy):
         arg = np.argsort(U)
         return arg
 
-    def get_predict_prob(self, unlabeled_loader):
+    def get_predict_prob(self, unlabeled_loader: DataLoader):
         self.model['backbone'].eval()
         with torch.cuda.device(self.device):
             predic_probs = torch.tensor([]).cuda()

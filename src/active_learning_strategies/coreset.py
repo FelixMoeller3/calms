@@ -1,14 +1,14 @@
 import random
 import numpy as np
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader,Dataset
 import torch
-#custom
+import torch.nn as nn
 from .strategy import Strategy
 from data.sampler import SubsetSequentialSampler
 from .kCenterGreedy import kCenterGreedy
 
 class CoreSet(Strategy):
-    def __init__(self, model, data_unlabeled, NO_CLASSES, test_loader, cfgs, device):
+    def __init__(self, model: nn.Module, data_unlabeled: Dataset, NO_CLASSES: int, test_loader: DataLoader, cfgs, device):
         super(CoreSet, self).__init__(model, data_unlabeled, NO_CLASSES, test_loader, cfgs, device)
 
     def query(self):
@@ -19,7 +19,7 @@ class CoreSet(Strategy):
         arg = self.get_kcg(unlabeled_loader)
         return arg
 
-    def get_kcg(self, unlabeled_loader):
+    def get_kcg(self, unlabeled_loader: DataLoader):
         labeled_data_size = self.BUDGET*self.cycle+self.INIT_BUDGET
         self.model['backbone'].eval()
         with torch.cuda.device(self.device):

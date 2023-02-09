@@ -1,4 +1,5 @@
 import random
+from typing import List
 from torch.utils.data import Sampler
 
 class SubsetSequentialSampler(Sampler):
@@ -18,7 +19,7 @@ class SubsetSequentialSampler(Sampler):
         return len(self.indices)
 
 
-def stratified_sampling(indices, data, n_samples:int = 10, n_classes:int = 10) :
+def stratified_sampling(indices, data, n_samples:int = 10, n_classes:int = 10) -> List[int]:
     """
     Sample data points with evenly distributed classes.
     Args:

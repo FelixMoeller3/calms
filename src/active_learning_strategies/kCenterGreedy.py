@@ -27,6 +27,7 @@ outlier datapoints.  Resulting centers are solution to multiple integer program.
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
+from typing import List
 
 import numpy as np
 from sklearn.metrics import pairwise_distances
@@ -69,7 +70,7 @@ class SamplingMethod(object):
 
 class kCenterGreedy(SamplingMethod):
 
-    def __init__(self, X,  metric='euclidean'):
+    def __init__(self, X,  metric: str='euclidean'):
         self.X = X
         # self.y = y
         self.flat_X = self.flatten_X()
@@ -81,7 +82,7 @@ class kCenterGreedy(SamplingMethod):
         self.n_obs = self.X.shape[0]
         self.already_selected = []
 
-    def update_distances(self, cluster_centers, only_new=True, reset_dist=False):
+    def update_distances(self, cluster_centers: List[int], only_new:bool=True, reset_dist:bool=False) -> None:
         """Update min distances given cluster centers.
         Args:
           cluster_centers: indices of cluster centers
@@ -105,7 +106,7 @@ class kCenterGreedy(SamplingMethod):
           else:
             self.min_distances = np.minimum(self.min_distances, dist)
 
-    def select_batch_(self, already_selected, N, **kwargs):
+    def select_batch_(self, already_selected: List[int], N: int, **kwargs) -> List[int]:
         """
         Diversity promoting active learning method that greedily forms a batch
         to minimize the maximum distance to a cluster center among all unlabeled

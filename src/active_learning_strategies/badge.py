@@ -1,20 +1,21 @@
 import random
+from typing import List
 import torch
 import numpy as np
 from copy import deepcopy
 from scipy import stats
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader,Dataset
 from sklearn.metrics import pairwise_distances
 import torch.nn.functional as F
-#custom
+import torch.nn as nn
 from .strategy import Strategy
 from data.sampler import SubsetSequentialSampler
 
 class Badge(Strategy):
-    def __init__(self, model, data_unlabeled, NO_CLASSES, test_loader, cfgs, device):
+    def __init__(self, model: nn.Module, data_unlabeled: Dataset, NO_CLASSES: int, test_loader: DataLoader, cfgs, device):
         super(Badge, self).__init__(model, data_unlabeled, NO_CLASSES, test_loader, cfgs, device)
 
-    def query(self):
+    def query(self) -> List[int]:
         unlabeled_loader = DataLoader(self.data_unlabeled, batch_size=self.BATCH, 
                                     sampler=SubsetSequentialSampler(self.subset), 
                                     pin_memory=True)
@@ -25,7 +26,7 @@ class Badge(Strategy):
         arg = self.init_centers(gradEmbedding)
         return arg
 
-    def get_grad_embedding(self, unlabeled_loader, len_ulb):
+    def get_grad_embedding(self, unlabeled_loader: DataLoader, len_ulb: int) -> torch.Tensor:
         embDim = self.model['backbone'].get_embedding_dim()
         self.model['backbone'].eval()
         nLab = self.NO_CLASSES
@@ -57,7 +58,7 @@ class Badge(Strategy):
             # print(ind)
             return torch.Tensor(embedding)
 
-    def init_centers(self, X):
+    def init_centers(self, X) -> List[int]:
         ind = np.argmax([np.linalg.norm(s, 2) for s in X])
         mu = [X[ind]]
         indsAll = [ind]
