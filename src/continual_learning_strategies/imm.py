@@ -47,14 +47,19 @@ class IMM(ContinualLearningStrategy):
             Trains the model for num_epoch epochs using the dataloaders 'train' and 'val' in the dataloaders dict
         '''
         start_time = time.time()
+        self._set_model_params()
         for epoch in range(num_epochs):
             print(f"Running epoch {epoch+1}/{num_epochs}")
             self._run_train_epoch(dataloaders['train'])
             self._run_val_epoch(dataloaders['val'])
-        self._merge_models(dataloaders['train'].dataset)
         self._save_model_params()
+        self._merge_models(dataloaders['train'].dataset)
         time_elapsed = time.time() - start_time
         print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
+
+    def _set_model_params(self) -> None:
+        for name,param in self.model.named_parameters():
+            param.data = self.prev_param_list[-1][name]
 
     def _run_train_epoch(self,dataloader: DataLoader) -> None:
         '''
@@ -123,6 +128,9 @@ class IMM(ContinualLearningStrategy):
                     new_model_weights[name] += alphas[i] * weights[name]
 
         else:
+            '''
+                TODO: The numbers seem odd for mode-IMM. Check if calculation works 
+            '''
             self._calc_fisher(train_dataset,sample_size)
             sigma = self._calc_sigma()
             for i,(weights,fisher) in enumerate(zip(self.prev_param_list,self.prev_fishers)):

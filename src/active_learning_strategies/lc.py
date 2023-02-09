@@ -3,12 +3,16 @@ import torch
 import numpy as np
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
-#custom
+import torch.nn as nn
 from .strategy import Strategy
 from data.sampler import SubsetSequentialSampler
 
 class LC(Strategy):
-    def __init__(self, model, data_unlabeled, NO_CLASSES, test_loader, cfgs, device):
+    '''
+        Implements the 'least confident' strategy where the data that the model is least confident predicting
+        is queried next.
+    '''
+    def __init__(self, model: nn.Module, data_unlabeled, NO_CLASSES:int, test_loader: DataLoader, cfgs, device):
         super(LC, self).__init__(model, data_unlabeled, NO_CLASSES, test_loader, cfgs, device)
 
     def query(self):

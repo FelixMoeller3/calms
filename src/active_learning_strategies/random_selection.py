@@ -1,9 +1,14 @@
 from .strategy import Strategy
 import random
 import numpy as np
+import torch.nn as nn
+from torch.utils.data import DataLoader
 
 class RandomSelection(Strategy):
-    def __init__(self, model, data_unlabeled, NO_CLASSES, test_loader, cfgs, device):
+    '''
+        Random selection strategy
+    '''
+    def __init__(self, model: nn.Module, data_unlabeled, NO_CLASSES: int, test_loader: DataLoader, cfgs, device):
         super(RandomSelection, self).__init__(model, data_unlabeled, NO_CLASSES, test_loader, cfgs, device)
 
     def query(self):
