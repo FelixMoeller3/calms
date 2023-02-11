@@ -1,3 +1,4 @@
+from typing import List
 import numpy as np
 import torch.nn as nn
 from torch.utils.data import DataLoader
@@ -31,7 +32,7 @@ class Strategy:
     def seed_random_init_set(self, init_set_seed):
         self.init_set_seed = init_set_seed
     
-    def feed_current_state(self, cycle, subset, labeled_set):
+    def feed_current_state(self, cycle:int, subset:List[int], labeled_set):
         self.subset = subset
         self.labeled_set = labeled_set
         self.cycle = cycle

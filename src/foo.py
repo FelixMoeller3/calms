@@ -1,4 +1,4 @@
-from models.test_model import testNN
+from models.test_model import testNN,testConv
 import continual_learning_strategies as cl_strat
 import active_learning_strategies as al_strat
 from torch.optim import SGD
@@ -7,6 +7,22 @@ from torchvision import datasets, transforms
 from torch.utils.data import DataLoader,random_split,Subset
 import random
 from datetime import datetime
+
+num_cycles = 10
+init_budget = 5000
+cycle_budget = 1000
+batch_size = 100
+dataset = "MNIST"
+
+'''
+fashion_mnist_train = datasets.FashionMNIST('./data', train=True,download=True, transform=transforms.Compose([
+                       transforms.ToTensor()
+                   ]))
+
+fashion_mnist_test = datasets.MNIST('./data', train=False,download=True, transform=transforms.Compose([
+                       transforms.ToTensor()
+                   ]))
+'''
 
 mnist_train = datasets.MNIST('./data', train=True,download=True, transform=transforms.Compose([
                        transforms.ToTensor(),
@@ -20,66 +36,40 @@ mnist_test = datasets.MNIST('./data', train=False,download=True, transform=trans
 test_loader = DataLoader(mnist_test,100,shuffle=True)
 
 model = testNN(28*28,1,400,0.2,0.5,10)
-optim = SGD(model.parameters(),lr=0.01)
+#model = testConv(1,10)
+optim = SGD(model.parameters(),lr=0.0035)
 #cl_strategy = cl_strat.ElasticWeightConsolidation(model,optim,nn.CrossEntropyLoss(),1.0)
 continual_learning_strategy = "ALASSO"
-cl_strategy = cl_strat.Alasso(model,optim,nn.CrossEntropyLoss(),1.0,0.7,1.5,0.7)
+cl_strategy = cl_strat.Alasso(model,optim,nn.CrossEntropyLoss(),0.5,0.7,1.5,0.7)
 active_learning_strategy = "LC"
-al_strategy = al_strat.LC(model,mnist_train,10,test_loader,32,100,100,None)
+al_strategy = al_strat.LC(model,mnist_train,10,test_loader,batch_size,cycle_budget,init_budget,None)
 loaders_dict = {'train': None, 'val': test_loader}
-num_cycles = 10
 
+unlabeled_set = [i for i in range(len(mnist_train))]
 score_list = []
-first_set = []
-for i in range(5000):
-    first_set.append(random.randint(0,len(mnist_train)-1))
-training_set = Subset(mnist_train,first_set)
-loaders_dict['train'] = DataLoader(training_set,100,shuffle=True)
+labeled_set = []
+for i in range(init_budget):
+    labeled_set.append(random.randint(0,len(mnist_train)-1))
+training_set = Subset(mnist_train,labeled_set)
+loaders_dict['train'] = DataLoader(training_set,batch_size,shuffle=True)
 cl_strategy.train(loaders_dict,5,score_list)
+unlabeled_set = [i for i in unlabeled_set if i not in labeled_set]
 
 for i in range(num_cycles):
+    al_strategy.feed_current_state(i,unlabeled_set,labeled_set)
     print(f'Running cycle {i+1}/{num_cycles}')
     training_examples = al_strategy.query()
+    labeled_set += training_examples
+    unlabeled_set = [i for i in unlabeled_set if i not in training_examples]
     training_set = Subset(mnist_train,training_examples)
-    loaders_dict['train'] = DataLoader(training_set,100,shuffle=True)
+    loaders_dict['train'] = DataLoader(training_set,batch_size,shuffle=True)
     cl_strategy.train(loaders_dict,5,score_list)
 
 with open("data/experiments/results.txt",'a') as f:
     f.write(f'Run completed at {datetime.today().strftime("%Y-%m-%d %H:%M:%S")}\n'
             f'Continual Learning Strategy: {continual_learning_strategy}\n'
             f'Active Learning Strategy: {active_learning_strategy}\n'
+            f'Dataset: {dataset}\n'
             f'Accuracy results at the end of each cycle: {score_list}\n'
+            f'{"-"* 70}'+ "\n"
         )
-'''
-indices_first_train = []
-indices_second_train = []
-all_digits = [[0,1],[2,3],[4,5],[6,7],[8,9]]
-train_datasets = []
-test_datasets = []
-indices = [[],[],[],[],[]]
-
-for i in range(len(mnist_train)):
-    cur_target = mnist_train.targets[i]
-    indices[cur_target//2].append(i)
-for i in range(len(indices)):
-    train_datasets.append(Subset(mnist_train,indices[i]))
-indices = [[],[],[],[],[]]
-for i in range(len(mnist_test)):
-    cur_target = mnist_test.targets[i]
-    indices[cur_target//2].append(i)
-for i in range(len(indices)):
-    test_datasets.append(Subset(mnist_test,indices[i]))
-    
-
-#for i in range(len(train_datasets)):
-#    ewc_strat.train(train_datasets[i],test_datasets[i],5)
-for i in range(len(benchmark.train_stream)):
-    cur_exp = benchmark.train_stream[i]
-    print("Start training on experience ", cur_exp.current_experience)
-    strat.train_mb_size = 100
-    strat.eval_mb_size = 100
-    strat.train(cur_exp)
-    print("End training on experience", cur_exp.current_experience)
-    print("Computing accuracy on the test set")
-    strat.eval(benchmark.test_stream[:])
-'''

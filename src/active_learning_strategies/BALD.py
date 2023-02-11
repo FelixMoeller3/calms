@@ -51,7 +51,7 @@ class BALD(Strategy):
         F_X =np.divide(all_entropy_dropout, self.dropout_iter)
         U_X = G_X - F_X
         arg = np.argsort(U_X)
-        return arg
+        return arg[:min(self.BUDGET,len(arg))]
 
     def get_predict_prob(self, unlabeled_loader: DataLoader) -> torch.Tensor:
         self.model.eval()
@@ -61,11 +61,11 @@ class BALD(Strategy):
         predic_probs = torch.tensor([])
 
         with torch.no_grad():
-            for inputs, _, _ in unlabeled_loader:
+            for inputs, _ in unlabeled_loader:
                 #TODO: let this run on cuda when running on cluster
                 #with torch.cuda.device(self.device):
                 #    inputs = inputs.cuda()
-                predict, _, _ = self.model(inputs)
-                prob = F.softmax(predict, dim=1)
+                outputs = self.model(inputs)
+                prob = F.softmax(outputs, dim=1)
                 predic_probs = torch.cat((predic_probs, prob), 0)
         return predic_probs

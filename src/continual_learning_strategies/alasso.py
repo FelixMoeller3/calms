@@ -9,7 +9,7 @@ from tqdm import tqdm
 class Alasso(ContinualLearningStrategy):
 
     def __init__(self,model:nn.Module,optim: torch.optim.Optimizer,crit: nn.CrossEntropyLoss,
-    weight:float=1.0,weight_prime:float=1.0,a:float=1.0,a_prime:float=1.0,epsilon:float=1e-8):
+    weight:float=1.0,weight_prime:float=1.0,a:float=1.0,a_prime:float=1.0,epsilon:float=1e-4):
         #TODO: Issue warning when parameter a is <=1 
         self.model = model
         self.crit = crit
@@ -69,11 +69,7 @@ class Alasso(ContinualLearningStrategy):
                 param < self.weights[name],
                 torch.fill(torch.zeros_like(self.omegas[name]),-1.0),
                 torch.ones_like(self.omegas[name])
-            ) * torch.maximum(
-                (self.grads2[name] - self.weight_prime * self.asymmetric_loss_func(name,param,self.a_prime))/
-                (torch.abs(self.weights[name]-param)**2 + self.epsilon),
-                torch.abs(self.weights[name])
-            )
+            ) * (self.grads2[name] - self.weight_prime * self.asymmetric_loss_func(name,param,self.a_prime))/((self.weights[name]-param)*(self.weights[name]-param) + self.epsilon)
 
     def asymmetric_loss_func(self,name:str,param:torch.Tensor,a:float) -> torch.Tensor:
         '''
@@ -81,19 +77,19 @@ class Alasso(ContinualLearningStrategy):
             :param name: the name of the current parameter of the model. Used to access the variable dicts.
             :param param: the values of the current parameter.
             :param a: the a value to use. See section 'parameter decoupling' in the paper for details
-            :param epsilon: the epsilon value to use. See section 'parameter decoupling' in the paper for details
+            :param epsilon: the epsilon value to use. Used so that the loss is overapproximated even if omega is 0
         '''
         return torch.where(
                 self.omegas[name] > 0.0,
                 torch.where(
                     param < self.weights[name],
-                    self.omegas[name] * (torch.abs(param - self.weights[name])**2 + self.epsilon),
-                    (self.omegas[name] * a + self.epsilon) * (torch.abs(param - self.weights[name])**2 + self.epsilon)
+                    self.omegas[name] * ((param - self.weights[name])*(param - self.weights[name])),
+                    (self.omegas[name] * a + self.epsilon) * ((param - self.weights[name])*(param - self.weights[name]))
                 ),
                 torch.where(
                     param < self.weights[name],
-                    (-1.0 * self.omegas[name] * a + self.epsilon) * (torch.abs(param - self.weights[name])**2 + self.epsilon),
-                    -1.0 * self.omegas[name] * (torch.abs(param - self.weights[name])**2 + self.epsilon)
+                    (-1.0 * self.omegas[name] * a + self.epsilon) * ((param - self.weights[name])*(param - self.weights[name])),
+                    -1.0 * self.omegas[name] * ((param - self.weights[name])*(param - self.weights[name]))
                 )
             )
 

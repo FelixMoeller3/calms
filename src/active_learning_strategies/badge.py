@@ -29,7 +29,7 @@ class Badge(Strategy):
         print('features shape: {}'.format(gradEmbedding.shape))
         print(self.BUDGET)
         arg = self.init_centers(gradEmbedding)
-        return arg
+        return arg[:min(self.BUDGET,len(arg))]
 
     def get_grad_embedding(self, unlabeled_loader: DataLoader, len_ulb: int) -> torch.Tensor:
         embDim = self.model.get_embedding_dim()
@@ -39,7 +39,7 @@ class Badge(Strategy):
         ind = 0
         print('embedding shape {}'.format(embedding.shape))
         with torch.no_grad():
-            for x, y, idxs in unlabeled_loader:
+            for x, y in unlabeled_loader:
                 # print(idxs)
                 #TODO: let this run on cuda when running on cluster
                 #with torch.cuda.device(self.device):

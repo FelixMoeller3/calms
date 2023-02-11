@@ -18,7 +18,7 @@ class LC(Strategy):
 
     def query(self) -> np.ndarray:
         unlabeled_loader = DataLoader(self.data_unlabeled, batch_size=self.BATCH, 
-                                    #sampler=SubsetSequentialSampler(self.subset), 
+                                    sampler=SubsetSequentialSampler(self.subset), 
                                     pin_memory=True)
         probs = self.get_predict_prob(unlabeled_loader)
         arg = np.argsort(probs)

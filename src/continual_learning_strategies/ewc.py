@@ -1,3 +1,4 @@
+from typing import List
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader,Dataset
@@ -35,7 +36,7 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
         for name,param in self.model.named_parameters():
             self.prev_params[name] = param.detach().clone()
 
-    def train(self, dataloaders: dict[str,DataLoader], num_epochs: int):
+    def train(self, dataloaders: dict[str,DataLoader], num_epochs: int,result_list:List[float]=[]):
         '''
             Trains the model for num_epoch epochs using the dataloaders 'train' and 'val' in the dataloaders dict
         '''
@@ -43,7 +44,8 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
         for epoch in range(num_epochs):
             print(f"Running epoch {epoch+1}/{num_epochs}")
             self._run_train_epoch(dataloaders['train'])
-            self._run_val_epoch(dataloaders['val'])
+            log_list = None if epoch < num_epochs-1 else result_list
+            self._run_val_epoch(dataloaders['val'],log_list)
         self._save_model_params()
         self._update_fisher_params(dataloaders['train'].dataset,0.05)
         time_elapsed = time.time() - start_time
@@ -75,7 +77,7 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
 
         print('Training Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
 
-    def _run_val_epoch(self,dataloader: DataLoader):
+    def _run_val_epoch(self,dataloader: DataLoader,log_list:List[float]=None):
         '''
             Runs one validation epoch using the dataloader which contains the validation data. 
         '''
@@ -93,7 +95,8 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
 
         epoch_loss = total_loss / len(dataloader.dataset)
         epoch_acc = correct_predictions / len(dataloader.dataset)
-        
+        if log_list is not None:
+            log_list.append(epoch_acc)
         print('Validation Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
 
 

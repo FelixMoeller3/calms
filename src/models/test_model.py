@@ -48,7 +48,7 @@ class testNN(nn.Module):
         return self.fc3.in_features
 
 class testConv(nn.Module):
-    def __init__(self, numChannels, classes):
+    def __init__(self, numChannels:int, classes:int):
         super(testConv,self).__init__()
         self.layers_before = nn.ModuleList([
             nn.Conv2d(in_channels=numChannels,out_channels=20,kernel_size=(5,5)),
