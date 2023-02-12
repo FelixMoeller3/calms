@@ -22,11 +22,12 @@ and determines which data should be queried next. The second category is
 machine learning technique which aims to make a given machine learning model learn new tasks
 without forgetting the knowledge of previous tasks. 
 The third category is \href{sec:Related_work:Model_Stealing}{Model Stealing}. Model Stealing is the
-processing of strategically querying a third-party machine learning model (also referred to as target model)
+process of strategically querying a third-party machine learning model (also referred to as target model)
 to train a local model (also referred to as substitute model) which is supposed to approximate the target model as
 good as possible.
 
 % use Settles as reference for the general introduction
+% Mention that active learning is a specific form of semi-supervised learning (according to Mundt et al.)
 \section{Active Learning}
 \label{sec:Related_work:Active_Learning}
 \subsection{General Introduction}
@@ -44,13 +45,30 @@ is assigning labels to them. Active Learning aims to overcome this issue produci
 % the different approaches used in the experiments (LC, CoreSet, BALD, Badge)
 
 % Use parisi et al. as reference for the general introduction
-% ALASSO paper also give good introduction into approaches and structures them
+% Synaptic Intelligence paper also gives good introduction into approaches and structures them
 % into three categories
+% Also mention the difference between task-incremental, class-incremental and domain-incremental learning
 \section{Continual Learning}
 \label{sec:Related_work:Continual_Learning}
-
 \subsection{General Introduction}
+Artificial Neural Networks suffer from a problem called \enquote{Catastrophic Forgetting} \cite{mccloskey1989catastrophic}. Catastrophic Forgetting
+is the phenomenon that the performance of a neural network previously trained on task $t_{n-k}$ severely decreases when the same neural network is later
+trained on task $t_n (k>0)$. More briefly, neural networks struggle to retain the knowledge of previous tasks when learning new tasks. The problem of Catastrophic Forgetting
+has wide-ranging implications for the use of neural networks because it limits their use to settings where the data at deployment time is distributed identically to the data
+observed at training time. Clearly, this is not the case in most real-world applications. Research in Continual Learning aims to develop mechanisms which alleviate Catastrophic Forgetting.
+The Continual Learning approaches which have been proposed so far can be grouped into three categories according to \cite{mundt2020wholistic} and \cite{zenke2017continual}. Mundt et al. \cite{mundt2020wholistic} propose
+to group Continual Learning approaches into \textbf{regularization}, \textbf{rehearsal} and \textbf{architectural} approaches whereas Zenke et al. \cite{zenke2017continual} group Continual Learning approaches into \textbf{architectural},
+\textbf{functional} and \textbf{structural} approaches. In the following, we will stick to the categorization proposed by Mundt et al. because it is broader and fully encompasses the categorization by Zenke et al.
+\subsubsection{Regularization}
+Regularization-based approaches to Continual Learning aim to prevent the forgetting of previous tasks by adding a regularization term to the model's loss function. The regularization term is used as a proxy for how much the
+performance of the model on previous tasks will decrease, i.e. a high regularization term indicates that the model will perform poorly on the old tasks with the current weights and a low regularization term indicates that
+the model has not lost much knowledge of the old tasks. The way the regularization term is computed can further be divided into two groups. There are \textbf{structural} approaches which regularize based on weight changes
+to the model and there are \textbf{functional} approaches which regularize based on the output of the model. Notable examples of structural approaches include Elastic Weight Consolidation (EWC) \cite{mccloskey2016overcoming},
+Memory Aware Synapses (MAS) \cite{aljundi2018memory}, Incremental Moment Matching (IMM) \cite{lee2017overcoming} as well as Asymmetric Loss Approximation by Single-Side Overestimation (ALASSO) \cite{park2019continual} which
+is an extension of Synaptic Intelligence (SI) \cite{zenke2017continual}. All the structural regularization approaches will be covered in more detail in the section on
+\href{sec:Related_work:Continual_Learning:Experiments}{the continual learning approaches used in the experiments}. Among the functional approaches 
 \subsection{Continual Learning Approaches used in the Experiments}
+\label{sec:Related_work:Continual_Learning:Experiments}
 \subsubsection{EWC}
 \subsubsection{MAS}
 \subsubsection{ALASSO}
