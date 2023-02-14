@@ -63,10 +63,14 @@ to group Continual Learning approaches into \textbf{regularization}, \textbf{reh
 Regularization-based approaches to Continual Learning aim to prevent the forgetting of previous tasks by adding a regularization term to the model's loss function. The regularization term is used as a proxy for how much the
 performance of the model on previous tasks will decrease, i.e. a high regularization term indicates that the model will perform poorly on the old tasks with the current weights and a low regularization term indicates that
 the model has not lost much knowledge of the old tasks. The way the regularization term is computed can further be divided into two groups. There are \textbf{structural} approaches which regularize based on weight changes
-to the model and there are \textbf{functional} approaches which regularize based on the output of the model. Notable examples of structural approaches include Elastic Weight Consolidation (EWC) \cite{mccloskey2016overcoming},
+to the model and there are \textbf{functional} approaches which regularize based on the output of the model. Notable examples of structural approaches include Elastic Weight Consolidation (EWC) \cite{kirkpatrick2017overcoming},
 Memory Aware Synapses (MAS) \cite{aljundi2018memory}, Incremental Moment Matching (IMM) \cite{lee2017overcoming} as well as Asymmetric Loss Approximation by Single-Side Overestimation (ALASSO) \cite{park2019continual} which
 is an extension of Synaptic Intelligence (SI) \cite{zenke2017continual}. All the structural regularization approaches will be covered in more detail in the section on
-\href{sec:Related_work:Continual_Learning:Experiments}{the continual learning approaches used in the experiments}. Among the functional approaches 
+\href{sec:Related_work:Continual_Learning:Experiments}{the continual learning approaches used in the experiments}. \\
+Functional regularization approaches are inspired by knowledge distillation \cite{hinton2015distilling}. They add a distillation
+loss to the objective function which is computed based on the prediction of a data sample stored for future use. These data samples are called soft targets. Li et al. \cite{li2017learning} compute the distillation loss by using the output of
+the newly arrived task given by the model trained on the old tasks. The distillation loss they introduce aims to retain the prediction of the old model on the new task even if the prediction itself may be inaccurate. The approach of Rannen et al.
+\cite{rannen2017encoder}, called Encoder Based Lifelong Learning (EBLL) is based on the approach of Li et al., however in EBLL the distillation loss is computed based on autoencoder reconstructions of old tasks.
 \subsection{Continual Learning Approaches used in the Experiments}
 \label{sec:Related_work:Continual_Learning:Experiments}
 \subsubsection{EWC}
