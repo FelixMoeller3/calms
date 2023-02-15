@@ -20,9 +20,7 @@ class IMM(ContinualLearningStrategy):
              If no list is provided the all previous tasks will be weighted equally.
             :param mean: Whether to use mean-IMM or mode-IMM
         '''
-        self.model = model
-        self.optimizer = optim
-        self.crit = crit
+        super(IMM,self).__init__(model,optim,crit)
         assert not alphas or abs(sum(alphas)-1.0) < 1e-8
         self.alphas = alphas
         self.weight = weight

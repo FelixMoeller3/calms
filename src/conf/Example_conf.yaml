@@ -1,0 +1,33 @@
+SUBSTITUTE_MODEL: 
+  NAME: 'Resnet18' # Possible values: Resnet18,Resnext50
+  DATASET: 'MNIST'
+  AL_METHOD: 
+    NAME: 'Badge' # Possible values: LC,BALD,Badge,CoreSet
+    INIT_BUDGET: 1000
+    BUDGET: 1000
+  CL_METHOD: 
+    NAME: 'Alasso' # Possible values : Alasso,EWC,MAS,IMM
+    WEIGHT: 1.0
+    WEIGHT_PRIME: 0.7
+    A: 1.5
+    A_PRIME: 0.75
+    EPSILON: 1e-4
+    OPTIMIZER:
+      NAME: 'SGD'
+      LR: 0.001
+      MOMENTUM: 0.9
+      WDECAY: 5e-4
+      MILESTONES: [160,240]
+BATCH_SIZE: 128 
+CYCLES: 10
+RESULTS_FOLDER: './experiments/example'
+TARGET_MODEL:
+  MODEL: 'Resnet18'
+  DATASET: 'MNIST'
+  EPOCHS : 50
+  OPTIMIZER:
+    NAME: 'SGD'
+    LR: 0.001
+    MOMENTUM: 0.9
+    WDECAY: 5e-4
+    MILESTONES: [160,240]

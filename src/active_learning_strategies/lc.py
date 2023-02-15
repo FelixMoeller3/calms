@@ -12,9 +12,9 @@ class LC(Strategy):
         Implements the 'least confident' strategy where the data that the model is least confident predicting
         is queried next, first proposed in the following paper: https://dl.acm.org/doi/pdf/10.1145/219587.219592
     '''
-    def __init__(self, model: nn.Module, data_unlabeled: Dataset, NO_CLASSES:int, test_loader: DataLoader,
-                batch:int,budget:int, init_budget:int, device):
-        super(LC, self).__init__(model, data_unlabeled, NO_CLASSES,test_loader,batch,budget,init_budget,device)
+    def __init__(self, model: nn.Module, data_unlabeled: Dataset, NO_CLASSES:int,batch:int,
+        budget:int, init_budget:int, device):
+        super(LC, self).__init__(model, data_unlabeled, NO_CLASSES,batch,budget,init_budget,device)
 
     def query(self) -> np.ndarray:
         unlabeled_loader = DataLoader(self.data_unlabeled, batch_size=self.BATCH, 

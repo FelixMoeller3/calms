@@ -13,16 +13,14 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
     '''
         Implementation of Elastic Weight Consolidation (EWC) as proposed in the following paper:
         https://www.pnas.org/doi/epdf/10.1073/pnas.1611835114
-        The code is heavily based on the following implementation:
+        The code is heavily based on the following implementations:
         https://github.com/shivamsaboo17/Overcoming-Catastrophic-forgetting-in-Neural-Networks and
         https://github.com/thuyngch/Overcoming-Catastrophic-Forgetting
     '''
 
     def __init__(self,model:nn.Module,optim: torch.optim.Optimizer,crit: nn.CrossEntropyLoss,weight:float=1.0):
-        self.model = model
+        super(ElasticWeightConsolidation,self).__init__(model,optim,crit)
         self.weight = weight
-        self.crit = crit
-        self.optimizer = optim
         self.prev_params = {}
         self._save_model_params()
         self.fisher = {}

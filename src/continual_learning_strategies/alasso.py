@@ -7,13 +7,26 @@ import time
 from tqdm import tqdm
 
 class Alasso(ContinualLearningStrategy):
+    '''
+        Implementation of Asymmetric Loss Approximation by Single-side Overestimation (ALASSO) proposed in the following paper:
+        https://openaccess.thecvf.com/content_ICCV_2019/papers/Park_Continual_Learning_by_Asymmetric_Loss_Approximation_With_Single-Side_Overestimation_ICCV_2019_paper.pdf
+        The implementation is based on the authors' implementation which can be found at: https://github.com/dmpark04/alasso
+    '''
 
     def __init__(self,model:nn.Module,optim: torch.optim.Optimizer,crit: nn.CrossEntropyLoss,
     weight:float=1.0,weight_prime:float=1.0,a:float=1.0,a_prime:float=1.0,epsilon:float=1e-4):
+        '''
+            :param model: The model that should be trained using continual learning.
+            :param optim: The optimizer to be used during training. Beware: When using Alasso, one should set a rather low learning rate as Alasso easily overshoots when using a medium to high learning rate.
+            :param crit: The criterion function to use. Usually, this is Cross-Entropy loss.
+            :param weight: The weight that should be used to weigh the surrogate loss. See the paper for details (it is called c there).
+            :param weight_prime: This corresponds to c' in the paper. See section 4.4 (Parameter decoupling) for details.
+            :param a: The parameter a controls the overestimation of the loss. See equation (5) of the paper for details.
+            :param a_prime: This corresponds to a' in the paper. See section 4.4 (Parameter decoupling) for details.
+            :param epsilon: This parameter is added to the denominator in equation (7) to make sure we are not dividing by zero. It should always be > 0.
+        '''
         #TODO: Issue warning when parameter a is <=1 
-        self.model = model
-        self.crit = crit
-        self.optimizer = optim
+        super(Alasso,self).__init__(model,optim,crit)
         self.weight = weight
         self.weight_prime = weight_prime
         self.a = a

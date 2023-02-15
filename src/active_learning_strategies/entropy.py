@@ -7,9 +7,9 @@ from .strategy import Strategy
 from data.sampler import SubsetSequentialSampler
 
 class Entropy(Strategy):
-    def __init__(self, model: nn.Module, data_unlabeled, NO_CLASSES: int, test_loader: DataLoader, 
+    def __init__(self, model: nn.Module, data_unlabeled, NO_CLASSES: int, 
         batch:int,budget:int, init_budget:int, device):
-        super(Entropy, self).__init__(model, data_unlabeled, NO_CLASSES, test_loader,batch,budget,init_budget,device)
+        super(Entropy, self).__init__(model, data_unlabeled, NO_CLASSES,batch,budget,init_budget,device)
 
     def query(self):
         unlabeled_loader = DataLoader(self.data_unlabeled, batch_size=self.BATCH, 

@@ -12,9 +12,9 @@ class CoreSet(Strategy):
         Implements the strategy CoreSet as proposed
         in the following paper: https://arxiv.org/pdf/1708.00489.pdf),
     '''
-    def __init__(self, model: nn.Module, data_unlabeled: Dataset, NO_CLASSES: int, test_loader: DataLoader,
+    def __init__(self, model: nn.Module, data_unlabeled: Dataset, NO_CLASSES: int,
         batch:int,budget:int, init_budget:int, device):
-        super(CoreSet, self).__init__(model, data_unlabeled, NO_CLASSES, test_loader,batch,budget,init_budget,device)
+        super(CoreSet, self).__init__(model, data_unlabeled, NO_CLASSES,batch,budget,init_budget,device)
 
     def query(self):
         unlabeled_loader = DataLoader(self.data_unlabeled, batch_size=self.BATCH, 

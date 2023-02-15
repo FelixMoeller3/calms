@@ -31,10 +31,8 @@ class MAS(ContinualLearningStrategy):
         None
 
         '''
-        self.model = model
-        self.optimizer = optimizer
+        super(MAS,self).__init__(model,optim,criterion)
         self.weight = weight
-        self.criterion = criterion
         self.freeze_layers = freeze_layers
         # The total number of samples that have been classified before training the current task
         self.n_samples_prev = 0

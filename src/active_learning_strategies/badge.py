@@ -16,9 +16,9 @@ class Badge(Strategy):
         Implements the strategy Batch Active learning by Diverse Gradient Embeddings (BADGE) as proposed
         in the following paper: https://arxiv.org/pdf/1906.03671.pdf
     '''
-    def __init__(self, model: nn.Module, data_unlabeled: Dataset, NO_CLASSES: int, test_loader: DataLoader,
+    def __init__(self, model: nn.Module, data_unlabeled: Dataset, NO_CLASSES: int,
         batch:int,budget:int, init_budget:int, device):
-        super(Badge, self).__init__(model, data_unlabeled, NO_CLASSES,test_loader,batch,budget,init_budget, device)
+        super(Badge, self).__init__(model, data_unlabeled, NO_CLASSES,batch,budget,init_budget, device)
 
     def query(self) -> List[int]:
         unlabeled_loader = DataLoader(self.data_unlabeled, batch_size=self.BATCH, 

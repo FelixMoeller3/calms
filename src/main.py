@@ -1,9 +1,8 @@
 #import argparse
 import torch
 import numpy as np
+from utils import config
 
 #parser = argparse.ArgumentParser(description='Run experiment for model stealing')
 
-a = torch.tensor([[1,2,3]])
-
-print(torch.max(a,1))
+config.parse_config('conf/Example_conf.yaml')

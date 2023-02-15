@@ -10,7 +10,7 @@ class Strategy:
     '''
         Base class for continual learning strategies
     '''
-    def __init__(self, model:nn.Module, data_unlabeled, NO_CLASSES:int, test_loader: DataLoader,
+    def __init__(self, model:nn.Module, data_unlabeled, NO_CLASSES:int,
      batch:int,budget:int, init_budget:int, device):
         self.model = model
         self.data_unlabeled = data_unlabeled
@@ -18,7 +18,6 @@ class Strategy:
         self.labeled_set = []
         self.cycle = 0
         self.NO_CLASSES = NO_CLASSES
-        self.test_loader = test_loader
         self.device = device
         self.init_set_seed = 0
 
