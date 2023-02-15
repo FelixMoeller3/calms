@@ -1,6 +1,8 @@
 import torch.nn as nn
 from functools import reduce
 from torch import flatten
+import torch
+import torch.nn.functional as F
 
 class testNN(nn.Module):
     def __init__(self, input_size, hidden_num, hidden_size, input_dropout, hidden_dropout, num_classes):
@@ -44,6 +46,15 @@ class testNN(nn.Module):
         return out
         #return reduce(lambda x, l: l(x), self.layers,x.view(-1,self.input_size))
 
+    def forward_embedding(self, x:torch.Tensor) -> tuple[torch.Tensor,torch.Tensor]:
+        out = x.view(-1,self.input_size)
+        out = self.fc1(out)
+        out = self.r1(out)
+        out = self.fc2(out)
+        out = self.r2(out)
+        emb = out.view(out.size(0),-1)
+        return self.fc3(out),emb
+
     def get_embedding_dim(self) -> int:
         return self.fc3.in_features
 
@@ -61,13 +72,23 @@ class testConv(nn.Module):
         ])
         self.layers_after = nn.ModuleList([
             nn.Linear(in_features=800,out_features=500),
-            nn.ReLU(),
-
-            nn.Linear(in_features=500,out_features=classes),
-            nn.LogSoftmax(dim=1)
+            nn.ReLU()
         ])
+        self.final = nn.Linear(in_features=500,out_features=classes)
 
-    def forward(self, x):
+    def forward(self, x:torch.Tensor):
         before_flatten = reduce(lambda x,l: l(x),self.layers_before,x)
         flattened = flatten(before_flatten,1)
-        return reduce(lambda x,l: l(x),self.layers_after,flattened)
+        before_final = reduce(lambda x,l: l(x),self.layers_after,flattened)
+        return self.final(before_final)
+
+    def forward_embedding(self, x:torch.Tensor) -> tuple[torch.Tensor,torch.Tensor]:
+        before_flatten = reduce(lambda x,l: l(x),self.layers_before,x)
+        flattened = flatten(before_flatten,1)
+        before_final = reduce(lambda x,l: l(x),self.layers_after,flattened)
+        emb = before_final.view(before_final.size(0),-1)
+        return self.final(before_final),emb
+
+    def get_embedding_dim(self) -> int:
+        return self.final.in_features
+

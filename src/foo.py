@@ -4,15 +4,15 @@ import active_learning_strategies as al_strat
 from torch.optim import SGD
 import torch.nn as nn
 from torchvision import datasets, transforms
-from torch.utils.data import DataLoader,random_split,Subset
-import random
-from datetime import datetime
-
+from torch.utils.data import DataLoader
+import model_stealing as ms
 num_cycles = 10
 init_budget = 5000
 cycle_budget = 1000
 batch_size = 100
 dataset = "MNIST"
+continual_learning_strategy = "MAS"
+active_learning_strategy = "Coreset"
 
 '''
 fashion_mnist_train = datasets.FashionMNIST('./data', train=True,download=True, transform=transforms.Compose([
@@ -34,15 +34,18 @@ mnist_test = datasets.MNIST('./data', train=False,download=True, transform=trans
                    ]))
 #train_loader = DataLoader(mnist_train,100,shuffle=True)
 test_loader = DataLoader(mnist_test,100,shuffle=True)
-
-model = testNN(28*28,1,400,0.2,0.5,10)
+train_loader = DataLoader(mnist_train,100,shuffle=True)
+loaders_dict = {'train': train_loader, 'val': test_loader}
+target_model = testConv(1,10)
+substitute_model = testNN(28*28,1,400,0.2,0.5,10)
 #model = testConv(1,10)
-optim = SGD(model.parameters(),lr=0.0035)
-#cl_strategy = cl_strat.ElasticWeightConsolidation(model,optim,nn.CrossEntropyLoss(),1.0)
-continual_learning_strategy = "ALASSO"
-cl_strategy = cl_strat.Alasso(model,optim,nn.CrossEntropyLoss(),0.5,0.7,1.5,0.7)
-active_learning_strategy = "LC"
-al_strategy = al_strat.LC(model,mnist_train,10,test_loader,batch_size,cycle_budget,init_budget,None)
+optim = SGD(substitute_model.parameters(),lr=0.0035)
+cl_strategy = cl_strat.MAS(substitute_model,optim,nn.CrossEntropyLoss(),1.0)
+al_strategy = al_strat.LC(substitute_model,mnist_train,10,test_loader,batch_size,cycle_budget,init_budget,None)
+train_strat = cl_strat.ElasticWeightConsolidation(target_model,SGD(target_model.parameters(),lr=0.01),nn.CrossEntropyLoss(),0.0)
+train_strat.train(loaders_dict,1)
+ms.ModelStealingProcess(target_model,al_strategy,cl_strategy).steal_model(mnist_train,mnist_test,100,10)
+'''
 loaders_dict = {'train': None, 'val': test_loader}
 
 unlabeled_set = [i for i in range(len(mnist_train))]
@@ -73,3 +76,5 @@ with open("data/experiments/results.txt",'a') as f:
             f'Accuracy results at the end of each cycle: {score_list}\n'
             f'{"-"* 70}'+ "\n"
         )
+'''
+

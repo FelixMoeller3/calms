@@ -22,7 +22,7 @@ class CoreSet(Strategy):
                                     pin_memory=True)
 
         arg = self.get_kcg(unlabeled_loader)
-        return arg
+        return arg[:self.BUDGET]
 
     def get_kcg(self, unlabeled_loader: DataLoader):
         labeled_data_size = self.BUDGET*self.cycle+self.INIT_BUDGET
@@ -33,11 +33,11 @@ class CoreSet(Strategy):
         features = torch.tensor([])
 
         with torch.no_grad():
-            for inputs, _, _ in unlabeled_loader:
+            for inputs, _ in unlabeled_loader:
                 #TODO: let this run on cuda when running on cluster
                 #with torch.cuda.device(self.device):
                 #    inputs = inputs.cuda()
-                _, features_batch, _ = self.model(inputs)
+                _, features_batch = self.model.forward_embedding(inputs)
                 features = torch.cat((features, features_batch), 0)
             feat = features.detach().cpu().numpy()
             new_av_idx = np.arange(len(self.subset),(len(self.subset) + labeled_data_size))

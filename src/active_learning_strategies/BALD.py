@@ -51,7 +51,7 @@ class BALD(Strategy):
         F_X =np.divide(all_entropy_dropout, self.dropout_iter)
         U_X = G_X - F_X
         arg = np.argsort(U_X)
-        return arg[:min(self.BUDGET,len(arg))]
+        return arg[:self.BUDGET]
 
     def get_predict_prob(self, unlabeled_loader: DataLoader) -> torch.Tensor:
         self.model.eval()

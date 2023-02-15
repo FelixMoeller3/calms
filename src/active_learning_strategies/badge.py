@@ -29,7 +29,7 @@ class Badge(Strategy):
         print('features shape: {}'.format(gradEmbedding.shape))
         print(self.BUDGET)
         arg = self.init_centers(gradEmbedding)
-        return arg[:min(self.BUDGET,len(arg))]
+        return arg[:self.BUDGET]
 
     def get_grad_embedding(self, unlabeled_loader: DataLoader, len_ulb: int) -> torch.Tensor:
         embDim = self.model.get_embedding_dim()
@@ -45,11 +45,10 @@ class Badge(Strategy):
                 #with torch.cuda.device(self.device):
                 #    x = x.cuda()
                 #    y = y.cuda()
-                scores, features_batch, _ = self.model(x)
+                scores, features_batch = self.model.forward_embedding(x)
                 features_batch = features_batch.data.cpu().numpy()
                 batchProbs = F.softmax(scores, dim=1).data.cpu().numpy()
                 maxInds = np.argmax(batchProbs, 1)
-                print('features:{}, batchProbs: {}'.format(features_batch.shape, batchProbs.shape))
                 for j in range(len(y)):
                     # print(idxs[j],ind)
                     for c in range(nLab):

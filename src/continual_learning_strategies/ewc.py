@@ -112,7 +112,8 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
             cur_index = random.randint(0,len(train_dataset)-1)
             elem, label = train_dataset[cur_index]
             self.optimizer.zero_grad()
-            output = self.model(elem)
+            input = torch.unsqueeze(elem,0)
+            output = self.model(input)
             sm = F.log_softmax(output,dim=1)
             label_tensor = torch.tensor([label],dtype=torch.long)
             loss = F.nll_loss(sm,label_tensor)
