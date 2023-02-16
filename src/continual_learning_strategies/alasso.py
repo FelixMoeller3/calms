@@ -14,24 +14,24 @@ class Alasso(ContinualLearningStrategy):
     '''
 
     def __init__(self,model:nn.Module,optim: torch.optim.Optimizer,crit: nn.CrossEntropyLoss,
-    weight:float=1.0,weight_prime:float=1.0,a:float=1.0,a_prime:float=1.0,epsilon:float=1e-4):
+    WEIGHT:float=1.0,WEIGHT_PRIME:float=1.0,A:float=1.0,A_PRIME:float=1.0,EPSILON:float=1e-4,**kwargs):
         '''
             :param model: The model that should be trained using continual learning.
             :param optim: The optimizer to be used during training. Beware: When using Alasso, one should set a rather low learning rate as Alasso easily overshoots when using a medium to high learning rate.
             :param crit: The criterion function to use. Usually, this is Cross-Entropy loss.
-            :param weight: The weight that should be used to weigh the surrogate loss. See the paper for details (it is called c there).
-            :param weight_prime: This corresponds to c' in the paper. See section 4.4 (Parameter decoupling) for details.
-            :param a: The parameter a controls the overestimation of the loss. See equation (5) of the paper for details.
-            :param a_prime: This corresponds to a' in the paper. See section 4.4 (Parameter decoupling) for details.
-            :param epsilon: This parameter is added to the denominator in equation (7) to make sure we are not dividing by zero. It should always be > 0.
+            :param WEIGHT: The weight that should be used to weigh the surrogate loss. See the paper for details (it is called c there).
+            :param WEIGHT_PRIME: This corresponds to c' in the paper. See section 4.4 (Parameter decoupling) for details.
+            :param A: The parameter a controls the overestimation of the loss. See equation (5) of the paper for details.
+            :param A_PRIME: This corresponds to a' in the paper. See section 4.4 (Parameter decoupling) for details.
+            :param EPSILON: This parameter is added to the denominator in equation (7) to make sure we are not dividing by zero. It should always be > 0.
         '''
         #TODO: Issue warning when parameter a is <=1 
         super(Alasso,self).__init__(model,optim,crit)
-        self.weight = weight
-        self.weight_prime = weight_prime
-        self.a = a
-        self.a_prime = a_prime
-        self.epsilon = epsilon
+        self.weight = WEIGHT
+        self.weight_prime = WEIGHT_PRIME
+        self.a = A
+        self.a_prime = A_PRIME
+        self.epsilon = EPSILON
         # Dict to save previous weights
         self.weights = {}
         self._save_weights()
@@ -158,7 +158,7 @@ class Alasso(ContinualLearningStrategy):
         total_loss = 0.0
         correct_predictions = 0
         for data in tqdm(dataloader):
-            self.optimizer.zero_grad()
+            self.optim.zero_grad()
             self._compute_deltas(compute_diff=False)
             inputs, labels = data
             outputs = self.model(inputs)
@@ -169,7 +169,7 @@ class Alasso(ContinualLearningStrategy):
             #retain_graph = (not last_epoch) or i<num_batches-1
             #start = time.time()
             reg_loss.backward(retain_graph=True)
-            self.optimizer.step()
+            self.optim.step()
             self._compute_deltas()
             self._compute_grads2()
             _, preds = torch.max(outputs.data, 1)

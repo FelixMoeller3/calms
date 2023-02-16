@@ -13,10 +13,10 @@ class BALD(Strategy):
         Implements the strategy Bayesian Active Learning by Disagreement (BALD) as proposed
         in the following paper: https://arxiv.org/pdf/1112.5745.pdf
     '''
-    def __init__(self, model: nn.Module, data_unlabeled: Dataset, NO_CLASSES: int,batch:int,budget:int,
-        init_budget:int, device, dropout_iter:int):
-        super(BALD, self).__init__(model, data_unlabeled,NO_CLASSES,batch,budget,init_budget,device)
-        self.dropout_iter = dropout_iter
+    def __init__(self, model: nn.Module, data_unlabeled: Dataset, NO_CLASSES: int,BATCH:int,BUDGET:int,
+        INIT_BUDGET:int, DROPOUT_ITER:int,device=None,**kwargs):
+        super(BALD, self).__init__(model, data_unlabeled,NO_CLASSES,BATCH,BUDGET,INIT_BUDGET,device)
+        self.dropout_iter = DROPOUT_ITER
 
     def query(self) -> np.ndarray:
         unlabeled_loader = DataLoader(self.data_unlabeled, batch_size=self.BATCH, 

@@ -18,7 +18,7 @@ class MAS(ContinualLearningStrategy):
     '''
 
     def __init__(self,model:nn.Module,optimizer: torch.optim.Optimizer, criterion: torch.nn.CrossEntropyLoss,
-                weight:float=1.0,freeze_layers:List[str]=[],use_gpu:bool=False):
+                WEIGHT:float=1.0,FREEZE_LAYERS:List[str]=[],USE_GPU:bool=False):
         '''
         Initializes the Memory Aware Synapses (MAS) class.
 
@@ -31,9 +31,9 @@ class MAS(ContinualLearningStrategy):
         None
 
         '''
-        super(MAS,self).__init__(model,optim,criterion)
-        self.weight = weight
-        self.freeze_layers = freeze_layers
+        super(MAS,self).__init__(model,optimizer,criterion)
+        self.weight = WEIGHT
+        self.freeze_layers = FREEZE_LAYERS
         # The total number of samples that have been classified before training the current task
         self.n_samples_prev = 0
         self.regularization_params_prev = {}
@@ -42,7 +42,7 @@ class MAS(ContinualLearningStrategy):
         self.regularization_params_cur = {}
         
         self.prev_params = {}
-        self.device = torch.device("cuda:0" if use_gpu and torch.cuda.is_available() else "cpu")
+        self.device = torch.device("cuda:0" if USE_GPU and torch.cuda.is_available() else "cpu")
         self._init_regularization_params()
 
     def _init_regularization_params(self) -> None:
@@ -114,16 +114,16 @@ class MAS(ContinualLearningStrategy):
 
             inputs, labels = data
 
-            self.optimizer.zero_grad()
+            self.optim.zero_grad()
             self.model.zero_grad()
             outputs = self.model(inputs)
             # Stop updating the regularization params during training
             #self._update_reg_params(outputs,labels.size(0))
             _, preds = torch.max(outputs.data, 1)
-            loss = self.criterion(outputs, labels) + self._compute_reg_loss()
+            loss = self.crit(outputs, labels) + self._compute_reg_loss()
 
             loss.backward()
-            self.optimizer.step()
+            self.optim.step()
             total_loss += loss.item()
             correct_predictions += torch.sum(preds == labels.data).item()
         epoch_loss = total_loss / len(dataloader.dataset)
@@ -184,7 +184,7 @@ class MAS(ContinualLearningStrategy):
             self.model.zero_grad()
             outputs = self.model(inputs)
             _, preds = torch.max(outputs.data,1)
-            loss = self.criterion(outputs,labels)
+            loss = self.crit(outputs,labels)
             batch_size = labels.size(0)
             self._update_reg_params(outputs,batch_size)
             total_loss += loss.item()

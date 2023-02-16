@@ -13,7 +13,7 @@ class IMM(ContinualLearningStrategy):
     Implementation of Incremental Moment Matching (IMM) according.
     '''
 
-    def __init__(self, model: nn.Module,optim: torch.optim.Optimizer,crit: nn.CrossEntropyLoss,alphas:List[float]=None,weight:float=1.0,mean:bool=True):
+    def __init__(self, model: nn.Module,optim: torch.optim.Optimizer,crit: nn.CrossEntropyLoss,ALPHAS:List[float]=None,WEIGHT:float=1.0,MEAN:bool=True):
         '''
             :param alphas: List of weights for models of previous tasks,
              i.e. how strongly previous tasks should be weighted. The sum of all entries in this list must be 1.
@@ -21,10 +21,10 @@ class IMM(ContinualLearningStrategy):
             :param mean: Whether to use mean-IMM or mode-IMM
         '''
         super(IMM,self).__init__(model,optim,crit)
-        assert not alphas or abs(sum(alphas)-1.0) < 1e-8
-        self.alphas = alphas
-        self.weight = weight
-        self.mean = mean
+        assert not ALPHAS or abs(sum(ALPHAS)-1.0) < 1e-8
+        self.alphas = ALPHAS
+        self.weight = WEIGHT
+        self.mean = MEAN
         self.num_tasks = 0
         self.prev_param_list = []
         self._save_model_params()
@@ -71,12 +71,12 @@ class IMM(ContinualLearningStrategy):
 
             inputs, labels = data
 
-            self.optimizer.zero_grad()
+            self.optim.zero_grad()
             
             outputs = self.model(inputs)
             loss = self._compute_consolidation_loss() + self.crit(outputs, labels)
             loss.backward()
-            self.optimizer.step()
+            self.optim.step()
             _, preds = torch.max(outputs.data, 1)
             total_loss += loss.item()
             correct_predictions += torch.sum(preds == labels.data).item()
@@ -151,7 +151,7 @@ class IMM(ContinualLearningStrategy):
         for _ in range(int(num_samples)):
             cur_index = random.randint(0,len(train_dataset)-1)
             elem, label = train_dataset[cur_index]
-            self.optimizer.zero_grad()
+            self.optim.zero_grad()
             output = self.model(elem)
             sm = F.log_softmax(output,dim=1)
             label_tensor = torch.tensor([label],dtype=torch.long)

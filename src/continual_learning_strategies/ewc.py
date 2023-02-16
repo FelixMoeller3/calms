@@ -18,9 +18,9 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
         https://github.com/thuyngch/Overcoming-Catastrophic-Forgetting
     '''
 
-    def __init__(self,model:nn.Module,optim: torch.optim.Optimizer,crit: nn.CrossEntropyLoss,weight:float=1.0):
+    def __init__(self,model:nn.Module,optim: torch.optim.Optimizer,crit: nn.CrossEntropyLoss,WEIGHT:float=1.0,**kwargs):
         super(ElasticWeightConsolidation,self).__init__(model,optim,crit)
-        self.weight = weight
+        self.weight = WEIGHT
         self.prev_params = {}
         self._save_model_params()
         self.fisher = {}
@@ -60,12 +60,12 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
 
             inputs, labels = data
 
-            self.optimizer.zero_grad()
+            self.optim.zero_grad()
             
             outputs = self.model(inputs)
             loss = self._compute_consolidation_loss() + self.crit(outputs, labels)
             loss.backward()
-            self.optimizer.step()
+            self.optim.step()
             _, preds = torch.max(outputs.data, 1)
             total_loss += loss.item()
             correct_predictions += torch.sum(preds == labels.data).item()
@@ -109,7 +109,7 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
         for _ in range(int(num_samples)):
             cur_index = random.randint(0,len(train_dataset)-1)
             elem, label = train_dataset[cur_index]
-            self.optimizer.zero_grad()
+            self.optim.zero_grad()
             input = torch.unsqueeze(elem,0)
             output = self.model(input)
             sm = F.log_softmax(output,dim=1)

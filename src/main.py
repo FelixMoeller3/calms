@@ -5,4 +5,4 @@ from utils import config
 
 #parser = argparse.ArgumentParser(description='Run experiment for model stealing')
 
-config.parse_config('conf/Example_conf.yaml')
+config.run_config("./src/conf/Example_conf.yaml")

@@ -1,33 +1,31 @@
 SUBSTITUTE_MODEL: 
-  NAME: 'Resnet18' # Possible values: Resnet18,Resnext50
+  NAME: 'TestConv' # Possible values: Resnet18,Resnext50,TestConv
   DATASET: 'MNIST'
   AL_METHOD: 
-    NAME: 'Badge' # Possible values: LC,BALD,Badge,CoreSet
+    NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
     INIT_BUDGET: 1000
     BUDGET: 1000
   CL_METHOD: 
-    NAME: 'Alasso' # Possible values : Alasso,EWC,MAS,IMM
+    NAME: 'EWC' # Possible values : Alasso,EWC,MAS,IMM,Naive
     WEIGHT: 1.0
-    WEIGHT_PRIME: 0.7
-    A: 1.5
-    A_PRIME: 0.75
-    EPSILON: 1e-4
     OPTIMIZER:
       NAME: 'SGD'
       LR: 0.001
       MOMENTUM: 0.9
-      WDECAY: 5e-4
+      WDECAY: 0.0005
       MILESTONES: [160,240]
-BATCH_SIZE: 128 
-CYCLES: 10
-RESULTS_FOLDER: './experiments/example'
+BATCH_SIZE: 128 # batch size used for training
+CYCLES: 1 # number of cycles in the model stealing process
+NUM_CLASSES: 10 # number of target classes
+RESULTS_FOLDER: './experiments/example/'
+RESULTS_FILE: 'results.txt'
 TARGET_MODEL:
-  MODEL: 'Resnet18'
+  MODEL: 'TestConv'
   DATASET: 'MNIST'
-  EPOCHS : 50
+  EPOCHS : 1
   OPTIMIZER:
     NAME: 'SGD'
     LR: 0.001
     MOMENTUM: 0.9
-    WDECAY: 5e-4
+    WDECAY: 0.0005
     MILESTONES: [160,240]

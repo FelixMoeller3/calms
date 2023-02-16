@@ -17,8 +17,8 @@ class Badge(Strategy):
         in the following paper: https://arxiv.org/pdf/1906.03671.pdf
     '''
     def __init__(self, model: nn.Module, data_unlabeled: Dataset, NO_CLASSES: int,
-        batch:int,budget:int, init_budget:int, device):
-        super(Badge, self).__init__(model, data_unlabeled, NO_CLASSES,batch,budget,init_budget, device)
+        BATCH:int,BUDGET:int, INIT_BUDGET:int, device=None,**kwargs):
+        super(Badge, self).__init__(model, data_unlabeled, NO_CLASSES,BATCH,BUDGET,INIT_BUDGET, device)
 
     def query(self) -> List[int]:
         unlabeled_loader = DataLoader(self.data_unlabeled, batch_size=self.BATCH, 

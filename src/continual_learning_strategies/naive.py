@@ -25,15 +25,15 @@ class Naive(ContinualLearningStrategy):
 
             inputs, labels = data
 
-            self.optimizer.zero_grad()
+            self.optim.zero_grad()
             outputs = self.model(inputs)
             # Stop updating the regularization params during training
             #self._update_reg_params(outputs,labels.size(0))
             _, preds = torch.max(outputs.data, 1)
-            loss = self.criterion(outputs, labels)
+            loss = self.crit(outputs, labels)
 
             loss.backward()
-            self.optimizer.step()
+            self.optim.step()
             total_loss += loss.item()
             correct_predictions += torch.sum(preds == labels.data).item()
         epoch_loss = total_loss / len(train_loader.dataset)
@@ -53,7 +53,7 @@ class Naive(ContinualLearningStrategy):
             # Stop updating the regularization params during training
             #self._update_reg_params(outputs,labels.size(0))
             _, preds = torch.max(outputs.data, 1)
-            loss = self.criterion(outputs, labels)
+            loss = self.crit(outputs, labels)
             total_loss += loss.item()
             correct_predictions += torch.sum(preds == labels.data).item()
         epoch_loss = total_loss / len(eval_loader.dataset)
