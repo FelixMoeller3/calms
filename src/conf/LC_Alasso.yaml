@@ -1,13 +1,16 @@
 SUBSTITUTE_MODEL: 
   NAME: 'TestConv' # Possible values: Resnet18,Resnext50,TestConv
-  DATASET: 'MNIST' # Possible values: MNIST,FashionMNIST
+  DATASET: 'FashionMNIST'
   AL_METHOD: 
     NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
     INIT_BUDGET: 1000
     BUDGET: 1000
   CL_METHOD: 
-    NAME: 'EWC' # Possible values : Alasso,EWC,MAS,IMM,Naive
-    WEIGHT: 1.0
+    NAME: 'Alasso' # Possible values : Alasso,EWC,MAS,IMM,Naive
+    WEIGHT: 0.5
+    WEIGHT_PRIME: 0.75
+    A: 1.5
+    A_PRIME: 0.75
     OPTIMIZER:
       NAME: 'SGD'
       LR: 0.001
@@ -15,14 +18,14 @@ SUBSTITUTE_MODEL:
       WDECAY: 0.0005
       MILESTONES: [160,240]
 BATCH_SIZE: 128 # batch size used for training
-CYCLES: 1 # number of cycles in the model stealing process
+CYCLES: 10 # number of cycles in the model stealing process
 NUM_CLASSES: 10 # number of target classes
 RESULTS_FOLDER: './experiments/example/'
 RESULTS_FILE: 'results.txt'
 TARGET_MODEL:
   MODEL: 'TestConv'
-  DATASET: 'MNIST'
-  EPOCHS : 1
+  DATASET: 'FashionMNIST'
+  EPOCHS : 3
   OPTIMIZER:
     NAME: 'SGD'
     LR: 0.001

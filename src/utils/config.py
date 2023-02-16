@@ -17,7 +17,7 @@ import os
 CONFIG = ["SUBSTITUTE_MODEL", "BATCH_SIZE", "CYCLES", "NUM_CLASSES", "RESULTS_FILE", "RESULTS_FILE", "TARGET_MODEL"]
 SUBSTITUTE_MODEL_CONFIG = ["NAME", "DATASET", "AL_METHOD", "CL_METHOD"]
 AL_CONFIG = ["NAME", "INIT_BUDGET", "BUDGET"]
-AL_METHODS = ['LC','BALD','Badge','CoreSet', 'random']
+AL_METHODS = ['LC','BALD','Badge','CoreSet', 'Random']
 CL_CONFIG = ["NAME", "OPTIMIZER"]
 CL_METHODS = ["Alasso", "IMM", "Naive", "EWC", "MAS"]
 MODELS = ['Resnet18','Resnext50', 'TestConv']
@@ -160,8 +160,6 @@ def build_al_strategy(al_config: dict,substitute_model: nn.Module, dataset: Data
     check_attribute_presence(al_config,AL_CONFIG,"active learning config")
     al_config["BATCH"] = batch_size
     al_config["NO_CLASSES"] = num_classes
-    if al_config["NAME"] not in AL_METHODS:
-        raise AttributeError(f"Active learning method unknown. Got {al_config['NAME']}, but expected one of {'.'.join(AL_METHODS)}")
     if al_config["NAME"] == "BALD":
         al_strat = al_strats.BALD(substitute_model,dataset,**al_config)
     elif al_config["NAME"] == "Badge":

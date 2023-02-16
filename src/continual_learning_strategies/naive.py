@@ -7,7 +7,7 @@ from tqdm import tqdm
 
 class Naive(ContinualLearningStrategy):
 
-    def __init__(self,model:nn.Module,optimizer: torch.optim.Optimizer,criterion: torch.nn.CrossEntropyLoss,use_gpu:bool=False):
+    def __init__(self,model:nn.Module,optimizer: torch.optim.Optimizer,criterion: torch.nn.CrossEntropyLoss,use_gpu:bool=False,**kwargs):
         super(Naive,self).__init__(model,optimizer,criterion)
 
     def train(self,dataloaders: dict[str,DataLoader],num_epochs:int,result_list:List[float]=[]) -> None:

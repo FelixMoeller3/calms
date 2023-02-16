@@ -13,7 +13,7 @@ class IMM(ContinualLearningStrategy):
     Implementation of Incremental Moment Matching (IMM) according.
     '''
 
-    def __init__(self, model: nn.Module,optim: torch.optim.Optimizer,crit: nn.CrossEntropyLoss,ALPHAS:List[float]=None,WEIGHT:float=1.0,MEAN:bool=True):
+    def __init__(self, model: nn.Module,optim: torch.optim.Optimizer,crit: nn.CrossEntropyLoss,ALPHAS:List[float]=None,WEIGHT:float=1.0,MEAN:bool=True,**kwargs):
         '''
             :param alphas: List of weights for models of previous tasks,
              i.e. how strongly previous tasks should be weighted. The sum of all entries in this list must be 1.
