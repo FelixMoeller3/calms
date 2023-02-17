@@ -7,5 +7,4 @@ from utils import config
 al = ["Random","BALD", "LC"]
 cl = ["Naive", "EWC", "MAS", "IMM", "Alasso"]
 for a in al:
-    for c in cl:
-        config.run_config("./src/conf/" + a + "_" + c + ".yaml")
+    config.run_al_comfig("./src/conf/" + a + "_Naive.yaml")

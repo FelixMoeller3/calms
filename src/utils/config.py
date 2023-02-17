@@ -57,6 +57,65 @@ def run_config(config_path: str) -> ModelStealingProcess:
                 f'{"-"* 70}'+ "\n"
             )
 
+def run_cl_al_config(config_path: str) -> ModelStealingProcess:
+    '''
+        Parses and runs the config file located at 'config_path'. 
+        The expected structure can be seen in the 'Example_conf.yaml' file in the 'conf' folder.
+    '''
+    start = time.time()
+    with open(config_path,"r") as f:
+        yaml_cfg = yaml.safe_load(f)
+    check_attribute_presence(yaml_cfg,CONFIG,"config")
+    batch_size = yaml_cfg["BATCH_SIZE"]
+    classes = yaml_cfg["NUM_CLASSES"]
+    al_method,cl_method,train_set,val_set = build_substitute_model(yaml_cfg["SUBSTITUTE_MODEL"],batch_size,classes)
+    cycles = yaml_cfg["CYCLES"]
+    ms_process = ModelStealingProcess(None,al_method,cl_method)
+    accuracies = ms_process.continual_learning(train_set,val_set,batch_size,cycles)
+    duration = time.time() - start
+    hours = int(duration)//3600
+    minutes = (int(duration) % 3600) // 60
+    seconds = int(duration) % 60
+    time_string = "{:02}h:{:02}m:{:02}s".format(hours,minutes,seconds)
+    os.makedirs(yaml_cfg["RESULTS_FOLDER"],exist_ok=True)
+    with open(yaml_cfg["RESULTS_FOLDER"] + yaml_cfg["RESULTS_FILE"],'a+') as f:
+        f.write(f'Run completed at {datetime.today().strftime("%Y-%m-%d %H:%M:%S")} after {time_string}\n'
+                f'Model: {yaml_cfg["SUBSTITUTE_MODEL"]["NAME"]}, trained on {yaml_cfg["SUBSTITUTE_MODEL"]["DATASET"]}\n'
+                f'Continual Learning Strategy: {yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["NAME"]}\n'
+                f'Active Learning Strategy: {yaml_cfg["SUBSTITUTE_MODEL"]["AL_METHOD"]["NAME"]}\n'
+                f'Accuracy results at the end of each cycle: {accuracies}\n'
+                f'{"-"* 70}'+ "\n"
+            )
+
+def run_al_comfig(config_path: str) -> ModelStealingProcess:
+    '''
+        Parses and runs the config file located at 'config_path'. 
+        The expected structure can be seen in the 'Example_conf.yaml' file in the 'conf' folder.
+    '''
+    start = time.time()
+    with open(config_path,"r") as f:
+        yaml_cfg = yaml.safe_load(f)
+    check_attribute_presence(yaml_cfg,CONFIG,"config")
+    batch_size = yaml_cfg["BATCH_SIZE"]
+    classes = yaml_cfg["NUM_CLASSES"]
+    al_method,cl_method,train_set,val_set = build_substitute_model(yaml_cfg["SUBSTITUTE_MODEL"],batch_size,classes)
+    cycles = yaml_cfg["CYCLES"]
+    ms_process = ModelStealingProcess(None,al_method,cl_method)
+    accuracies = ms_process.active_learning(train_set,val_set,batch_size,cycles)
+    duration = time.time() - start
+    hours = int(duration)//3600
+    minutes = (int(duration) % 3600) // 60
+    seconds = int(duration) % 60
+    time_string = "{:02}h:{:02}m:{:02}s".format(hours,minutes,seconds)
+    os.makedirs(yaml_cfg["RESULTS_FOLDER"],exist_ok=True)
+    with open(yaml_cfg["RESULTS_FOLDER"] + yaml_cfg["RESULTS_FILE"],'a+') as f:
+        f.write(f'Run completed at {datetime.today().strftime("%Y-%m-%d %H:%M:%S")} after {time_string}\n'
+                f'Model: {yaml_cfg["SUBSTITUTE_MODEL"]["NAME"]}, trained on {yaml_cfg["SUBSTITUTE_MODEL"]["DATASET"]}\n'
+                f'Active Learning Strategy: {yaml_cfg["SUBSTITUTE_MODEL"]["AL_METHOD"]["NAME"]}\n'
+                f'Accuracy results at the end of each cycle: {accuracies}\n'
+                f'{"-"* 70}'+ "\n"
+            )
+
 def check_attribute_presence(config: dict, attributes: list[str],config_name: str) -> None:
     '''
         Checks if all attributes are present in the config dict. The config_name is needed to

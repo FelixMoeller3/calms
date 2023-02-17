@@ -16,9 +16,9 @@ SUBSTITUTE_MODEL:
       WDECAY: 0.0005
       MILESTONES: [160,240]
 BATCH_SIZE: 128 # batch size used for training
-CYCLES: 10 # number of cycles in the model stealing process
+CYCLES: 20 # number of cycles in the model stealing process
 NUM_CLASSES: 10 # number of target classes
-RESULTS_FOLDER: './experiments/example/'
+RESULTS_FOLDER: './experiments/CL_AL/'
 RESULTS_FILE: 'results.txt'
 TARGET_MODEL:
   MODEL: 'TestConv'
