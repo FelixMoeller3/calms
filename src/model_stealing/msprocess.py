@@ -21,7 +21,7 @@ class ModelStealingProcess:
         self.cl_strat = continualLearningStrategy
         self.substitute_model = self.cl_strat.model
 
-    def active_learning(self,train_set: Dataset, val_set: Dataset,batch_size:int,num_cycles:int) -> List[float]:
+    def active_learning(self,train_set: Dataset, val_set: Dataset,batch_size:int,num_cycles:int,num_epochs:int) -> List[float]:
         '''
             Runs the classic active learning scenario where a new model is trained in every iteration.
             :param train_set: the dataset that the model will be trained on.
@@ -38,7 +38,7 @@ class ModelStealingProcess:
             labeled_set.append(random.randint(0,len(train_set)-1))
         training_set = Subset(train_set,labeled_set)
         loaders_dict['train'] = DataLoader(training_set,batch_size,shuffle=True)
-        self.cl_strat.train(loaders_dict,5,score_list)
+        self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list)
         unlabeled_set = [i for i in unlabeled_set if i not in labeled_set]
         for i in range(num_cycles):
             self.al_strat.feed_current_state(i,unlabeled_set,labeled_set)
@@ -51,11 +51,11 @@ class ModelStealingProcess:
             loaders_dict['train'] = DataLoader(training_set,batch_size,shuffle=True)
             self.cl_strat.model = testConv(1,10)
             self.cl_strat.optim = torch.optim.SGD(self.cl_strat.model.parameters(),0.001,0.9,weight_decay=0.0005)
-            self.cl_strat.train(loaders_dict,5,score_list)
+            self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list)
 
         return score_list
 
-    def continual_learning(self,train_set: Dataset, val_set: Dataset,batch_size:int,num_cycles:int) -> List[float]:
+    def continual_learning(self,train_set: Dataset, val_set: Dataset,batch_size:int,num_cycles:int,num_epochs:int) -> List[float]:
         '''
             Runs a combined continual and active learning approach where instead of querying the target model the actual label is used.
             :param train_set: the dataset that the model will be trained on.
@@ -72,7 +72,7 @@ class ModelStealingProcess:
             labeled_set.append(random.randint(0,len(train_set)-1))
         training_set = Subset(train_set,labeled_set)
         loaders_dict['train'] = DataLoader(training_set,batch_size,shuffle=True)
-        self.cl_strat.train(loaders_dict,5,score_list)
+        self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list)
         unlabeled_set = [i for i in unlabeled_set if i not in labeled_set]
         for i in range(num_cycles):
             self.al_strat.feed_current_state(i,unlabeled_set,labeled_set)
@@ -82,11 +82,11 @@ class ModelStealingProcess:
             unlabeled_set = [i for i in unlabeled_set if i not in training_examples]
             training_set = Subset(train_set,training_examples)
             loaders_dict['train'] = DataLoader(training_set,batch_size,shuffle=True)
-            self.cl_strat.train(loaders_dict,5,score_list)
+            self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list)
 
         return score_list
 
-    def steal_model(self,train_set: Dataset,val_set: Dataset,batch_size:int,num_cycles:int) -> List[float]:
+    def steal_model(self,train_set: Dataset,val_set: Dataset,batch_size:int,num_cycles:int,num_epochs:int) -> List[float]:
         '''
             Implements the actual model stealing process where the target model is iteratively queried and then the substitute model is trained using
             continual learning.
@@ -109,7 +109,7 @@ class ModelStealingProcess:
             #print(train_set.targets[elem])
         training_set = Subset(train_set,labeled_set)
         loaders_dict['train'] = DataLoader(training_set,batch_size,shuffle=True)
-        self.cl_strat.train(loaders_dict,5,score_list)
+        self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list)
         unlabeled_set = [i for i in unlabeled_set if i not in labeled_set]
         for i in range(num_cycles):
             self.al_strat.feed_current_state(i,unlabeled_set,labeled_set)
@@ -121,7 +121,7 @@ class ModelStealingProcess:
             unlabeled_set = [i for i in unlabeled_set if i not in training_examples]
             training_set = Subset(train_set,training_examples)
             loaders_dict['train'] = DataLoader(training_set,batch_size,shuffle=True)
-            self.cl_strat.train(loaders_dict,5,score_list)
+            self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list)
 
         return score_list
 

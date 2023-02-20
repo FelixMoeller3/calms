@@ -1,0 +1,66 @@
+Run completed at 2023-02-17 13:50:08 after 00h:07m:23s
+Model: TestConv, trained on FashionMNIST
+Continual Learning Strategy: Naive
+Active Learning Strategy: Random
+Accuracy results at the end of each cycle: [0.2066, 0.4246, 0.529, 0.6126, 0.6329, 0.6581, 0.6733, 0.6828, 0.7027, 0.7197, 0.724, 0.7073, 0.6997, 0.7168, 0.7368, 0.7211, 0.7422, 0.7475, 0.7494, 0.7506, 0.7275]
+----------------------------------------------------------------------
+Run completed at 2023-02-17 13:57:53 after 00h:07m:44s
+Model: TestConv, trained on FashionMNIST
+Continual Learning Strategy: EWC
+Active Learning Strategy: Random
+Accuracy results at the end of each cycle: [0.2157, 0.3731, 0.4193, 0.4658, 0.5652, 0.6325, 0.6745, 0.6884, 0.6726, 0.7054, 0.6941, 0.7066, 0.7204, 0.7271, 0.7039, 0.725, 0.7243, 0.7455, 0.7079, 0.749, 0.7523]
+----------------------------------------------------------------------
+Run completed at 2023-02-17 14:13:02 after 00h:01m:44s
+Model: TestConv, trained on FashionMNIST
+Continual Learning Strategy: Naive
+Active Learning Strategy: Random
+Accuracy results at the end of each cycle: [0.2091, 0.339, 0.4627, 0.5655, 0.5834, 0.6384, 0.6602, 0.6524, 0.6912, 0.6836, 0.7031, 0.7017, 0.7032, 0.7029, 0.7025, 0.697, 0.7149, 0.7328, 0.6919, 0.7302, 0.7318]
+----------------------------------------------------------------------
+Run completed at 2023-02-17 14:15:03 after 00h:02m:01s
+Model: TestConv, trained on FashionMNIST
+Continual Learning Strategy: EWC
+Active Learning Strategy: Random
+Accuracy results at the end of each cycle: [0.2603, 0.3078, 0.4187, 0.5241, 0.6184, 0.6199, 0.6668, 0.6724, 0.6766, 0.7035, 0.7129, 0.6885, 0.7088, 0.7106, 0.7238, 0.734, 0.716, 0.7385, 0.7148, 0.7397, 0.7399]
+----------------------------------------------------------------------
+Run completed at 2023-02-17 14:17:31 after 00h:02m:27s
+Model: TestConv, trained on FashionMNIST
+Continual Learning Strategy: MAS
+Active Learning Strategy: Random
+Accuracy results at the end of each cycle: [0.2213, 0.3855, 0.4329, 0.5596, 0.6456, 0.6567, 0.6797, 0.6822, 0.6968, 0.7079, 0.701, 0.7076, 0.6957, 0.6893, 0.7021, 0.7036, 0.7258, 0.7236, 0.7127, 0.7324, 0.7275]
+----------------------------------------------------------------------
+Run completed at 2023-02-17 14:19:25 after 00h:01m:53s
+Model: TestConv, trained on FashionMNIST
+Continual Learning Strategy: IMM
+Active Learning Strategy: Random
+Accuracy results at the end of each cycle: [0.2097, 0.3933, 0.4225, 0.5615, 0.6341, 0.6445, 0.6318, 0.673, 0.6875, 0.7166, 0.6924, 0.6972, 0.7177, 0.7122, 0.7297, 0.7383, 0.708, 0.7307, 0.7409, 0.7462, 0.7509]
+----------------------------------------------------------------------
+Run completed at 2023-02-17 14:35:01 after 00h:15m:36s
+Model: TestConv, trained on FashionMNIST
+Continual Learning Strategy: Alasso
+Active Learning Strategy: Random
+Accuracy results at the end of each cycle: [0.2091, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
+----------------------------------------------------------------------
+Run completed at 2023-02-17 14:43:16 after 00h:08m:14s
+Model: TestConv, trained on FashionMNIST
+Continual Learning Strategy: Naive
+Active Learning Strategy: BALD
+Accuracy results at the end of each cycle: [0.2776, 0.2774, 0.4879, 0.579, 0.6261, 0.6561, 0.6815, 0.6872, 0.7021, 0.7146, 0.6983, 0.7281, 0.7201, 0.7319, 0.7367, 0.722, 0.7294, 0.7446, 0.7527, 0.7482, 0.7564]
+----------------------------------------------------------------------
+Run completed at 2023-02-17 14:50:40 after 00h:07m:23s
+Model: TestConv, trained on FashionMNIST
+Continual Learning Strategy: EWC
+Active Learning Strategy: BALD
+Accuracy results at the end of each cycle: [0.2795, 0.2306, 0.5213, 0.621, 0.653, 0.6469, 0.6675, 0.6777, 0.6848, 0.7106, 0.7165, 0.7268, 0.7257, 0.7298, 0.7313, 0.7439, 0.7385, 0.7488, 0.7499, 0.7408, 0.7654]
+----------------------------------------------------------------------
+Run completed at 2023-02-17 14:58:14 after 00h:07m:33s
+Model: TestConv, trained on FashionMNIST
+Continual Learning Strategy: MAS
+Active Learning Strategy: BALD
+Accuracy results at the end of each cycle: [0.2149, 0.3757, 0.4594, 0.5516, 0.6201, 0.6451, 0.6743, 0.6743, 0.6879, 0.7055, 0.7107, 0.7111, 0.7256, 0.7135, 0.7073, 0.7047, 0.7217, 0.7408, 0.7459, 0.7345, 0.7491]
+----------------------------------------------------------------------
+Run completed at 2023-02-17 15:05:16 after 00h:07m:01s
+Model: TestConv, trained on FashionMNIST
+Continual Learning Strategy: IMM
+Active Learning Strategy: BALD
+Accuracy results at the end of each cycle: [0.2087, 0.3957, 0.4996, 0.602, 0.6388, 0.6691, 0.6626, 0.6518, 0.6971, 0.7099, 0.7096, 0.7033, 0.7199, 0.7171, 0.7361, 0.7202, 0.7462, 0.7418, 0.7346, 0.7415, 0.7516]
+----------------------------------------------------------------------

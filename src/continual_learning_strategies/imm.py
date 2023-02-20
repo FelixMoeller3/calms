@@ -40,7 +40,7 @@ class IMM(ContinualLearningStrategy):
         if self.alphas and len(self.prev_param_list) > len(self.alphas):
             self.prev_param_list.pop(0)
 
-    def train(self, dataloaders: dict[str,DataLoader], num_epochs: int,result_list:List[float]=[]) -> None:
+    def train(self, dataloaders: dict[str,DataLoader], num_epochs: int,val_step:int,result_list:List[float]=[]) -> None:
         '''
             Trains the model for num_epoch epochs using the dataloaders 'train' and 'val' in the dataloaders dict
         '''
@@ -50,7 +50,8 @@ class IMM(ContinualLearningStrategy):
             print(f"Running epoch {epoch+1}/{num_epochs}")
             self._run_train_epoch(dataloaders['train'])
             log_list = None if epoch < num_epochs-1 else result_list
-            self._run_val_epoch(dataloaders['val'],log_list)
+            if (epoch+1) % val_step == 0:
+                self._run_val_epoch(dataloaders['val'],log_list)
         self._save_model_params()
         self._merge_models(dataloaders['train'].dataset)
         time_elapsed = time.time() - start_time

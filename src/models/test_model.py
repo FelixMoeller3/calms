@@ -59,10 +59,14 @@ class testNN(nn.Module):
         return self.fc3.in_features
 
 class testConv(nn.Module):
-    def __init__(self, numChannels:int, classes:int):
+    def __init__(self, input_dim:tuple[int], classes:int):
         super(testConv,self).__init__()
+        after_conv_x = (input_dim[1] - 4)//2
+        after_conv_x = (after_conv_x - 4)//2
+        after_conv_y = (input_dim[2] - 4)//2
+        after_conv_y = (after_conv_y - 4)//2
         self.layers_before = nn.ModuleList([
-            nn.Conv2d(in_channels=numChannels,out_channels=20,kernel_size=(5,5)),
+            nn.Conv2d(in_channels=input_dim[0],out_channels=20,kernel_size=(5,5)),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=(2,2),stride=(2,2)),
 
@@ -71,7 +75,7 @@ class testConv(nn.Module):
             nn.MaxPool2d(kernel_size=(2,2),stride=(2,2))
         ])
         self.layers_after = nn.ModuleList([
-            nn.Linear(in_features=800,out_features=500),
+            nn.Linear(in_features=50*after_conv_x*after_conv_y,out_features=500),
             nn.ReLU()
         ])
         self.final = nn.Linear(in_features=500,out_features=classes)

@@ -60,7 +60,7 @@ class MAS(ContinualLearningStrategy):
                 continue
             self.regularization_params_cur[name] = torch.zeros(param.size())
 
-    def train(self, dataloaders: dict[str,DataLoader], num_epochs:int,result_list:List[float]=[]) -> None:
+    def train(self, dataloaders: dict[str,DataLoader], num_epochs:int,val_step:int,result_list:List[float]=[]) -> None:
         '''
             Trains the model for num_epochs with the data given by the dataloader
         '''
@@ -70,7 +70,8 @@ class MAS(ContinualLearningStrategy):
             print(f"Running epoch {epoch+1}/{num_epochs}")
             self._run_train_epoch(dataloaders['train'])
             log_list = None if epoch < num_epochs-1 else result_list
-            self._run_val_epoch(dataloaders['val'],log_list)
+            if (epoch+1) % val_step == 0:
+                self._run_val_epoch(dataloaders['val'],log_list)
         self._update_regularization_params()
         time_elapsed = time.time() - start_time
         print('Training complete in {:.0f}m {:.0f}s'.format(

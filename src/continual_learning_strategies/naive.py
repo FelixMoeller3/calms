@@ -10,13 +10,14 @@ class Naive(ContinualLearningStrategy):
     def __init__(self,model:nn.Module,optimizer: torch.optim.Optimizer,criterion: torch.nn.CrossEntropyLoss,use_gpu:bool=False,**kwargs):
         super(Naive,self).__init__(model,optimizer,criterion)
 
-    def train(self,dataloaders: dict[str,DataLoader],num_epochs:int,result_list:List[float]=[]) -> None:
+    def train(self,dataloaders: dict[str,DataLoader],num_epochs:int,val_step:int,result_list:List[float]=[]) -> None:
         self.model.train(True)
-        for i in range(num_epochs):
-            print(f'Running epoch {i+1}/{num_epochs}')
+        for epoch in range(num_epochs):
+            print(f'Running epoch {epoch+1}/{num_epochs}')
             self._run_train_epoch(dataloaders["train"])
-            log_list = None if i < num_epochs-1 else result_list
-            self.eval(dataloaders["val"],log_list)
+            log_list = None if epoch < num_epochs-1 else result_list
+            if (epoch+1) % val_step == 0:
+                self.eval(dataloaders["val"],log_list)
 
     def _run_train_epoch(self,train_loader: DataLoader) -> None:
         total_loss = 0.0

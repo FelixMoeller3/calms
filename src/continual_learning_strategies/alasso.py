@@ -131,7 +131,7 @@ class Alasso(ContinualLearningStrategy):
             self.deltas[name] = param - self.deltas[name]
 
 
-    def train(self, dataloaders: dict[str,DataLoader], num_epochs: int,result_list:List[float]=[]) -> None:
+    def train(self, dataloaders: dict[str,DataLoader], num_epochs:int, val_step:int,result_list:List[float]=[]) -> None:
         '''
             Trains the model for num_epoch epochs using the dataloaders 'train' and 'val' in the dataloaders dict
         '''
@@ -144,7 +144,8 @@ class Alasso(ContinualLearningStrategy):
             print(f"Running epoch {epoch+1}/{num_epochs}")
             self._run_train_epoch(dataloaders['train'],last_epoch=epoch==num_epochs-1)
             log_list = None if epoch < num_epochs-1 else result_list
-            self._run_val_epoch(dataloaders['val'],log_list)
+            if (epoch+1) % val_step == 0:
+                self._run_val_epoch(dataloaders['val'],log_list)
         # Update Omegas
         time_elapsed = time.time() - start_time
         print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))

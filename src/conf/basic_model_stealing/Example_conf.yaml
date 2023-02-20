@@ -1,0 +1,31 @@
+SUBSTITUTE_MODEL: 
+  NAME: 'TestConv' # Possible values: Resnet18,Resnext50,TestConv
+  DATASET: 'MNIST' # Possible values: MNIST,FashionMNIST
+  AL_METHOD: 
+    NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
+    INIT_BUDGET: 1000
+    BUDGET: 1000
+  CL_METHOD: 
+    NAME: 'EWC' # Possible values : Alasso,EWC,MAS,IMM,Naive
+    WEIGHT: 1.0
+    OPTIMIZER:
+      NAME: 'SGD'
+      LR: 0.001
+      MOMENTUM: 0.9
+      WDECAY: 0.0005
+      MILESTONES: [160,240]
+BATCH_SIZE: 128 # batch size used for training
+CYCLES: 1 # number of cycles in the model stealing process
+EPOCHS: 10 # number of epochs for which the substitute model is trained in each iteration of the active learning process
+RESULTS_FOLDER: './experiments/example/'
+RESULTS_FILE: 'results_10epochs.txt'
+TARGET_MODEL:
+  MODEL: 'TestConv'
+  DATASET: 'MNIST'
+  EPOCHS : 1
+  OPTIMIZER:
+    NAME: 'SGD'
+    LR: 0.001
+    MOMENTUM: 0.9
+    WDECAY: 0.0005
+    MILESTONES: [160,240]

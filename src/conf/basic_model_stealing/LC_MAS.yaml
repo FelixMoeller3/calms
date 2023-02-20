@@ -2,24 +2,23 @@ SUBSTITUTE_MODEL:
   NAME: 'TestConv' # Possible values: Resnet18,Resnext50,TestConv
   DATASET: 'FashionMNIST'
   AL_METHOD: 
-    NAME: 'BALD' # Possible values: LC,BALD,Badge,CoreSet,Random
-    DROPOUT_ITER: 2
+    NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
     INIT_BUDGET: 1000
     BUDGET: 1000
   CL_METHOD: 
-    NAME: 'IMM' # Possible values : Alasso,EWC,MAS,IMM,Naive
-    ALPHAS: [0.45,0.55]
+    NNAME: 'MAS' # Possible values : Alasso,EWC,MAS,IMM,Naive
+    WEIGHT: 0.01
     OPTIMIZER:
-      NAME: 'SGD'
-      LR: 0.001
+      NAME: 'ADAM'
+      LR: 0.003
       MOMENTUM: 0.9
       WDECAY: 0.0005
       MILESTONES: [160,240]
 BATCH_SIZE: 128 # batch size used for training
 CYCLES: 20 # number of cycles in the model stealing process
-NUM_CLASSES: 10 # number of target classes
+EPOCHS: 10
 RESULTS_FOLDER: './experiments/CL_AL/'
-RESULTS_FILE: 'results.txt'
+RESULTS_FILE: 'results_10epochs.txt'
 TARGET_MODEL:
   MODEL: 'TestConv'
   DATASET: 'FashionMNIST'
