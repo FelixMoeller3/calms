@@ -38,6 +38,7 @@ class Badge(Strategy):
         embedding = np.zeros([len_ulb, embDim*nLab])
         ind = 0
         print('embedding shape {}'.format(embedding.shape))
+        model = self.model.cuda() if self.use_gpu else self.model
         with torch.no_grad():
             for x, y in unlabeled_loader:
                 # print(idxs)
@@ -45,7 +46,7 @@ class Badge(Strategy):
                 #with torch.cuda.device(self.device):
                 if self.use_gpu:
                     x = x.cuda()
-                scores, features_batch = self.model.forward_embedding(x)
+                scores, features_batch = model.forward_embedding(x)
                 features_batch = features_batch.data.cpu().numpy()
                 batchProbs = F.softmax(scores, dim=1).data.cpu().numpy()
                 maxInds = np.argmax(batchProbs, 1)

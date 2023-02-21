@@ -8,7 +8,7 @@
 #SBATCH --cpus-per-task=40                 # number of CPUs required per MPI task
 #SBATCH --ntasks-per-node=1                # maximum count of tasks per node
 #SBATCH --mail-type=ALL                    # Notify user by email when certain event types occur.
-#SBATCH --mail-user=utywh@student.kit.edu  # notification email address
+#SBATCH --mail-user=ie2651@partner.kit.edu # notification email address
 #SBATCH --gres=gpu:1
 
 module purge                                       # Unload all currently loaded modules.

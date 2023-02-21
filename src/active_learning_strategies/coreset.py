@@ -33,6 +33,7 @@ class CoreSet(Strategy):
         features = torch.tensor([])
         if self.use_gpu:
             features = features.cuda()
+        model = self.model.cuda() if self.use_gpu else self.model
 
         with torch.no_grad():
             for inputs, _ in unlabeled_loader:
@@ -41,7 +42,7 @@ class CoreSet(Strategy):
                 #    inputs = inputs.cuda()
                 if self.use_gpu:
                     inputs = inputs.cuda()
-                _, features_batch = self.model.forward_embedding(inputs)
+                _, features_batch = model.forward_embedding(inputs)
                 features = torch.cat((features, features_batch), 0)
             feat = features.detach().cpu().numpy()
             new_av_idx = np.arange(len(self.subset),(len(self.subset) + labeled_data_size))
