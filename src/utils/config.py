@@ -14,9 +14,9 @@ from datetime import datetime
 import time
 import os
 
-CONFIG = ["SUBSTITUTE_MODEL", "BATCH_SIZE", "CYCLES", "RESULTS_FILE", "RESULTS_FILE", "TARGET_MODEL", "EPOCHS"]
+CONFIG = ["SUBSTITUTE_MODEL", "BATCH_SIZE", "CYCLES", "RESULTS_FILE", "RESULTS_FILE", "TARGET_MODEL", "EPOCHS","USE_GPU"]
 SUBSTITUTE_MODEL_CONFIG = ["NAME", "DATASET", "AL_METHOD", "CL_METHOD"]
-AL_CONFIG = ["NAME", "INIT_BUDGET", "BUDGET","USE_GPU"]
+AL_CONFIG = ["NAME", "INIT_BUDGET", "BUDGET"]
 AL_METHODS = ['LC','BALD','Badge','CoreSet', 'Random']
 CL_CONFIG = ["NAME", "OPTIMIZER"]
 CL_METHODS = ["Alasso", "IMM", "Naive", "EWC", "MAS"]
@@ -36,10 +36,11 @@ def run_config(config_path: str) -> ModelStealingProcess:
         yaml_cfg = yaml.safe_load(f)
     check_attribute_presence(yaml_cfg,CONFIG,"config")
     batch_size = yaml_cfg["BATCH_SIZE"]
-    target_model = build_target_model(yaml_cfg["TARGET_MODEL"],batch_size)
-    al_method,cl_method,train_set,val_set = build_substitute_model(yaml_cfg["SUBSTITUTE_MODEL"],batch_size,classes)
+    use_gpu = yaml_cfg["USE_GPU"]
+    target_model = build_target_model(yaml_cfg["TARGET_MODEL"],batch_size,use_gpu)
+    al_method,cl_method,train_set,val_set = build_substitute_model(yaml_cfg["SUBSTITUTE_MODEL"],batch_size,use_gpu)
     cycles = yaml_cfg["CYCLES"]
-    ms_process = ModelStealingProcess(target_model,al_method,cl_method)
+    ms_process = ModelStealingProcess(target_model,al_method,cl_method,use_gpu)
     num_epochs = yaml_cfg["EPOCHS"]
     accuracies = ms_process.steal_model(train_set,val_set,batch_size,cycles,num_epochs)
     duration = time.time() - start
@@ -68,7 +69,8 @@ def run_cl_al_config(config_path: str) -> ModelStealingProcess:
         yaml_cfg = yaml.safe_load(f)
     check_attribute_presence(yaml_cfg,CONFIG,"config")
     batch_size = yaml_cfg["BATCH_SIZE"]
-    al_method,cl_method,train_set,val_set = build_substitute_model(yaml_cfg["SUBSTITUTE_MODEL"],batch_size)
+    use_gpu = yaml_cfg["USE_GPU"]
+    al_method,cl_method,train_set,val_set = build_substitute_model(yaml_cfg["SUBSTITUTE_MODEL"],batch_size,use_gpu)
     cycles = yaml_cfg["CYCLES"]
     ms_process = ModelStealingProcess(None,al_method,cl_method)
     num_epochs = yaml_cfg["EPOCHS"]
@@ -88,7 +90,7 @@ def run_cl_al_config(config_path: str) -> ModelStealingProcess:
                 f'{"-"* 70}'+ "\n"
             )
 
-def run_al_comfig(config_path: str) -> ModelStealingProcess:
+def run_al_config(config_path: str) -> ModelStealingProcess:
     '''
         Parses and runs the config file located at 'config_path'. 
         The expected structure can be seen in the 'Example_conf.yaml' file in the 'conf' folder.
@@ -98,7 +100,8 @@ def run_al_comfig(config_path: str) -> ModelStealingProcess:
         yaml_cfg = yaml.safe_load(f)
     check_attribute_presence(yaml_cfg,CONFIG,"config")
     batch_size = yaml_cfg["BATCH_SIZE"]
-    al_method,cl_method,train_set,val_set = build_substitute_model(yaml_cfg["SUBSTITUTE_MODEL"],batch_size)
+    use_gpu = yaml_cfg["USE_GPU"]
+    al_method,cl_method,train_set,val_set = build_substitute_model(yaml_cfg["SUBSTITUTE_MODEL"],batch_size,use_gpu)
     cycles = yaml_cfg["CYCLES"]
     ms_process = ModelStealingProcess(None,al_method,cl_method)
     num_epochs = yaml_cfg["EPOCHS"]
@@ -126,29 +129,32 @@ def check_attribute_presence(config: dict, attributes: list[str],config_name: st
         if elem not in config:
             raise AttributeError(f"{elem} must to be specified in {config_name}")
 
-def build_target_model(target_model_config: dict,batch_size:int) -> nn.Module:
+def build_target_model(target_model_config: dict,batch_size:int,use_gpu:bool) -> nn.Module:
     check_attribute_presence(target_model_config,TARGET_MODEL_CONFIG,"target model config")
-    train_set,input_dim,num_classes = load_dataset(target_model_config['DATASET'],True)
-    target_model = build_model(target_model_config["MODEL"],input_dim,num_classes)
+    train_set,input_dim,num_classes = load_dataset(target_model_config['DATASET'],True,use_gpu)
+    target_model = build_model(target_model_config["MODEL"],input_dim,num_classes,use_gpu)
     train_loader = DataLoader(train_set,batch_size,True)
-    val_set,_,_ = load_dataset(target_model_config['DATASET'],False)
+    val_set,_,_ = load_dataset(target_model_config['DATASET'],False,use_gpu)
     val_loader = DataLoader(val_set,batch_size,True)
     optimizer = build_optimizer(target_model_config["OPTIMIZER"],target_model)
     train_model(target_model,train_loader,val_loader,optimizer,target_model_config["EPOCHS"])
     return target_model
 
-def build_model(name: str, input_dim:tuple[int], num_classes: int) -> nn.Module:
+def build_model(name: str, input_dim:tuple[int], num_classes: int, use_gpu:bool) -> nn.Module:
     #TODO: Add models here
     if name == "Resnet18":
-        return None
+        model = None
     elif name == "Resnext50":
-        return None
+        model = None
     elif name == "TestConv":
-        return testConv(input_dim,num_classes)
+        model = testConv(input_dim,num_classes)
     else:
         raise AttributeError(f"Model name unknown. Got {name}, but expected one of {','.join(MODELS)}")
+    if use_gpu:
+        model.cuda()
+    return model
 
-def load_dataset(name: str,train:bool) -> tuple[Dataset,torch.Size,int]:
+def load_dataset(name: str,train:bool,use_gpu:bool) -> tuple[Dataset,torch.Size,int]:
     '''
         Loads a dataset into memory and returns it along with the dimension of a single instance
         and the number of target classes the dataset has.
@@ -168,6 +174,9 @@ def load_dataset(name: str,train:bool) -> tuple[Dataset,torch.Size,int]:
                    ]),download=True)
     else:
         raise AttributeError(f"Dataset unknown. Got {name}, but expected one of {','.join(DATASET_NAMES)}")
+    if use_gpu:
+        dataset.data.cuda()
+        dataset.targets.cuda()
     return dataset,dataset[0][0].shape,len(dataset.class_to_idx)
 
 def build_optimizer(config: dict,model:nn.Module) -> torch.optim.Optimizer:
@@ -216,20 +225,21 @@ def run_val_epoch(model: nn.Module, val_loader: DataLoader, criterion: nn.CrossE
     epoch_acc = correct_predictions / len(val_loader.dataset)
     print('Validation Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
 
-def build_substitute_model(config: dict,batch_size:int) -> tuple[Strategy,ContinualLearningStrategy,Dataset,Dataset]:
+def build_substitute_model(config: dict,batch_size:int,use_gpu:bool) -> tuple[Strategy,ContinualLearningStrategy,Dataset,Dataset]:
     check_attribute_presence(config,SUBSTITUTE_MODEL_CONFIG,"substitute model config")
-    train_set,input_dim,num_classes = load_dataset(config["DATASET"],True)
-    substitute_model = build_model(config["NAME"],input_dim,num_classes)
-    val_set, _, _ = load_dataset(config["DATASET"],False)
-    al_strategy = build_al_strategy(config["AL_METHOD"],substitute_model,train_set,batch_size,num_classes)
+    train_set,input_dim,num_classes = load_dataset(config["DATASET"],True,use_gpu)
+    substitute_model = build_model(config["NAME"],input_dim,num_classes,use_gpu)
+    val_set, _, _ = load_dataset(config["DATASET"],False,use_gpu)
+    al_strategy = build_al_strategy(config["AL_METHOD"],substitute_model,train_set,batch_size,num_classes,use_gpu)
     cl_strategy = build_cl_strategy(config["CL_METHOD"],substitute_model)
     return al_strategy,cl_strategy,train_set,val_set
 
 
-def build_al_strategy(al_config: dict,substitute_model: nn.Module, dataset: Dataset,batch_size:int,num_classes:int) -> Strategy:
+def build_al_strategy(al_config: dict,substitute_model: nn.Module, dataset: Dataset,batch_size:int,num_classes:int,use_gpu:bool) -> Strategy:
     check_attribute_presence(al_config,AL_CONFIG,"active learning config")
     al_config["BATCH"] = batch_size
     al_config["NO_CLASSES"] = num_classes
+    al_config["USE_GPU"] = use_gpu
     if al_config["NAME"] == "BALD":
         al_strat = al_strats.BALD(substitute_model,dataset,**al_config)
     elif al_config["NAME"] == "Badge":

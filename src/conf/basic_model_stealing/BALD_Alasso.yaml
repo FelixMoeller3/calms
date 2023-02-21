@@ -6,7 +6,6 @@ SUBSTITUTE_MODEL:
     DROPOUT_ITER: 2
     INIT_BUDGET: 2000
     BUDGET: 2000
-    USE_GPU: True # Whether or not to use GPU Acceleration
   CL_METHOD: 
     NAME: 'Alasso' # Possible values : Alasso,EWC,MAS,IMM,Naive
     WEIGHT: 0.01
@@ -22,6 +21,7 @@ SUBSTITUTE_MODEL:
 BATCH_SIZE: 128 # batch size used for training
 CYCLES: 20 # number of cycles in the model stealing process
 EPOCHS: 10
+USE_GPU: True # Whether or not to use GPU Acceleration
 RESULTS_FOLDER: './experiments/CL_AL/'
 RESULTS_FILE: 'results_10epochs.txt'
 TARGET_MODEL:
