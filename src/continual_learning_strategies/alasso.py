@@ -80,7 +80,7 @@ class Alasso(ContinualLearningStrategy):
         for name, param in self.model.named_parameters():
             self.omegas[name] = torch.where(
                 param < self.weights[name],
-                torch.fill(torch.zeros_like(self.omegas[name]),-1.0),
+                torch.fill_(torch.zeros_like(self.omegas[name]),-1.0),
                 torch.ones_like(self.omegas[name])
             ) * (self.grads2[name] - self.weight_prime * self.asymmetric_loss_func(name,param,self.a_prime))/((self.weights[name]-param)*(self.weights[name]-param) + self.epsilon)
 
