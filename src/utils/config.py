@@ -175,8 +175,11 @@ def load_dataset(name: str,train:bool,use_gpu:bool) -> tuple[Dataset,torch.Size,
     else:
         raise AttributeError(f"Dataset unknown. Got {name}, but expected one of {','.join(DATASET_NAMES)}")
     if use_gpu:
+        if not isinstance(dataset.data,torch.Tensor):
+            dataset.data = torch.tensor(dataset.data)
         dataset.data.cuda()
-        dataset.targets = torch.tensor(dataset.targets)
+        if not isinstance(dataset.targets,torch.Tensor):
+            dataset.targets = torch.tensor(dataset.targets)
         dataset.targets.cuda()
     return dataset,dataset[0][0].shape,len(dataset.class_to_idx)
 
