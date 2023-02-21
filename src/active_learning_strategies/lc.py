@@ -32,7 +32,7 @@ class LC(Strategy):
         predic_probs = torch.tensor([])
         if self.use_gpu:
             predic_probs = predic_probs.cuda()
-
+        model = self.model.cuda()
         with torch.no_grad():
             for inputs,_ in unlabeled_loader:
                 #TODO: enable when running on cluster
@@ -40,7 +40,7 @@ class LC(Strategy):
                     inputs = inputs.cuda()
                 #with torch.cuda.device(self.device):
                 #    inputs = inputs.cuda()
-                predictions = self.model(inputs)
+                predictions = model(inputs)
                 prob = F.softmax(predictions, dim=1)
                 predict_vals,_ = torch.max(prob, 1)
                 predic_probs = torch.cat((predic_probs, predict_vals), 0)
