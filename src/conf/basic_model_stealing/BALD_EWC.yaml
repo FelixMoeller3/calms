@@ -6,6 +6,7 @@ SUBSTITUTE_MODEL:
     DROPOUT_ITER: 2
     INIT_BUDGET: 2000
     BUDGET: 2000
+    USE_GPU: True # Whether or not to use GPU Acceleration
   CL_METHOD: 
     NAME: 'EWC' # Possible values : Alasso,EWC,MAS,IMM,Naive
     WEIGHT: 0.1

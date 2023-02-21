@@ -5,6 +5,7 @@ SUBSTITUTE_MODEL:
     NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
     INIT_BUDGET: 2000
     BUDGET: 2000
+    USE_GPU: True # Whether or not to use GPU Acceleration
   CL_METHOD: 
     NAME: 'Alasso' # Possible values : Alasso,EWC,MAS,IMM,Naive
     WEIGHT: 0.01

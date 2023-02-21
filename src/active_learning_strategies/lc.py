@@ -13,8 +13,8 @@ class LC(Strategy):
         is queried next, first proposed in the following paper: https://dl.acm.org/doi/pdf/10.1145/219587.219592
     '''
     def __init__(self, model: nn.Module, data_unlabeled: Dataset, NO_CLASSES:int,BATCH:int,
-        BUDGET:int, INIT_BUDGET:int, device=None,**kwargs):
-        super(LC, self).__init__(model, data_unlabeled, NO_CLASSES,BATCH,BUDGET,INIT_BUDGET,device)
+        BUDGET:int, INIT_BUDGET:int, USE_GPU=False,**kwargs):
+        super(LC, self).__init__(model, data_unlabeled, NO_CLASSES,BATCH,BUDGET,INIT_BUDGET,USE_GPU)
 
     def query(self) -> np.ndarray:
         unlabeled_loader = DataLoader(self.data_unlabeled, batch_size=self.BATCH, 
@@ -30,10 +30,14 @@ class LC(Strategy):
         #with torch.cuda.device(self.device):
         #    predic_probs = torch.tensor([]).cuda()
         predic_probs = torch.tensor([])
+        if self.use_gpu:
+            predic_probs = predic_probs.cuda()
 
         with torch.no_grad():
             for inputs,_ in unlabeled_loader:
                 #TODO: enable when running on cluster
+                if self.use_gpu:
+                    inputs = inputs.cuda()
                 #with torch.cuda.device(self.device):
                 #    inputs = inputs.cuda()
                 predictions = self.model(inputs)

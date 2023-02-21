@@ -59,12 +59,16 @@ class BALD(Strategy):
         #with torch.cuda.device(self.device):
         #    predic_probs = torch.tensor([]).cuda()
         predic_probs = torch.tensor([])
+        if self.use_gpu:
+            predic_probs = predic_probs.cuda()
 
         with torch.no_grad():
             for inputs, _ in unlabeled_loader:
                 #TODO: let this run on cuda when running on cluster
                 #with torch.cuda.device(self.device):
                 #    inputs = inputs.cuda()
+                if self.use_gpu:
+                    inputs = inputs.cuda()
                 outputs = self.model(inputs)
                 prob = F.softmax(outputs, dim=1)
                 predic_probs = torch.cat((predic_probs, prob), 0)

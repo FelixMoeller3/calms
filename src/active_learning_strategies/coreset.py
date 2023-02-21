@@ -13,8 +13,8 @@ class CoreSet(Strategy):
         in the following paper: https://arxiv.org/pdf/1708.00489.pdf),
     '''
     def __init__(self, model: nn.Module, data_unlabeled: Dataset, NO_CLASSES: int,
-        BATCH:int,BUDGET:int, INIT_BUDGET:int, device=None,**kwargs):
-        super(CoreSet, self).__init__(model, data_unlabeled, NO_CLASSES,BATCH,BUDGET,INIT_BUDGET,device)
+        BATCH:int,BUDGET:int, INIT_BUDGET:int, USE_GPU:bool=False,**kwargs):
+        super(CoreSet, self).__init__(model, data_unlabeled, NO_CLASSES,BATCH,BUDGET,INIT_BUDGET,USE_GPU)
 
     def query(self):
         unlabeled_loader = DataLoader(self.data_unlabeled, batch_size=self.BATCH, 
@@ -31,12 +31,16 @@ class CoreSet(Strategy):
         #with torch.cuda.device(self.device):
         #    features = torch.tensor([]).cuda()
         features = torch.tensor([])
+        if self.use_gpu:
+            features = features.cuda()
 
         with torch.no_grad():
             for inputs, _ in unlabeled_loader:
                 #TODO: let this run on cuda when running on cluster
                 #with torch.cuda.device(self.device):
                 #    inputs = inputs.cuda()
+                if self.use_gpu:
+                    inputs = inputs.cuda()
                 _, features_batch = self.model.forward_embedding(inputs)
                 features = torch.cat((features, features_batch), 0)
             feat = features.detach().cpu().numpy()

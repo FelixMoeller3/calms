@@ -43,8 +43,8 @@ class Badge(Strategy):
                 # print(idxs)
                 #TODO: let this run on cuda when running on cluster
                 #with torch.cuda.device(self.device):
-                #    x = x.cuda()
-                #    y = y.cuda()
+                if self.use_gpu:
+                    x = x.cuda()
                 scores, features_batch = self.model.forward_embedding(x)
                 features_batch = features_batch.data.cpu().numpy()
                 batchProbs = F.softmax(scores, dim=1).data.cpu().numpy()

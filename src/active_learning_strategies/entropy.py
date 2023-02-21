@@ -8,8 +8,8 @@ from data.sampler import SubsetSequentialSampler
 
 class Entropy(Strategy):
     def __init__(self, model: nn.Module, data_unlabeled, NO_CLASSES: int, 
-        BATCH:int,BUDGET:int, INIT_BUDGET:int, device=None,**kwargs):
-        super(Entropy, self).__init__(model, data_unlabeled, NO_CLASSES,BATCH,BUDGET,INIT_BUDGET,device)
+        BATCH:int,BUDGET:int, INIT_BUDGET:int, USE_GPU:bool=False,**kwargs):
+        super(Entropy, self).__init__(model, data_unlabeled, NO_CLASSES,BATCH,BUDGET,INIT_BUDGET,USE_GPU)
 
     def query(self):
         unlabeled_loader = DataLoader(self.data_unlabeled, batch_size=self.BATCH, 

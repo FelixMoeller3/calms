@@ -8,8 +8,8 @@ class RandomSelection(Strategy):
     '''
         Random selection strategy
     '''
-    def __init__(self, model: nn.Module, data_unlabeled: Dataset, NO_CLASSES: int,BATCH:int,BUDGET:int,INIT_BUDGET:int, device=None,**kwargs):
-        super(RandomSelection, self).__init__(model, data_unlabeled, NO_CLASSES,BATCH,BUDGET,INIT_BUDGET,device)
+    def __init__(self, model: nn.Module, data_unlabeled: Dataset, NO_CLASSES: int,BATCH:int,BUDGET:int,INIT_BUDGET:int, USE_GPU:bool=False,**kwargs):
+        super(RandomSelection, self).__init__(model, data_unlabeled, NO_CLASSES,BATCH,BUDGET,INIT_BUDGET,USE_GPU)
 
     def query(self) -> np.ndarray:
         random.seed(self.init_set_seed)
