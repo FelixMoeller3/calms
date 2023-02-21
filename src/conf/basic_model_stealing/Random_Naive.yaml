@@ -1,10 +1,10 @@
 SUBSTITUTE_MODEL: 
   NAME: 'TestConv' # Possible values: Resnet18,Resnext50,TestConv
-  DATASET: 'FashionMNIST'
+  DATASET: 'CIFAR-10'
   AL_METHOD: 
     NAME: 'Random' # Possible values: LC,BALD,Badge,CoreSet,Random
-    INIT_BUDGET: 1000
-    BUDGET: 1000
+    INIT_BUDGET: 2000
+    BUDGET: 2000
   CL_METHOD: 
     NAME: 'Naive' # Possible values : Alasso,EWC,MAS,IMM,Naive
     OPTIMIZER:
@@ -16,8 +16,8 @@ SUBSTITUTE_MODEL:
 BATCH_SIZE: 128 # batch size used for training
 CYCLES: 20 # number of cycles in the model stealing process
 EPOCHS: 10
-RESULTS_FOLDER: './experiments/AL/'
-RESULTS_FILE: 'results.txt'
+RESULTS_FOLDER: './experiments/CL_AL/'
+RESULTS_FILE: 'results_10epochs.txt'
 TARGET_MODEL:
   MODEL: 'TestConv'
   DATASET: 'FashionMNIST'

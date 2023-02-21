@@ -1,14 +1,15 @@
 SUBSTITUTE_MODEL: 
   NAME: 'TestConv' # Possible values: Resnet18,Resnext50,TestConv
-  DATASET: 'FashionMNIST'
+  DATASET: 'CIFAR-10'
   AL_METHOD: 
     NAME: 'BALD' # Possible values: LC,BALD,Badge,CoreSet,Random
     DROPOUT_ITER: 2
-    INIT_BUDGET: 1000
-    BUDGET: 1000
+    INIT_BUDGET: 2000
+    BUDGET: 2000
   CL_METHOD: 
     NAME: 'IMM' # Possible values : Alasso,EWC,MAS,IMM,Naive
     ALPHAS: [0.45,0.55]
+    WEIGHT: 0.1
     OPTIMIZER:
       NAME: 'SGD'
       LR: 0.001

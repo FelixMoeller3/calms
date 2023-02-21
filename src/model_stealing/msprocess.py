@@ -49,7 +49,7 @@ class ModelStealingProcess:
             unlabeled_set = [i for i in unlabeled_set if i not in training_examples]
             training_set = Subset(train_set,labeled_set)
             loaders_dict['train'] = DataLoader(training_set,batch_size,shuffle=True)
-            self.cl_strat.model = testConv(1,10)
+            self.cl_strat.model = testConv([3,32,32],10)
             self.cl_strat.optim = torch.optim.SGD(self.cl_strat.model.parameters(),0.001,0.9,weight_decay=0.0005)
             self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list)
 

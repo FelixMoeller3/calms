@@ -1,11 +1,12 @@
 SUBSTITUTE_MODEL: 
   NAME: 'TestConv' # Possible values: Resnet18,Resnext50,TestConv
-  DATASET: 'FashionMNIST'
+  DATASET: 'CIFAR-10'
   AL_METHOD: 
     NAME: 'Random' # Possible values: LC,BALD,Badge,CoreSet,Random
-    INIT_BUDGET: 1000
-    BUDGET: 1000
-  NAME: 'MAS' # Possible values : Alasso,EWC,MAS,IMM,Naive
+    INIT_BUDGET: 2000
+    BUDGET: 2000
+  CL_METHOD:
+    NAME: 'MAS' # Possible values : Alasso,EWC,MAS,IMM,Naive
     WEIGHT: 0.01
     OPTIMIZER:
       NAME: 'ADAM'
@@ -21,7 +22,7 @@ RESULTS_FILE: 'results_10epochs.txt'
 TARGET_MODEL:
   MODEL: 'TestConv'
   DATASET: 'FashionMNIST'
-  EPOCHS : 3
+  EPOCHS: 3
   OPTIMIZER:
     NAME: 'SGD'
     LR: 0.001

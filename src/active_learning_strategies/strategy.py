@@ -31,7 +31,7 @@ class Strategy:
     def seed_random_init_set(self, init_set_seed):
         self.init_set_seed = init_set_seed
     
-    def feed_current_state(self, cycle:int, subset:List[int], labeled_set):
+    def feed_current_state(self, cycle:int, subset:List[int], labeled_set: List[int]):
         self.subset = subset
         self.labeled_set = labeled_set
         self.cycle = cycle

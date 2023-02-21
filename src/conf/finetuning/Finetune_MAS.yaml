@@ -8,7 +8,7 @@ SUBSTITUTE_MODEL:
     BUDGET: 1000
   CL_METHOD: 
     NAME: 'EWC' # Possible values : Alasso,EWC,MAS,IMM,Naive
-    WEIGHT: 0.01
+    WEIGHT: 0.5
     OPTIMIZER:
       NAME: 'ADAM'
       LR: 0.0025
