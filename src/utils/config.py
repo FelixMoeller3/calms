@@ -131,13 +131,13 @@ def check_attribute_presence(config: dict, attributes: list[str],config_name: st
 
 def build_target_model(target_model_config: dict,batch_size:int,use_gpu:bool) -> nn.Module:
     check_attribute_presence(target_model_config,TARGET_MODEL_CONFIG,"target model config")
-    train_set,input_dim,num_classes = load_dataset(target_model_config['DATASET'],True,use_gpu)
+    train_set,input_dim,num_classes = load_dataset(target_model_config['DATASET'],True)
     target_model = build_model(target_model_config["MODEL"],input_dim,num_classes,use_gpu)
     train_loader = DataLoader(train_set,batch_size,True)
-    val_set,_,_ = load_dataset(target_model_config['DATASET'],False,use_gpu)
+    val_set,_,_ = load_dataset(target_model_config['DATASET'],False)
     val_loader = DataLoader(val_set,batch_size,True)
     optimizer = build_optimizer(target_model_config["OPTIMIZER"],target_model)
-    train_model(target_model,train_loader,val_loader,optimizer,target_model_config["EPOCHS"])
+    train_model(target_model,train_loader,val_loader,optimizer,target_model_config["EPOCHS"],use_gpu)
     return target_model
 
 def build_model(name: str, input_dim:tuple[int], num_classes: int, use_gpu:bool) -> nn.Module:
@@ -154,7 +154,7 @@ def build_model(name: str, input_dim:tuple[int], num_classes: int, use_gpu:bool)
         model.cuda()
     return model
 
-def load_dataset(name: str,train:bool,use_gpu:bool) -> tuple[Dataset,torch.Size,int]:
+def load_dataset(name: str,train:bool) -> tuple[Dataset,torch.Size,int]:
     '''
         Loads a dataset into memory and returns it along with the dimension of a single instance
         and the number of target classes the dataset has.
@@ -174,13 +174,6 @@ def load_dataset(name: str,train:bool,use_gpu:bool) -> tuple[Dataset,torch.Size,
                    ]),download=True)
     else:
         raise AttributeError(f"Dataset unknown. Got {name}, but expected one of {','.join(DATASET_NAMES)}")
-    if use_gpu:
-        if not isinstance(dataset.data,torch.Tensor):
-            dataset.data = torch.tensor(dataset.data)
-        dataset.data.cuda()
-        if not isinstance(dataset.targets,torch.Tensor):
-            dataset.targets = torch.tensor(dataset.targets)
-        dataset.targets.cuda()
     return dataset,dataset[0][0].shape,len(dataset.class_to_idx)
 
 def build_optimizer(config: dict,model:nn.Module) -> torch.optim.Optimizer:
@@ -193,7 +186,7 @@ def build_optimizer(config: dict,model:nn.Module) -> torch.optim.Optimizer:
         raise AttributeError(f"Optimizer unknown. Got {config['NAME']}, but expected one of {','.join(OPTIMIZERS)}")
     return optimizer
 
-def train_model(model: nn.Module,train_loader:DataLoader,val_loader:DataLoader,optimizer: torch.optim.Optimizer,num_epochs:int) -> None:
+def train_model(model: nn.Module,train_loader:DataLoader,val_loader:DataLoader,optimizer: torch.optim.Optimizer,num_epochs:int,use_gpu:bool) -> None:
     criterion = nn.CrossEntropyLoss()
     print("Training model...\n")
     for epoch in range(num_epochs):
@@ -201,6 +194,8 @@ def train_model(model: nn.Module,train_loader:DataLoader,val_loader:DataLoader,o
         correct_predictions = 0.0
         for data in tqdm(train_loader,desc=f"Running epoch {epoch+1}/{num_epochs}"):
             inputs,labels = data
+            if use_gpu:
+                inputs, labels = inputs.cuda(), labels.cuda()
             optimizer.zero_grad()
             outputs = model(inputs)
             _, preds = torch.max(outputs.data, 1)
@@ -212,14 +207,16 @@ def train_model(model: nn.Module,train_loader:DataLoader,val_loader:DataLoader,o
         epoch_loss = total_loss / len(train_loader.dataset)
         epoch_acc = correct_predictions / len(train_loader.dataset)
         print('Training Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
-        run_val_epoch(model,val_loader,criterion)
+        run_val_epoch(model,val_loader,criterion,use_gpu)
     print("Training completed\n")
 
-def run_val_epoch(model: nn.Module, val_loader: DataLoader, criterion: nn.CrossEntropyLoss) -> None:
+def run_val_epoch(model: nn.Module, val_loader: DataLoader, criterion: nn.CrossEntropyLoss,use_gpu:bool) -> None:
     total_loss = 0.0
     correct_predictions = 0.0
     for data in tqdm(val_loader,desc=f"Computing validation"):
         inputs,labels = data
+        if use_gpu:
+            inputs, labels = inputs.cuda(), labels.cuda()
         outputs = model(inputs)
         _, preds = torch.max(outputs.data, 1)
         loss = criterion(outputs, labels)
@@ -231,11 +228,11 @@ def run_val_epoch(model: nn.Module, val_loader: DataLoader, criterion: nn.CrossE
 
 def build_substitute_model(config: dict,batch_size:int,use_gpu:bool) -> tuple[Strategy,ContinualLearningStrategy,Dataset,Dataset]:
     check_attribute_presence(config,SUBSTITUTE_MODEL_CONFIG,"substitute model config")
-    train_set,input_dim,num_classes = load_dataset(config["DATASET"],True,use_gpu)
+    train_set,input_dim,num_classes = load_dataset(config["DATASET"],True)
     substitute_model = build_model(config["NAME"],input_dim,num_classes,use_gpu)
-    val_set, _, _ = load_dataset(config["DATASET"],False,use_gpu)
+    val_set, _, _ = load_dataset(config["DATASET"],False)
     al_strategy = build_al_strategy(config["AL_METHOD"],substitute_model,train_set,batch_size,num_classes,use_gpu)
-    cl_strategy = build_cl_strategy(config["CL_METHOD"],substitute_model)
+    cl_strategy = build_cl_strategy(config["CL_METHOD"],substitute_model,use_gpu)
     return al_strategy,cl_strategy,train_set,val_set
 
 
@@ -259,9 +256,10 @@ def build_al_strategy(al_config: dict,substitute_model: nn.Module, dataset: Data
     return al_strat
 
 
-def build_cl_strategy(cl_config:dict,substitute_model: nn.Module) -> ContinualLearningStrategy:
+def build_cl_strategy(cl_config:dict,substitute_model: nn.Module,use_gpu) -> ContinualLearningStrategy:
     check_attribute_presence(cl_config,CL_CONFIG,"continual learning config")
     optimizer = build_optimizer(cl_config["OPTIMIZER"],substitute_model)
+    cl_config["USE_GPU"] = use_gpu
     if cl_config["NAME"] == "Alasso":
         cl_strat = cl_strats.Alasso(substitute_model,optimizer,nn.CrossEntropyLoss(),**cl_config)
     elif cl_config["NAME"] == "IMM":

@@ -25,12 +25,11 @@ class Entropy(Strategy):
         self.model.eval()
         with torch.cuda.device(self.device):
             predic_probs = torch.tensor([]).cuda()
-            model = self.model.cuda()
         with torch.no_grad():
             for inputs, _, _ in unlabeled_loader:
                 with torch.cuda.device(self.device):
                     inputs = inputs.cuda()
-                predict, _, _ = model(inputs)
+                predict, _, _ = self.model(inputs)
                 prob = F.softmax(predict, dim=1)
                 predic_probs = torch.cat((predic_probs, prob), 0)
 

@@ -14,7 +14,7 @@ class Alasso(ContinualLearningStrategy):
     '''
 
     def __init__(self,model:nn.Module,optim: torch.optim.Optimizer,crit: nn.CrossEntropyLoss,
-    WEIGHT:float=1.0,WEIGHT_PRIME:float=1.0,A:float=1.0,A_PRIME:float=1.0,EPSILON:float=1e-4,**kwargs):
+    WEIGHT:float=1.0,WEIGHT_PRIME:float=1.0,A:float=1.0,A_PRIME:float=1.0,EPSILON:float=1e-4,USE_GPU:bool=False,**kwargs):
         '''
             :param model: The model that should be trained using continual learning.
             :param optim: The optimizer to be used during training. Beware: When using Alasso, one should set a rather low learning rate as Alasso easily overshoots when using a medium to high learning rate.
@@ -26,7 +26,7 @@ class Alasso(ContinualLearningStrategy):
             :param EPSILON: This parameter is added to the denominator in equation (7) to make sure we are not dividing by zero. It should always be > 0.
         '''
         #TODO: Issue warning when parameter a is <=1 
-        super(Alasso,self).__init__(model,optim,crit)
+        super(Alasso,self).__init__(model,optim,crit,USE_GPU)
         self.weight = WEIGHT
         self.weight_prime = WEIGHT_PRIME
         self.a = A
@@ -130,26 +130,11 @@ class Alasso(ContinualLearningStrategy):
         for name, param in self.model.named_parameters():
             self.deltas[name] = param - self.deltas[name]
 
-
-    def train(self, dataloaders: dict[str,DataLoader], num_epochs:int, val_step:int,result_list:List[float]=[]) -> None:
-        '''
-            Trains the model for num_epoch epochs using the dataloaders 'train' and 'val' in the dataloaders dict
-        '''
-        start_time = time.time()
+    def _before_train(self) -> None:
         self._compute_omegas()
         self._save_weights()
         self.grads2 = {}
         self._compute_grads2()
-        for epoch in range(num_epochs):
-            print(f"Running epoch {epoch+1}/{num_epochs}")
-            self._run_train_epoch(dataloaders['train'],last_epoch=epoch==num_epochs-1)
-            log_list = None if epoch < num_epochs-1 else result_list
-            if (epoch+1) % val_step == 0:
-                self._run_val_epoch(dataloaders['val'],log_list)
-        # Update Omegas
-        time_elapsed = time.time() - start_time
-        print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
-
 
     def _run_train_epoch(self,dataloader: DataLoader,last_epoch:bool=False) -> None:
         '''
@@ -162,11 +147,13 @@ class Alasso(ContinualLearningStrategy):
             self.optim.zero_grad()
             self._compute_deltas(compute_diff=False)
             inputs, labels = data
+            if self.use_gpu:
+                inputs, labels = inputs.cuda(), labels.cuda()
             outputs = self.model(inputs)
             unreg_loss = self.crit(outputs, labels)
             unreg_loss.backward()
             self._compute_unreg_grads()
-            reg_loss = self._compute_consolidation_loss()
+            reg_loss = self._compute_regularization_loss()
             #retain_graph = (not last_epoch) or i<num_batches-1
             #start = time.time()
             reg_loss.backward(retain_graph=True)
@@ -181,38 +168,8 @@ class Alasso(ContinualLearningStrategy):
         epoch_acc = correct_predictions / len(dataloader.dataset)
         print('Training Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
 
-    def calc_num_node_in_grad_fn(self,grad_fn):
-        result = 0
-        if grad_fn is not None:
-            result += 1
-            if hasattr(grad_fn, 'next_functions'):
-                for f in grad_fn.next_functions:
-                    result += self.calc_num_node_in_grad_fn(f)
-        return result
-    
-    def _run_val_epoch(self,dataloader: DataLoader,log_list:List[float]=None) -> None:
-        '''
-            Runs one validation epoch using the dataloader which contains the validation data. 
-        '''
-        total_loss = 0.0
-        correct_predictions = 0
-        self.model.train(False)
-        for data in tqdm(dataloader):
-            inputs, labels = data
 
-            outputs = self.model(inputs)
-            _, preds = torch.max(outputs.data,1)
-            loss = self.crit(outputs,labels)
-            total_loss += loss.item()
-            correct_predictions += torch.sum(preds == labels.data).item()
-
-        epoch_loss = total_loss / len(dataloader.dataset)
-        epoch_acc = correct_predictions / len(dataloader.dataset)
-        if log_list is not None:
-            log_list.append(epoch_acc)
-        print('Validation Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
-
-    def _compute_consolidation_loss(self) -> torch.Tensor:
+    def _compute_regularization_loss(self) -> torch.Tensor:
         '''
             Computes the loss added to the standard loss via the regularization term.
         '''

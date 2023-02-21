@@ -1,12 +1,10 @@
 from typing import List
 import torch
 import torch.nn as nn
-from torch.utils.data import DataLoader,Dataset
+from torch.utils.data import Dataset
 from .cl_base import ContinualLearningStrategy
-import time
 import random
 from torch.nn import functional as F
-from tqdm import tqdm
 
 
 class ElasticWeightConsolidation(ContinualLearningStrategy):
@@ -18,8 +16,8 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
         https://github.com/thuyngch/Overcoming-Catastrophic-Forgetting
     '''
 
-    def __init__(self,model:nn.Module,optim: torch.optim.Optimizer,crit: nn.CrossEntropyLoss,WEIGHT:float=1.0,**kwargs):
-        super(ElasticWeightConsolidation,self).__init__(model,optim,crit)
+    def __init__(self,model:nn.Module,optim: torch.optim.Optimizer,crit: nn.CrossEntropyLoss,WEIGHT:float=1.0,USE_GPU:bool=False,**kwargs):
+        super(ElasticWeightConsolidation,self).__init__(model,optim,crit,USE_GPU)
         self.weight = WEIGHT
         self.prev_params = {}
         self._save_model_params()
@@ -34,70 +32,9 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
         for name,param in self.model.named_parameters():
             self.prev_params[name] = param.detach().clone()
 
-    def train(self, dataloaders: dict[str,DataLoader], num_epochs:int,val_step:int,result_list:List[float]=[]):
-        '''
-            Trains the model for num_epoch epochs using the dataloaders 'train' and 'val' in the dataloaders dict
-        '''
-        start_time = time.time()
-        for epoch in range(num_epochs):
-            print(f"Running epoch {epoch+1}/{num_epochs}")
-            self._run_train_epoch(dataloaders['train'])
-            log_list = None if epoch < num_epochs-1 else result_list
-            if (epoch+1) % val_step == 0:
-                self._run_val_epoch(dataloaders['val'],log_list)
+    def _after_train(self,train_set: Dataset) -> None:
         self._save_model_params()
-        self._update_fisher_params(dataloaders['train'].dataset,0.05)
-        time_elapsed = time.time() - start_time
-        print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
-
-    def _run_train_epoch(self,dataloader: DataLoader) -> None:
-        '''
-            Runs one epoch of the training procedure with the data given by the dataloader.
-        '''
-        self.model.train(True)
-        total_loss = 0.0
-        correct_predictions = 0
-        for data in tqdm(dataloader):
-
-            inputs, labels = data
-
-            self.optim.zero_grad()
-            
-            outputs = self.model(inputs)
-            loss = self._compute_consolidation_loss() + self.crit(outputs, labels)
-            loss.backward()
-            self.optim.step()
-            _, preds = torch.max(outputs.data, 1)
-            total_loss += loss.item()
-            correct_predictions += torch.sum(preds == labels.data).item()
-        
-        epoch_loss = total_loss / len(dataloader.dataset)
-        epoch_acc = correct_predictions / len(dataloader.dataset)
-
-        print('Training Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
-
-    def _run_val_epoch(self,dataloader: DataLoader,log_list:List[float]=None):
-        '''
-            Runs one validation epoch using the dataloader which contains the validation data. 
-        '''
-        total_loss = 0.0
-        correct_predictions = 0
-        self.model.train(False)
-        for data in tqdm(dataloader):
-            inputs, labels = data
-
-            outputs = self.model(inputs)
-            _, preds = torch.max(outputs.data,1)
-            loss = self.crit(outputs,labels)
-            total_loss += loss.item()
-            correct_predictions += torch.sum(preds == labels.data).item()
-
-        epoch_loss = total_loss / len(dataloader.dataset)
-        epoch_acc = correct_predictions / len(dataloader.dataset)
-        if log_list is not None:
-            log_list.append(epoch_acc)
-        print('Validation Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
-
+        self._update_fisher_params(train_set,0.05)
 
     def _update_fisher_params(self, train_dataset: Dataset=None, sample_size:float=0.05):
         '''
@@ -122,7 +59,7 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
                 self.fisher[name] += param.grad.data ** 2 / num_samples
 
 
-    def _compute_consolidation_loss(self):
+    def _compute_regularization_loss(self):
         '''
             TODO: Add method description
         '''

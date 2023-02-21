@@ -10,8 +10,8 @@ SUBSTITUTE_MODEL:
     ALPHAS: [0.45,0.55]
     WEIGHT: 0.1
     OPTIMIZER:
-      NAME: 'SGD'
-      LR: 0.001
+      NAME: 'ADAM'
+      LR: 0.005
       MOMENTUM: 0.9
       WDECAY: 0.0005
       MILESTONES: [160,240]
