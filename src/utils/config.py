@@ -40,6 +40,7 @@ def run_config(config_path: str) -> ModelStealingProcess:
     target_model = build_target_model(yaml_cfg["TARGET_MODEL"],batch_size,use_gpu)
     al_method,cl_method,train_set,val_set = build_substitute_model(yaml_cfg["SUBSTITUTE_MODEL"],batch_size,use_gpu)
     cycles = yaml_cfg["CYCLES"]
+    print(f'Model stealing with strategies {yaml_cfg["SUBSTITUTE_MODEL"]["AL_METHOD"]["NAME"]} and {yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["NAME"]}')
     ms_process = ModelStealingProcess(target_model,al_method,cl_method,use_gpu)
     num_epochs = yaml_cfg["EPOCHS"]
     accuracies = ms_process.steal_model(train_set,val_set,batch_size,cycles,num_epochs)
@@ -74,6 +75,7 @@ def run_cl_al_config(config_path: str) -> ModelStealingProcess:
     cycles = yaml_cfg["CYCLES"]
     ms_process = ModelStealingProcess(None,al_method,cl_method)
     num_epochs = yaml_cfg["EPOCHS"]
+    print(f'Running continual active learning with strategies {yaml_cfg["SUBSTITUTE_MODEL"]["AL_METHOD"]["NAME"]} and {yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["NAME"]}')
     accuracies = ms_process.continual_learning(train_set,val_set,batch_size,cycles,num_epochs)
     duration = time.time() - start
     hours = int(duration)//3600
@@ -105,6 +107,7 @@ def run_al_config(config_path: str) -> ModelStealingProcess:
     cycles = yaml_cfg["CYCLES"]
     ms_process = ModelStealingProcess(None,al_method,cl_method)
     num_epochs = yaml_cfg["EPOCHS"]
+    print(f'Running active learning with strategy {yaml_cfg["SUBSTITUTE_MODEL"]["AL_METHOD"]["NAME"]}')
     accuracies = ms_process.active_learning(train_set,val_set,batch_size,cycles,num_epochs)
     duration = time.time() - start
     hours = int(duration)//3600

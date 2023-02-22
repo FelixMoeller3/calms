@@ -14,6 +14,16 @@
 module purge                                       # Unload all currently loaded modules.
 module load devel/cuda/11.8
 source ../ba_env/bin/activate   
-
+configs=("./src/conf/basic_model_stealing/Badge_Alasso.yaml"
+        "./src/conf/basic_model_stealing/Badge_EWC.yaml"
+        "./src/conf/basic_model_stealing/Badge_IMM.yaml"
+        "./src/conf/basic_model_stealing/Badge_MAS.yaml"
+        "./src/conf/basic_model_stealing/Badge_Naive.yaml"
+)
+for conf in "${configs[@]}"
+do 
+    echo "Running $conf with mode AL"
+    python ./src/main.py -c $conf -m "AL"
+done
 python ./src/main.py
-deactivate
+#deactivate
