@@ -136,3 +136,27 @@ Continual Learning Strategy: EWC
 Active Learning Strategy: Random
 Accuracy results at the end of each cycle: [0.4354, 0.4763, 0.5196, 0.4602, 0.6026, 0.6306, 0.6372, 0.6343, 0.6278, 0.5235, 0.6417, 0.6715, 0.7012, 0.6838, 0.7033, 0.6973, 0.7209, 0.7044, 0.7104, 0.7233, 0.7193]
 ----------------------------------------------------------------------
+Run completed at 2023-02-22 14:36:57 after 00h:04m:54s
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: MAS
+Active Learning Strategy: Random
+Accuracy results at the end of each cycle: [0.4093, 0.5136, 0.5464, 0.5789, 0.5942, 0.622, 0.6427, 0.6497, 0.6685, 0.6784, 0.6981, 0.7007, 0.711, 0.7114, 0.7168, 0.7329, 0.7359, 0.7412, 0.745, 0.7551, 0.756]
+----------------------------------------------------------------------
+Run completed at 2023-02-22 14:40:12 after 00h:03m:14s
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: Naive
+Active Learning Strategy: Random
+Accuracy results at the end of each cycle: [0.3968, 0.4744, 0.526, 0.5584, 0.5768, 0.6108, 0.6387, 0.648, 0.6613, 0.6708, 0.6796, 0.7004, 0.7027, 0.7127, 0.7214, 0.7225, 0.7337, 0.7376, 0.7418, 0.7407, 0.7453]
+----------------------------------------------------------------------
+Run completed at 2023-02-22 14:44:03 after 00h:03m:50s
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: EWC
+Active Learning Strategy: Random
+Accuracy results at the end of each cycle: [0.4016, 0.5, 0.5478, 0.5783, 0.6023, 0.6269, 0.6525, 0.6608, 0.6755, 0.6871, 0.6994, 0.7099, 0.7168, 0.7288, 0.7339, 0.7356, 0.7489, 0.75, 0.7535, 0.7527, 0.7652]
+----------------------------------------------------------------------
+Run completed at 2023-02-22 14:47:17 after 00h:03m:14s
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: IMM
+Active Learning Strategy: Random
+Accuracy results at the end of each cycle: [0.3457, 0.5126, 0.5656, 0.5914, 0.6151, 0.6333, 0.6505, 0.664, 0.6771, 0.6946, 0.709, 0.7176, 0.7142, 0.7269, 0.7323, 0.7325, 0.7395, 0.7489, 0.7509, 0.7628, 0.7682]
+----------------------------------------------------------------------

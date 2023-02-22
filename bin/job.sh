@@ -12,7 +12,7 @@
 #SBATCH --gres=gpu:1
 
 module purge                                       # Unload all currently loaded modules.
-module load devel/cuda/11.4
+module load devel/cuda/11.8
 source ../ba_env/bin/activate   
 
 python ./src/main.py
