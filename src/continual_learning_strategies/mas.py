@@ -96,7 +96,7 @@ class MAS(ContinualLearningStrategy):
             Should be called whenever the model is evaluated
         '''
         output_l2 = nn.MSELoss(reduction='sum')
-        targets = output_l2(outputs,torch.zeros(outputs.size()))
+        targets = output_l2(outputs,torch.zeros_like(outputs))
         targets.backward(retain_graph=True)
         for name, param in self.model.named_parameters():
             if name not in self.regularization_params_prev:
