@@ -53,7 +53,7 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
                 input = input.cuda()
             output = self.model(input)
             sm = F.log_softmax(output,dim=1)
-            label_tensor = torch.tensor([label],dtype=torch.long)
+            label_tensor = torch.tensor([label],dtype=torch.long).cuda() if self.use_gpu else torch.tensor([label],dtype=torch.long)
             loss = F.nll_loss(sm,label_tensor)
             loss.backward()
 
