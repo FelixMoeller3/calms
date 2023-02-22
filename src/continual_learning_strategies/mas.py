@@ -32,7 +32,7 @@ class MAS(ContinualLearningStrategy):
 
         '''
         super(MAS,self).__init__(model,optimizer,criterion,USE_GPU)
-        self.weight = WEIGHT
+        self.weight = torch.tensor(WEIGHT).cuda() if self.use_gpu else torch.tensor(WEIGHT)
         self.freeze_layers = FREEZE_LAYERS
         # The total number of samples that have been classified before training the current task
         self.n_samples_prev = 0
@@ -52,12 +52,12 @@ class MAS(ContinualLearningStrategy):
             for name, param in self.model.named_parameters():
                 if name in self.freeze_layers:
                     continue
-                self.regularization_params_prev[name] = torch.zeros(param.size())
+                self.regularization_params_prev[name] = torch.zeros_like(param)
         # return if the current parameters have already been set to zero
         for name, param in self.model.named_parameters():
             if name in self.freeze_layers:
                 continue
-            self.regularization_params_cur[name] = torch.zeros(param.size())
+            self.regularization_params_cur[name] = torch.zeros_like(param)
 
     def _before_train(self) -> None:
         self._save_prev_params()
@@ -119,7 +119,7 @@ class MAS(ContinualLearningStrategy):
         '''
             Computes the regularization loss for one batch
         '''
-        reg_loss = torch.tensor(0.0)
+        reg_loss = torch.tensor(0.0).cuda() if self.use_gpu else torch.tensor(0.0)
         for name,param in self.model.named_parameters():
             if name in self.freeze_layers:
                 continue

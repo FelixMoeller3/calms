@@ -18,7 +18,7 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
 
     def __init__(self,model:nn.Module,optim: torch.optim.Optimizer,crit: nn.CrossEntropyLoss,WEIGHT:float=1.0,USE_GPU:bool=False,**kwargs):
         super(ElasticWeightConsolidation,self).__init__(model,optim,crit,USE_GPU)
-        self.weight = WEIGHT
+        self.weight = torch.tensor(WEIGHT).cuda() if self.use_gpu else torch.tensor(WEIGHT)
         self.prev_params = {}
         self._save_model_params()
         self.fisher = {}
@@ -49,6 +49,8 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
             elem, label = train_dataset[cur_index]
             self.optim.zero_grad()
             input = torch.unsqueeze(elem,0)
+            if self.use_gpu:
+                input = input.cuda()
             output = self.model(input)
             sm = F.log_softmax(output,dim=1)
             label_tensor = torch.tensor([label],dtype=torch.long)
@@ -63,7 +65,7 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
         '''
             TODO: Add method description
         '''
-        loss = torch.tensor(0.0)
+        loss = torch.tensor(0.0).cuda() if self.use_gpu else torch.tensor(0.0)
         for name,param in self.model.named_parameters():
             diff:torch.Tensor = param - self.prev_params[name]
             diff.pow_(2)

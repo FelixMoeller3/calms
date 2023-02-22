@@ -20,8 +20,11 @@ class IMM(ContinualLearningStrategy):
         '''
         super(IMM,self).__init__(model,optim,crit,USE_GPU)
         assert not ALPHAS or abs(sum(ALPHAS)-1.0) < 1e-8
-        self.alphas = ALPHAS
-        self.weight = WEIGHT
+        if ALPHAS:
+            self.alphas = [torch.tensor(val).cuda() if self.use_gpu else torch.tensor(val) for val in ALPHAS]
+        else:
+            self.alphas = ALPHAS
+        self.weight = torch.tensor(WEIGHT).cuda() if self.use_gpu else torch.tensor(WEIGHT)
         self.mean = MEAN
         self.num_tasks = 0
         self.prev_param_list = []
@@ -65,7 +68,11 @@ class IMM(ContinualLearningStrategy):
         new_model_weights = {}
         for name,param in self.model.named_parameters():
             new_model_weights[name] = torch.zeros_like(param)
-        alphas = [1/len(self.prev_param_list)] * len(self.prev_param_list) if not self.alphas else self.alphas
+        if self.alphas:
+            alphas = self.alphas
+        else:
+            val = 1/len(self.prev_param_list)
+            alphas = [torch.tensor(val).cuda() if self.use_gpu else torch.tensor(val)] * len(self.prev_param_list)
         if self.mean:
             for i,weights in enumerate(self.prev_param_list):
                 for name,param in self.model.named_parameters():
@@ -98,10 +105,14 @@ class IMM(ContinualLearningStrategy):
         for _ in range(int(num_samples)):
             cur_index = random.randint(0,len(train_dataset)-1)
             elem, label = train_dataset[cur_index]
+            if not isinstance(elem,torch.Tensor):
+                elem = torch.tensor(elem)
+            if self.use_gpu:
+                elem = elem.cuda()
             self.optim.zero_grad()
             output = self.model(elem)
             sm = F.log_softmax(output,dim=1)
-            label_tensor = torch.tensor([label],dtype=torch.long)
+            label_tensor = torch.tensor([label],dtype=torch.long).cuda() if self.use_gpu else torch.tensor([label],dtype=torch.long)
             loss = F.nll_loss(sm,label_tensor)
             loss.backward()
 
