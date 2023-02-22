@@ -1,0 +1,31 @@
+SUBSTITUTE_MODEL: 
+  NAME: 'TestConv' # Possible values: Resnet18,Resnext50,TestConv
+  DATASET: 'CIFAR-10' # Possible values: MNIST,FashionMNIST
+  AL_METHOD: 
+    NAME: 'CoreSet' # Possible values: LC,BALD,Badge,CoreSet,Random
+    INIT_BUDGET: 1000
+    BUDGET: 1000
+  CL_METHOD: 
+    NAME: 'Naive' # Possible values : Alasso,EWC,MAS,IMM,Naive
+    OPTIMIZER:
+      NAME: 'ADAM'
+      LR: 0.001
+      MOMENTUM: 0.9
+      WDECAY: 0.0005
+      MILESTONES: [160,240]
+BATCH_SIZE: 128 # batch size used for training
+CYCLES: 10 # number of cycles in the model stealing process
+EPOCHS: 5
+USE_GPU: True # Whether or not to use GPU Acceleration
+RESULTS_FOLDER: './experiments/CL_AL/'
+RESULTS_FILE: 'results_10epochs.txt'
+TARGET_MODEL:
+  MODEL: 'TestConv'
+  DATASET: 'FashionMNIST'
+  EPOCHS : 3
+  OPTIMIZER:
+    NAME: 'SGD'
+    LR: 0.001
+    MOMENTUM: 0.9
+    WDECAY: 0.0005
+    MILESTONES: [160,240]

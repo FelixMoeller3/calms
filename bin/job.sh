@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=continuallearning       # job name
 #SBATCH --partition=gpu_4                  # queue for the resource allocation.
-#SBATCH --time=100:00                     # wall-clock time limit  
+#SBATCH --time=500:00                     # wall-clock time limit  
 #SBATCH --mem=10000                        # memory per node
 #SBATCH --nodes=1                          # number of nodes to be used
 #SBATCH --cpus-per-task=40                 # number of CPUs required per MPI task
