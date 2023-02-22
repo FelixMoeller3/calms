@@ -10,10 +10,10 @@ SUBSTITUTE_MODEL:
     ALPHAS: [0.45,0.55]
     WEIGHT: 0.1
     OPTIMIZER:
-      NAME: 'ADAM'
-      LR: 0.005
+      NAME: 'SGD'
+      LR: 0.01
       MOMENTUM: 0.9
-      WDECAY: 0.0005
+      WDECAY: 0.0001
       MILESTONES: [160,240]
 BATCH_SIZE: 128 # batch size used for training
 CYCLES: 20 # number of cycles in the model stealing process
