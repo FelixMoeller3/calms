@@ -14,8 +14,8 @@ class BALD(Strategy):
         in the following paper: https://arxiv.org/pdf/1112.5745.pdf
     '''
     def __init__(self, model: nn.Module, data_unlabeled: Dataset, NO_CLASSES: int,BATCH:int,BUDGET:int,
-        INIT_BUDGET:int, DROPOUT_ITER:int,device=None,**kwargs):
-        super(BALD, self).__init__(model, data_unlabeled,NO_CLASSES,BATCH,BUDGET,INIT_BUDGET,device)
+        INIT_BUDGET:int, DROPOUT_ITER:int,USE_GPU:bool=False,**kwargs):
+        super(BALD, self).__init__(model, data_unlabeled,NO_CLASSES,BATCH,BUDGET,INIT_BUDGET,USE_GPU)
         self.dropout_iter = DROPOUT_ITER
 
     def query(self) -> np.ndarray:

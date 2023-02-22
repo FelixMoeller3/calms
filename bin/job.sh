@@ -25,5 +25,4 @@ do
     echo "Running $conf with mode AL"
     python ./src/main.py -c $conf -m "AL"
 done
-python ./src/main.py
-#deactivate
+deactivate

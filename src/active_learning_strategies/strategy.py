@@ -11,7 +11,7 @@ class Strategy:
         Base class for continual learning strategies
     '''
     def __init__(self, model:nn.Module, data_unlabeled, NO_CLASSES:int,
-     batch:int,budget:int, init_budget:int, use_gpu):
+     batch:int,budget:int, init_budget:int, use_gpu:bool):
         self.model = model
         self.data_unlabeled = data_unlabeled
         self.subset = []
