@@ -144,7 +144,7 @@ def build_model(name: str, input_dim:tuple[int], num_classes: int, use_gpu:bool)
     #TODO: Add models here
     if name == "Resnet18":
         model = ResNet(BasicBlock, [2,2,2,2], num_classes)
-    if name == "Resnet34":
+    elif name == "Resnet34":
         model = ResNet(BasicBlock, [3,4,6,3], num_classes)
     elif name == "Resnet50":
         model = ResNet(Bottleneck, [3,4,6,3], num_classes)
