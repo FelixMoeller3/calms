@@ -8,7 +8,7 @@ import torch.nn as nn
 from torch.utils.data import DataLoader,Dataset
 from torchvision import datasets, transforms
 import torch
-from models import testConv,testNN
+from models import testConv,testNN,ResNet,BasicBlock,Bottleneck
 from tqdm import tqdm
 from datetime import datetime
 import time
@@ -21,7 +21,7 @@ AL_METHODS = ['LC','BALD','Badge','CoreSet', 'Random']
 CL_CONFIG = ["NAME", "OPTIMIZER"]
 CL_METHODS = ["Alasso", "IMM", "Naive", "EWC", "MAS"]
 OPTIMIZERS =["SGD", "ADAM"]
-MODELS = ['Resnet18','Resnext50', 'TestConv']
+MODELS = ['Resnet18', 'Resnet34', 'Resnet50', 'Resnet101', 'Resnet152', 'TestConv']
 TARGET_MODEL_CONFIG = ['MODEL','DATASET','EPOCHS','OPTIMIZER']
 DATASET_NAMES = ["MNIST","FashionMNIST", "CIFAR-10"]
 OPTIMIZER_CONFIG = ["NAME", "LR", "MOMENTUM", "WDECAY", "MILESTONES"]
@@ -143,9 +143,15 @@ def build_target_model(target_model_config: dict,batch_size:int,use_gpu:bool) ->
 def build_model(name: str, input_dim:tuple[int], num_classes: int, use_gpu:bool) -> nn.Module:
     #TODO: Add models here
     if name == "Resnet18":
-        model = None
-    elif name == "Resnext50":
-        model = None
+        model = ResNet(BasicBlock, [2,2,2,2], num_classes)
+    if name == "Resnet34":
+        model = ResNet(BasicBlock, [3,4,6,3], num_classes)
+    elif name == "Resnet50":
+        model = ResNet(Bottleneck, [3,4,6,3], num_classes)
+    elif name == "Resnet101":
+        model = ResNet(Bottleneck, [3,4,23,3], num_classes)
+    elif name == "Resnet152":
+        model = ResNet(Bottleneck, [3,8,36,3], num_classes)
     elif name == "TestConv":
         model = testConv(input_dim,num_classes)
     else:

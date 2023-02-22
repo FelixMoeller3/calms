@@ -6,7 +6,7 @@ from torchvision import datasets,transforms
 
 #parser = argparse.ArgumentParser(description='Run experiment for model stealing')
 #al = ["Random","BALD", "LC"]
-#cl = ["MAS","Naive", "EWC", "IMM", "Alasso"]
+cl = ["MAS","Naive", "EWC", "IMM", "Alasso"]
 #for a in al:
 #    for c in cl:
 #        config.run_cl_al_config("./src/conf/basic_model_stealing/" + a + "_" + c + ".yaml")
@@ -15,5 +15,5 @@ from torchvision import datasets,transforms
 #for a in al:
 #    for c in cl:
 #        config.run_cl_al_config("./src/conf/basic_model_stealing/" + a + "_" + c + ".yaml")
-config.run_cl_al_config("./src/conf/basic_model_stealing/Random_MAS.yaml")
-print("hello world")
+for c in cl:
+    config.run_cl_al_config("./src/conf/basic_model_stealing/Random_" + c + ".yaml")

@@ -1,1 +1,1 @@
-from .test_model import testConv,testNN
+from .test_model import testConv,testNN,ResNet,BasicBlock,Bottleneck
