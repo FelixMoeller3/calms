@@ -27,11 +27,11 @@ class Alasso(ContinualLearningStrategy):
         '''
         #TODO: Issue warning when parameter a is <=1 
         super(Alasso,self).__init__(model,optim,crit,USE_GPU)
-        self.weight = WEIGHT
-        self.weight_prime = WEIGHT_PRIME
-        self.a = A
-        self.a_prime = A_PRIME
-        self.epsilon = EPSILON
+        self.weight = torch.tensor(WEIGHT).cuda() if self.use_gpu else torch.tensor(WEIGHT)
+        self.weight_prime = torch.tensor(WEIGHT_PRIME).cuda() if self.use_gpu else torch.tensor(WEIGHT_PRIME)
+        self.a = torch.tensor(A).cuda() if self.use_gpu else torch.tensor(A)
+        self.a_prime = torch.tensor(A_PRIME).cuda() if self.use_gpu else torch.tensor(A_PRIME)
+        self.epsilon = torch.tensor(EPSILON).cuda() if self.use_gpu else torch.tensor(EPSILON)
         # Dict to save previous weights
         self.weights = {}
         self._save_weights()
@@ -63,7 +63,7 @@ class Alasso(ContinualLearningStrategy):
         '''
         if not self.grads2:
             for name,param in self.model.named_parameters():
-                self.grads2[name] = torch.zeros_like(param)
+                self.grads2[name] = torch.zeros_like(param).cuda() if self.use_gpu else torch.zeros_like(param)
             return
         for name, param in self.model.named_parameters():
             self.grads2[name] = self.grads2[name] - self.unreg_grads[name] * self.deltas[name]
@@ -75,7 +75,7 @@ class Alasso(ContinualLearningStrategy):
         '''
         if not self.omegas:
             for name,param in self.model.named_parameters():
-                self.omegas[name] = torch.zeros_like(param)
+                self.omegas[name] = torch.zeros_like(param).cuda() if self.use_gpu else torch.zeros_like(param)
             return
         for name, param in self.model.named_parameters():
             self.omegas[name] = torch.where(
@@ -112,7 +112,7 @@ class Alasso(ContinualLearningStrategy):
         '''
         if not self.unreg_grads:
             for name,param in self.model.named_parameters():
-                self.unreg_grads[name] = torch.zeros_like(param)
+                self.unreg_grads[name] = torch.zeros_like(param).cuda() if self.use_gpu else torch.zeros_like(param)
             return
         for name,param in self.model.named_parameters():
             self.unreg_grads[name] = param.grad.detach().clone()
@@ -173,7 +173,7 @@ class Alasso(ContinualLearningStrategy):
         '''
             Computes the loss added to the standard loss via the regularization term.
         '''
-        loss = torch.tensor(0.0)
+        loss = torch.tensor(0.0).cuda() if self.use_gpu else torch.tensor(0.0)
         for name,param in self.model.named_parameters():
             loss += self.asymmetric_loss_func(name,param,self.a).sum()
         return loss * self.weight
