@@ -86,7 +86,7 @@ def run_cl_al_config(config_path: str) -> ModelStealingProcess:
     sub_cfg = yaml_cfg['SUBSTITUTE_MODEL']
     with open(yaml_cfg["RESULTS_FOLDER"] + yaml_cfg["RESULTS_FILE"],'a+') as f:
         f.write(f'Run completed at {datetime.today().strftime("%Y-%m-%d %H:%M:%S")} after {time_string}\n'
-                f'Optimizer args {"".join([f"{elem}:{sub_cfg[elem]}" for elem in sub_cfg])}'
+                f'Optimizer args {"".join([f"{elem}:{sub_cfg[elem]}" for elem in sub_cfg])} \n'
                 f'Model: {yaml_cfg["SUBSTITUTE_MODEL"]["NAME"]}, trained on {yaml_cfg["SUBSTITUTE_MODEL"]["DATASET"]}\n'
                 f'Continual Learning Strategy: {yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["NAME"]}\n'
                 f'Active Learning Strategy: {yaml_cfg["SUBSTITUTE_MODEL"]["AL_METHOD"]["NAME"]}\n'
