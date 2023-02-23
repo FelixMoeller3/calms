@@ -83,7 +83,7 @@ def run_cl_al_config(config_path: str) -> ModelStealingProcess:
     seconds = int(duration) % 60
     time_string = "{:02}h:{:02}m:{:02}s".format(hours,minutes,seconds)
     os.makedirs(yaml_cfg["RESULTS_FOLDER"],exist_ok=True)
-    sub_cfg = yaml_cfg['SUBSTITUTE_MODEL']
+    sub_cfg = yaml_cfg['SUBSTITUTE_MODEL']["CL_METHOD"]
     with open(yaml_cfg["RESULTS_FOLDER"] + yaml_cfg["RESULTS_FILE"],'a+') as f:
         f.write(f'Run completed at {datetime.today().strftime("%Y-%m-%d %H:%M:%S")} after {time_string}\n'
                 f'Optimizer args {"".join([f"{elem}:{sub_cfg[elem]}" for elem in sub_cfg])} \n'
