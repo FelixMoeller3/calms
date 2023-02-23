@@ -160,3 +160,117 @@ Continual Learning Strategy: IMM
 Active Learning Strategy: Random
 Accuracy results at the end of each cycle: [0.3457, 0.5126, 0.5656, 0.5914, 0.6151, 0.6333, 0.6505, 0.664, 0.6771, 0.6946, 0.709, 0.7176, 0.7142, 0.7269, 0.7323, 0.7325, 0.7395, 0.7489, 0.7509, 0.7628, 0.7682]
 ----------------------------------------------------------------------
+Run completed at 2023-02-22 21:31:43 after 00h:02m:58s
+Model: TestConv, trained on CIFAR-10
+Continual Learning Strategy: EWC
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.4032, 0.4745, 0.5011, 0.5062, 0.5145, 0.5299, 0.5229, 0.5344, 0.5318, 0.5309, 0.5452, 0.5564, 0.5618, 0.5577, 0.5585, 0.5693, 0.5695, 0.5734, 0.5694, 0.5806, 0.581]
+----------------------------------------------------------------------
+Run completed at 2023-02-22 21:34:04 after 00h:02m:11s
+Model: TestConv, trained on CIFAR-10
+Continual Learning Strategy: IMM
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.1002, 0.1794, 0.2281, 0.2597, 0.2826, 0.2939, 0.3199, 0.3063, 0.34, 0.3684, 0.3851, 0.3939, 0.416, 0.4164, 0.4265, 0.4305, 0.4555, 0.449, 0.4584, 0.4627, 0.4653]
+----------------------------------------------------------------------
+Run completed at 2023-02-22 21:36:22 after 00h:02m:11s
+Model: TestConv, trained on CIFAR-10
+Continual Learning Strategy: Naive
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.4199, 0.4609, 0.4972, 0.5128, 0.5094, 0.5272, 0.5179, 0.5258, 0.5354, 0.5346, 0.5422, 0.5476, 0.5513, 0.5522, 0.5573, 0.5651, 0.5527, 0.56, 0.5536, 0.5624, 0.5731]
+----------------------------------------------------------------------
+Run completed at 2023-02-22 22:02:22 after 00h:25m:57s
+Model: TestConv, trained on CIFAR-10
+Continual Learning Strategy: Alasso
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.3734, 0.4475, 0.454, 0.4368, 0.4333, 0.4363, 0.4015, 0.3982, 0.373, 0.3528, 0.3372, 0.322, 0.3402, 0.3245, 0.316, 0.3072, 0.2769, 0.2898, 0.2947, 0.2727, 0.2818]
+----------------------------------------------------------------------
+Run completed at 2023-02-22 22:05:35 after 00h:03m:11s
+Model: TestConv, trained on CIFAR-10
+Continual Learning Strategy: EWC
+Active Learning Strategy: BALD
+Accuracy results at the end of each cycle: [0.4027, 0.4285, 0.4876, 0.4874, 0.5048, 0.5166, 0.5218, 0.5314, 0.5376, 0.5462, 0.5481, 0.5424, 0.5459, 0.5505, 0.562, 0.5635, 0.5621, 0.5648, 0.567, 0.5686, 0.5706]
+----------------------------------------------------------------------
+Run completed at 2023-02-22 22:08:42 after 00h:03m:05s
+Model: TestConv, trained on CIFAR-10
+Continual Learning Strategy: IMM
+Active Learning Strategy: BALD
+Accuracy results at the end of each cycle: [0.1625, 0.1554, 0.186, 0.2457, 0.266, 0.292, 0.3135, 0.3286, 0.3417, 0.3623, 0.3691, 0.3924, 0.4044, 0.4204, 0.4156, 0.4411, 0.4294, 0.4464, 0.4543, 0.4636, 0.449]
+----------------------------------------------------------------------
+Run completed at 2023-02-22 22:12:02 after 00h:03m:17s
+Model: TestConv, trained on CIFAR-10
+Continual Learning Strategy: MAS
+Active Learning Strategy: BALD
+Accuracy results at the end of each cycle: [0.4048, 0.4607, 0.4901, 0.4648, 0.4886, 0.5125, 0.5227, 0.4968, 0.5302, 0.522, 0.5283, 0.5316, 0.5417, 0.5391, 0.5142, 0.5314, 0.5437, 0.5337, 0.5346, 0.5297, 0.5454]
+----------------------------------------------------------------------
+Run completed at 2023-02-22 22:15:19 after 00h:03m:14s
+Model: TestConv, trained on CIFAR-10
+Continual Learning Strategy: Naive
+Active Learning Strategy: BALD
+Accuracy results at the end of each cycle: [0.4162, 0.4521, 0.4683, 0.4853, 0.4864, 0.5029, 0.5048, 0.5031, 0.5041, 0.5247, 0.5218, 0.5246, 0.5221, 0.523, 0.5231, 0.531, 0.5395, 0.5431, 0.5443, 0.5379, 0.5446]
+----------------------------------------------------------------------
+Run completed at 2023-02-22 22:30:42 after 00h:03m:08s
+Model: TestConv, trained on CIFAR-10
+Continual Learning Strategy: EWC
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.4215, 0.4505, 0.4893, 0.5178, 0.5296, 0.5396, 0.5317, 0.5532, 0.5603, 0.5604, 0.5651, 0.5661, 0.5797, 0.5739, 0.5772, 0.5821, 0.5843, 0.582, 0.5775, 0.5834, 0.5801]
+----------------------------------------------------------------------
+Run completed at 2023-02-22 22:44:08 after 00h:28m:47s
+Model: TestConv, trained on CIFAR-10
+Continual Learning Strategy: Alasso
+Active Learning Strategy: BALD
+Accuracy results at the end of each cycle: [0.4085, 0.4597, 0.4531, 0.4529, 0.4477, 0.4018, 0.4111, 0.3876, 0.3729, 0.3592, 0.3527, 0.35, 0.3319, 0.3065, 0.3233, 0.3075, 0.3267, 0.311, 0.2586, 0.2819, 0.2322]
+----------------------------------------------------------------------
+Run completed at 2023-02-22 23:31:21 after 00h:06m:59s
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: EWC
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.3996, 0.4775, 0.5448, 0.5928, 0.5562, 0.6047, 0.564, 0.6209, 0.6264, 0.6763, 0.6656, 0.5593, 0.6965, 0.7041, 0.6889, 0.6546, 0.7097, 0.7171, 0.7238, 0.7207, 0.7262]
+----------------------------------------------------------------------
+Run completed at 2023-02-22 23:36:40 after 00h:05m:07s
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: IMM
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.4154, 0.4607, 0.4919, 0.5054, 0.5212, 0.5367, 0.5459, 0.5586, 0.5699, 0.5769, 0.5801, 0.5877, 0.5983, 0.6078, 0.606, 0.6103, 0.6229, 0.6208, 0.6218, 0.6265, 0.6316]
+----------------------------------------------------------------------
+Run completed at 2023-02-22 23:41:59 after 00h:05m:11s
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: Naive
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.3033, 0.3146, 0.4797, 0.4364, 0.5256, 0.5344, 0.5616, 0.5541, 0.6285, 0.61, 0.6294, 0.6237, 0.6428, 0.6493, 0.6575, 0.6568, 0.6666, 0.6728, 0.6681, 0.6787, 0.6766]
+----------------------------------------------------------------------
+Run completed at 2023-02-22 23:55:46 after 00h:07m:03s
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: EWC
+Active Learning Strategy: BALD
+Accuracy results at the end of each cycle: [0.4561, 0.4197, 0.539, 0.5508, 0.5476, 0.5831, 0.6012, 0.6014, 0.5831, 0.6669, 0.6476, 0.6828, 0.684, 0.6901, 0.6991, 0.6947, 0.7037, 0.7072, 0.7046, 0.714, 0.7244]
+----------------------------------------------------------------------
+Run completed at 2023-02-23 00:03:20 after 00h:07m:29s
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: MAS
+Active Learning Strategy: BALD
+Accuracy results at the end of each cycle: [0.2994, 0.3678, 0.4347, 0.4559, 0.3481, 0.4649, 0.4649, 0.4642, 0.496, 0.5045, 0.4808, 0.4582, 0.5787, 0.5037, 0.4759, 0.5572, 0.5374, 0.5913, 0.5388, 0.5149, 0.5419]
+----------------------------------------------------------------------
+Run completed at 2023-02-23 00:09:52 after 00h:06m:30s
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: Naive
+Active Learning Strategy: BALD
+Accuracy results at the end of each cycle: [0.3812, 0.4544, 0.4308, 0.4081, 0.5091, 0.5226, 0.5039, 0.6147, 0.6294, 0.5364, 0.6213, 0.6584, 0.6408, 0.6441, 0.6569, 0.6628, 0.6623, 0.6627, 0.6694, 0.6718, 0.68]
+----------------------------------------------------------------------
+Run completed at 2023-02-23 00:36:41 after 00h:26m:46s
+Model: TestConv, trained on CIFAR-10
+Continual Learning Strategy: Alasso
+Active Learning Strategy: BALD
+Accuracy results at the end of each cycle: [0.3872, 0.4681, 0.4653, 0.4444, 0.4411, 0.4323, 0.4012, 0.387, 0.3618, 0.3565, 0.3496, 0.3507, 0.297, 0.3298, 0.3097, 0.3191, 0.2847, 0.293, 0.2832, 0.2869, 0.2679]
+----------------------------------------------------------------------
+Run completed at 2023-02-23 00:55:46 after 03h:44m:47s
+Model: TestConv, trained on CIFAR-10
+Continual Learning Strategy: Alasso
+Active Learning Strategy: Badge
+Accuracy results at the end of each cycle: [0.2953, 0.379, 0.4043, 0.4215, 0.426, 0.4271, 0.4164, 0.4263, 0.4366, 0.426, 0.4283]
+----------------------------------------------------------------------
+Run completed at 2023-02-23 04:52:45 after 03h:55m:17s
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: EWC
+Active Learning Strategy: Badge
+Accuracy results at the end of each cycle: [0.2803, 0.3862, 0.3708, 0.3996, 0.4273, 0.4363, 0.4458, 0.3928, 0.3699, 0.3835, 0.3903]
+----------------------------------------------------------------------

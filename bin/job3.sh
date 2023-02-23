@@ -14,11 +14,16 @@
 module purge                                       # Unload all currently loaded modules.
 module load devel/cuda/11.8
 source ../ba_env/bin/activate   
-configs=("./src/conf/basic_model_stealing/Badge_Alasso.yaml"
-        "./src/conf/basic_model_stealing/Badge_EWC.yaml"
-        "./src/conf/basic_model_stealing/Badge_IMM.yaml"
-        "./src/conf/basic_model_stealing/Badge_MAS.yaml"
-        "./src/conf/basic_model_stealing/Badge_Naive.yaml"
+configs=("./src/conf/basic_model_stealing/LC_EWC.yaml"
+        "./src/conf/basic_model_stealing/LC_IMM.yaml"
+        "./src/conf/basic_model_stealing/LC_MAS.yaml"
+        "./src/conf/basic_model_stealing/LC_Naive.yaml"
+	"./src/conf/basic_model_stealing/LC_Alasso.yaml"
+	"./src/conf/basic_model_stealing/BALD_EWC.yaml"
+        "./src/conf/basic_model_stealing/BALD_IMM.yaml"
+        "./src/conf/basic_model_stealing/BALD_MAS.yaml"
+        "./src/conf/basic_model_stealing/BALD_Naive.yaml"
+        "./src/conf/basic_model_stealing/BALD_Alasso.yaml"
 )
 for conf in "${configs[@]}"
 do 

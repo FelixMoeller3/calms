@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --job-name=continuallearning       # job name
-#SBATCH --partition=gpu_4                  # queue for the resource allocation.
+#SBATCH --partition=gpu_4_a100                  # queue for the resource allocation.
 #SBATCH --time=500:00                     # wall-clock time limit  
 #SBATCH --mem=10000                        # memory per node
 #SBATCH --nodes=1                          # number of nodes to be used
@@ -14,11 +14,11 @@
 module purge                                       # Unload all currently loaded modules.
 module load devel/cuda/11.8
 source ../ba_env/bin/activate   
-configs=("./src/conf/basic_model_stealing/Badge_Alasso.yaml"
-        "./src/conf/basic_model_stealing/Badge_EWC.yaml"
-        "./src/conf/basic_model_stealing/Badge_IMM.yaml"
-        "./src/conf/basic_model_stealing/Badge_MAS.yaml"
-        "./src/conf/basic_model_stealing/Badge_Naive.yaml"
+configs=("./src/conf/basic_model_stealing/CoreSet_EWC.yaml"
+        "./src/conf/basic_model_stealing/CoreSet_IMM.yaml"
+        "./src/conf/basic_model_stealing/CoreSet_MAS.yaml"
+        "./src/conf/basic_model_stealing/CoreSet_Naive.yaml"
+	"./src/conf/basic_model_stealing/CoreSet_Alasso.yaml"
 )
 for conf in "${configs[@]}"
 do 
