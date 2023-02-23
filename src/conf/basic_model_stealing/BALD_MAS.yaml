@@ -10,7 +10,7 @@ SUBSTITUTE_MODEL:
     NAME: 'MAS' # Possible values : Alasso,EWC,MAS,IMM,Naive
     WEIGHT: 0.01
     OPTIMIZER:
-      NAME: 'ADAM'
+      NAME: 'SGD'
       LR: 0.003
       MOMENTUM: 0.9
       WDECAY: 0.0005
