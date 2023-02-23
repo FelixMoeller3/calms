@@ -1,0 +1,32 @@
+SUBSTITUTE_MODEL: 
+  NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
+  DATASET: 'CIFAR-10'
+  AL_METHOD: 
+    NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
+    INIT_BUDGET: 2000
+    BUDGET: 2000
+  CL_METHOD: 
+    NAME: 'MAS' # Possible values : Alasso,EWC,MAS,IMM,Naive
+    WEIGHT: 0.5
+    OPTIMIZER:
+      NAME: 'SGD'
+      LR: 0.003
+      MOMENTUM: 0.9
+      WDECAY: 0.0005
+      MILESTONES: [160,240]
+BATCH_SIZE: 128 # batch size used for training
+CYCLES: 20 # number of cycles in the model stealing process
+EPOCHS: 10
+USE_GPU: True # Whether or not to use GPU Acceleration
+RESULTS_FOLDER: './experiments/finetuning/'
+RESULTS_FILE: 'finetune_MAS.txt'
+TARGET_MODEL:
+  MODEL: 'TestConv'
+  DATASET: 'FashionMNIST'
+  EPOCHS : 3
+  OPTIMIZER:
+    NAME: 'SGD'
+    LR: 0.001
+    MOMENTUM: 0.9
+    WDECAY: 0.0005
+    MILESTONES: [160,240]

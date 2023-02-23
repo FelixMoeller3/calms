@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=continuallearning       # job name
+#SBATCH --job-name=EWC_Finetune       # job name
 #SBATCH --partition=gpu_4_a100                  # queue for the resource allocation.
 #SBATCH --time=500:00                     # wall-clock time limit  
 #SBATCH --mem=10000                        # memory per node
@@ -14,15 +14,12 @@
 module purge                                       # Unload all currently loaded modules.
 module load devel/cuda/11.8
 source ../ba_env/bin/activate   
-configs=("./src/conf/basic_model_stealing/CoreSet_EWC.yaml"
-        "./src/conf/basic_model_stealing/CoreSet_IMM.yaml"
-        "./src/conf/basic_model_stealing/CoreSet_MAS.yaml"
-        "./src/conf/basic_model_stealing/CoreSet_Naive.yaml"
-	"./src/conf/basic_model_stealing/CoreSet_Alasso.yaml"
-)
-for conf in "${configs[@]}"
+for file in ./src/conf/finetuning/EWC/*
 do 
-    echo "Running $conf with mode CL"
-    python ./src/main.py -c $conf -m "CL"
+    echo "Running $file with mode CL"
+    python ./src/main.py -c $file -m "CL"
 done
 deactivate
+
+
+
