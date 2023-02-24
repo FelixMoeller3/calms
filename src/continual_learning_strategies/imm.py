@@ -5,20 +5,21 @@ from torch.utils.data import Dataset
 from typing import List, Optional
 import random
 from torch.nn import functional as F
+import torch.optim.lr_scheduler as lr_scheduler
 
 class IMM(ContinualLearningStrategy):
     '''
     Implementation of Incremental Moment Matching (IMM) according.
     '''
 
-    def __init__(self, model: nn.Module,optim: torch.optim.Optimizer,crit: nn.CrossEntropyLoss,ALPHAS:List[float]=None,WEIGHT:float=1.0,MEAN:bool=True,USE_GPU:bool=False,**kwargs):
+    def __init__(self, model: nn.Module,optim: torch.optim.Optimizer, scheduler: lr_scheduler._LRScheduler, crit: nn.CrossEntropyLoss,ALPHAS:List[float]=None,WEIGHT:float=1.0,MEAN:bool=True,USE_GPU:bool=False,**kwargs):
         '''
             :param alphas: List of weights for models of previous tasks,
              i.e. how strongly previous tasks should be weighted. The sum of all entries in this list must be 1.
              If no list is provided the all previous tasks will be weighted equally.
             :param mean: Whether to use mean-IMM or mode-IMM
         '''
-        super(IMM,self).__init__(model,optim,crit,USE_GPU)
+        super(IMM,self).__init__(model,optim,scheduler,crit,USE_GPU)
         assert not ALPHAS or abs(sum(ALPHAS)-1.0) < 1e-8
         if ALPHAS:
             self.alphas = [torch.tensor(val).cuda() if self.use_gpu else torch.tensor(val) for val in ALPHAS]

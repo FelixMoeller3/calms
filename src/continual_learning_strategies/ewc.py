@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import Dataset
 from .cl_base import ContinualLearningStrategy
+import torch.optim.lr_scheduler as lr_scheduler
 import random
 from torch.nn import functional as F
 
@@ -16,8 +17,8 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
         https://github.com/thuyngch/Overcoming-Catastrophic-Forgetting
     '''
 
-    def __init__(self,model:nn.Module,optim: torch.optim.Optimizer,crit: nn.CrossEntropyLoss,WEIGHT:float=1.0,USE_GPU:bool=False,**kwargs):
-        super(ElasticWeightConsolidation,self).__init__(model,optim,crit,USE_GPU)
+    def __init__(self,model:nn.Module,optim: torch.optim.Optimizer,scheduler: lr_scheduler._LRScheduler,crit: nn.CrossEntropyLoss,WEIGHT:float=1.0,USE_GPU:bool=False,**kwargs):
+        super(ElasticWeightConsolidation,self).__init__(model,optim,scheduler,crit,USE_GPU)
         self.weight = torch.tensor(WEIGHT).cuda() if self.use_gpu else torch.tensor(WEIGHT)
         self.prev_params = {}
         self._save_model_params()
