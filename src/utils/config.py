@@ -95,7 +95,7 @@ def run_cl_al_config(config_path: str) -> ModelStealingProcess:
                 f'{"-"* 70}'+ "\n"
             )
 
-def run_al_config(config_path: str) -> ModelStealingProcess:
+def run_al_config(config_path: str) -> None:
     '''
         Parses and runs the config file located at 'config_path'. 
         The expected structure can be seen in the 'Example_conf.yaml' file in the 'conf' folder.
@@ -126,6 +126,31 @@ def run_al_config(config_path: str) -> ModelStealingProcess:
                 f'{"-"* 70}'+ "\n"
             )
 
+def run_target_model_config(config_path: str) -> None:
+    '''
+        Parses and runs the config file located at 'config_path'. 
+        The expected structure can be seen in the 'Example_conf.yaml' file in the 'conf' folder.
+    '''
+    start = time.time()
+    with open(config_path,"r") as f:
+        yaml_cfg = yaml.safe_load(f)
+    check_attribute_presence(yaml_cfg,CONFIG,"config")
+    batch_size = yaml_cfg["BATCH_SIZE"]
+    use_gpu = yaml_cfg["USE_GPU"]
+    print(f"Testing target model: {yaml_cfg['TARGET_MODEL']['MODEL']}")
+    build_target_model(yaml_cfg["TARGET_MODEL"],batch_size,use_gpu)
+    duration = time.time() - start
+    hours = int(duration)//3600
+    minutes = (int(duration) % 3600) // 60
+    seconds = int(duration) % 60
+    time_string = "{:02}h:{:02}m:{:02}s".format(hours,minutes,seconds)
+    os.makedirs(yaml_cfg["RESULTS_FOLDER"],exist_ok=True)
+    with open(yaml_cfg["RESULTS_FOLDER"] + yaml_cfg["RESULTS_FILE"],'a+') as f:
+        f.write(f'Run completed at {datetime.today().strftime("%Y-%m-%d %H:%M:%S")} after {time_string}\n'
+                f'Target model: {yaml_cfg["TARGET_MODEL"]["MODEL"]}, trained on {yaml_cfg["TARGET_MODEL"]["DATASET"]}\n'
+                f'{"-"* 70}'+ "\n"
+            )
+
 def check_attribute_presence(config: dict, attributes: list[str],config_name: str) -> None:
     '''
         Checks if all attributes are present in the config dict. The config_name is needed to
@@ -142,8 +167,8 @@ def build_target_model(target_model_config: dict,batch_size:int,use_gpu:bool) ->
     train_loader = DataLoader(train_set,batch_size,True)
     val_set,_,_ = load_dataset(target_model_config['DATASET'],False)
     val_loader = DataLoader(val_set,batch_size,True)
-    optimizer = build_optimizer(target_model_config["OPTIMIZER"],target_model)
-    train_model(target_model,train_loader,val_loader,optimizer,target_model_config["EPOCHS"],use_gpu)
+    optimizer,scheduler = build_optimizer(target_model_config["OPTIMIZER"],target_model)
+    train_model(target_model,train_loader,val_loader,optimizer,scheduler,target_model_config["EPOCHS"],use_gpu)
     return target_model
 
 def build_model(name: str, input_dim:tuple[int], num_classes: int, use_gpu:bool) -> nn.Module:
@@ -181,10 +206,16 @@ def load_dataset(name: str,train:bool) -> tuple[Dataset,torch.Size,int]:
                        transforms.ToTensor()
                    ]),download=True)
     elif name == "CIFAR-10":
-        dataset = datasets.CIFAR10("./data",train,transform=transforms.Compose([
-                       transforms.ToTensor(),
-                       transforms.Normalize(mean=[0.491, 0.482, 0.447], std=[0.247, 0.243, 0.262])
-                   ]),download=True)
+        augmentation = [
+            transforms.RandomCrop(32, padding=4),
+            transforms.RandomHorizontalFlip(),
+        ]
+        normalization = [
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.491, 0.482, 0.447], std=[0.247, 0.243, 0.262])
+        ]
+        transform = augmentation + normalization if train else normalization
+        dataset = datasets.CIFAR10("./data",train,transform=transforms.Compose(transform),download=True)
     else:
         raise AttributeError(f"Dataset unknown. Got {name}, but expected one of {','.join(DATASET_NAMES)}")
     return dataset,dataset[0][0].shape,len(dataset.class_to_idx)
@@ -202,7 +233,7 @@ def build_optimizer(config: dict,model:nn.Module) -> tuple[torch.optim.Optimizer
         raise AttributeError(f"Optimizer unknown. Got {config['NAME']}, but expected one of {','.join(OPTIMIZERS)}")
     return optimizer,scheduler
 
-def train_model(model: nn.Module,train_loader:DataLoader,val_loader:DataLoader,optimizer: torch.optim.Optimizer,num_epochs:int,use_gpu:bool) -> None:
+def train_model(model: nn.Module,train_loader:DataLoader,val_loader:DataLoader,optimizer: torch.optim.Optimizer,scheduler:lr_scheduler._LRScheduler,num_epochs:int,use_gpu:bool) -> None:
     criterion = nn.CrossEntropyLoss()
     print("Training model...\n")
     for epoch in range(num_epochs):
@@ -222,6 +253,7 @@ def train_model(model: nn.Module,train_loader:DataLoader,val_loader:DataLoader,o
             correct_predictions += torch.sum(preds == labels.data).item()
         epoch_loss = total_loss / len(train_loader.dataset)
         epoch_acc = correct_predictions / len(train_loader.dataset)
+        scheduler.step()
         print('Training Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
         run_val_epoch(model,val_loader,criterion,use_gpu)
     print("Training completed\n")
