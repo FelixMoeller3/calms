@@ -7,10 +7,10 @@ SUBSTITUTE_MODEL:
     BUDGET: 2000
   CL_METHOD: 
     NAME: 'MAS' # Possible values : Alasso,EWC,MAS,IMM,Naive
-    WEIGHT: 0.5
+    WEIGHT: 2.0
     OPTIMIZER:
       NAME: 'SGD'
-      LR: 0.003
+      LR: 0.1
       MOMENTUM: 0.9
       WDECAY: 0.0005
       MILESTONES: [160,240]

@@ -5,7 +5,7 @@ from active_learning_strategies.strategy import Strategy
 from continual_learning_strategies.cl_base import ContinualLearningStrategy
 from torch.utils.data import Dataset,DataLoader,Subset
 import random
-from models import testConv
+from models import testConv,ResNet,BasicBlock
 
 class ModelStealingProcess:
 
@@ -49,7 +49,8 @@ class ModelStealingProcess:
             unlabeled_set = [i for i in unlabeled_set if i not in training_examples]
             training_set = Subset(train_set,labeled_set)
             loaders_dict['train'] = DataLoader(training_set,batch_size,shuffle=True)
-            self.cl_strat.model = testConv([3,32,32],10)
+            self.cl_strat.model = ResNet(BasicBlock, [2,2,2,2], 10)
+            self.cl_strat.model = self.cl_strat.model.cuda()
             self.cl_strat.optim = torch.optim.SGD(self.cl_strat.model.parameters(),0.001,0.9,weight_decay=0.0005)
             self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list)
 

@@ -3,10 +3,12 @@ SUBSTITUTE_MODEL:
   DATASET: 'CIFAR-10'
   AL_METHOD: 
     NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
+    INIT_BUDGET: 2000
+    BUDGET: 2000
   CL_METHOD: 
     NAME: 'Naive' # Possible values : Alasso,EWC,MAS,IMM,Naive
     OPTIMIZER:
-      NAME: 'Adam'
+      NAME: 'ADAM'
       LR: 0.005
       MOMENTUM: 0.9
       WDECAY: 0.0005
