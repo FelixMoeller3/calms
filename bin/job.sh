@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#SBATCH --job-name=continuallearning       # job name
+#SBATCH --job-name=AL_Baseline       # job name
 #SBATCH --partition=gpu_4                  # queue for the resource allocation.
-#SBATCH --time=25:00                     # wall-clock time limit  
+#SBATCH --time=100:00                     # wall-clock time limit  
 #SBATCH --mem=10000                        # memory per node
 #SBATCH --nodes=1                          # number of nodes to be used
 #SBATCH --cpus-per-task=40                 # number of CPUs required per MPI task
@@ -14,11 +14,11 @@
 module purge                                       # Unload all currently loaded modules.
 module load devel/cuda/11.8
 source ../ba_env/bin/activate   
-configs=("./src/conf/basic_model_stealing/LC_Naive.yaml"
-        "./src/conf/basic_model_stealing/Random_Naive.yaml"
+configs=("./src/conf/basic_model_stealing/Random_Naive.yaml"
         "./src/conf/basic_model_stealing/BALD_Naive.yaml"
         "./src/conf/basic_model_stealing/CoreSet_Naive.yaml"
         "./src/conf/basic_model_stealing/Badge_Naive.yaml"
+	"./src/conf/basic_model_stealing/LC_Naive.yaml"
 )
 for conf in "${configs[@]}"
 do 
