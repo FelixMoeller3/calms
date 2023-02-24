@@ -1,0 +1,49 @@
+Run completed at 2023-02-23 20:05:20 after 00h:05m:39s
+Optimizer args NAME:NaiveOPTIMIZER:{'NAME': 'SGD', 'LR': 0.01, 'MOMENTUM': 0.9, 'WDECAY': 0.0005, 'MILESTONES': [160, 240]}USE_GPU:True 
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: Naive
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.4139, 0.5125, 0.5592, 0.5866, 0.6151, 0.6307, 0.6513, 0.6617, 0.6737, 0.683, 0.6827, 0.6964, 0.7083, 0.7165, 0.7178, 0.7197, 0.725, 0.7276, 0.7284, 0.7325, 0.7402]
+----------------------------------------------------------------------
+Run completed at 2023-02-23 20:10:27 after 00h:04m:56s
+Optimizer args NAME:NaiveOPTIMIZER:{'NAME': 'SGD', 'LR': 0.001, 'MOMENTUM': 0.9, 'WDECAY': 0.0005, 'MILESTONES': [160, 240]}USE_GPU:True 
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: Naive
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.3965, 0.4575, 0.4823, 0.4953, 0.5231, 0.5333, 0.5446, 0.5606, 0.5728, 0.5763, 0.5834, 0.5826, 0.5901, 0.5971, 0.607, 0.6102, 0.6187, 0.6284, 0.6336, 0.6361, 0.6389]
+----------------------------------------------------------------------
+Run completed at 2023-02-23 20:15:25 after 00h:04m:55s
+Optimizer args NAME:NaiveOPTIMIZER:{'NAME': 'SGD', 'LR': 0.005, 'MOMENTUM': 0.9, 'WDECAY': 0.0005, 'MILESTONES': [160, 240]}USE_GPU:True 
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: Naive
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.4386, 0.4931, 0.5265, 0.5616, 0.5865, 0.6067, 0.6238, 0.6352, 0.6513, 0.6523, 0.663, 0.6691, 0.6772, 0.6879, 0.6979, 0.6953, 0.6913, 0.7002, 0.6971, 0.7058, 0.7133]
+----------------------------------------------------------------------
+Run completed at 2023-02-24 10:16:37 after 00h:05m:49s
+Optimizer args NAME:NaiveOPTIMIZER:{'NAME': 'SGD', 'LR': 0.1, 'MOMENTUM': 0.9, 'WDECAY': 0.0005, 'MILESTONES': [160, 240]}USE_GPU:True 
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: Naive
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.3721, 0.3334, 0.3823, 0.4244, 0.4326, 0.5018, 0.5469, 0.5835, 0.6028, 0.6253, 0.6203, 0.6307, 0.6535, 0.6507, 0.6547, 0.6606, 0.678, 0.6811, 0.685, 0.6886, 0.6939]
+----------------------------------------------------------------------
+Run completed at 2023-02-24 10:21:48 after 00h:05m:00s
+Optimizer args NAME:NaiveOPTIMIZER:{'NAME': 'ADAM', 'LR': 0.1, 'MOMENTUM': 0.9, 'WDECAY': 0.0005, 'MILESTONES': [160, 240]}USE_GPU:True 
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: Naive
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.169, 0.1719, 0.278, 0.2321, 0.1673, 0.1878, 0.2905, 0.2041, 0.2596, 0.1736, 0.23, 0.1095, 0.2685, 0.22, 0.1676, 0.1582, 0.2264, 0.1934, 0.1927, 0.2634, 0.1016]
+----------------------------------------------------------------------
+Run completed at 2023-02-24 10:26:52 after 00h:05m:01s
+Optimizer args NAME:NaiveOPTIMIZER:{'NAME': 'ADAM', 'LR': 0.1, 'MOMENTUM': 0.9, 'WDECAY': 0.0005, 'MILESTONES': [160, 240]}USE_GPU:True 
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: Naive
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.1546, 0.1721, 0.2747, 0.1132, 0.2239, 0.2849, 0.2058, 0.2159, 0.3221, 0.3124, 0.1207, 0.2295, 0.1621, 0.2111, 0.1462, 0.1418, 0.1842, 0.1481, 0.127, 0.2402, 0.1931]
+----------------------------------------------------------------------
+Run completed at 2023-02-24 10:31:55 after 00h:05m:01s
+Optimizer args NAME:NaiveOPTIMIZER:{'NAME': 'ADAM', 'LR': 0.005, 'MOMENTUM': 0.9, 'WDECAY': 0.0005, 'MILESTONES': [160, 240]}USE_GPU:True 
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: Naive
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.3399, 0.3838, 0.4023, 0.3993, 0.4817, 0.4895, 0.4464, 0.5195, 0.5852, 0.4649, 0.5598, 0.6011, 0.5827, 0.6185, 0.6248, 0.6307, 0.6337, 0.6445, 0.6389, 0.6331, 0.6417]
+----------------------------------------------------------------------
