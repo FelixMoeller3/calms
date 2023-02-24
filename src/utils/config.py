@@ -5,6 +5,7 @@ import continual_learning_strategies as cl_strats
 from continual_learning_strategies.cl_base import ContinualLearningStrategy
 from model_stealing.msprocess import ModelStealingProcess
 import torch.nn as nn
+import torch.optim.lr_scheduler as lr_scheduler
 from torch.utils.data import DataLoader,Dataset
 from torchvision import datasets, transforms
 import torch
@@ -24,7 +25,7 @@ OPTIMIZERS =["SGD", "ADAM"]
 MODELS = ['Resnet18', 'Resnet34', 'Resnet50', 'Resnet101', 'Resnet152', 'TestConv']
 TARGET_MODEL_CONFIG = ['MODEL','DATASET','EPOCHS','OPTIMIZER']
 DATASET_NAMES = ["MNIST","FashionMNIST", "CIFAR-10"]
-OPTIMIZER_CONFIG = ["NAME", "LR", "MOMENTUM", "WDECAY", "MILESTONES"]
+OPTIMIZER_CONFIG = ["NAME", "LR", "MOMENTUM", "WDECAY"]
 
 def run_config(config_path: str) -> ModelStealingProcess:
     '''
@@ -181,21 +182,25 @@ def load_dataset(name: str,train:bool) -> tuple[Dataset,torch.Size,int]:
                    ]),download=True)
     elif name == "CIFAR-10":
         dataset = datasets.CIFAR10("./data",train,transform=transforms.Compose([
-                       transforms.ToTensor()
+                       transforms.ToTensor(),
+                       transforms.Normalize(mean=[0.491, 0.482, 0.447], std=[0.247, 0.243, 0.262])
                    ]),download=True)
     else:
         raise AttributeError(f"Dataset unknown. Got {name}, but expected one of {','.join(DATASET_NAMES)}")
     return dataset,dataset[0][0].shape,len(dataset.class_to_idx)
 
-def build_optimizer(config: dict,model:nn.Module) -> torch.optim.Optimizer:
+def build_optimizer(config: dict,model:nn.Module) -> tuple[torch.optim.Optimizer,lr_scheduler.MultiStepLR]:
     check_attribute_presence(config,OPTIMIZER_CONFIG,"optimizer config")
+    scheduler = None
     if config["NAME"] == "SGD":
         optimizer = torch.optim.SGD(model.parameters(),float(config["LR"]),float(config["MOMENTUM"]),weight_decay=float(config["WDECAY"]))
+        if "MILESTONES" in config:
+            scheduler = lr_scheduler.MultiStepLR(optimizer,config["MILESTONES"])
     elif config["NAME"] == "ADAM":
         optimizer = torch.optim.Adam(model.parameters(),float(config["LR"]),weight_decay=float(config["WDECAY"]))
     else:
         raise AttributeError(f"Optimizer unknown. Got {config['NAME']}, but expected one of {','.join(OPTIMIZERS)}")
-    return optimizer
+    return optimizer,scheduler
 
 def train_model(model: nn.Module,train_loader:DataLoader,val_loader:DataLoader,optimizer: torch.optim.Optimizer,num_epochs:int,use_gpu:bool) -> None:
     criterion = nn.CrossEntropyLoss()
@@ -269,18 +274,18 @@ def build_al_strategy(al_config: dict,substitute_model: nn.Module, dataset: Data
 
 def build_cl_strategy(cl_config:dict,substitute_model: nn.Module,use_gpu) -> ContinualLearningStrategy:
     check_attribute_presence(cl_config,CL_CONFIG,"continual learning config")
-    optimizer = build_optimizer(cl_config["OPTIMIZER"],substitute_model)
+    optimizer,scheduler = build_optimizer(cl_config["OPTIMIZER"],substitute_model)
     cl_config["USE_GPU"] = use_gpu
     if cl_config["NAME"] == "Alasso":
-        cl_strat = cl_strats.Alasso(substitute_model,optimizer,nn.CrossEntropyLoss(),**cl_config)
+        cl_strat = cl_strats.Alasso(substitute_model,optimizer,scheduler,nn.CrossEntropyLoss(),**cl_config)
     elif cl_config["NAME"] == "IMM":
-        cl_strat = cl_strats.IMM(substitute_model,optimizer,nn.CrossEntropyLoss(),**cl_config)
+        cl_strat = cl_strats.IMM(substitute_model,optimizer,scheduler,nn.CrossEntropyLoss(),**cl_config)
     elif cl_config["NAME"] == "MAS":
-        cl_strat = cl_strats.MAS(substitute_model,optimizer,nn.CrossEntropyLoss(),**cl_config)
+        cl_strat = cl_strats.MAS(substitute_model,optimizer,scheduler,nn.CrossEntropyLoss(),**cl_config)
     elif cl_config["NAME"] == "EWC":
-        cl_strat = cl_strats.ElasticWeightConsolidation(substitute_model,optimizer,nn.CrossEntropyLoss(),**cl_config)
+        cl_strat = cl_strats.ElasticWeightConsolidation(substitute_model,optimizer,scheduler,nn.CrossEntropyLoss(),**cl_config)
     elif cl_config["NAME"] == "Naive":
-        cl_strat = cl_strats.Naive(substitute_model,optimizer,nn.CrossEntropyLoss(),**cl_config)
+        cl_strat = cl_strats.Naive(substitute_model,optimizer,scheduler,nn.CrossEntropyLoss(),**cl_config)
     else:
         raise AttributeError(f"Continual learning strategy unknown. Got {cl_config['NAME']}, but expected one of {','.join(CL_METHODS)}")
     return cl_strat

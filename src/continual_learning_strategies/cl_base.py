@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader,Dataset
 from typing import List
+import torch.optim.lr_scheduler as lr_scheduler
 import time
 from tqdm import tqdm
 
@@ -10,9 +11,10 @@ class ContinualLearningStrategy(ABC):
     '''
         This is the base class for all continual learning strategies
     '''
-    def __init__(self, model:nn.Module,optim: torch.optim.Optimizer,crit: nn.CrossEntropyLoss, use_gpu:bool):
+    def __init__(self, model:nn.Module,optim: torch.optim.Optimizer, scheduler:lr_scheduler._LRScheduler, crit: nn.CrossEntropyLoss, use_gpu:bool):
         self.model = model
         self.optim = optim
+        self.scheduler = scheduler
         self.crit = crit
         self.use_gpu = use_gpu
 
@@ -25,6 +27,8 @@ class ContinualLearningStrategy(ABC):
             log_list = None if epoch < num_epochs-1 else result_list
             if (epoch+1) % val_step == 0:
                 self._run_val_epoch(dataloaders['val'],log_list)
+            if self.scheduler:
+                self.scheduler.step() 
         self._after_train(dataloaders['train'].dataset)
         time_elapsed = time.time() - start_time
         print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))

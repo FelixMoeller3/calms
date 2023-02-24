@@ -3,7 +3,7 @@ import torch.nn as nn
 from .cl_base import ContinualLearningStrategy
 import torch
 from torch.utils.data import DataLoader
-import time
+import torch.optim.lr_scheduler as lr_scheduler
 from tqdm import tqdm
 
 class Alasso(ContinualLearningStrategy):
@@ -13,7 +13,7 @@ class Alasso(ContinualLearningStrategy):
         The implementation is based on the authors' implementation which can be found at: https://github.com/dmpark04/alasso
     '''
 
-    def __init__(self,model:nn.Module,optim: torch.optim.Optimizer,crit: nn.CrossEntropyLoss,
+    def __init__(self,model:nn.Module,optim: torch.optim.Optimizer, scheduler: lr_scheduler._LRScheduler,crit: nn.CrossEntropyLoss,
     WEIGHT:float=1.0,WEIGHT_PRIME:float=1.0,A:float=1.0,A_PRIME:float=1.0,EPSILON:float=1e-4,USE_GPU:bool=False,**kwargs):
         '''
             :param model: The model that should be trained using continual learning.
@@ -26,7 +26,7 @@ class Alasso(ContinualLearningStrategy):
             :param EPSILON: This parameter is added to the denominator in equation (7) to make sure we are not dividing by zero. It should always be > 0.
         '''
         #TODO: Issue warning when parameter a is <=1 
-        super(Alasso,self).__init__(model,optim,crit,USE_GPU)
+        super(Alasso,self).__init__(model,optim,scheduler,crit,USE_GPU)
         self.weight = torch.tensor(WEIGHT).cuda() if self.use_gpu else torch.tensor(WEIGHT)
         self.weight_prime = torch.tensor(WEIGHT_PRIME).cuda() if self.use_gpu else torch.tensor(WEIGHT_PRIME)
         self.a = torch.tensor(A).cuda() if self.use_gpu else torch.tensor(A)

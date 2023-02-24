@@ -6,6 +6,7 @@ import time
 from torch.utils.data import DataLoader,Dataset
 from typing import List
 from .cl_base import ContinualLearningStrategy
+import torch.optim.lr_scheduler as lr_scheduler
 from tqdm import tqdm
 
 class MAS(ContinualLearningStrategy):
@@ -17,7 +18,7 @@ class MAS(ContinualLearningStrategy):
         - https://github.com/rahafaljundi/MAS-Memory-Aware-Synapses
     '''
 
-    def __init__(self,model:nn.Module,optimizer: torch.optim.Optimizer, criterion: torch.nn.CrossEntropyLoss,
+    def __init__(self,model:nn.Module,optimizer: torch.optim.Optimizer, scheduler: lr_scheduler._LRScheduler,criterion: torch.nn.CrossEntropyLoss,
                 WEIGHT:float=1.0,FREEZE_LAYERS:List[str]=[],USE_GPU:bool=False,**kwargs):
         '''
         Initializes the Memory Aware Synapses (MAS) class.
@@ -31,7 +32,7 @@ class MAS(ContinualLearningStrategy):
         None
 
         '''
-        super(MAS,self).__init__(model,optimizer,criterion,USE_GPU)
+        super(MAS,self).__init__(model,optimizer,scheduler,criterion,USE_GPU)
         self.weight = torch.tensor(WEIGHT).cuda() if self.use_gpu else torch.tensor(WEIGHT)
         self.freeze_layers = FREEZE_LAYERS
         # The total number of samples that have been classified before training the current task
