@@ -3,20 +3,20 @@ SUBSTITUTE_MODEL:
   DATASET: 'CIFAR-10'
   AL_METHOD: 
     NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
-    INIT_BUDGET: 2000
-    BUDGET: 2000
+    INIT_BUDGET: 4000
+    BUDGET: 4000
   CL_METHOD: 
     NAME: 'EWC' # Possible values : Alasso,EWC,MAS,IMM,Naive
-    WEIGHT: 0.5
+    WEIGHT: 1.0
     OPTIMIZER:
-      NAME: 'ADAM'
-      LR: 0.003
+      NAME: 'SGD'
+      LR: 0.1
       MOMENTUM: 0.9
       WDECAY: 0.0005
-      MILESTONES: [160,240]
+      MILESTONES: [120,240]
 BATCH_SIZE: 128 # batch size used for training
-CYCLES: 20 # number of cycles in the model stealing process
-EPOCHS: 10
+CYCLES: 10 # number of cycles in the model stealing process
+EPOCHS: 30
 USE_GPU: True # Whether or not to use GPU Acceleration
 RESULTS_FOLDER: './experiments/CL_AL/'
 RESULTS_FILE: 'results_10epochs.txt'
