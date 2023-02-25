@@ -5,6 +5,7 @@ SUBSTITUTE_MODEL:
     NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
     INIT_BUDGET: 1000
     BUDGET: 1000
+    LOOKBACK: 5 # How many previous queries shall be used for training
   CL_METHOD: 
     NAME: 'EWC' # Possible values : Alasso,EWC,MAS,IMM,Naive
     WEIGHT: 1.0

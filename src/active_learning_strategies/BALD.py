@@ -14,8 +14,8 @@ class BALD(Strategy):
         in the following paper: https://arxiv.org/pdf/1112.5745.pdf
     '''
     def __init__(self, model: nn.Module, data_unlabeled: Dataset, NO_CLASSES: int,BATCH:int,BUDGET:int,
-        INIT_BUDGET:int, DROPOUT_ITER:int,USE_GPU:bool=False,**kwargs):
-        super(BALD, self).__init__(model, data_unlabeled,NO_CLASSES,BATCH,BUDGET,INIT_BUDGET,USE_GPU)
+        INIT_BUDGET:int, DROPOUT_ITER:int,LOOKBACK:int,USE_GPU:bool=False,**kwargs):
+        super(BALD, self).__init__(model, data_unlabeled,NO_CLASSES,BATCH,BUDGET,INIT_BUDGET,LOOKBACK,USE_GPU)
         self.dropout_iter = DROPOUT_ITER
 
     def query(self) -> np.ndarray:
@@ -51,7 +51,8 @@ class BALD(Strategy):
         F_X =np.divide(all_entropy_dropout, self.dropout_iter)
         U_X = G_X - F_X
         arg = np.argsort(U_X)
-        return arg[:self.BUDGET]
+        self.add_query(arg[:self.BUDGET])
+        return np.concatenate(self.previous_queries)
 
     def get_predict_prob(self, unlabeled_loader: DataLoader) -> torch.Tensor:
         self.model.eval()

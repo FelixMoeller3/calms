@@ -13,8 +13,8 @@ class CoreSet(Strategy):
         in the following paper: https://arxiv.org/pdf/1708.00489.pdf),
     '''
     def __init__(self, model: nn.Module, data_unlabeled: Dataset, NO_CLASSES: int,
-        BATCH:int,BUDGET:int, INIT_BUDGET:int, USE_GPU:bool=False,**kwargs):
-        super(CoreSet, self).__init__(model, data_unlabeled, NO_CLASSES,BATCH,BUDGET,INIT_BUDGET,USE_GPU)
+        BATCH:int,BUDGET:int, INIT_BUDGET:int, LOOKBACK:int, USE_GPU:bool=False,**kwargs):
+        super(CoreSet, self).__init__(model, data_unlabeled, NO_CLASSES,BATCH,BUDGET,INIT_BUDGET,LOOKBACK,USE_GPU)
 
     def query(self):
         unlabeled_loader = DataLoader(self.data_unlabeled, batch_size=self.BATCH, 
@@ -22,7 +22,8 @@ class CoreSet(Strategy):
                                     pin_memory=True)
 
         arg = self.get_kcg(unlabeled_loader)
-        return arg[:self.BUDGET]
+        self.add_query(arg[:self.BUDGET])
+        return np.concatenate(self.previous_queries)
 
     def get_kcg(self, unlabeled_loader: DataLoader):
         labeled_data_size = self.BUDGET*self.cycle+self.INIT_BUDGET

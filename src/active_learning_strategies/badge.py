@@ -17,8 +17,8 @@ class Badge(Strategy):
         in the following paper: https://arxiv.org/pdf/1906.03671.pdf
     '''
     def __init__(self, model: nn.Module, data_unlabeled: Dataset, NO_CLASSES: int,
-        BATCH:int,BUDGET:int, INIT_BUDGET:int, USE_GPU:bool=False,**kwargs):
-        super(Badge, self).__init__(model, data_unlabeled, NO_CLASSES,BATCH,BUDGET,INIT_BUDGET, USE_GPU)
+        BATCH:int,BUDGET:int, INIT_BUDGET:int, LOOKBACK: int, USE_GPU:bool=False,**kwargs):
+        super(Badge, self).__init__(model, data_unlabeled, NO_CLASSES,BATCH,BUDGET,INIT_BUDGET, LOOKBACK, USE_GPU)
 
     def query(self) -> List[int]:
         unlabeled_loader = DataLoader(self.data_unlabeled, batch_size=self.BATCH, 
@@ -29,7 +29,8 @@ class Badge(Strategy):
         print('features shape: {}'.format(gradEmbedding.shape))
         print(self.BUDGET)
         arg = self.init_centers(gradEmbedding)
-        return arg[:self.BUDGET]
+        self.add_query(arg[:self.BUDGET])
+        return np.concatenate(self.previous_queries)
 
     def get_grad_embedding(self, unlabeled_loader: DataLoader, len_ulb: int) -> torch.Tensor:
         embDim = self.model.get_embedding_dim()

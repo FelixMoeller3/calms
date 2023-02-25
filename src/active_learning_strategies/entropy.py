@@ -8,8 +8,8 @@ from data.sampler import SubsetSequentialSampler
 
 class Entropy(Strategy):
     def __init__(self, model: nn.Module, data_unlabeled, NO_CLASSES: int, 
-        BATCH:int,BUDGET:int, INIT_BUDGET:int, USE_GPU:bool=False,**kwargs):
-        super(Entropy, self).__init__(model, data_unlabeled, NO_CLASSES,BATCH,BUDGET,INIT_BUDGET,USE_GPU)
+        BATCH:int,BUDGET:int, INIT_BUDGET:int, LOOKBACK:int, USE_GPU:bool=False,**kwargs):
+        super(Entropy, self).__init__(model, data_unlabeled, NO_CLASSES,BATCH,BUDGET,INIT_BUDGET,LOOKBACK,USE_GPU)
 
     def query(self):
         unlabeled_loader = DataLoader(self.data_unlabeled, batch_size=self.BATCH, 
@@ -19,7 +19,8 @@ class Entropy(Strategy):
         log_probs = torch.log(probs)
         U = -(probs*log_probs).sum(1).cpu()
         arg = np.argsort(U)
-        return arg
+        self.add_query(arg[:self.BUDGET])
+        return np.concatenate(self.previous_queries)
 
     def get_predict_prob(self, unlabeled_loader: DataLoader):
         self.model.eval()
