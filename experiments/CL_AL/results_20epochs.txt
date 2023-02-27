@@ -1,0 +1,8 @@
+Run completed at 2023-02-27 15:45:43 after 00h:09m:42s
+Optimizer args NAME:NaiveOPTIMIZER:{'NAME': 'SGD', 'LR': 0.1, 'MOMENTUM': 0.9, 'WDECAY': 0.0005, 'MILESTONES': [120, 360]}USE_GPU:True 
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: Naive
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.4243, 0.4676, 0.4942, 0.4576, 0.5724, 0.5346, 0.6428, 0.6394, 0.7629, 0.7601]
+Class distribution for each query: 
+----------------------------------------------------------------------

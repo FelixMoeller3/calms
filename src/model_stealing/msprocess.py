@@ -75,7 +75,8 @@ class ModelStealingProcess:
         for i in range(self.al_strat.INIT_BUDGET):
             labeled_set.append(random.randint(0,len(train_set)-1))
         if compute_query_dist:
-            dist_list.append(self._get_dist(labeled_set,train_set.class_to_idx))
+            labels = [train_set.targets[index] for index in labeled_set]
+            dist_list.append(self._get_dist(labels,len(train_set.class_to_idx)))
         training_set = Subset(train_set,labeled_set)
         loaders_dict['train'] = DataLoader(training_set,batch_size,shuffle=True)
         self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list,5)
@@ -85,7 +86,8 @@ class ModelStealingProcess:
             print(f'Running cycle {i+1}/{num_cycles}')
             training_examples = self.al_strat.query()
             if compute_query_dist:
-                dist_list.append(self._get_dist(training_examples[-self.al_strat.BUDGET:],train_set.class_to_idx))
+                labels = [train_set.targets[index] for index in training_examples[-self.al_strat.BUDGET:]]
+                dist_list.append(self._get_dist(labels,len(train_set.class_to_idx)))
             labeled_set += list(training_examples[-self.al_strat.BUDGET:])
             unlabeled_set = [i for i in unlabeled_set if i not in training_examples[-self.al_strat.BUDGET:]]
             training_set = Subset(train_set,training_examples)
@@ -137,8 +139,8 @@ class ModelStealingProcess:
         '''
             Returns the distribution of classes in an active learning query.
         '''
-        cur_dist = [0] * len(num_classes)
+        cur_dist = [0] * num_classes
         c = Counter(data)
         for elem in c:
-            cur_dist[elem] = c[elem]/len(data)
+            cur_dist[elem-1] = c[elem]/len(data)
         return cur_dist
