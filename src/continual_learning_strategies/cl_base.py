@@ -18,17 +18,26 @@ class ContinualLearningStrategy(ABC):
         self.crit = crit
         self.use_gpu = use_gpu
 
-    def train(self,dataloaders: dict[str,DataLoader],num_epochs:int,val_step:int,result_list:List[float]=[]) -> None:
+
+    def train(self,dataloaders: dict[str,DataLoader],num_epochs:int,val_step:int,result_list:List[float]=[],early_stopping:int=-1) -> None:
+        '''
+            :param early_stopping: Patience (number of epochs) for early stopping. If <0 then no early stopping is used.
+        '''
         start_time = time.time()
         self._before_train()
+        val_scores = []
         for epoch in range(num_epochs):
             print(f'Running epoch {epoch+1}/{num_epochs}')
             self._run_train_epoch(dataloaders["train"])
             log_list = None if epoch < num_epochs-1 else result_list
-            if (epoch+1) % val_step == 0:
-                self._run_val_epoch(dataloaders['val'],log_list)
+            #if (epoch+1) % val_step == 0:
+            val_loss = self._run_val_epoch(dataloaders['val'],log_list)
             if self.scheduler:
                 self.scheduler.step() 
+            if early_stopping > -1:
+                val_scores.append(val_loss)
+                if self._check_stopping(val_scores,early_stopping):
+                    break
         self._after_train(dataloaders['train'].dataset)
         time_elapsed = time.time() - start_time
         print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
@@ -64,7 +73,7 @@ class ContinualLearningStrategy(ABC):
         epoch_acc = correct_predictions / len(train_loader.dataset)
         print('Training Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
 
-    def _run_val_epoch(self,dataloader: DataLoader,log_list:List[float]=None) -> None:
+    def _run_val_epoch(self,dataloader: DataLoader,log_list:List[float]=None) -> float:
         '''
             Runs one validation epoch using the dataloader which contains the validation data. 
         '''
@@ -87,6 +96,7 @@ class ContinualLearningStrategy(ABC):
         if log_list is not None:
             log_list.append(epoch_acc)
         print('Validation Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
+        return epoch_loss
 
     def _after_train(self,train_set: Dataset=None) -> None:
         pass
@@ -96,6 +106,12 @@ class ContinualLearningStrategy(ABC):
 
     def _after_pred_val(self,outputs:torch.Tensor=None,batch_size:int=None) -> None:
         pass
+
+    def _check_stopping(self,scores: List[float], patience:int) -> bool:
+        if len(scores) < 2+patience:
+            return False
+        first = scores.pop(0)
+        return first >= max(scores)
 
     def save(self, filename: str):
         torch.save(self.model, filename)

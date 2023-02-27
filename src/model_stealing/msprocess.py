@@ -6,6 +6,7 @@ from continual_learning_strategies.cl_base import ContinualLearningStrategy
 from torch.utils.data import Dataset,DataLoader,Subset
 import random
 from models import testConv,ResNet,BasicBlock
+from collections import Counter
 
 class ModelStealingProcess:
 
@@ -38,7 +39,7 @@ class ModelStealingProcess:
             labeled_set.append(random.randint(0,len(train_set)-1))
         training_set = Subset(train_set,labeled_set)
         loaders_dict['train'] = DataLoader(training_set,batch_size,shuffle=True)
-        self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list)
+        self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list,5)
         unlabeled_set = [i for i in unlabeled_set if i not in labeled_set]
         for i in range(num_cycles):
             self.al_strat.feed_current_state(i,unlabeled_set,labeled_set)
@@ -52,11 +53,12 @@ class ModelStealingProcess:
             self.cl_strat.model = ResNet(BasicBlock, [2,2,2,2], 10)
             self.cl_strat.model = self.cl_strat.model.cuda()
             self.cl_strat.optim = torch.optim.SGD(self.cl_strat.model.parameters(),0.001,0.9,weight_decay=0.0005)
-            self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list)
+            self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list,5)
 
         return score_list
 
-    def continual_learning(self,train_set: Dataset, val_set: Dataset,batch_size:int,num_cycles:int,num_epochs:int) -> List[float]:
+    def continual_learning(self,train_set: Dataset, val_set: Dataset,batch_size:int,num_cycles:int,
+    num_epochs:int,compute_query_dist:bool=False) -> tuple[List[float],List[List[float]]]:
         '''
             Runs a combined continual and active learning approach where instead of querying the target model the actual label is used.
             :param train_set: the dataset that the model will be trained on.
@@ -69,23 +71,28 @@ class ModelStealingProcess:
         unlabeled_set = [i for i in range(len(train_set))]
         labeled_set = []
         score_list = []
+        dist_list = []
         for i in range(self.al_strat.INIT_BUDGET):
             labeled_set.append(random.randint(0,len(train_set)-1))
+        if compute_query_dist:
+            dist_list.append(self._get_dist(labeled_set,train_set.class_to_idx))
         training_set = Subset(train_set,labeled_set)
         loaders_dict['train'] = DataLoader(training_set,batch_size,shuffle=True)
-        self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list)
+        self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list,5)
         unlabeled_set = [i for i in unlabeled_set if i not in labeled_set]
         for i in range(num_cycles):
             self.al_strat.feed_current_state(i,unlabeled_set,labeled_set)
             print(f'Running cycle {i+1}/{num_cycles}')
             training_examples = self.al_strat.query()
+            if compute_query_dist:
+                dist_list.append(self._get_dist(training_examples[-self.al_strat.BUDGET:],train_set.class_to_idx))
             labeled_set += list(training_examples[-self.al_strat.BUDGET:])
             unlabeled_set = [i for i in unlabeled_set if i not in training_examples[-self.al_strat.BUDGET:]]
             training_set = Subset(train_set,training_examples)
             loaders_dict['train'] = DataLoader(training_set,batch_size,shuffle=True)
-            self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list)
+            self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list,5)
 
-        return score_list
+        return score_list,dist_list
 
     def steal_model(self,train_set: Dataset,val_set: Dataset,batch_size:int,num_cycles:int,num_epochs:int) -> List[float]:
         '''
@@ -110,7 +117,7 @@ class ModelStealingProcess:
             #print(train_set.targets[elem])
         training_set = Subset(train_set,labeled_set)
         loaders_dict['train'] = DataLoader(training_set,batch_size,shuffle=True)
-        self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list)
+        self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list,5)
         unlabeled_set = [i for i in unlabeled_set if i not in labeled_set]
         for i in range(num_cycles):
             self.al_strat.feed_current_state(i,unlabeled_set,labeled_set)
@@ -122,7 +129,16 @@ class ModelStealingProcess:
             unlabeled_set = [i for i in unlabeled_set if i not in training_examples[-self.al_strat.BUDGET:]]
             training_set = Subset(train_set,training_examples)
             loaders_dict['train'] = DataLoader(training_set,batch_size,shuffle=True)
-            self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list)
+            self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list,5)
 
         return score_list
 
+    def _get_dist(self,data: List[int], num_classes: int) -> List[int]:
+        '''
+            Returns the distribution of classes in an active learning query.
+        '''
+        cur_dist = [0] * len(num_classes)
+        c = Counter(data)
+        for elem in c:
+            cur_dist[elem] = c[elem]/len(data)
+        return cur_dist
