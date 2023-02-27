@@ -1,6 +1,6 @@
 SUBSTITUTE_MODEL: 
   NAME: 'TestConv' # Possible values: Resnet18,Resnext50,TestConv
-  DATASET: 'MNIST' # Possible values: MNIST,FashionMNIST
+  DATASET: 'TinyImageNet' # Possible values: MNIST,FashionMNIST,TinyImageNet
   AL_METHOD: 
     NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
     INIT_BUDGET: 1000

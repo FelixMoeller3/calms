@@ -14,8 +14,9 @@ from tqdm import tqdm
 from datetime import datetime
 import time
 import os
+from data import TinyImageNet
 
-CONFIG = ["SUBSTITUTE_MODEL", "BATCH_SIZE", "CYCLES", "RESULTS_FILE", "RESULTS_FILE", "TARGET_MODEL", "EPOCHS","USE_GPU"]
+CONFIG = ["SUBSTITUTE_MODEL", "BATCH_SIZE", "CYCLES", "RESULTS_FILE", "RESULTS_FILE", "TARGET_MODEL", "EPOCHS"]
 SUBSTITUTE_MODEL_CONFIG = ["NAME", "DATASET", "AL_METHOD", "CL_METHOD"]
 AL_CONFIG = ["NAME", "INIT_BUDGET", "BUDGET", "LOOKBACK"]
 AL_METHODS = ['LC','BALD','Badge','CoreSet', 'Random']
@@ -24,7 +25,7 @@ CL_METHODS = ["Alasso", "IMM", "Naive", "EWC", "MAS"]
 OPTIMIZERS =["SGD", "ADAM"]
 MODELS = ['Resnet18', 'Resnet34', 'Resnet50', 'Resnet101', 'Resnet152', 'TestConv']
 TARGET_MODEL_CONFIG = ['MODEL','DATASET','EPOCHS','OPTIMIZER']
-DATASET_NAMES = ["MNIST","FashionMNIST", "CIFAR-10"]
+DATASET_NAMES = ["MNIST","FashionMNIST", "CIFAR-10","TinyImageNet"]
 OPTIMIZER_CONFIG = ["NAME", "LR", "MOMENTUM", "WDECAY"]
 
 def run_config(config_path: str) -> ModelStealingProcess:
@@ -37,7 +38,7 @@ def run_config(config_path: str) -> ModelStealingProcess:
         yaml_cfg = yaml.safe_load(f)
     check_attribute_presence(yaml_cfg,CONFIG,"config")
     batch_size = yaml_cfg["BATCH_SIZE"]
-    use_gpu = yaml_cfg["USE_GPU"]
+    use_gpu = detect_gpu()
     target_model = build_target_model(yaml_cfg["TARGET_MODEL"],batch_size,use_gpu)
     al_method,cl_method,train_set,val_set = build_substitute_model(yaml_cfg["SUBSTITUTE_MODEL"],batch_size,use_gpu)
     cycles = yaml_cfg["CYCLES"]
@@ -71,7 +72,7 @@ def run_cl_al_config(config_path: str) -> ModelStealingProcess:
         yaml_cfg = yaml.safe_load(f)
     check_attribute_presence(yaml_cfg,CONFIG,"config")
     batch_size = yaml_cfg["BATCH_SIZE"]
-    use_gpu = yaml_cfg["USE_GPU"]
+    use_gpu = detect_gpu()
     al_method,cl_method,train_set,val_set = build_substitute_model(yaml_cfg["SUBSTITUTE_MODEL"],batch_size,use_gpu)
     cycles = yaml_cfg["CYCLES"]
     ms_process = ModelStealingProcess(None,al_method,cl_method)
@@ -105,7 +106,7 @@ def run_al_config(config_path: str) -> None:
         yaml_cfg = yaml.safe_load(f)
     check_attribute_presence(yaml_cfg,CONFIG,"config")
     batch_size = yaml_cfg["BATCH_SIZE"]
-    use_gpu = yaml_cfg["USE_GPU"]
+    use_gpu = detect_gpu()
     al_method,cl_method,train_set,val_set = build_substitute_model(yaml_cfg["SUBSTITUTE_MODEL"],batch_size,use_gpu)
     cycles = yaml_cfg["CYCLES"]
     ms_process = ModelStealingProcess(None,al_method,cl_method)
@@ -136,7 +137,7 @@ def run_target_model_config(config_path: str) -> None:
         yaml_cfg = yaml.safe_load(f)
     check_attribute_presence(yaml_cfg,CONFIG,"config")
     batch_size = yaml_cfg["BATCH_SIZE"]
-    use_gpu = yaml_cfg["USE_GPU"]
+    use_gpu = detect_gpu()
     print(f"Testing target model: {yaml_cfg['TARGET_MODEL']['MODEL']}")
     build_target_model(yaml_cfg["TARGET_MODEL"],batch_size,use_gpu)
     duration = time.time() - start
@@ -150,6 +151,14 @@ def run_target_model_config(config_path: str) -> None:
                 f'Target model: {yaml_cfg["TARGET_MODEL"]["MODEL"]}, trained on {yaml_cfg["TARGET_MODEL"]["DATASET"]}\n'
                 f'{"-"* 70}'+ "\n"
             )
+
+def detect_gpu() -> bool:
+    use_gpu = torch.cuda.is_available()
+    if use_gpu:
+        print(f"Using GPU with CUDA Version: {torch.version.cuda}")
+    else:
+        print(f"Using CPU since no CUDA Version was found")
+    return use_gpu
 
 def check_attribute_presence(config: dict, attributes: list[str],config_name: str) -> None:
     '''
@@ -216,6 +225,18 @@ def load_dataset(name: str,train:bool) -> tuple[Dataset,torch.Size,int]:
         ]
         transform = augmentation + normalization if train else normalization
         dataset = datasets.CIFAR10("./data",train,transform=transforms.Compose(transform),download=True)
+    elif name == "TinyImageNet":
+        augmentation = [
+            transforms.RandomCrop(64,padding=8),
+            transforms.RandomHorizontalFlip(),
+        ]
+        normalization = [
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.5, 0.5, 0.5], 
+                            std=[0.5, 0.5, 0.5])
+        ]
+        transform = augmentation + normalization if train else normalization
+        dataset = TinyImageNet("./data",train,transform=transforms.Compose(transform),download=True)
     else:
         raise AttributeError(f"Dataset unknown. Got {name}, but expected one of {','.join(DATASET_NAMES)}")
     return dataset,dataset[0][0].shape,len(dataset.class_to_idx)
