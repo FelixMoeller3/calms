@@ -31,6 +31,7 @@ class Strategy:
         self.num_saved_queries += 1
         if self.num_saved_queries > self.look_back:
             self.previous_queries.pop(0)
+            self.num_saved_queries -= 1
         self.previous_queries.append(new_query)
 
 

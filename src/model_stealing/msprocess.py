@@ -79,7 +79,7 @@ class ModelStealingProcess:
             self.al_strat.feed_current_state(i,unlabeled_set,labeled_set)
             print(f'Running cycle {i+1}/{num_cycles}')
             training_examples = self.al_strat.query()
-            labeled_set += training_examples
+            labeled_set += list(training_examples[-self.al_strat.BUDGET:])
             unlabeled_set = [i for i in unlabeled_set if i not in training_examples]
             training_set = Subset(train_set,training_examples)
             loaders_dict['train'] = DataLoader(training_set,batch_size,shuffle=True)
