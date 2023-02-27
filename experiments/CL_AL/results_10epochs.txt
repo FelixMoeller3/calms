@@ -376,3 +376,17 @@ Continual Learning Strategy: Alasso
 Active Learning Strategy: CoreSet
 Accuracy results at the end of each cycle: [0.2654, 0.3944, 0.3883, 0.4276, 0.4398, 0.4219, 0.4572, 0.4758, 0.4631, 0.4761, 0.4668]
 ----------------------------------------------------------------------
+Run completed at 2023-02-25 12:14:49 after 00h:23m:15s
+Optimizer args NAME:EWCWEIGHT:1.0OPTIMIZER:{'NAME': 'SGD', 'LR': 0.1, 'MOMENTUM': 0.9, 'WDECAY': 0.0005, 'MILESTONES': [120, 240]}USE_GPU:True 
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: EWC
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.5051, 0.6134, 0.6925, 0.7398, 0.839, 0.8513, 0.8533, 0.8576, 0.8653, 0.8644, 0.8703]
+----------------------------------------------------------------------
+Run completed at 2023-02-25 12:43:05 after 00h:18m:58s
+Optimizer args NAME:NaiveOPTIMIZER:{'NAME': 'SGD', 'LR': 0.1, 'MOMENTUM': 0.9, 'WDECAY': 0.0005, 'MILESTONES': [120, 240]}USE_GPU:True 
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: Naive
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.4834, 0.6314, 0.7165, 0.6911, 0.8643, 0.8689, 0.8734, 0.8762, 0.8814, 0.8835, 0.887]
+----------------------------------------------------------------------
