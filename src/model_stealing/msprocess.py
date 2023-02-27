@@ -140,5 +140,5 @@ class ModelStealingProcess:
         cur_dist = [0] * len(num_classes)
         c = Counter(data)
         for elem in c:
-            cur_dist[elem] = c[elem]
+            cur_dist[elem] = c[elem]/len(data)
         return cur_dist
