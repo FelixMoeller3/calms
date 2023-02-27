@@ -1,6 +1,6 @@
 SUBSTITUTE_MODEL: 
-  NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
-  DATASET: 'CIFAR-10'
+  NAME: 'TestConv' # Possible values: Resnet18,Resnext50,TestConv
+  DATASET: 'MNIST'
   AL_METHOD: 
     NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
     INIT_BUDGET: 4000

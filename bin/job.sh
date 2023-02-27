@@ -16,7 +16,7 @@ module load devel/cuda/11.8
 source ../ba_env/bin/activate   
 configs=(
 	#"./src/conf/finetuning/Finetune_MAS.yaml"
-	"./src/conf/basic_model_stealing/BALD_Naive.yaml"
+	"./src/conf/basic_model_stealing/LC_Naive.yaml"
         #"./src/conf/basic_model_stealing/Random_Naive.yaml"
 	#"./src/conf/basic_model_stealing/BALD_Naive.yaml"
         #"./src/conf/basic_model_stealing/CoreSet_Naive.yaml"
