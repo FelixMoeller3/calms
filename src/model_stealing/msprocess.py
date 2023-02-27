@@ -139,8 +139,10 @@ class ModelStealingProcess:
         '''
             Returns the distribution of classes in an active learning query.
         '''
+        if isinstance(data[0],torch.Tensor):
+            data = [elem.item() for elem in data]
         cur_dist = [0] * num_classes
         c = Counter(data)
         for elem in c:
-            cur_dist[elem-1] = c[elem]/len(data)
+            cur_dist[elem] = c[elem]/len(data)
         return cur_dist

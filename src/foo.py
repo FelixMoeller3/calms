@@ -24,7 +24,7 @@ fashion_mnist_test = datasets.MNIST('./data', train=False,download=True, transfo
                    ]))
 '''
 
-mnist_train = datasets.MNIST('./data', train=True,download=True, transform=transforms.Compose([
+""" mnist_train = datasets.MNIST('./data', train=True,download=True, transform=transforms.Compose([
                        transforms.ToTensor(),
                        transforms.Normalize((0.1307,), (0.3081,))
                    ]))
@@ -44,7 +44,7 @@ cl_strategy = cl_strat.MAS(substitute_model,optim,nn.CrossEntropyLoss(),1.0)
 al_strategy = al_strat.LC(substitute_model,mnist_train,10,test_loader,batch_size,cycle_budget,init_budget,None)
 train_strat = cl_strat.ElasticWeightConsolidation(target_model,SGD(target_model.parameters(),lr=0.01),nn.CrossEntropyLoss(),0.0)
 train_strat.train(loaders_dict,1)
-ms.ModelStealingProcess(target_model,al_strategy,cl_strategy).steal_model(mnist_train,mnist_test,100,10)
+ms.ModelStealingProcess(target_model,al_strategy,cl_strategy).steal_model(mnist_train,mnist_test,100,10) """
 '''
 loaders_dict = {'train': None, 'val': test_loader}
 
@@ -78,3 +78,6 @@ with open("data/experiments/results.txt",'a') as f:
         )
 '''
 
+if __name__ == "__main__":
+    from utils import config
+    config.run_cl_al_config("./src/conf/basic_model_stealing/LC_Naive.yaml")
