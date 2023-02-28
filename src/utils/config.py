@@ -113,7 +113,7 @@ def run_al_config(config_path: str) -> None:
     ms_process = ModelStealingProcess(None,al_method,cl_method)
     num_epochs = yaml_cfg["EPOCHS"]
     print(f'Running active learning with strategy {yaml_cfg["SUBSTITUTE_MODEL"]["AL_METHOD"]["NAME"]}')
-    accuracies = ms_process.active_learning(train_set,val_set,batch_size,cycles,num_epochs)
+    accuracies = ms_process.active_learning(train_set,val_set,batch_size,cycles,num_epochs,yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["OPTIMIZER"],build_optimizer)
     duration = time.time() - start
     hours = int(duration)//3600
     minutes = (int(duration) % 3600) // 60

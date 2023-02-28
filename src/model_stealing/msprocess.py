@@ -1,4 +1,4 @@
-from typing import List
+from typing import Callable, List
 import torch.nn as nn
 import torch
 from active_learning_strategies.strategy import Strategy
@@ -7,6 +7,7 @@ from torch.utils.data import Dataset,DataLoader,Subset
 import random
 from models import testConv,ResNet,BasicBlock
 from collections import Counter
+import copy
 
 class ModelStealingProcess:
 
@@ -22,7 +23,8 @@ class ModelStealingProcess:
         self.cl_strat = continualLearningStrategy
         self.substitute_model = self.cl_strat.model
 
-    def active_learning(self,train_set: Dataset, val_set: Dataset,batch_size:int,num_cycles:int,num_epochs:int) -> List[float]:
+    def active_learning(self,train_set: Dataset, val_set: Dataset,batch_size:int,num_cycles:int,num_epochs:int,
+                        optimizer_config:dict,optimizer_builder: Callable) -> List[float]:
         '''
             Runs the classic active learning scenario where a new model is trained in every iteration.
             :param train_set: the dataset that the model will be trained on.
@@ -35,6 +37,8 @@ class ModelStealingProcess:
         unlabeled_set = [i for i in range(len(train_set))]
         labeled_set = []
         score_list = []
+        optimizer_state = self.cl_strat.optim.state_dict()
+        copied_scheduler = self.cl_strat.scheduler.state_dict
         for i in range(self.al_strat.INIT_BUDGET):
             labeled_set.append(random.randint(0,len(train_set)-1))
         training_set = Subset(train_set,labeled_set)
@@ -52,7 +56,9 @@ class ModelStealingProcess:
             loaders_dict['train'] = DataLoader(training_set,batch_size,shuffle=True)
             self.cl_strat.model = ResNet(BasicBlock, [2,2,2,2], 10)
             self.cl_strat.model = self.cl_strat.model.cuda()
-            self.cl_strat.optim = torch.optim.SGD(self.cl_strat.model.parameters(),0.001,0.9,weight_decay=0.0005)
+            optim,scheduler = optimizer_builder(optimizer_config,self.cl_strat.model)
+            self.cl_strat.optim = optim
+            self.cl_strat.scheduler = scheduler
             self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list,5)
 
         return score_list
