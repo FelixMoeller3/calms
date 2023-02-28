@@ -30,11 +30,11 @@ class ContinualLearningStrategy(ABC):
             print(f'Running epoch {epoch+1}/{num_epochs}')
             self._run_train_epoch(dataloaders["train"])
             if early_stopping > -1 or (epoch+1) % val_step == 0:
-                val_acc,val_loss = self._run_val_epoch(dataloaders['val'])
+                val_acc = self._run_val_epoch(dataloaders['val'])
             if self.scheduler:
                 self.scheduler.step() 
             if early_stopping > -1:
-                val_scores.append(val_loss)
+                val_scores.append(val_acc)
                 if self._check_stopping(val_scores,early_stopping):
                     print(f"Stopping training after {epoch+1} epochs")
                     break 
@@ -74,7 +74,7 @@ class ContinualLearningStrategy(ABC):
         epoch_acc = correct_predictions / len(train_loader.dataset)
         print('Training Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
 
-    def _run_val_epoch(self,dataloader: DataLoader) -> tuple[float,float]:
+    def _run_val_epoch(self,dataloader: DataLoader) -> float:
         '''
             Runs one validation epoch using the dataloader which contains the validation data. 
         '''
@@ -95,7 +95,7 @@ class ContinualLearningStrategy(ABC):
         epoch_loss = total_loss / len(dataloader.dataset)
         epoch_acc = correct_predictions / len(dataloader.dataset)
         print('Validation Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
-        return epoch_acc,epoch_loss
+        return epoch_acc
 
     def _after_train(self,train_set: Dataset=None) -> None:
         pass
@@ -110,7 +110,7 @@ class ContinualLearningStrategy(ABC):
         if len(scores) < 2+patience:
             return False
         first = scores.pop(0)
-        return first >= max(scores)
+        return first < min(scores)
 
     def save(self, filename: str):
         torch.save(self.model, filename)
