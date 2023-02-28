@@ -54,6 +54,7 @@ def run_config(config_path: str) -> ModelStealingProcess:
     os.makedirs(yaml_cfg["RESULTS_FOLDER"],exist_ok=True)
     with open(yaml_cfg["RESULTS_FOLDER"] + yaml_cfg["RESULTS_FILE"],'a+') as f:
         f.write(f'Run completed at {datetime.today().strftime("%Y-%m-%d %H:%M:%S")} after {time_string}\n'
+                f'Config File:\n{yaml.dump(yaml_cfg)}'
                 f'Target model: {yaml_cfg["TARGET_MODEL"]["MODEL"]}, trained on {yaml_cfg["TARGET_MODEL"]["DATASET"]}\n'
                 f'Substitute model: {yaml_cfg["SUBSTITUTE_MODEL"]["NAME"]}, trained on {yaml_cfg["SUBSTITUTE_MODEL"]["DATASET"]}\n'
                 f'Continual Learning Strategy: {yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["NAME"]}\n'
@@ -88,7 +89,7 @@ def run_cl_al_config(config_path: str) -> ModelStealingProcess:
     sub_cfg = yaml_cfg['SUBSTITUTE_MODEL']["CL_METHOD"]
     with open(yaml_cfg["RESULTS_FOLDER"] + yaml_cfg["RESULTS_FILE"],'a+') as f:
         f.write(f'Run completed at {datetime.today().strftime("%Y-%m-%d %H:%M:%S")} after {time_string}\n'
-                f'Optimizer args {"".join([f"{elem}:{sub_cfg[elem]}" for elem in sub_cfg])} \n'
+                f'Config File: {yaml.dump(yaml_cfg)}\n'
                 f'Model: {yaml_cfg["SUBSTITUTE_MODEL"]["NAME"]}, trained on {yaml_cfg["SUBSTITUTE_MODEL"]["DATASET"]}\n'
                 f'Continual Learning Strategy: {yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["NAME"]}\n'
                 f'Active Learning Strategy: {yaml_cfg["SUBSTITUTE_MODEL"]["AL_METHOD"]["NAME"]}\n'
@@ -122,6 +123,7 @@ def run_al_config(config_path: str) -> None:
     os.makedirs(yaml_cfg["RESULTS_FOLDER"],exist_ok=True)
     with open(yaml_cfg["RESULTS_FOLDER"] + yaml_cfg["RESULTS_FILE"],'a+') as f:
         f.write(f'Run completed at {datetime.today().strftime("%Y-%m-%d %H:%M:%S")} after {time_string}\n'
+                f'Config File: {yaml.dump(yaml_cfg)}\n'
                 f'Model: {yaml_cfg["SUBSTITUTE_MODEL"]["NAME"]}, trained on {yaml_cfg["SUBSTITUTE_MODEL"]["DATASET"]}\n'
                 f'Active Learning Strategy: {yaml_cfg["SUBSTITUTE_MODEL"]["AL_METHOD"]["NAME"]}\n'
                 f'Accuracy results at the end of each cycle: {accuracies}\n'
@@ -149,6 +151,7 @@ def run_target_model_config(config_path: str) -> None:
     os.makedirs(yaml_cfg["RESULTS_FOLDER"],exist_ok=True)
     with open(yaml_cfg["RESULTS_FOLDER"] + yaml_cfg["RESULTS_FILE"],'a+') as f:
         f.write(f'Run completed at {datetime.today().strftime("%Y-%m-%d %H:%M:%S")} after {time_string}\n'
+                f'Config File: {yaml.dump(yaml_cfg)}\n'
                 f'Target model: {yaml_cfg["TARGET_MODEL"]["MODEL"]}, trained on {yaml_cfg["TARGET_MODEL"]["DATASET"]}\n'
                 f'{"-"* 70}'+ "\n"
             )
@@ -217,15 +220,26 @@ def load_dataset(name: str,train:bool) -> tuple[Dataset,torch.Size,int]:
                    ]),download=True)
     elif name == "CIFAR-10":
         augmentation = [
-            transforms.RandomCrop(32, padding=4),
             transforms.RandomHorizontalFlip(),
+            transforms.RandomCrop(32, padding=4),
         ]
         normalization = [
             transforms.ToTensor(),
-            transforms.Normalize(mean=[0.491, 0.482, 0.447], std=[0.247, 0.243, 0.262])
+            transforms.Normalize([0.4914, 0.4822, 0.4465], [0.2023, 0.1994, 0.2010])
         ]
         transform = augmentation + normalization if train else normalization
         dataset = datasets.CIFAR10("./data",train,transform=transforms.Compose(transform),download=True)
+    elif name == "CIFAR-100":
+        augmentation = [
+            transforms.RandomHorizontalFlip(),
+            transforms.RandomCrop(32, padding=4),
+        ]
+        normalization = [
+            transforms.ToTensor(),
+            transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761))
+        ]
+        transform = augmentation + normalization if train else normalization
+        dataset = datasets.CIFAR100("./data",train,transform=transforms.Compose(transform),download=True)
     elif name == "TinyImageNet":
         augmentation = [
             transforms.RandomCrop(64,padding=8),
