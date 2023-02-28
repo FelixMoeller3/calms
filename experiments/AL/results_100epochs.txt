@@ -1,0 +1,5 @@
+Run completed at 2023-02-28 11:50:47 after 01h:37m:47s
+Model: Resnet18, trained on CIFAR-10
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.475, 0.5044, 0.6243, 0.6679, 0.7029, 0.7222, 0.7399, 0.7284, 0.7765, 0.7966, 0.7946, 0.7908, 0.7887, 0.8117, 0.8022, 0.7849]
+----------------------------------------------------------------------

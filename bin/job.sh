@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=AL_Baseline       # job name
 #SBATCH --partition=gpu_4                  # queue for the resource allocation.
-#SBATCH --time=30:00                     # wall-clock time limit  
+#SBATCH --time=400:00                     # wall-clock time limit  
 #SBATCH --mem=10000                        # memory per node
 #SBATCH --nodes=1                          # number of nodes to be used
 #SBATCH --cpus-per-task=40                 # number of CPUs required per MPI task
@@ -24,7 +24,7 @@ configs=(
 )
 for conf in "${configs[@]}"
 do 
-    echo "Running $conf with mode CL"
-    python ./src/main.py -c $conf -m "CL"
+    echo "Running $conf with mode AL"
+    python ./src/main.py -c $conf -m "AL"
 done
 deactivate
