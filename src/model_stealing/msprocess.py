@@ -47,12 +47,11 @@ class ModelStealingProcess:
             self.al_strat.model = self.cl_strat.model
             print(f'Running cycle {i+1}/{num_cycles}')
             training_examples = self.al_strat.query()
-            labeled_set += [unlabeled_set[elem] for elem in training_examples]
-            unlabeled_set = [i for i in unlabeled_set if i not in training_examples]
+            training_examples_absolute_indices = [unlabeled_set[elem] for elem in training_examples[-self.al_strat.BUDGET:]]
+            labeled_set += training_examples_absolute_indices
+            unlabeled_set = [i for i in unlabeled_set if i not in training_examples_absolute_indices]
             training_set = Subset(train_set,labeled_set)
             loaders_dict['train'] = DataLoader(training_set,batch_size,shuffle=True)
-            #self.cl_strat.model = ResNet(BasicBlock, [2,2,2,2], 10)
-            #self.cl_strat.model = self.cl_strat.model.cuda()
             optim,scheduler = optimizer_builder(optimizer_config,self.cl_strat.model)
             self.cl_strat.optim = optim
             self.cl_strat.scheduler = scheduler
@@ -88,11 +87,12 @@ class ModelStealingProcess:
             self.al_strat.feed_current_state(i,unlabeled_set,labeled_set)
             print(f'Running cycle {i+1}/{num_cycles}')
             training_examples = self.al_strat.query()
+            training_examples_absolute_indices = [unlabeled_set[elem] for elem in training_examples[-self.al_strat.BUDGET:]]
             if compute_query_dist:
-                labels = [train_set.targets[unlabeled_set[index]] for index in training_examples[-self.al_strat.BUDGET:]]
+                labels = [train_set.targets[index] for index in training_examples_absolute_indices]
                 dist_list.append(self._get_dist(labels,len(train_set.class_to_idx)))
-            labeled_set += [unlabeled_set[elem] for elem in training_examples[-self.al_strat.BUDGET:]]
-            unlabeled_set = [i for i in unlabeled_set if i not in training_examples[-self.al_strat.BUDGET:]]
+            labeled_set += training_examples_absolute_indices
+            unlabeled_set = [i for i in unlabeled_set if i not in training_examples_absolute_indices]
             training_set = Subset(train_set,training_examples)
             loaders_dict['train'] = DataLoader(training_set,batch_size,shuffle=True)
             self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list)
@@ -128,10 +128,11 @@ class ModelStealingProcess:
             self.al_strat.feed_current_state(i,unlabeled_set,labeled_set)
             print(f'Running cycle {i+1}/{num_cycles}')
             training_examples = self.al_strat.query()
-            for elem in training_examples:
-                train_set.targets[unlabeled_set[elem]] = torch.max(self.target_model(torch.unsqueeze(train_set[unlabeled_set[elem]][0],0)),1)[1]
-            labeled_set += [unlabeled_set[elem] for elem in training_examples[-self.al_strat.BUDGET:])]
-            unlabeled_set = [i for i in unlabeled_set if i not in training_examples[-self.al_strat.BUDGET:]]
+            training_examples_absolute_indices = [unlabeled_set[elem] for elem in training_examples[-self.al_strat.BUDGET:]]
+            for elem in training_examples_absolute_indices:
+                train_set.targets[elem] = torch.max(self.target_model(torch.unsqueeze(train_set[elem][0],0)),1)[1]
+            labeled_set += training_examples_absolute_indices
+            unlabeled_set = [i for i in unlabeled_set if i not in training_examples_absolute_indices]
             training_set = Subset(train_set,training_examples)
             loaders_dict['train'] = DataLoader(training_set,batch_size,shuffle=True)
             self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list)
