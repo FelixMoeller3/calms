@@ -130,7 +130,7 @@ class ModelStealingProcess:
             training_examples = self.al_strat.query()
             for elem in training_examples:
                 train_set.targets[unlabeled_set[elem]] = torch.max(self.target_model(torch.unsqueeze(train_set[unlabeled_set[elem]][0],0)),1)[1]
-            labeled_set += [unlabeled_set[elem] for elem in training_examples[-self.al_strat.BUDGET:])]
+            labeled_set += [unlabeled_set[elem] for elem in training_examples[-self.al_strat.BUDGET:]]
             unlabeled_set = [i for i in unlabeled_set if i not in training_examples[-self.al_strat.BUDGET:]]
             training_set = Subset(train_set,training_examples)
             loaders_dict['train'] = DataLoader(training_set,batch_size,shuffle=True)
