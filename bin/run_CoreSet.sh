@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#SBATCH --job-name=MAS_Finetune       # job name
+#SBATCH --job-name=Run_AL_CoreSet       # job name
 #SBATCH --partition=gpu_4_a100                  # queue for the resource allocation.
-#SBATCH --time=25:00                     # wall-clock time limit  
+#SBATCH --time=800:00                     # wall-clock time limit  
 #SBATCH --mem=10000                        # memory per node
 #SBATCH --nodes=1                          # number of nodes to be used
 #SBATCH --cpus-per-task=40                 # number of CPUs required per MPI task
@@ -13,11 +13,12 @@
 
 module purge                                       # Unload all currently loaded modules.
 module load devel/cuda/11.8
-source ../ba_env/bin/activate   
-for file in ./src/conf/finetuning/MAS/*
+source ../ba_env/bin/activate
+files=("./src/conf/basic_model_stealing/CoreSet_Naive.yaml")
+for file in "${files[@]}"
 do 
-    echo "Running $file with mode CL"
-    python ./src/main.py -c $file -m "CL"
+    echo "Running $file with mode AL"
+    python ./src/main.py -c $file -m "AL"
 done
 deactivate
 
