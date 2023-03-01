@@ -3,9 +3,9 @@ SUBSTITUTE_MODEL:
   DATASET: 'CIFAR-10'
   AL_METHOD: 
     NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
-    INIT_BUDGET: 3000
-    BUDGET: 3000
-    LOOKBACK: 5
+    INIT_BUDGET: 2000
+    BUDGET: 2000
+    LOOKBACK: 1
   CL_METHOD: 
     NAME: 'EWC' # Possible values : Alasso,EWC,MAS,IMM,Naive
     WEIGHT: 1.0
@@ -14,13 +14,13 @@ SUBSTITUTE_MODEL:
       LR: 0.1
       MOMENTUM: 0.9
       WDECAY: 0.0005
-      MILESTONES: [120,240]
+      MILESTONES: [60,120]
 BATCH_SIZE: 128 # batch size used for training
 CYCLES: 15 # number of cycles in the model stealing process
-EPOCHS: 50
+EPOCHS: 200
 USE_GPU: True # Whether or not to use GPU Acceleration
 RESULTS_FOLDER: './experiments/CL_AL/'
-RESULTS_FILE: 'results_50epochs.txt'
+RESULTS_FILE: 'results_200epochs.txt'
 TARGET_MODEL:
   MODEL: 'TestConv'
   DATASET: 'FashionMNIST'

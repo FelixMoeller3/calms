@@ -13,7 +13,7 @@ class RandomSelection(Strategy):
 
     def query(self) -> np.ndarray:
         random.seed(self.init_set_seed)
-        arg = list(self.subset)
+        arg = [i for i in range(len(self.subset))]
         random.shuffle(arg)
         self.add_query(arg[:self.BUDGET])
         return np.concatenate(self.previous_queries)
