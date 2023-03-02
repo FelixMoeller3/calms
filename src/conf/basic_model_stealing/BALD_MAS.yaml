@@ -3,7 +3,7 @@ SUBSTITUTE_MODEL:
   DATASET: 'CIFAR-10'
   AL_METHOD: 
     NAME: 'BALD' # Possible values: LC,BALD,Badge,CoreSet,Random
-    DROPOUT_ITER: 10
+    DROPOUT_ITER: 25
     INIT_BUDGET: 2000
     BUDGET: 2000
     LOOKBACK: 1
@@ -12,10 +12,10 @@ SUBSTITUTE_MODEL:
     WEIGHT: 1.0
     OPTIMIZER:
       NAME: 'SGD'
-      LR: 0.1
+      LR: 0.01
       MOMENTUM: 0.9
       WDECAY: 0.0005
-      MILESTONES: [60,120]
+      MILESTONES: [80,160]
 BATCH_SIZE: 128 # batch size used for training
 CYCLES: 15 # number of cycles in the model stealing process
 EPOCHS: 200

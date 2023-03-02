@@ -7,14 +7,14 @@ SUBSTITUTE_MODEL:
     BUDGET: 2000
     LOOKBACK: 1
   CL_METHOD: 
-    NNAME: 'MAS' # Possible values : Alasso,EWC,MAS,IMM,Naive
+    NAME: 'MAS' # Possible values : Alasso,EWC,MAS,IMM,Naive
     WEIGHT: 1.0
     OPTIMIZER:
       NAME: 'SGD'
-      LR: 0.1
+      LR: 0.01
       MOMENTUM: 0.9
       WDECAY: 0.0005
-      MILESTONES: [60,120]
+      MILESTONES: [80,160]
 BATCH_SIZE: 128 # batch size used for training
 CYCLES: 15 # number of cycles in the model stealing process
 EPOCHS: 200
