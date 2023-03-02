@@ -1,5 +1,5 @@
 SUBSTITUTE_MODEL: 
-NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
+  NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
   DATASET: 'CIFAR-10'
   AL_METHOD: 
     NAME: 'BALD' # Possible values: LC,BALD,Badge,CoreSet,Random
