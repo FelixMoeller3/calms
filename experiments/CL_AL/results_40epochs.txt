@@ -1,0 +1,49 @@
+Run completed at 2023-03-02 15:45:08 after 00h:07m:09s
+Config File: BATCH_SIZE: 128
+CYCLES: 15
+EPOCHS: 40
+RESULTS_FILE: results_40epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 500
+    INIT_BUDGET: 1000
+    LOOKBACK: 1
+    NAME: LC
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: EWC
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 10000
+      - 12000
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+    WEIGHT: 1.0
+  DATASET: CIFAR-10
+  NAME: Resnet18
+TARGET_MODEL:
+  DATASET: FashionMNIST
+  EPOCHS: 3
+  MODEL: TestConv
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+USE_GPU: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: EWC
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.3684, 0.3266, 0.3948, 0.3949, 0.399, 0.3925, 0.4238, 0.4375, 0.4302, 0.4446, 0.4534, 0.4352, 0.4709, 0.4984, 0.5136, 0.5115]
+Class distribution for each query: [8.8, 8.6, 9.6, 10.7, 11.8, 9.6, 10.3, 9.3, 11.4, 9.9],[5.2, 5.8, 12.0, 20.4, 10.2, 15.4, 9.2, 10.4, 4.8, 6.6],[10.2, 15.2, 7.2, 9.0, 8.0, 7.4, 9.6, 5.8, 11.2, 16.4],[11.0, 7.2, 12.0, 11.0, 7.8, 11.6, 7.2, 11.0, 11.0, 10.2],[9.0, 4.8, 12.2, 15.4, 12.6, 10.6, 13.2, 12.0, 3.2, 7.0],[7.0, 5.8, 15.8, 16.0, 9.6, 10.4, 15.0, 9.8, 2.8, 7.8],[8.0, 12.4, 11.4, 10.4, 9.6, 10.2, 8.6, 8.0, 5.4, 16.0],[10.6, 8.0, 13.8, 11.2, 12.8, 9.0, 8.4, 10.0, 8.8, 7.4],[10.0, 7.2, 12.0, 13.2, 12.0, 8.8, 8.6, 8.0, 11.2, 9.0],[10.6, 9.8, 10.6, 10.0, 10.2, 9.4, 11.0, 6.0, 10.2, 12.2],[10.6, 7.8, 13.0, 12.0, 8.2, 6.2, 11.6, 8.4, 7.8, 14.4],[9.0, 6.8, 13.2, 10.2, 10.6, 8.6, 9.0, 12.6, 9.8, 10.2],[6.4, 12.6, 11.6, 10.6, 12.0, 12.8, 11.6, 9.4, 5.2, 7.8],[9.4, 8.2, 12.4, 10.4, 10.6, 10.8, 9.0, 8.4, 11.6, 9.2],[10.8, 4.8, 11.6, 10.8, 12.8, 12.6, 7.4, 10.6, 10.8, 7.8],[11.2, 6.6, 11.4, 12.4, 10.0, 10.4, 9.8, 10.0, 11.6, 6.6]
+----------------------------------------------------------------------
