@@ -3,8 +3,8 @@ SUBSTITUTE_MODEL:
   DATASET: 'CIFAR-10'
   AL_METHOD: 
     NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
-    INIT_BUDGET: 2000
-    BUDGET: 2000
+    INIT_BUDGET: 1000
+    BUDGET: 500
     LOOKBACK: 1
   CL_METHOD: 
     NAME: 'Naive' # Possible values : Alasso,EWC,MAS,IMM,Naive
@@ -13,12 +13,12 @@ SUBSTITUTE_MODEL:
       LR: 0.1
       MOMENTUM: 0.9
       WDECAY: 0.0005
-      MILESTONES: [60,120]
+      MILESTONES: [10000,12000]
 BATCH_SIZE: 128 # batch size used for training
 CYCLES: 15 # number of cycles in the model stealing process
-EPOCHS: 200
+EPOCHS: 50
 RESULTS_FOLDER: './experiments/AL/'
-RESULTS_FILE: 'results_200epochs.txt'
+RESULTS_FILE: 'results_50epochs.txt'
 TARGET_MODEL:
   MODEL: 'TestConv'
   DATASET: 'FashionMNIST'
