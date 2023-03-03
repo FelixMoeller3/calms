@@ -60,7 +60,7 @@ class ModelStealingProcess:
         return score_list
 
     def continual_learning(self,train_set: Dataset, val_set: Dataset,batch_size:int,num_cycles:int,
-    num_epochs:int,compute_query_dist:bool=False) -> tuple[List[float],List[List[float]]]:
+    num_epochs:int,compute_query_dist:bool,optimizer_config:dict,optimizer_builder: Callable) -> tuple[List[float],List[List[float]]]:
         '''
             Runs a combined continual and active learning approach where instead of querying the target model the actual label is used.
             :param train_set: the dataset that the model will be trained on.
@@ -95,6 +95,9 @@ class ModelStealingProcess:
             unlabeled_set = [i for i in unlabeled_set if i not in training_examples_absolute_indices]
             training_set = Subset(train_set,training_examples)
             loaders_dict['train'] = DataLoader(training_set,batch_size,shuffle=True)
+            optim,scheduler = optimizer_builder(optimizer_config,self.cl_strat.model)
+            self.cl_strat.optim = optim
+            self.cl_strat.scheduler = scheduler
             self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list)
 
         return score_list,dist_list
