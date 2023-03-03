@@ -15,7 +15,7 @@ SUBSTITUTE_MODEL:
       WDECAY: 0.0005
       MILESTONES: [10000,12000]
 BATCH_SIZE: 128 # batch size used for training
-CYCLES: 15 # number of cycles in the model stealing process
+CYCLES: 25 # number of cycles in the model stealing process
 EPOCHS: 50
 RESULTS_FOLDER: './experiments/AL/'
 RESULTS_FILE: 'results_50epochs.txt'

@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=LC_EWC       # job name
 #SBATCH --partition=gpu_4_a100             # queue for the resource allocation.
-#SBATCH --time=60:00                     # wall-clock time limit  
+#SBATCH --time=180:00                     # wall-clock time limit  
 #SBATCH --mem=10000                        # memory per node
 #SBATCH --nodes=1                          # number of nodes to be used
 #SBATCH --cpus-per-task=40                 # number of CPUs required per MPI task

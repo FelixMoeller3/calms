@@ -429,3 +429,100 @@ Model: Resnet18, trained on CIFAR-10
 Active Learning Strategy: CoreSet
 Accuracy results at the end of each cycle: [0.5795, 0.7186, 0.8022, 0.8404, 0.8637, 0.8825, 0.894, 0.9045, 0.91, 0.9158, 0.9208, 0.9266, 0.931, 0.9314, 0.9345, 0.9339]
 ----------------------------------------------------------------------
+Run completed at 2023-03-03 14:00:39 after 09h:01m:34s
+Config File: BATCH_SIZE: 128
+CYCLES: 15
+EPOCHS: 200
+RESULTS_FILE: results_200epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    INIT_BUDGET: 2000
+    LOOKBACK: 1
+    NAME: CoreSet
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    ALPHAS:
+    - 0.45
+    - 0.55
+    NAME: IMM
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+    WEIGHT: 1.0
+  DATASET: CIFAR-10
+  NAME: Resnet18
+TARGET_MODEL:
+  DATASET: FashionMNIST
+  EPOCHS: 3
+  MODEL: TestConv
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+USE_GPU: true
+
+Model: Resnet18, trained on CIFAR-10
+Active Learning Strategy: CoreSet
+Accuracy results at the end of each cycle: [0.574, 0.7227, 0.7887, 0.8358, 0.862, 0.8805, 0.897, 0.9038, 0.9121, 0.9187, 0.9211, 0.9241, 0.9267, 0.9317, 0.9308, 0.933]
+----------------------------------------------------------------------
+Run completed at 2023-03-03 17:34:33 after 10h:19m:12s
+Config File: BATCH_SIZE: 128
+CYCLES: 15
+EPOCHS: 200
+RESULTS_FILE: results_200epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    INIT_BUDGET: 2000
+    LOOKBACK: 1
+    NAME: CoreSet
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: MAS
+    OPTIMIZER:
+      LR: 0.01
+      MILESTONES:
+      - 80
+      - 160
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+    WEIGHT: 1.0
+  DATASET: CIFAR-10
+  NAME: Resnet18
+TARGET_MODEL:
+  DATASET: FashionMNIST
+  EPOCHS: 3
+  MODEL: TestConv
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+USE_GPU: true
+
+Model: Resnet18, trained on CIFAR-10
+Active Learning Strategy: CoreSet
+Accuracy results at the end of each cycle: [0.6391, 0.6603, 0.679, 0.6897, 0.7034, 0.7164, 0.7288, 0.7354, 0.7455, 0.7546, 0.7593, 0.7672, 0.7705, 0.7725, 0.7775, 0.7815]
+----------------------------------------------------------------------
