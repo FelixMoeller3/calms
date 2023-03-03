@@ -79,14 +79,14 @@ def run_cl_al_config(config_path: str) -> ModelStealingProcess:
     ms_process = ModelStealingProcess(None,al_method,cl_method)
     num_epochs = yaml_cfg["EPOCHS"]
     print(f'Running continual active learning with strategies {yaml_cfg["SUBSTITUTE_MODEL"]["AL_METHOD"]["NAME"]} and {yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["NAME"]}')
-    accuracies,query_dists = ms_process.continual_learning(train_set,val_set,batch_size,cycles,num_epochs,True)
+    accuracies,query_dists = ms_process.continual_learning(train_set,val_set,batch_size,cycles,num_epochs,False,
+                                                           yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["OPTIMIZER"],build_optimizer)
     duration = time.time() - start
     hours = int(duration)//3600
     minutes = (int(duration) % 3600) // 60
     seconds = int(duration) % 60
     time_string = "{:02}h:{:02}m:{:02}s".format(hours,minutes,seconds)
     os.makedirs(yaml_cfg["RESULTS_FOLDER"],exist_ok=True)
-    sub_cfg = yaml_cfg['SUBSTITUTE_MODEL']["CL_METHOD"]
     with open(yaml_cfg["RESULTS_FOLDER"] + yaml_cfg["RESULTS_FILE"],'a+') as f:
         f.write(f'Run completed at {datetime.today().strftime("%Y-%m-%d %H:%M:%S")} after {time_string}\n'
                 f'Config File: {yaml.dump(yaml_cfg)}\n'
