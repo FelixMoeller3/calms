@@ -43,3 +43,48 @@ Model: Resnet18, trained on CIFAR-10
 Active Learning Strategy: LC
 Accuracy results at the end of each cycle: [0.3667, 0.4212, 0.4446, 0.473, 0.4916, 0.501, 0.5374, 0.5896, 0.6175, 0.641, 0.6487, 0.7026, 0.7175, 0.6658, 0.7784, 0.7489]
 ----------------------------------------------------------------------
+Run completed at 2023-03-03 21:37:39 after 01h:35m:02s
+Config File: BATCH_SIZE: 128
+CYCLES: 25
+EPOCHS: 50
+RESULTS_FILE: results_50epochs.txt
+RESULTS_FOLDER: ./experiments/AL/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 500
+    INIT_BUDGET: 1000
+    LOOKBACK: 1
+    NAME: LC
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 10000
+      - 12000
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  DATASET: CIFAR-10
+  NAME: Resnet18
+TARGET_MODEL:
+  DATASET: FashionMNIST
+  EPOCHS: 3
+  MODEL: TestConv
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+
+Model: Resnet18, trained on CIFAR-10
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.3592, 0.4674, 0.5002, 0.5298, 0.5759, 0.6026, 0.6541, 0.6508, 0.7206, 0.7013, 0.7222, 0.7613, 0.7538, 0.7601, 0.7652, 0.7704, 0.7669, 0.8076, 0.811, 0.801, 0.8295, 0.8234, 0.8239, 0.8332, 0.8333, 0.8527]
+----------------------------------------------------------------------
