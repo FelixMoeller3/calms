@@ -6,17 +6,19 @@ from typing import List
 import torch.optim.lr_scheduler as lr_scheduler
 import time
 from tqdm import tqdm
+from torch.nn.utils import clip_grad
 
 class ContinualLearningStrategy(ABC):
     '''
         This is the base class for all continual learning strategies
     '''
-    def __init__(self, model:nn.Module,optim: torch.optim.Optimizer, scheduler:lr_scheduler._LRScheduler, crit: nn.CrossEntropyLoss, use_gpu:bool):
+    def __init__(self, model:nn.Module,optim: torch.optim.Optimizer, scheduler:lr_scheduler._LRScheduler, crit: nn.CrossEntropyLoss, use_gpu:bool, clip_grad: float=100000.0):
         self.model = model
         self.optim = optim
         self.scheduler = scheduler
         self.crit = crit
         self.use_gpu = use_gpu
+        self.clip_grad = clip_grad
 
 
     def train(self,dataloaders: dict[str,DataLoader],num_epochs:int,val_step:int,result_list:List[float]=[],early_stopping:int=-1) -> None:
@@ -67,6 +69,8 @@ class ContinualLearningStrategy(ABC):
             loss = self.crit(outputs, labels) + self._compute_regularization_loss()
 
             loss.backward()
+            if self.clip_grad > 0:
+                clip_grad.clip_grad_norm_(self.model.parameters(),self.clip_grad)
             self.optim.step()
             total_loss += loss.item()
             correct_predictions += torch.sum(preds == labels.data).item()
