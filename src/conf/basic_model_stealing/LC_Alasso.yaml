@@ -5,24 +5,25 @@ SUBSTITUTE_MODEL:
     NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
     INIT_BUDGET: 2000
     BUDGET: 2000
+    LOOKBACK: 1
   CL_METHOD: 
     NAME: 'Alasso' # Possible values : Alasso,EWC,MAS,IMM,Naive
     WEIGHT: 0.5
     WEIGHT_PRIME: 0.25
-    A: 3.0
-    A_PRIME: 1.5
+    A: 1.0
+    A_PRIME: 0.5
     OPTIMIZER:
-      NAME: 'ADAM'
-      LR: 0.001
+      NAME: 'SGD'
+      LR: 0.05
       MOMENTUM: 0.9
       WDECAY: 0.0005
       MILESTONES: [160,240]
 BATCH_SIZE: 128 # batch size used for training
 CYCLES: 20 # number of cycles in the model stealing process
-EPOCHS: 10
+EPOCHS: 50
 USE_GPU: True # Whether or not to use GPU Acceleration
 RESULTS_FOLDER: './experiments/CL_AL/'
-RESULTS_FILE: 'results_10epochs.txt'
+RESULTS_FILE: 'results_50epochs.txt'
 TARGET_MODEL:
   MODEL: 'TestConv'
   DATASET: 'FashionMNIST'
