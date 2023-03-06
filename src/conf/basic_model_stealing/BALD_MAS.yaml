@@ -12,10 +12,10 @@ SUBSTITUTE_MODEL:
     WEIGHT: 1.0
     OPTIMIZER:
       NAME: 'SGD'
-      LR: 0.1
+      LR: 0.05
       MOMENTUM: 0.9
       WDECAY: 0.0005
-      MILESTONES: [60,120]
+      MILESTONES: [120,240]
 BATCH_SIZE: 128 # batch size used for training
 CYCLES: 20 # number of cycles in the model stealing process
 EPOCHS: 150

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#SBATCH --job-name=Run_BALD       # job name
+#SBATCH --job-name=LC_Alasso       # job name
 #SBATCH --partition=gpu_4_a100                  # queue for the resource allocation.
-#SBATCH --time=180:00                     # wall-clock time limit  
+#SBATCH --time=30:00                     # wall-clock time limit  
 #SBATCH --mem=10000                        # memory per node
 #SBATCH --nodes=1                          # number of nodes to be used
 #SBATCH --cpus-per-task=2                 # number of CPUs required per MPI task
@@ -14,11 +14,11 @@
 module purge                                       # Unload all currently loaded modules.
 module load devel/cuda/11.8
 source ../ba_env/bin/activate
-files=("./src/conf/basic_model_stealing/BALD_Naive.yaml")
+files=("./src/conf/basic_model_stealing/LC_Alasso.yaml")
 for file in "${files[@]}"
 do 
     echo "Running $file with mode CL"
-    srun python ./src/main.py -c $file -m "CL"
+    python ./src/main.py -c $file -m "CL"
 done
 deactivate
 
