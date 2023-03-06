@@ -5,6 +5,7 @@ import torch
 from torch.utils.data import DataLoader
 import torch.optim.lr_scheduler as lr_scheduler
 from tqdm import tqdm
+from torch.nn.utils import clip_grad
 
 class Alasso(ContinualLearningStrategy):
     '''
@@ -14,7 +15,7 @@ class Alasso(ContinualLearningStrategy):
     '''
 
     def __init__(self,model:nn.Module,optim: torch.optim.Optimizer, scheduler: lr_scheduler._LRScheduler,crit: nn.CrossEntropyLoss,
-    WEIGHT:float=1.0,WEIGHT_PRIME:float=1.0,A:float=1.0,A_PRIME:float=1.0,EPSILON:float=1e-4,USE_GPU:bool=False,**kwargs):
+    WEIGHT:float=1.0,WEIGHT_PRIME:float=1.0,A:float=1.0,A_PRIME:float=1.0,EPSILON:float=1e-4,USE_GPU:bool=False,clip_grad: float=100000.0,**kwargs):
         '''
             :param model: The model that should be trained using continual learning.
             :param optim: The optimizer to be used during training. Beware: When using Alasso, one should set a rather low learning rate as Alasso easily overshoots when using a medium to high learning rate.
@@ -157,6 +158,8 @@ class Alasso(ContinualLearningStrategy):
             #retain_graph = (not last_epoch) or i<num_batches-1
             #start = time.time()
             reg_loss.backward(retain_graph=True)
+            if self.clip_grad > 0:
+                clip_grad.clip_grad_norm_(self.model.parameters(),self.clip_grad)
             self.optim.step()
             self._compute_deltas()
             self._compute_grads2()
