@@ -19,7 +19,7 @@ class MAS(ContinualLearningStrategy):
     '''
 
     def __init__(self,model:nn.Module,optimizer: torch.optim.Optimizer, scheduler: lr_scheduler._LRScheduler,criterion: torch.nn.CrossEntropyLoss,
-            WEIGHT:float=1.0,FREEZE_LAYERS:List[str]=[],USE_GPU:bool=False,clip_grad:float=1000.0,**kwargs):
+            WEIGHT:float=1.0,FREEZE_LAYERS:List[str]=[],USE_GPU:bool=False,clip_grad:float=2.0,**kwargs):
         '''
         Initializes the Memory Aware Synapses (MAS) class.
 

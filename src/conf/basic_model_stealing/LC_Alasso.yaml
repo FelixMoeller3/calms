@@ -1,5 +1,5 @@
 SUBSTITUTE_MODEL: 
-  NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
+  NAME: 'TestConv' # Possible values: Resnet18,Resnext50,TestConv
   DATASET: 'CIFAR-10'
   AL_METHOD: 
     NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
@@ -19,8 +19,8 @@ SUBSTITUTE_MODEL:
       WDECAY: 0.0005
       MILESTONES: [160,240]
 BATCH_SIZE: 128 # batch size used for training
-CYCLES: 20 # number of cycles in the model stealing process
-EPOCHS: 50
+CYCLES: 10 # number of cycles in the model stealing process
+EPOCHS: 20
 USE_GPU: True # Whether or not to use GPU Acceleration
 RESULTS_FOLDER: './experiments/CL_AL/'
 RESULTS_FILE: 'results_50epochs.txt'

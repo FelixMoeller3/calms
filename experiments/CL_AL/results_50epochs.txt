@@ -102,3 +102,55 @@ Model: Resnet18, trained on CIFAR-10
 Active Learning Strategy: LC
 Accuracy results at the end of each cycle: [0.3928, 0.4547, 0.5168, 0.5202, 0.5735, 0.5883, 0.5867, 0.6311, 0.6278, 0.6723, 0.6937, 0.7173, 0.6961, 0.756, 0.7648, 0.7656]
 ----------------------------------------------------------------------
+Run completed at 2023-03-07 15:47:06 after 00h:21m:20s
+Config File: BATCH_SIZE: 128
+CYCLES: 10
+EPOCHS: 20
+RESULTS_FILE: results_50epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    INIT_BUDGET: 2000
+    LOOKBACK: 1
+    NAME: LC
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    A: 1.0
+    A_PRIME: 0.5
+    NAME: Alasso
+    OPTIMIZER:
+      LR: 0.05
+      MILESTONES:
+      - 160
+      - 240
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+    WEIGHT: 0.5
+    WEIGHT_PRIME: 0.25
+  DATASET: CIFAR-10
+  NAME: TestConv
+TARGET_MODEL:
+  DATASET: FashionMNIST
+  EPOCHS: 3
+  MODEL: TestConv
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+USE_GPU: true
+
+Model: TestConv, trained on CIFAR-10
+Continual Learning Strategy: Alasso
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.3618, 0.2871, 0.3231, 0.288, 0.2113, 0.253, 0.139, 0.1659, 0.1636, 0.167, 0.1034]
+Class distribution for each query: 
+----------------------------------------------------------------------

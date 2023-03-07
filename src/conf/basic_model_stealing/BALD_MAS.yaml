@@ -15,9 +15,9 @@ SUBSTITUTE_MODEL:
       LR: 0.1
       MOMENTUM: 0.9
       WDECAY: 0.0005
-      MILESTONES: [60,120]
+      MILESTONES: [90,120]
 BATCH_SIZE: 128 # batch size used for training
-CYCLES: 20 # number of cycles in the model stealing process
+CYCLES: 24 # number of cycles in the model stealing process
 EPOCHS: 150
 USE_GPU: True # Whether or not to use GPU Acceleration
 RESULTS_FOLDER: './experiments/CL_AL/'
