@@ -28,36 +28,6 @@ Continual Learning Strategy: Alasso
 Active Learning Strategy: Random
 Accuracy results at the end of each cycle: [0.1184, 0.1584, 0.2497, 0.3294, 0.3601, 0.4024, 0.4338, 0.4541, 0.4763, 0.4892, 0.4676, 0.4639, 0.4751, 0.4882, 0.5219, 0.5592, 0.5728, 0.6073, 0.6225, 0.6568, 0.6628]
 ----------------------------------------------------------------------
-Run completed at 2023-02-16 22:53:06 after 00h:08m:37s
-Model: TestConv, trained on FashionMNIST
-Continual Learning Strategy: Naive
-Active Learning Strategy: BALD
-Accuracy results at the end of each cycle: [0.1113, 0.261, 0.3114, 0.2521, 0.4372, 0.4764, 0.5806, 0.6078, 0.6494, 0.6539, 0.6514, 0.6639, 0.6737, 0.6561, 0.6916, 0.6888, 0.6976, 0.7091, 0.6952, 0.7099, 0.6867]
-----------------------------------------------------------------------
-Run completed at 2023-02-16 23:04:34 after 00h:11m:27s
-Model: TestConv, trained on FashionMNIST
-Continual Learning Strategy: EWC
-Active Learning Strategy: BALD
-Accuracy results at the end of each cycle: [0.1005, 0.304, 0.2651, 0.2611, 0.5356, 0.4621, 0.5715, 0.6007, 0.6412, 0.6461, 0.6585, 0.6661, 0.6573, 0.6756, 0.6951, 0.7019, 0.7012, 0.6929, 0.7066, 0.7157, 0.7237]
-----------------------------------------------------------------------
-Run completed at 2023-02-16 23:17:24 after 00h:12m:50s
-Model: TestConv, trained on FashionMNIST
-Continual Learning Strategy: MAS
-Active Learning Strategy: BALD
-Accuracy results at the end of each cycle: [0.1563, 0.171, 0.2651, 0.4335, 0.4443, 0.4917, 0.4722, 0.5208, 0.5927, 0.6183, 0.6432, 0.6549, 0.6719, 0.6832, 0.6889, 0.6882, 0.6937, 0.6885, 0.6943, 0.7088, 0.6906]
-----------------------------------------------------------------------
-Run completed at 2023-02-16 23:26:09 after 00h:08m:44s
-Model: TestConv, trained on FashionMNIST
-Continual Learning Strategy: IMM
-Active Learning Strategy: BALD
-Accuracy results at the end of each cycle: [0.2462, 0.202, 0.3284, 0.3176, 0.3594, 0.5275, 0.5619, 0.5789, 0.6054, 0.6293, 0.6405, 0.6644, 0.6763, 0.6879, 0.6821, 0.6697, 0.7026, 0.7, 0.6989, 0.7039, 0.7114]
-----------------------------------------------------------------------
-Run completed at 2023-02-16 23:42:24 after 00h:16m:15s
-Model: TestConv, trained on FashionMNIST
-Continual Learning Strategy: Alasso
-Active Learning Strategy: BALD
-Accuracy results at the end of each cycle: [0.2352, 0.2958, 0.2351, 0.2914, 0.2944, 0.3406, 0.4362, 0.4357, 0.5203, 0.5839, 0.6123, 0.6205, 0.6348, 0.6492, 0.6677, 0.6661, 0.6602, 0.6714, 0.6782, 0.6879, 0.6957]
-----------------------------------------------------------------------
 Run completed at 2023-02-16 23:48:36 after 00h:06m:11s
 Model: TestConv, trained on FashionMNIST
 Continual Learning Strategy: Naive
