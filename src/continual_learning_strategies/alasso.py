@@ -15,7 +15,7 @@ class Alasso(ContinualLearningStrategy):
     '''
 
     def __init__(self,model:nn.Module,optim: torch.optim.Optimizer, scheduler: lr_scheduler._LRScheduler,crit: nn.CrossEntropyLoss,
-    WEIGHT:float=1.0,WEIGHT_PRIME:float=1.0,A:float=1.0,A_PRIME:float=1.0,EPSILON:float=1e-4,USE_GPU:bool=False,clip_grad: float=100000.0,**kwargs):
+    WEIGHT:float=1.0,WEIGHT_PRIME:float=1.0,A:float=1.0,A_PRIME:float=1.0,EPSILON:float=1e-4,USE_GPU:bool=False,clip_grad: float=1000.0,**kwargs):
         '''
             :param model: The model that should be trained using continual learning.
             :param optim: The optimizer to be used during training. Beware: When using Alasso, one should set a rather low learning rate as Alasso easily overshoots when using a medium to high learning rate.
@@ -27,7 +27,7 @@ class Alasso(ContinualLearningStrategy):
             :param EPSILON: This parameter is added to the denominator in equation (7) to make sure we are not dividing by zero. It should always be > 0.
         '''
         #TODO: Issue warning when parameter a is <=1 
-        super(Alasso,self).__init__(model,optim,scheduler,crit,USE_GPU)
+        super(Alasso,self).__init__(model,optim,scheduler,crit,USE_GPU,clip_grad)
         self.weight = torch.tensor(WEIGHT).cuda() if self.use_gpu else torch.tensor(WEIGHT)
         self.weight_prime = torch.tensor(WEIGHT_PRIME).cuda() if self.use_gpu else torch.tensor(WEIGHT_PRIME)
         self.a = torch.tensor(A).cuda() if self.use_gpu else torch.tensor(A)

@@ -50,7 +50,7 @@ class BALD(Strategy):
         G_X = np.sum(Entropy_Avg_Pi, axis=1)
         F_X =np.divide(all_entropy_dropout, self.dropout_iter)
         U_X = G_X - F_X
-        arg = np.argsort(U_X)
+        arg = np.argsort(-U_X)
         self.add_query(arg[:self.BUDGET])
         return np.concatenate(self.previous_queries)
 
