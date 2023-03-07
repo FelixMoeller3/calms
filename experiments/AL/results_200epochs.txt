@@ -321,3 +321,50 @@ Model: Resnet18, trained on CIFAR-10
 Active Learning Strategy: BALD
 Accuracy results at the end of each cycle: [0.5356, 0.6139, 0.6546, 0.6879, 0.7176, 0.7481, 0.7785, 0.7914, 0.8021, 0.815, 0.8262, 0.8287, 0.8373, 0.8487, 0.8608, 0.8701]
 ----------------------------------------------------------------------
+Run completed at 2023-03-07 06:40:07 after 09h:53m:34s
+Config File: BATCH_SIZE: 128
+CYCLES: 15
+EPOCHS: 200
+RESULTS_FILE: results_200epochs.txt
+RESULTS_FOLDER: ./experiments/AL/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    DROPOUT_ITER: 25
+    INIT_BUDGET: 2000
+    LOOKBACK: 1
+    NAME: BALD
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  DATASET: CIFAR-10
+  NAME: Resnet18
+TARGET_MODEL:
+  DATASET: FashionMNIST
+  EPOCHS: 3
+  MODEL: TestConv
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+USE_GPU: true
+
+Model: Resnet18, trained on CIFAR-10
+Active Learning Strategy: BALD
+Accuracy results at the end of each cycle: [0.5792, 0.7462, 0.8322, 0.8767, 0.9034, 0.9212, 0.9353, 0.9402, 0.9437, 0.9497, 0.948, 0.9488, 0.9477, 0.9498, 0.9465, 0.9467]
+----------------------------------------------------------------------
