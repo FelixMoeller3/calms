@@ -125,7 +125,7 @@ class ModelStealingProcess:
             self._add_targets(train_set,training_examples_absolute_indices,use_label)
             labeled_set += training_examples_absolute_indices
             unlabeled_set = [i for i in unlabeled_set if i not in training_examples_absolute_indices]
-            self._train_cycle(train_set,training_examples,loaders_dict,batch_size,num_epochs,score_list)
+            self._train_cycle(train_set,training_examples_absolute_indices,loaders_dict,batch_size,num_epochs,score_list)
 
         return score_list
     
