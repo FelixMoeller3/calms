@@ -24,7 +24,7 @@ CL_CONFIG = ["NAME", "OPTIMIZER"]
 CL_METHODS = ["Alasso", "IMM", "Naive", "EWC", "MAS"]
 OPTIMIZERS =["SGD", "ADAM"]
 MODELS = ['Resnet18', 'Resnet34', 'Resnet50', 'Resnet101', 'Resnet152', 'TestConv','ActiveThiefConv']
-TARGET_MODEL_CONFIG = ['MODEL','DATASET','EPOCHS','OPTIMIZER','TARGET_MODEL_FOLDER','TARGET_MODEL_FILE']
+TARGET_MODEL_CONFIG = ['MODEL','DATASET','EPOCHS','OPTIMIZER','TARGET_MODEL_FOLDER','TARGET_MODEL_FILE','TRAIN_MODEL']
 DATASET_NAMES = ["MNIST","FashionMNIST", "CIFAR-10","TinyImageNet"]
 OPTIMIZER_CONFIG = ["NAME", "LR", "MOMENTUM", "WDECAY"]
 
@@ -45,7 +45,7 @@ def run_config(config_path: str) -> ModelStealingProcess:
     print(f'Model stealing with strategies {yaml_cfg["SUBSTITUTE_MODEL"]["AL_METHOD"]["NAME"]} and {yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["NAME"]}')
     ms_process = ModelStealingProcess(target_model,al_method,cl_method,use_gpu)
     num_epochs = yaml_cfg["EPOCHS"]
-    accuracies = ms_process.steal_model(train_set,val_set,batch_size,cycles,num_epochs)
+    accuracies,agreements = ms_process.steal_model(train_set,val_set,batch_size,cycles,num_epochs)
     duration = time.time() - start
     hours = int(duration)//3600
     minutes = (int(duration) % 3600) // 60
@@ -60,6 +60,7 @@ def run_config(config_path: str) -> ModelStealingProcess:
                 f'Continual Learning Strategy: {yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["NAME"]}\n'
                 f'Active Learning Strategy: {yaml_cfg["SUBSTITUTE_MODEL"]["AL_METHOD"]["NAME"]}\n'
                 f'Accuracy results at the end of each cycle: {accuracies}\n'
+                f'Model agreement at the end of each cycle: {agreements}\n'
                 f'{"-"* 70}'+ "\n"
             )
 
@@ -178,6 +179,11 @@ def check_attribute_presence(config: dict, attributes: list[str],config_name: st
 
 def build_target_model(target_model_config: dict,batch_size:int,use_gpu:bool) -> nn.Module:
     check_attribute_presence(target_model_config,TARGET_MODEL_CONFIG,"target model config")
+    if not target_model_config["TRAIN_MODEL"]:
+        print(f'Loading model located at {target_model_config["TARGET_MODEL_FOLDER"] + target_model_config["TARGET_MODEL_FILE"]}')
+        model = torch.load(target_model_config["TARGET_MODEL_FOLDER"] + target_model_config["TARGET_MODEL_FILE"])
+        return model
+    print("Training target model from scratch")
     train_set,input_dim,num_classes = load_dataset(target_model_config['DATASET'],True)
     target_model = build_model(target_model_config["MODEL"],input_dim,num_classes,use_gpu)
     train_loader = DataLoader(train_set,batch_size,True)

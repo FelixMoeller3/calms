@@ -22,6 +22,7 @@ RESULTS_FILE: 'results_80epochs.txt'
 TARGET_MODEL:
   TARGET_MODEL_FOLDER: './data/models/'
   TARGET_MODEL_FILE: 'active_thief.pt'
+  TRAIN_MODEL: True
   MODEL: 'ActiveThiefConv'
   DATASET: 'CIFAR-10'
   EPOCHS : 200

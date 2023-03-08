@@ -23,6 +23,9 @@ RESULTS_FOLDER: './experiments/example/'
 RESULTS_FILE: 'results_10epochs.txt'
 TARGET_MODEL:
   MODEL: 'TestConv'
+  TARGET_MODEL_FOLDER: './data/models/'
+  TARGET_MODEL_FILE: 'active_thief.pt'
+  TRAIN_MODEL: True
   DATASET: 'MNIST'
   EPOCHS : 1
   OPTIMIZER:
