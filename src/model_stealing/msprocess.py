@@ -111,11 +111,13 @@ class ModelStealingProcess:
         loaders_dict = {'train': None, 'val': val_loader}
         unlabeled_set = [i for i in range(len(train_set))]
         labeled_set = []
-        score_list = []
+        val_accuracies = []
+        agreements = []
         for i in range(self.al_strat.INIT_BUDGET):
             labeled_set.append(random.randint(0,len(train_set)-1))
         self._add_targets(train_set,labeled_set,use_label)
-        self._train_cycle(train_set,labeled_set,loaders_dict,batch_size,num_epochs,score_list)
+        self._train_cycle(train_set,labeled_set,loaders_dict,batch_size,num_epochs,val_accuracies)
+        agreements.append(self._compute_agreement(loaders_dict['val']))
         unlabeled_set = [i for i in unlabeled_set if i not in labeled_set]
         for i in range(num_cycles):
             self.al_strat.feed_current_state(i,unlabeled_set,labeled_set)
@@ -125,9 +127,9 @@ class ModelStealingProcess:
             self._add_targets(train_set,training_examples_absolute_indices,use_label)
             labeled_set += training_examples_absolute_indices
             unlabeled_set = [i for i in unlabeled_set if i not in training_examples_absolute_indices]
-            self._train_cycle(train_set,training_examples_absolute_indices,loaders_dict,batch_size,num_epochs,score_list)
+            self._train_cycle(train_set,training_examples_absolute_indices,loaders_dict,batch_size,num_epochs,val_accuracies)
 
-        return score_list
+        return val_accuracies
     
 
     def _train_cycle(self,train_set: Dataset,training_examples: List[int],loaders_dict: dict[str,DataLoader],batch_size:int,num_epochs:int,score_list:List[int]) -> None:
@@ -155,6 +157,8 @@ class ModelStealingProcess:
                 train_set.targets[index] = torch.nn.functional.softmax(self.target_model(torch.unsqueeze(train_set[index][0],0)),dim=0)
 
     
+    #def _compute_agreement(self, )
+
 
     def _get_dist(self,data: List[int], num_classes: int) -> List[int]:
         '''
