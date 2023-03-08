@@ -21,7 +21,8 @@ RESULTS_FOLDER: './experiments/Target_Model_Training/'
 RESULTS_FILE: 'results_200epochs.txt'
 TARGET_MODEL:
   TARGET_MODEL_FOLDER: './data/models/'
-  TARGET_MODEL_FILE: 'active_thief_l2.pt'
+  TARGET_MODEL_FILE: 'active_thief.pt'
+  TRAIN_MODEL: True
   MODEL: 'ActiveThiefConv'
   DATASET: 'CIFAR-10'
   EPOCHS : 200

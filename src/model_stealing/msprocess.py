@@ -94,7 +94,7 @@ class ModelStealingProcess:
 
         return score_list,dist_list
 
-    def steal_model(self,train_set: Dataset,val_set: Dataset,batch_size:int,num_cycles:int,num_epochs:int,use_label:bool=True) -> List[float]:
+    def steal_model(self,train_set: Dataset,val_set: Dataset,batch_size:int,num_cycles:int,num_epochs:int,use_label:bool=True) -> tuple[List[float],List[float]]:
         '''
             Implements the actual model stealing process where the target model is iteratively queried and then the substitute model is trained using
             continual learning.
@@ -129,10 +129,10 @@ class ModelStealingProcess:
             unlabeled_set = [i for i in unlabeled_set if i not in training_examples_absolute_indices]
             self._train_cycle(train_set,training_examples_absolute_indices,loaders_dict,batch_size,num_epochs,val_accuracies)
 
-        return val_accuracies
+        return val_accuracies,agreements
     
 
-    def _train_cycle(self,train_set: Dataset,training_examples: List[int],loaders_dict: dict[str,DataLoader],batch_size:int,num_epochs:int,score_list:List[int]) -> None:
+    def _train_cycle(self,train_set: Dataset,training_examples: List[int],loaders_dict: dict[str,DataLoader],batch_size:int,num_epochs:int,score_list:List[float]) -> None:
         '''
             Trains the substitute model with the data queried in the current cycle.
             :param train_set: The full training dataset.
@@ -157,7 +157,13 @@ class ModelStealingProcess:
                 train_set.targets[index] = torch.nn.functional.softmax(self.target_model(torch.unsqueeze(train_set[index][0],0)),dim=0)
 
     
-    #def _compute_agreement(self, )
+    def _compute_agreement(self, val_loader: DataLoader, agreements: List[float]) -> None:
+        agreed_predictions = 0
+        for inputs,_ in val_loader:
+            _, target_model_preds = torch.max(self.target_model(inputs).data,1)
+            _, substitute_model_preds = torch.max(self.cl_strat.model(inputs).data,1)
+            agreed_predictions += torch.sum(target_model_preds == substitute_model_preds).item()
+        agreements.append(agreed_predictions/len(val_loader.dataset))
 
 
     def _get_dist(self,data: List[int], num_classes: int) -> List[int]:
