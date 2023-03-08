@@ -268,7 +268,8 @@ def build_optimizer(config: dict,model:nn.Module) -> tuple[torch.optim.Optimizer
         if "MILESTONES" in config:
             scheduler = lr_scheduler.MultiStepLR(optimizer,config["MILESTONES"])
     elif config["NAME"] == "ADAM":
-        optimizer = torch.optim.Adam(model.parameters(),float(config["LR"]),weight_decay=float(config["WDECAY"]))
+        w_decay = float(config["WDECAY"]) if "WDECAY" in config else None
+        optimizer = torch.optim.Adam(model.parameters(),float(config["LR"]),weight_decay=w_decay)
     else:
         raise AttributeError(f"Optimizer unknown. Got {config['NAME']}, but expected one of {','.join(OPTIMIZERS)}")
     return optimizer,scheduler

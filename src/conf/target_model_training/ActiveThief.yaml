@@ -17,7 +17,7 @@ SUBSTITUTE_MODEL:
 BATCH_SIZE: 128 # batch size used for training
 CYCLES: 49 # number of cycles in the model stealing process
 EPOCHS: 80
-RESULTS_FOLDER: './experiments/CL_AL/'
+RESULTS_FOLDER: './experiments/Target_Model_Training/'
 RESULTS_FILE: 'results_80epochs.txt'
 TARGET_MODEL:
   TARGET_MODEL_FOLDER: './data/models/'
@@ -26,8 +26,8 @@ TARGET_MODEL:
   DATASET: 'CIFAR-10'
   EPOCHS : 200
   OPTIMIZER:
-    NAME: 'SGD'
-    LR: 0.1
+    NAME: 'ADAM'
+    LR: 0.001
     MOMENTUM: 0.9
-    WDECAY: 0.0005
+    WDECAY: 0.001
     MILESTONES: [120,180]
