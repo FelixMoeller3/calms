@@ -28,22 +28,23 @@ class ThiefConvNet(nn.Module):
 
     def __init__(self,num_conv_blocks=3,input_channels=3,num_classes=10,input_dim:int=64):
         super(ThiefConvNet,self).__init__()
-        self.blocks = []
+        blocks = []
         for i in range(num_conv_blocks):
             in_channels = input_channels if i == 0 else 16*(2**i)
             out_channels = 32*(2**i)
-            self.blocks.append(ConvBlock(in_channels,out_channels))
+            blocks.append(ConvBlock(in_channels,out_channels))
             input_dim = (input_dim - 4)//2
+        self.before_final = nn.Sequential(*blocks)
         self.final = nn.Linear(out_channels*input_dim*input_dim,num_classes)
 
     def forward(self, x):
-        before_flatten = reduce(lambda x, l: l(x), self.blocks,x)
+        before_flatten = self.before_final(x)
         flattened = before_flatten.view(before_flatten.size(0),-1)
         return self.final(flattened)
     
 
     def forward_embedding(self, x:torch.Tensor) -> tuple[torch.Tensor,torch.Tensor]:
-        before_flatten = reduce(lambda x,l: l(x),self.blocks,x)
+        before_flatten = self.before_final(x)
         flattened = before_flatten.view(before_flatten.size(0),-1)
         return self.final(flattened),flattened
     

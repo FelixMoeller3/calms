@@ -294,7 +294,8 @@ def train_model(model: nn.Module,train_loader:DataLoader,val_loader:DataLoader,o
             correct_predictions += torch.sum(preds == labels.data).item()
         epoch_loss = total_loss / len(train_loader.dataset)
         epoch_acc = correct_predictions / len(train_loader.dataset)
-        scheduler.step()
+        if scheduler:
+            scheduler.step()
         print('Training Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
         run_val_epoch(model,val_loader,criterion,use_gpu)
     print("Training completed\n")
