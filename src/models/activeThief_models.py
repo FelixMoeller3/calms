@@ -9,9 +9,9 @@ class ConvBlock(nn.Module):
 
     def __init__(self, in_planes, planes, stride=1):
         super(ConvBlock, self).__init__()
-        self.conv1 = nn.Conv2d(in_planes, planes, kernel_size=3, stride=stride, padding=1, bias=False)
+        self.conv1 = nn.Conv2d(in_planes, planes, kernel_size=3, stride=stride, padding="same", bias=False)
         self.bn1 = nn.BatchNorm2d(planes)
-        self.conv2 = nn.Conv2d(planes, planes, kernel_size=3, stride=stride, padding=1, bias=False)
+        self.conv2 = nn.Conv2d(planes, planes, kernel_size=3, stride=stride, padding="same", bias=False)
         self.bn2 = nn.BatchNorm2d(planes)
 
         self.pool = nn.MaxPool2d(kernel_size=2,stride=2)
@@ -26,14 +26,14 @@ class ConvBlock(nn.Module):
 
 class ThiefConvNet(nn.Module):
 
-    def __init__(self,num_conv_blocks=3,input_channels=3,num_classes=10,input_dim:int=64):
+    def __init__(self,num_conv_blocks=4,input_channels=3,num_classes=10,input_dim:int=64):
         super(ThiefConvNet,self).__init__()
         blocks = []
         for i in range(num_conv_blocks):
             in_channels = input_channels if i == 0 else 16*(2**i)
             out_channels = 32*(2**i)
             blocks.append(ConvBlock(in_channels,out_channels))
-            input_dim = (input_dim - 4)//2
+            input_dim //= 2
         self.before_final = nn.Sequential(*blocks)
         self.final = nn.Linear(out_channels*input_dim*input_dim,num_classes)
 

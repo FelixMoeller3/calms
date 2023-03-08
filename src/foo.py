@@ -80,4 +80,4 @@ with open("data/experiments/results.txt",'a') as f:
 
 if __name__ == "__main__":
     from utils import config
-    config.run_cl_al_config("./src/conf/basic_model_stealing/LC_Naive.yaml")
+    config.run_target_model_config("./src/conf/target_model_training/ActiveThief.yaml")
