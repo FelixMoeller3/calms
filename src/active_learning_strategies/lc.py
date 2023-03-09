@@ -17,11 +17,14 @@ class LC(Strategy):
         super(LC, self).__init__(model, data_unlabeled, NO_CLASSES,BATCH,BUDGET,INIT_BUDGET,LOOKBACK,USE_GPU)
 
     def query(self) -> np.ndarray:
-        unlabeled_loader = DataLoader(self.data_unlabeled, batch_size=self.BATCH, 
-                                    sampler=SubsetSequentialSampler(self.subset), 
-                                    pin_memory=True)
-        probs = self.get_predict_prob(unlabeled_loader)
-        arg = np.argsort(probs)
+        if len(self.subset) <= self.BUDGET:
+            arg = np.array([i for i in range(len(self.subset))])
+        else:
+            unlabeled_loader = DataLoader(self.data_unlabeled, batch_size=self.BATCH, 
+                                        sampler=SubsetSequentialSampler(self.subset), 
+                                        pin_memory=True)
+            probs = self.get_predict_prob(unlabeled_loader)
+            arg = np.argsort(probs)
         self.add_query(arg[:self.BUDGET])
         return np.concatenate(self.previous_queries)
 
