@@ -990,3 +990,52 @@ Active Learning Strategy: CoreSet
 Accuracy results at the end of each cycle: [0.5349, 0.5578, 0.5548, 0.5418, 0.5485, 0.5441, 0.5466, 0.5485, 0.5476, 0.5422, 0.5601, 0.5555, 0.5566, 0.5591, 0.5463, 0.554, 0.5589, 0.5625, 0.5605, 0.5617, 0.5471, 0.5603, 0.5571, 0.5624, 0.5613, 0.5659, 0.5561, 0.5602, 0.5647, 0.5554, 0.5558, 0.5625, 0.5653, 0.5683, 0.5643, 0.5555, 0.5685, 0.5593, 0.5708, 0.5647, 0.5693, 0.5621, 0.567, 0.56, 0.5647, 0.549, 0.5666, 0.5659, 0.5695, 0.5864]
 Class distribution for each query: 
 ----------------------------------------------------------------------
+Run completed at 2023-03-09 00:03:47 after 11h:56m:19s
+Config File: BATCH_SIZE: 128
+CYCLES: 49
+EPOCHS: 80
+RESULTS_FILE: results_80epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 1000
+    INIT_BUDGET: 1000
+    LOOKBACK: 1
+    NAME: Badge
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: MAS
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+    WEIGHT: 1.0
+  DATASET: CIFAR-10
+  NAME: Resnet18
+TARGET_MODEL:
+  DATASET: FashionMNIST
+  EPOCHS: 3
+  MODEL: TestConv
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+USE_GPU: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: MAS
+Active Learning Strategy: Badge
+Accuracy results at the end of each cycle: [0.5245, 0.5331, 0.5413, 0.526, 0.5322, 0.5247, 0.5199, 0.5208, 0.5248, 0.5263, 0.5341, 0.5328, 0.5324, 0.5217, 0.5301, 0.5275, 0.5246, 0.5349, 0.5311, 0.5327, 0.5334, 0.5345, 0.5305, 0.5335, 0.5317, 0.5276, 0.5318, 0.5358, 0.534, 0.5328, 0.5284, 0.5355, 0.5181, 0.5324, 0.5336, 0.5337, 0.5342, 0.5323, 0.535, 0.5339, 0.5379, 0.5386, 0.5365, 0.5274, 0.536, 0.533, 0.5297, 0.5288, 0.522, 0.5499]
+Class distribution for each query: 
+----------------------------------------------------------------------
