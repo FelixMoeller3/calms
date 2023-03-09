@@ -14,13 +14,13 @@ SUBSTITUTE_MODEL:
       LR: 0.1
       MOMENTUM: 0.9
       WDECAY: 0.0005
-      MILESTONES: [90,120]
+      MILESTONES: [60,120]
 BATCH_SIZE: 128 # batch size used for training
 CYCLES: 12 # number of cycles in the model stealing process
 EPOCHS: 150
 USE_GPU: True # Whether or not to use GPU Acceleration
 RESULTS_FOLDER: './experiments/CL_AL/'
-RESULTS_FILE: 'results_150epochs.txt'
+RESULTS_FILE: 'correct_results_150epochs.txt'
 TARGET_MODEL:
   MODEL: 'TestConv'
   DATASET: 'FashionMNIST'

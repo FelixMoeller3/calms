@@ -4,8 +4,8 @@ SUBSTITUTE_MODEL:
   AL_METHOD: 
     NAME: 'BALD' # Possible values: LC,BALD,Badge,CoreSet,Random
     DROPOUT_ITER: 25
-    INIT_BUDGET: 1000
-    BUDGET: 1000
+    INIT_BUDGET: 4000
+    BUDGET: 4000
     LOOKBACK: 1
   CL_METHOD: 
     NAME: 'IMM' # Possible values : Alasso,EWC,MAS,IMM,Naive
@@ -18,11 +18,11 @@ SUBSTITUTE_MODEL:
       WDECAY: 0.0005
       MILESTONES: [60,120]
 BATCH_SIZE: 128 # batch size used for training
-CYCLES: 49 # number of cycles in the model stealing process
-EPOCHS: 80
+CYCLES: 12 # number of cycles in the model stealing process
+EPOCHS: 150
 USE_GPU: True # Whether or not to use GPU Acceleration
 RESULTS_FOLDER: './experiments/CL_AL/'
-RESULTS_FILE: 'results_80epochs.txt'
+RESULTS_FILE: 'correct_results_150epochs.txt'
 TARGET_MODEL:
   MODEL: 'TestConv'
   DATASET: 'FashionMNIST'

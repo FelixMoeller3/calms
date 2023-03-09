@@ -124,3 +124,45 @@ TARGET_MODEL:
 Target model: ActiveThiefConv, trained on CIFAR-10
 Model saved at: ./data/models/active_thief_l3.pt
 ----------------------------------------------------------------------
+Run completed at 2023-03-08 17:25:45 after 00h:55m:12s
+Config File: BATCH_SIZE: 128
+CYCLES: 49
+EPOCHS: 80
+RESULTS_FILE: results_200epochs.txt
+RESULTS_FOLDER: ./experiments/Target_Model_Training/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BUDGET: 1000
+    INIT_BUDGET: 1000
+    LOOKBACK: 1
+    NAME: LC
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+  DATASET: CIFAR-10
+  NAME: Resnet18
+TARGET_MODEL:
+  DATASET: CIFAR-10
+  EPOCHS: 200
+  MODEL: ActiveThiefConv
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 120
+    - 180
+    MOMENTUM: 0.9
+    NAME: ADAM
+    WDECAY: 0.001
+  TARGET_MODEL_FILE: active_thief_l2.pt
+  TARGET_MODEL_FOLDER: ./data/models/
+
+Target model: ActiveThiefConv, trained on CIFAR-10
+Model saved at: ./data/models/active_thief_l2.pt
+----------------------------------------------------------------------

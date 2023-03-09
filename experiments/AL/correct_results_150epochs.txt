@@ -1,0 +1,48 @@
+Run completed at 2023-03-09 02:45:37 after 02h:24m:48s
+Config File: BATCH_SIZE: 128
+CYCLES: 24
+EPOCHS: 150
+RESULTS_FILE: correct_results_150epochs.txt
+RESULTS_FOLDER: ./experiments/AL/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    INIT_BUDGET: 2000
+    LOOKBACK: 1
+    NAME: CoreSet
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  DATASET: CIFAR-10
+  NAME: Resnet18
+TARGET_MODEL:
+  DATASET: FashionMNIST
+  EPOCHS: 3
+  MODEL: TestConv
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+USE_GPU: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: Naive
+Active Learning Strategy: CoreSet
+Accuracy results at the end of each cycle: [0.5487, 0.6099, 0.6678, 0.6973, 0.7135, 0.7395, 0.7638, 0.7814, 0.7808, 0.7874, 0.7936, 0.7976, 0.8018, 0.7951, 0.7951, 0.7907, 0.801, 0.7985, 0.7977, 0.8068, 0.8057, 0.8016, 0.7995, 0.793, 0.8072]
+Class distribution for each query: 
+----------------------------------------------------------------------
