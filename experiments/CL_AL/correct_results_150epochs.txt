@@ -1342,3 +1342,52 @@ Active Learning Strategy: CoreSet
 Accuracy results at the end of each cycle: [0.5935, 0.6679, 0.7163, 0.7465, 0.7638, 0.7786, 0.7894, 0.801, 0.8022, 0.7989, 0.8001, 0.8026, 0.8096, 0.8086, 0.8094, 0.8007, 0.8115, 0.8149, 0.8081, 0.8103, 0.81, 0.8065, 0.8064, 0.8035, 0.8099]
 Class distribution for each query: 
 ----------------------------------------------------------------------
+Run completed at 2023-03-09 14:23:47 after 11h:02m:33s
+Config File: BATCH_SIZE: 128
+CYCLES: 24
+EPOCHS: 150
+RESULTS_FILE: correct_results_150epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    INIT_BUDGET: 2000
+    LOOKBACK: 1
+    NAME: Badge
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: MAS
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+    WEIGHT: 1.0
+  DATASET: CIFAR-10
+  NAME: Resnet18
+TARGET_MODEL:
+  DATASET: FashionMNIST
+  EPOCHS: 3
+  MODEL: TestConv
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+USE_GPU: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: MAS
+Active Learning Strategy: Badge
+Accuracy results at the end of each cycle: [0.6344, 0.6566, 0.6718, 0.6826, 0.6791, 0.6853, 0.6913, 0.6919, 0.6933, 0.7038, 0.6976, 0.708, 0.7057, 0.7109, 0.7189, 0.7146, 0.7111, 0.7207, 0.722, 0.7223, 0.7283, 0.7346, 0.729, 0.7325, 0.7356]
+Class distribution for each query: 
+----------------------------------------------------------------------
