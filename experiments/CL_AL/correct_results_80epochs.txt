@@ -894,3 +894,52 @@ Active Learning Strategy: Badge
 Accuracy results at the end of each cycle: [0.4441, 0.4994, 0.5212, 0.5657, 0.6022, 0.6053, 0.627, 0.632, 0.6454, 0.6498, 0.6689, 0.668, 0.6933, 0.679, 0.6863, 0.7061, 0.7156, 0.7155, 0.7189, 0.7263, 0.7354, 0.7403, 0.7432, 0.7513, 0.7324, 0.7474, 0.7521, 0.7436, 0.7574, 0.7547, 0.7514, 0.7417, 0.7481, 0.7465, 0.7433, 0.7542, 0.7521, 0.7649, 0.7567, 0.7524, 0.7515, 0.7536, 0.7537, 0.758, 0.76, 0.7596, 0.7645, 0.7753, 0.7533, 0.7303]
 Class distribution for each query: 
 ----------------------------------------------------------------------
+Run completed at 2023-03-09 12:37:55 after 09h:49m:28s
+Config File: BATCH_SIZE: 128
+CYCLES: 49
+EPOCHS: 80
+RESULTS_FILE: correct_results_80epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 1000
+    INIT_BUDGET: 1000
+    LOOKBACK: 1
+    NAME: Badge
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: EWC
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+    WEIGHT: 1.0
+  DATASET: CIFAR-10
+  NAME: Resnet18
+TARGET_MODEL:
+  DATASET: FashionMNIST
+  EPOCHS: 3
+  MODEL: TestConv
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+USE_GPU: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: EWC
+Active Learning Strategy: Badge
+Accuracy results at the end of each cycle: [0.4406, 0.5031, 0.5314, 0.5623, 0.5934, 0.5958, 0.618, 0.631, 0.6568, 0.6584, 0.6899, 0.6913, 0.7189, 0.7226, 0.7315, 0.7308, 0.7444, 0.7264, 0.7393, 0.7467, 0.7457, 0.7469, 0.7511, 0.7545, 0.7427, 0.755, 0.7471, 0.7617, 0.7626, 0.7564, 0.7548, 0.7451, 0.7547, 0.7518, 0.753, 0.7663, 0.7588, 0.7577, 0.7654, 0.7577, 0.7616, 0.7581, 0.76, 0.7589, 0.7581, 0.7564, 0.7614, 0.7559, 0.764, 0.728]
+Class distribution for each query: 
+----------------------------------------------------------------------
