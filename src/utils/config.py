@@ -207,7 +207,7 @@ def build_model(name: str, input_dim:tuple[int], num_classes: int, use_gpu:bool)
     elif name == "TestConv":
         model = testConv(input_dim,num_classes)
     elif name == "ActiveThiefConv":
-        model = ThiefConvNet(num_classes=num_classes,input_dim=input_dim[1])
+        model = ThiefConvNet(input_channels=input_dim[0],num_classes=num_classes,input_dim=input_dim[1])
     else:
         raise AttributeError(f"Model name unknown. Got {name}, but expected one of {','.join(MODELS)}")
     if use_gpu:

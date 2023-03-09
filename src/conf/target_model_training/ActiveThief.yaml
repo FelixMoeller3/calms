@@ -20,11 +20,11 @@ EPOCHS: 80
 RESULTS_FOLDER: './experiments/Target_Model_Training/'
 RESULTS_FILE: 'results_200epochs.txt'
 TARGET_MODEL:
-  TARGET_MODEL_FOLDER: './data/models/'
-  TARGET_MODEL_FILE: 'active_thief.pt'
+  TARGET_MODEL_FOLDER: './data/models/mnist/'
+  TARGET_MODEL_FILE: 'active_thief_l3.pt'
   TRAIN_MODEL: True
   MODEL: 'ActiveThiefConv'
-  DATASET: 'CIFAR-10'
+  DATASET: 'MNIST'
   EPOCHS : 200
   OPTIMIZER:
     NAME: 'ADAM'
