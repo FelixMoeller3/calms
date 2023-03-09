@@ -17,11 +17,14 @@ class CoreSet(Strategy):
         super(CoreSet, self).__init__(model, data_unlabeled, NO_CLASSES,BATCH,BUDGET,INIT_BUDGET,LOOKBACK,USE_GPU)
 
     def query(self):
-        unlabeled_loader = DataLoader(self.data_unlabeled, batch_size=self.BATCH, 
-                                    sampler=SubsetSequentialSampler(self.subset+self.labeled_set), 
-                                    pin_memory=True)
+        if len(self.subset) <= self.BUDGET:
+            arg = np.array([i for i in range(len(self.subset))])
+        else:
+            unlabeled_loader = DataLoader(self.data_unlabeled, batch_size=self.BATCH, 
+                                        sampler=SubsetSequentialSampler(self.subset+self.labeled_set), 
+                                        pin_memory=True)
 
-        arg = self.get_kcg(unlabeled_loader)
+            arg = self.get_kcg(unlabeled_loader)
         self.add_query(arg[:self.BUDGET])
         return np.concatenate(self.previous_queries)
 
@@ -48,5 +51,4 @@ class CoreSet(Strategy):
             new_av_idx = np.arange(len(self.subset),(len(self.subset) + labeled_data_size))
             sampling = kCenterGreedy(feat)  
             batch = sampling.select_batch_(new_av_idx, self.BUDGET)
-            other_idx = [x for x in range(len(self.subset)) if x not in batch]
-        return  other_idx + batch
+        return batch

@@ -21,14 +21,17 @@ class Badge(Strategy):
         super(Badge, self).__init__(model, data_unlabeled, NO_CLASSES,BATCH,BUDGET,INIT_BUDGET, LOOKBACK, USE_GPU)
 
     def query(self) -> List[int]:
-        unlabeled_loader = DataLoader(self.data_unlabeled, batch_size=self.BATCH, 
-                                    sampler=SubsetSequentialSampler(self.subset), 
-                                    pin_memory=True)
+        if len(self.subset) <= self.BUDGET:
+            arg = np.array([i for i in range(len(self.subset))])
+        else:
+            unlabeled_loader = DataLoader(self.data_unlabeled, batch_size=self.BATCH, 
+                                        sampler=SubsetSequentialSampler(self.subset), 
+                                        pin_memory=True)
 
-        gradEmbedding = self.get_grad_embedding(unlabeled_loader, len(self.subset)).numpy()
-        print('features shape: {}'.format(gradEmbedding.shape))
-        print(self.BUDGET)
-        arg = self.init_centers(gradEmbedding)
+            gradEmbedding = self.get_grad_embedding(unlabeled_loader, len(self.subset)).numpy()
+            print('features shape: {}'.format(gradEmbedding.shape))
+            print(self.BUDGET)
+            arg = self.init_centers(gradEmbedding)
         self.add_query(arg[:self.BUDGET])
         return np.concatenate(self.previous_queries)
 
@@ -92,5 +95,4 @@ class Badge(Strategy):
             mu.append(X[ind])
             indsAll.append(ind)
             cent += 1
-        others = [i for i in range(len(X)) if i not in indsAll]
-        return others + indsAll
+        return indsAll

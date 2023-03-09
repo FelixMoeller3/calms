@@ -19,38 +19,41 @@ class BALD(Strategy):
         self.dropout_iter = DROPOUT_ITER
 
     def query(self) -> np.ndarray:
-        unlabeled_loader = DataLoader(self.data_unlabeled, batch_size=self.BATCH, 
-                                    sampler=SubsetSequentialSampler(self.subset), 
-                                    pin_memory=True)
-        n_uPts = len(self.subset)
-    
-        # Heuristic:m G_X - F_X
-        score_ALL = np.zeros(shape=(n_uPts, self.NO_CLASSES))
-        all_entropy_dropout = np.zeros(shape=(n_uPts))
+        if len(self.subset) <= self.BUDGET:
+            arg = np.array([i for i in range(len(self.subset))])
+        else:
+            unlabeled_loader = DataLoader(self.data_unlabeled, batch_size=self.BATCH, 
+                                        sampler=SubsetSequentialSampler(self.subset), 
+                                        pin_memory=True)
+            n_uPts = len(self.subset)
+        
+            # Heuristic:m G_X - F_X
+            score_ALL = np.zeros(shape=(n_uPts, self.NO_CLASSES))
+            all_entropy_dropout = np.zeros(shape=(n_uPts))
 
-        for d in tqdm(
-            range(self.dropout_iter),
-            desc = "Dropout Iterations",
-        ):
-            probs = self.get_predict_prob(unlabeled_loader).cpu().numpy()
-            score_ALL += probs
+            for d in tqdm(
+                range(self.dropout_iter),
+                desc = "Dropout Iterations",
+            ):
+                probs = self.get_predict_prob(unlabeled_loader).cpu().numpy()
+                score_ALL += probs
 
-            # computing F_X
-            dropout_score_log = np.log2(
-                probs + 1e-6
-            )# add 1e-6 to avoid log(0)
-            Entropy_Compute = -np.multiply(probs, dropout_score_log)
-            Entropy_per_Dropout = np.sum(Entropy_Compute, axis=1)
+                # computing F_X
+                dropout_score_log = np.log2(
+                    probs + 1e-6
+                )# add 1e-6 to avoid log(0)
+                Entropy_Compute = -np.multiply(probs, dropout_score_log)
+                Entropy_per_Dropout = np.sum(Entropy_Compute, axis=1)
 
-            all_entropy_dropout += Entropy_per_Dropout
+                all_entropy_dropout += Entropy_per_Dropout
 
-        Avg_Pi= np.divide(score_ALL, self.dropout_iter)
-        Log_Avg_Pi = np.log2(Avg_Pi + 1e-6)
-        Entropy_Avg_Pi = -np.multiply(Avg_Pi, Log_Avg_Pi)
-        G_X = np.sum(Entropy_Avg_Pi, axis=1)
-        F_X =np.divide(all_entropy_dropout, self.dropout_iter)
-        U_X = G_X - F_X
-        arg = np.argsort(-U_X)
+            Avg_Pi= np.divide(score_ALL, self.dropout_iter)
+            Log_Avg_Pi = np.log2(Avg_Pi + 1e-6)
+            Entropy_Avg_Pi = -np.multiply(Avg_Pi, Log_Avg_Pi)
+            G_X = np.sum(Entropy_Avg_Pi, axis=1)
+            F_X =np.divide(all_entropy_dropout, self.dropout_iter)
+            U_X = G_X - F_X
+            arg = np.argsort(-U_X)
         self.add_query(arg[:self.BUDGET])
         return np.concatenate(self.previous_queries)
 
