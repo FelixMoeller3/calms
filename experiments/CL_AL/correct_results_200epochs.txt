@@ -1,0 +1,92 @@
+Run completed at 2023-03-10 17:36:29 after 21h:51m:27s
+Config File: BATCH_SIZE: 128
+CYCLES: 12
+EPOCHS: 200
+RESULTS_FILE: correct_results_200epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 4000
+    INIT_BUDGET: 4000
+    LOOKBACK: 1
+    NAME: Badge
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  DATASET: CIFAR-10
+  NAME: Resnet18
+TARGET_MODEL:
+  DATASET: FashionMNIST
+  EPOCHS: 3
+  MODEL: TestConv
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+USE_GPU: true
+
+Model: Resnet18, trained on CIFAR-10
+Active Learning Strategy: Badge
+Accuracy results at the end of each cycle: [0.678, 0.8502, 0.9039, 0.9299, 0.9407, 0.9482, 0.9483, 0.9493, 0.9468, 0.9457, 0.9406, 0.9362, 0.9375]
+----------------------------------------------------------------------
+Run completed at 2023-03-11 20:05:20 after 32h:15m:00s
+Config File: BATCH_SIZE: 128
+CYCLES: 24
+EPOCHS: 200
+RESULTS_FILE: correct_results_200epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    INIT_BUDGET: 2000
+    LOOKBACK: 1
+    NAME: Badge
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  DATASET: CIFAR-10
+  NAME: Resnet18
+TARGET_MODEL:
+  DATASET: FashionMNIST
+  EPOCHS: 3
+  MODEL: TestConv
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+USE_GPU: true
+
+Model: Resnet18, trained on CIFAR-10
+Active Learning Strategy: Badge
+Accuracy results at the end of each cycle: [0.5967, 0.7767, 0.8435, 0.8794, 0.8991, 0.9137, 0.9268, 0.9353, 0.9398, 0.9435, 0.9485, 0.9504, 0.9488, 0.9493, 0.9477, 0.945, 0.9436, 0.9401, 0.9381, 0.9341, 0.9344, 0.9289, 0.927, 0.9193, 0.9189]
+----------------------------------------------------------------------

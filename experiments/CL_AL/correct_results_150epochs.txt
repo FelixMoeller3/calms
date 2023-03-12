@@ -1439,3 +1439,453 @@ Active Learning Strategy: Badge
 Accuracy results at the end of each cycle: [0.6344, 0.6566, 0.6718, 0.6826, 0.6791, 0.6853, 0.6913, 0.6919, 0.6933, 0.7038, 0.6976, 0.708, 0.7057, 0.7109, 0.7189, 0.7146, 0.7111, 0.7207, 0.722, 0.7223, 0.7283, 0.7346, 0.729, 0.7325, 0.7356]
 Class distribution for each query: 
 ----------------------------------------------------------------------
+Run completed at 2023-03-10 09:38:37 after 11h:30m:23s
+Config File: BATCH_SIZE: 128
+CYCLES: 12
+EPOCHS: 150
+RESULTS_FILE: correct_results_150epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 4000
+    INIT_BUDGET: 4000
+    LOOKBACK: 1
+    NAME: Badge
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: MAS
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+    WEIGHT: 1.0
+  DATASET: CIFAR-10
+  NAME: Resnet18
+TARGET_MODEL:
+  DATASET: FashionMNIST
+  EPOCHS: 3
+  MODEL: TestConv
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+USE_GPU: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: MAS
+Active Learning Strategy: Badge
+Accuracy results at the end of each cycle: [0.7599, 0.7851, 0.7987, 0.8112, 0.8138, 0.82, 0.8236, 0.8213, 0.8229, 0.8093, 0.8131, 0.7845, 0.7519]
+Class distribution for each query: 
+----------------------------------------------------------------------
+Run completed at 2023-03-11 01:02:50 after 10h:35m:27s
+Config File: BATCH_SIZE: 128
+CYCLES: 12
+EPOCHS: 150
+RESULTS_FILE: correct_results_150epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 4000
+    INIT_BUDGET: 4000
+    LOOKBACK: 1
+    NAME: Badge
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    ALPHAS:
+    - 0.45
+    - 0.55
+    NAME: IMM
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+    WEIGHT: 1.0
+  DATASET: CIFAR-10
+  NAME: Resnet18
+TARGET_MODEL:
+  DATASET: FashionMNIST
+  EPOCHS: 3
+  MODEL: TestConv
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+USE_GPU: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: IMM
+Active Learning Strategy: Badge
+Accuracy results at the end of each cycle: [0.6701, 0.7679, 0.8146, 0.8317, 0.8421, 0.844, 0.8529, 0.8471, 0.8396, 0.8282, 0.7993, 0.7739, 0.7031]
+Class distribution for each query: 
+----------------------------------------------------------------------
+Run completed at 2023-03-11 02:05:16 after 11h:04m:25s
+Config File: BATCH_SIZE: 128
+CYCLES: 12
+EPOCHS: 150
+RESULTS_FILE: correct_results_150epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 4000
+    INIT_BUDGET: 4000
+    LOOKBACK: 1
+    NAME: Badge
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: EWC
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+    WEIGHT: 1.0
+  DATASET: CIFAR-10
+  NAME: Resnet18
+TARGET_MODEL:
+  DATASET: FashionMNIST
+  EPOCHS: 3
+  MODEL: TestConv
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+USE_GPU: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: EWC
+Active Learning Strategy: Badge
+Accuracy results at the end of each cycle: [0.6976, 0.8049, 0.8313, 0.844, 0.849, 0.8484, 0.8542, 0.8415, 0.8508, 0.8262, 0.8054, 0.7713, 0.7314]
+Class distribution for each query: 
+----------------------------------------------------------------------
+Run completed at 2023-03-11 04:08:35 after 02h:08m:55s
+Config File: BATCH_SIZE: 128
+CYCLES: 12
+EPOCHS: 150
+RESULTS_FILE: correct_results_150epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 4000
+    INIT_BUDGET: 4000
+    LOOKBACK: 1
+    NAME: CoreSet
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    ALPHAS:
+    - 0.45
+    - 0.55
+    NAME: IMM
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+    WEIGHT: 1.0
+  DATASET: CIFAR-10
+  NAME: Resnet18
+TARGET_MODEL:
+  DATASET: FashionMNIST
+  EPOCHS: 3
+  MODEL: TestConv
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+USE_GPU: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: IMM
+Active Learning Strategy: CoreSet
+Accuracy results at the end of each cycle: [0.6893, 0.7801, 0.8133, 0.8346, 0.8369, 0.8484, 0.8455, 0.848, 0.8464, 0.8257, 0.8099, 0.7732, 0.6709]
+Class distribution for each query: 
+----------------------------------------------------------------------
+Run completed at 2023-03-11 05:56:30 after 02h:25m:12s
+Config File: BATCH_SIZE: 128
+CYCLES: 12
+EPOCHS: 150
+RESULTS_FILE: correct_results_150epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 4000
+    INIT_BUDGET: 4000
+    LOOKBACK: 1
+    NAME: CoreSet
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: MAS
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+    WEIGHT: 1.0
+  DATASET: CIFAR-10
+  NAME: Resnet18
+TARGET_MODEL:
+  DATASET: FashionMNIST
+  EPOCHS: 3
+  MODEL: TestConv
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+USE_GPU: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: MAS
+Active Learning Strategy: CoreSet
+Accuracy results at the end of each cycle: [0.7806, 0.7986, 0.8023, 0.8119, 0.8138, 0.8184, 0.8238, 0.8281, 0.8202, 0.8201, 0.8189, 0.7971, 0.7649]
+Class distribution for each query: 
+----------------------------------------------------------------------
+Run completed at 2023-03-11 05:56:34 after 02h:25m:15s
+Config File: BATCH_SIZE: 128
+CYCLES: 12
+EPOCHS: 150
+RESULTS_FILE: correct_results_150epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 4000
+    INIT_BUDGET: 4000
+    LOOKBACK: 1
+    NAME: CoreSet
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: EWC
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+    WEIGHT: 1.0
+  DATASET: CIFAR-10
+  NAME: Resnet18
+TARGET_MODEL:
+  DATASET: FashionMNIST
+  EPOCHS: 3
+  MODEL: TestConv
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+USE_GPU: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: EWC
+Active Learning Strategy: CoreSet
+Accuracy results at the end of each cycle: [0.6663, 0.7439, 0.7939, 0.8238, 0.8265, 0.8391, 0.8292, 0.8416, 0.8299, 0.8352, 0.8158, 0.7811, 0.6842]
+Class distribution for each query: 
+----------------------------------------------------------------------
+Run completed at 2023-03-11 10:01:52 after 11h:46m:43s
+Config File: BATCH_SIZE: 128
+CYCLES: 24
+EPOCHS: 150
+RESULTS_FILE: correct_results_150epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    INIT_BUDGET: 2000
+    LOOKBACK: 1
+    NAME: Badge
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: EWC
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+    WEIGHT: 1.0
+  DATASET: CIFAR-10
+  NAME: Resnet18
+TARGET_MODEL:
+  DATASET: FashionMNIST
+  EPOCHS: 3
+  MODEL: TestConv
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+USE_GPU: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: EWC
+Active Learning Strategy: Badge
+Accuracy results at the end of each cycle: [0.6036, 0.6648, 0.7301, 0.7616, 0.7841, 0.7977, 0.7949, 0.7943, 0.8, 0.7996, 0.8047, 0.8125, 0.7996, 0.8129, 0.8034, 0.8175, 0.7954, 0.8034, 0.8016, 0.794, 0.7796, 0.7759, 0.7233, 0.7104, 0.653]
+Class distribution for each query: 
+----------------------------------------------------------------------
+Run completed at 2023-03-11 20:46:38 after 11h:31m:16s
+Config File: BATCH_SIZE: 128
+CYCLES: 24
+EPOCHS: 150
+RESULTS_FILE: correct_results_150epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    INIT_BUDGET: 2000
+    LOOKBACK: 1
+    NAME: Badge
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: MAS
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+    WEIGHT: 1.0
+  DATASET: CIFAR-10
+  NAME: Resnet18
+TARGET_MODEL:
+  DATASET: FashionMNIST
+  EPOCHS: 3
+  MODEL: TestConv
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+USE_GPU: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: MAS
+Active Learning Strategy: Badge
+Accuracy results at the end of each cycle: [0.6576, 0.6856, 0.7014, 0.714, 0.7256, 0.7245, 0.7359, 0.7361, 0.7486, 0.7491, 0.7566, 0.7522, 0.7619, 0.754, 0.7659, 0.7688, 0.7675, 0.7739, 0.7754, 0.774, 0.7677, 0.7624, 0.7598, 0.7526, 0.7328]
+Class distribution for each query: 
+----------------------------------------------------------------------
+Run completed at 2023-03-11 23:20:18 after 11h:40m:51s
+Config File: BATCH_SIZE: 128
+CYCLES: 24
+EPOCHS: 150
+RESULTS_FILE: correct_results_150epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    INIT_BUDGET: 2000
+    LOOKBACK: 1
+    NAME: Badge
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    ALPHAS:
+    - 0.45
+    - 0.55
+    NAME: IMM
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+    WEIGHT: 1.0
+  DATASET: CIFAR-10
+  NAME: Resnet18
+TARGET_MODEL:
+  DATASET: FashionMNIST
+  EPOCHS: 3
+  MODEL: TestConv
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+USE_GPU: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: IMM
+Active Learning Strategy: Badge
+Accuracy results at the end of each cycle: [0.5833, 0.6643, 0.7173, 0.7411, 0.7747, 0.7876, 0.7947, 0.8031, 0.7945, 0.7969, 0.8061, 0.8089, 0.8157, 0.8145, 0.8089, 0.8071, 0.8002, 0.7981, 0.7907, 0.7901, 0.7693, 0.784, 0.7486, 0.6966, 0.6523]
+Class distribution for each query: 
+----------------------------------------------------------------------
