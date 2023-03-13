@@ -9,7 +9,7 @@ import torch.optim.lr_scheduler as lr_scheduler
 from torch.utils.data import DataLoader,Dataset
 from torchvision import datasets, transforms
 import torch
-from models import testConv,testNN,ResNet,BasicBlock,Bottleneck,ThiefConvNet
+from models import testConv,testNN,ResNet,BasicBlock,Bottleneck,ThiefConvNet,VGG16
 from tqdm import tqdm
 from datetime import datetime
 import time
@@ -23,7 +23,7 @@ AL_METHODS = ['LC','BALD','Badge','CoreSet', 'Random']
 CL_CONFIG = ["NAME", "OPTIMIZER"]
 CL_METHODS = ["Alasso", "IMM", "Naive", "EWC", "MAS"]
 OPTIMIZERS =["SGD", "ADAM"]
-MODELS = ['Resnet18', 'Resnet34', 'Resnet50', 'Resnet101', 'Resnet152', 'TestConv','ActiveThiefConv']
+MODELS = ['Resnet18', 'Resnet34', 'Resnet50', 'Resnet101', 'Resnet152', 'TestConv','ActiveThiefConv', 'VGG16']
 TARGET_MODEL_CONFIG = ['MODEL','DATASET','EPOCHS','OPTIMIZER','TARGET_MODEL_FOLDER','TARGET_MODEL_FILE','TRAIN_MODEL']
 DATASET_NAMES = ["MNIST","FashionMNIST", "CIFAR-10","TinyImageNet"]
 OPTIMIZER_CONFIG = ["NAME", "LR", "MOMENTUM", "WDECAY"]
@@ -208,6 +208,8 @@ def build_model(name: str, input_dim:tuple[int], num_classes: int, use_gpu:bool)
         model = testConv(input_dim,num_classes)
     elif name == "ActiveThiefConv":
         model = ThiefConvNet(input_channels=input_dim[0],num_classes=num_classes,input_dim=input_dim[1])
+    elif name == "VGG16":
+        model = VGG16(input_dim[0],num_classes,input_dim[1])
     else:
         raise AttributeError(f"Model name unknown. Got {name}, but expected one of {','.join(MODELS)}")
     if use_gpu:

@@ -1,2 +1,2 @@
-from .test_model import testConv,testNN,ResNet,BasicBlock,Bottleneck
+from .test_model import testConv,testNN,ResNet,BasicBlock,Bottleneck,VGG16
 from .activeThief_models import ConvBlock,ThiefConvNet
