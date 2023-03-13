@@ -3,27 +3,28 @@ from active_learning_strategies.strategy import Strategy
 import active_learning_strategies as al_strats
 import continual_learning_strategies as cl_strats
 from continual_learning_strategies.cl_base import ContinualLearningStrategy
-from model_stealing.msprocess import ModelStealingProcess
+from process_runner import ModelStealingProcess,ClProcess,AlProcess
 import torch.nn as nn
 import torch.optim.lr_scheduler as lr_scheduler
 from torch.utils.data import DataLoader,Dataset
 from torchvision import datasets, transforms
 import torch
-from models import testConv,testNN,ResNet,BasicBlock,Bottleneck,ThiefConvNet
+from models import testConv,testNN,ResNet,BasicBlock,Bottleneck,ThiefConvNet,VGG16
 from tqdm import tqdm
 from datetime import datetime
 import time
 import os
 from data import TinyImageNet
+import pickle
 
-CONFIG = ["SUBSTITUTE_MODEL", "BATCH_SIZE", "CYCLES", "RESULTS_FILE", "RESULTS_FILE", "TARGET_MODEL", "EPOCHS"]
+CONFIG = ["SUBSTITUTE_MODEL", "BATCH_SIZE", "CYCLES", "RESULTS_FILE", "RESULTS_FILE", "TARGET_MODEL", "EPOCHS","RECOVER_STATE","SAVE_STATE","STATE_DIR"]
 SUBSTITUTE_MODEL_CONFIG = ["NAME", "DATASET", "AL_METHOD", "CL_METHOD"]
 AL_CONFIG = ["NAME", "INIT_BUDGET", "BUDGET", "LOOKBACK"]
 AL_METHODS = ['LC','BALD','Badge','CoreSet', 'Random']
 CL_CONFIG = ["NAME", "OPTIMIZER"]
 CL_METHODS = ["Alasso", "IMM", "Naive", "EWC", "MAS"]
 OPTIMIZERS =["SGD", "ADAM"]
-MODELS = ['Resnet18', 'Resnet34', 'Resnet50', 'Resnet101', 'Resnet152', 'TestConv','ActiveThiefConv']
+MODELS = ['Resnet18', 'Resnet34', 'Resnet50', 'Resnet101', 'Resnet152', 'TestConv','ActiveThiefConv', 'VGG16']
 TARGET_MODEL_CONFIG = ['MODEL','DATASET','EPOCHS','OPTIMIZER','TARGET_MODEL_FOLDER','TARGET_MODEL_FILE','TRAIN_MODEL']
 DATASET_NAMES = ["MNIST","FashionMNIST", "CIFAR-10","TinyImageNet"]
 OPTIMIZER_CONFIG = ["NAME", "LR", "MOMENTUM", "WDECAY"]
@@ -41,18 +42,26 @@ def run_config(config_path: str) -> ModelStealingProcess:
     use_gpu = detect_gpu()
     target_model = build_target_model(yaml_cfg["TARGET_MODEL"],batch_size,use_gpu)
     al_method,cl_method,train_set,val_set = build_substitute_model(yaml_cfg["SUBSTITUTE_MODEL"],batch_size,use_gpu)
+    prev_state = {}
+    if yaml_cfg["RECOVER_STATE"]:
+        with open(os.path.join(yaml_cfg["STATE_DIR"],"latest_state.pkl"),'rb') as f:
+            prev_state = pickle.load(f)
+        cl_method.model.load_state_dict(torch.load(os.path.join(yaml_cfg["STATE_DIR"],"model.pth")))
     cycles = yaml_cfg["CYCLES"]
     print(f'Model stealing with strategies {yaml_cfg["SUBSTITUTE_MODEL"]["AL_METHOD"]["NAME"]} and {yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["NAME"]}')
-    ms_process = ModelStealingProcess(target_model,al_method,cl_method,use_gpu)
+    state_dir = None
+    if yaml_cfg["SAVE_STATE"]:
+        state_dir = yaml_cfg["STATE_DIR"]
+    ms_process = ModelStealingProcess(target_model,al_method,cl_method,state_dir)
     num_epochs = yaml_cfg["EPOCHS"]
-    accuracies,agreements = ms_process.steal_model(train_set,val_set,batch_size,cycles,num_epochs)
+    accuracies,agreements = ms_process.steal_model(train_set,val_set,batch_size,cycles,num_epochs,**prev_state)
     duration = time.time() - start
     hours = int(duration)//3600
     minutes = (int(duration) % 3600) // 60
     seconds = int(duration) % 60
     time_string = "{:02}h:{:02}m:{:02}s".format(hours,minutes,seconds)
     os.makedirs(yaml_cfg["RESULTS_FOLDER"],exist_ok=True)
-    with open(yaml_cfg["RESULTS_FOLDER"] + yaml_cfg["RESULTS_FILE"],'a+') as f:
+    with open(os.path.join(yaml_cfg["RESULTS_FOLDER"], yaml_cfg["RESULTS_FILE"]),'a+') as f:
         f.write(f'Run completed at {datetime.today().strftime("%Y-%m-%d %H:%M:%S")} after {time_string}\n'
                 f'Config File:\n{yaml.dump(yaml_cfg)}'
                 f'Target model: {yaml_cfg["TARGET_MODEL"]["MODEL"]}, trained on {yaml_cfg["TARGET_MODEL"]["DATASET"]}\n'
@@ -76,26 +85,34 @@ def run_cl_al_config(config_path: str) -> ModelStealingProcess:
     batch_size = yaml_cfg["BATCH_SIZE"]
     use_gpu = detect_gpu()
     al_method,cl_method,train_set,val_set = build_substitute_model(yaml_cfg["SUBSTITUTE_MODEL"],batch_size,use_gpu)
+    prev_state = {}
+    if yaml_cfg["RECOVER_STATE"]:
+        with open(os.path.join(yaml_cfg["STATE_DIR"],"latest_state.pkl"),'rb') as f:
+            prev_state = pickle.load(f)
+        cl_method.model.load_state_dict(torch.load(os.path.join(yaml_cfg["STATE_DIR"],"model.pth")))
     cycles = yaml_cfg["CYCLES"]
-    ms_process = ModelStealingProcess(None,al_method,cl_method)
+    state_dir = None
+    if yaml_cfg["SAVE_STATE"]:
+        state_dir = yaml_cfg["STATE_DIR"]
+    process_runner = ClProcess(al_method,cl_method,state_dir)
     num_epochs = yaml_cfg["EPOCHS"]
     print(f'Running continual active learning with strategies {yaml_cfg["SUBSTITUTE_MODEL"]["AL_METHOD"]["NAME"]} and {yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["NAME"]}')
-    accuracies,query_dists = ms_process.continual_learning(train_set,val_set,batch_size,cycles,num_epochs,False,
-                                                           yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["OPTIMIZER"],build_optimizer)
+    accuracies = process_runner.continual_learning(train_set,val_set,batch_size,cycles,num_epochs,
+                                                           yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["OPTIMIZER"],build_optimizer,**prev_state)
     duration = time.time() - start
     hours = int(duration)//3600
     minutes = (int(duration) % 3600) // 60
     seconds = int(duration) % 60
     time_string = "{:02}h:{:02}m:{:02}s".format(hours,minutes,seconds)
     os.makedirs(yaml_cfg["RESULTS_FOLDER"],exist_ok=True)
-    with open(yaml_cfg["RESULTS_FOLDER"] + yaml_cfg["RESULTS_FILE"],'a+') as f:
+    with open(os.path.join(yaml_cfg["RESULTS_FOLDER"],yaml_cfg["RESULTS_FILE"]),'a+') as f:
         f.write(f'Run completed at {datetime.today().strftime("%Y-%m-%d %H:%M:%S")} after {time_string}\n'
                 f'Config File: {yaml.dump(yaml_cfg)}\n'
                 f'Model: {yaml_cfg["SUBSTITUTE_MODEL"]["NAME"]}, trained on {yaml_cfg["SUBSTITUTE_MODEL"]["DATASET"]}\n'
                 f'Continual Learning Strategy: {yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["NAME"]}\n'
                 f'Active Learning Strategy: {yaml_cfg["SUBSTITUTE_MODEL"]["AL_METHOD"]["NAME"]}\n'
                 f'Accuracy results at the end of each cycle: {accuracies}\n'
-                f'Class distribution for each query: {",".join([str(dist) for dist in query_dists])}\n'
+                #f'Class distribution for each query: {",".join([str(dist) for dist in query_dists])}\n'
                 f'{"-"* 70}'+ "\n"
             )
 
@@ -112,17 +129,25 @@ def run_al_config(config_path: str) -> None:
     use_gpu = detect_gpu()
     al_method,cl_method,train_set,val_set = build_substitute_model(yaml_cfg["SUBSTITUTE_MODEL"],batch_size,use_gpu)
     cycles = yaml_cfg["CYCLES"]
-    ms_process = ModelStealingProcess(None,al_method,cl_method)
+    prev_state = {}
+    if yaml_cfg["RECOVER_STATE"]:
+        with open(os.path.join(yaml_cfg["STATE_DIR"],"latest_state.pkl"),'rb') as f:
+            prev_state = pickle.load(f)
+        cl_method.model.load_state_dict(torch.load(os.path.join(yaml_cfg["STATE_DIR"],"model.pth")))
+    state_dir = None
+    if yaml_cfg["SAVE_STATE"]:
+        state_dir = yaml_cfg["STATE_DIR"]
+    ms_process = AlProcess(al_method,cl_method,state_dir)
     num_epochs = yaml_cfg["EPOCHS"]
     print(f'Running active learning with strategy {yaml_cfg["SUBSTITUTE_MODEL"]["AL_METHOD"]["NAME"]}')
-    accuracies = ms_process.active_learning(train_set,val_set,batch_size,cycles,num_epochs,yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["OPTIMIZER"],build_optimizer)
+    accuracies = ms_process.active_learning(train_set,val_set,batch_size,cycles,num_epochs,yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["OPTIMIZER"],build_optimizer,**prev_state)
     duration = time.time() - start
     hours = int(duration)//3600
     minutes = (int(duration) % 3600) // 60
     seconds = int(duration) % 60
     time_string = "{:02}h:{:02}m:{:02}s".format(hours,minutes,seconds)
     os.makedirs(yaml_cfg["RESULTS_FOLDER"],exist_ok=True)
-    with open(yaml_cfg["RESULTS_FOLDER"] + yaml_cfg["RESULTS_FILE"],'a+') as f:
+    with open(os.path.join(yaml_cfg["RESULTS_FOLDER"], yaml_cfg["RESULTS_FILE"]),'a+') as f:
         f.write(f'Run completed at {datetime.today().strftime("%Y-%m-%d %H:%M:%S")} after {time_string}\n'
                 f'Config File: {yaml.dump(yaml_cfg)}\n'
                 f'Model: {yaml_cfg["SUBSTITUTE_MODEL"]["NAME"]}, trained on {yaml_cfg["SUBSTITUTE_MODEL"]["DATASET"]}\n'
@@ -145,14 +170,14 @@ def run_target_model_config(config_path: str) -> None:
     print(f"Testing target model: {yaml_cfg['TARGET_MODEL']['MODEL']}")
     model = build_target_model(yaml_cfg["TARGET_MODEL"],batch_size,use_gpu)
     os.makedirs(yaml_cfg["TARGET_MODEL"]["TARGET_MODEL_FOLDER"],exist_ok=True)
-    torch.save(model, yaml_cfg["TARGET_MODEL"]["TARGET_MODEL_FOLDER"] + yaml_cfg["TARGET_MODEL"]["TARGET_MODEL_FILE"])
+    torch.save(model, os.path.join(yaml_cfg["TARGET_MODEL"]["TARGET_MODEL_FOLDER"],yaml_cfg["TARGET_MODEL"]["TARGET_MODEL_FILE"]))
     duration = time.time() - start
     hours = int(duration)//3600
     minutes = (int(duration) % 3600) // 60
     seconds = int(duration) % 60
     time_string = "{:02}h:{:02}m:{:02}s".format(hours,minutes,seconds)
     os.makedirs(yaml_cfg["RESULTS_FOLDER"],exist_ok=True)
-    with open(yaml_cfg["RESULTS_FOLDER"] + yaml_cfg["RESULTS_FILE"],'a+') as f:
+    with open(os.path.join(yaml_cfg["RESULTS_FOLDER"],yaml_cfg["RESULTS_FILE"]),'a+') as f:
         f.write(f'Run completed at {datetime.today().strftime("%Y-%m-%d %H:%M:%S")} after {time_string}\n'
                 f'Config File: {yaml.dump(yaml_cfg)}\n'
                 f'Target model: {yaml_cfg["TARGET_MODEL"]["MODEL"]}, trained on {yaml_cfg["TARGET_MODEL"]["DATASET"]}\n'
@@ -208,6 +233,8 @@ def build_model(name: str, input_dim:tuple[int], num_classes: int, use_gpu:bool)
         model = testConv(input_dim,num_classes)
     elif name == "ActiveThiefConv":
         model = ThiefConvNet(input_channels=input_dim[0],num_classes=num_classes,input_dim=input_dim[1])
+    elif name == "VGG16":
+        model = VGG16(input_dim[0],num_classes,input_dim[1])
     else:
         raise AttributeError(f"Model name unknown. Got {name}, but expected one of {','.join(MODELS)}")
     if use_gpu:

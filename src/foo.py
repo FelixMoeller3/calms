@@ -5,7 +5,7 @@ from torch.optim import SGD
 import torch.nn as nn
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
-import model_stealing as ms
+import process_runner as ms
 num_cycles = 10
 init_budget = 5000
 cycle_budget = 1000
@@ -80,4 +80,4 @@ with open("data/experiments/results.txt",'a') as f:
 
 if __name__ == "__main__":
     from utils import config
-    config.run_config("./src/conf/target_model_training/ActiveThief.yaml")
+    config.run_cl_al_config("./src/conf/Example_conf.yaml")
