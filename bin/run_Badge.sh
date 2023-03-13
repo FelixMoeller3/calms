@@ -17,8 +17,8 @@ source ../ba_env/bin/activate
 files=("./src/conf/basic_model_stealing/Badge_Naive.yaml")
 for file in "${files[@]}"
 do 
-    echo "Running $file with mode AL"
-    python ./src/main.py -c $file -m "AL"
+    echo "Running $file with mode CL"
+    python ./src/main.py -c $file -m "CL"
 done
 deactivate
 
