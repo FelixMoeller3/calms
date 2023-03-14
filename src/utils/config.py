@@ -1,3 +1,4 @@
+from typing import Optional
 import yaml
 from active_learning_strategies.strategy import Strategy
 import active_learning_strategies as al_strats
@@ -40,8 +41,8 @@ def run_config(config_path: str) -> ModelStealingProcess:
     check_attribute_presence(yaml_cfg,CONFIG,"config")
     batch_size = yaml_cfg["BATCH_SIZE"]
     use_gpu = detect_gpu()
-    target_model = build_target_model(yaml_cfg["TARGET_MODEL"],batch_size,use_gpu)
-    al_method,cl_method,train_set,val_set = build_substitute_model(yaml_cfg["SUBSTITUTE_MODEL"],batch_size,use_gpu)
+    target_model,num_classes = build_target_model(yaml_cfg["TARGET_MODEL"],batch_size,use_gpu)
+    al_method,cl_method,train_set,val_set = build_substitute_model(yaml_cfg["SUBSTITUTE_MODEL"],batch_size,use_gpu,num_classes)
     prev_state = {}
     if yaml_cfg["RECOVER_STATE"]:
         with open(os.path.join(yaml_cfg["STATE_DIR"],"latest_state.pkl"),'rb') as f:
@@ -202,21 +203,21 @@ def check_attribute_presence(config: dict, attributes: list[str],config_name: st
         if elem not in config:
             raise AttributeError(f"{elem} must to be specified in {config_name}")
 
-def build_target_model(target_model_config: dict,batch_size:int,use_gpu:bool) -> nn.Module:
+def build_target_model(target_model_config: dict,batch_size:int,use_gpu:bool) -> tuple[nn.Module,int]:
     check_attribute_presence(target_model_config,TARGET_MODEL_CONFIG,"target model config")
+    train_set,input_dim,num_classes = load_dataset(target_model_config['DATASET'],True)
     if not target_model_config["TRAIN_MODEL"]:
         print(f'Loading model located at {target_model_config["TARGET_MODEL_FOLDER"] + target_model_config["TARGET_MODEL_FILE"]}')
-        model = torch.load(target_model_config["TARGET_MODEL_FOLDER"] + target_model_config["TARGET_MODEL_FILE"])
-        return model
+        target_model = torch.load(target_model_config["TARGET_MODEL_FOLDER"] + target_model_config["TARGET_MODEL_FILE"])
+        return target_model,num_classes
     print("Training target model from scratch")
-    train_set,input_dim,num_classes = load_dataset(target_model_config['DATASET'],True)
     target_model = build_model(target_model_config["MODEL"],input_dim,num_classes,use_gpu)
     train_loader = DataLoader(train_set,batch_size,True)
     val_set,_,_ = load_dataset(target_model_config['DATASET'],False)
     val_loader = DataLoader(val_set,batch_size,True)
     optimizer,scheduler = build_optimizer(target_model_config["OPTIMIZER"],target_model)
     train_model(target_model,train_loader,val_loader,optimizer,scheduler,target_model_config["EPOCHS"],use_gpu)
-    return target_model
+    return target_model,num_classes
 
 def build_model(name: str, input_dim:tuple[int], num_classes: int, use_gpu:bool) -> nn.Module:
     if name == "Resnet18":
@@ -349,9 +350,11 @@ def run_val_epoch(model: nn.Module, val_loader: DataLoader, criterion: nn.CrossE
     epoch_acc = correct_predictions / len(val_loader.dataset)
     print('Validation Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
 
-def build_substitute_model(config: dict,batch_size:int,use_gpu:bool) -> tuple[Strategy,ContinualLearningStrategy,Dataset,Dataset]:
+def build_substitute_model(config: dict,batch_size:int,use_gpu:bool,num_classes:Optional[int]=None) -> tuple[Strategy,ContinualLearningStrategy,Dataset,Dataset]:
     check_attribute_presence(config,SUBSTITUTE_MODEL_CONFIG,"substitute model config")
-    train_set,input_dim,num_classes = load_dataset(config["DATASET"],True)
+    train_set,input_dim,num_classes_new = load_dataset(config["DATASET"],True)
+    if num_classes is None:
+        num_classes = num_classes_new
     substitute_model = build_model(config["NAME"],input_dim,num_classes,use_gpu)
     val_set, _, _ = load_dataset(config["DATASET"],False)
     al_strategy = build_al_strategy(config["AL_METHOD"],substitute_model,train_set,batch_size,num_classes,use_gpu)
