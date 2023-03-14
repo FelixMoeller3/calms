@@ -6,6 +6,7 @@ import torch.nn as nn
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 import process_runner as ms
+import torch
 num_cycles = 10
 init_budget = 5000
 cycle_budget = 1000
@@ -80,4 +81,4 @@ with open("data/experiments/results.txt",'a') as f:
 
 if __name__ == "__main__":
     from utils import config
-    config.run_cl_al_config("./src/conf/Example_conf.yaml")
+    config.run_config("./src/conf/Example_conf.yaml")

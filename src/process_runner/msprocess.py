@@ -6,10 +6,12 @@ from continual_learning_strategies.cl_base import ContinualLearningStrategy
 from torch.utils.data import Dataset,DataLoader,Subset
 import random
 from .process_base import BaseProcess
+from data import Softmax_label_set
+
 
 class ModelStealingProcess(BaseProcess):
 
-    def __init__(self,targetModel:nn.Module,activeLearningStrategy: Strategy,continualLearningStrategy: ContinualLearningStrategy,state_dir:str=None):
+    def __init__(self,targetModel:nn.Module,activeLearningStrategy: Strategy,continualLearningStrategy: ContinualLearningStrategy,state_dir:str=None,use_gpu:bool=False):
         '''
             :param targetModel: the target model in the model stealing process (i.e. the one that will be stolen). Needs to be pretrained!!
             :param activeLearningStrategy: the active learning strategy to use in the model stealing process.
@@ -19,6 +21,7 @@ class ModelStealingProcess(BaseProcess):
         super(ModelStealingProcess,self).__init__(activeLearningStrategy,continualLearningStrategy,state_dir)
         self.target_model = targetModel
         self.substitute_model = self.cl_strat.model
+        self.use_gpu = use_gpu
 
     def steal_model(self,train_set: Dataset,val_set: Dataset,batch_size:int,num_cycles:int,num_epochs:int,use_label:bool=True,
                     start_cycle:int=0,labeled_set:List[int]=[],unlabeled_set:List[int]=[],val_accuracies:List[float]=[],
@@ -35,6 +38,8 @@ class ModelStealingProcess(BaseProcess):
         '''
         # set all labels to -1 to ensure no labels are given before
         #train_set.targets[train_set.targets > -1] = -1
+        if not use_label:
+            train_set = Softmax_label_set(train_set)
         val_loader = DataLoader(val_set,batch_size,shuffle=True)
         loaders_dict = {'train': None, 'val': val_loader}
         if start_cycle == 0:
@@ -58,27 +63,36 @@ class ModelStealingProcess(BaseProcess):
             labeled_set += training_examples_absolute_indices
             unlabeled_set = [i for i in unlabeled_set if i not in training_examples_absolute_indices]
             self._train_cycle(train_set,training_examples_absolute_indices,loaders_dict,batch_size,num_epochs,val_accuracies)
-            
+            cur_agreement = self._compute_agreement(loaders_dict['val'])
+            print("Current agreement is: {:.4f}".format(cur_agreement))
+            agreements.append(cur_agreement)
             if self.state_dir is not None:
                 state_dict = {'start_cycle': i+1, 'labeled_set': labeled_set, 'unlabeled_set': unlabeled_set,'val_accuracies': val_accuracies, 'agreements': agreements}
                 self._save_state(state_dict)
         return val_accuracies,agreements
     
-    def _add_targets(self, train_set: Dataset,labels_to_add: List[int],use_label:bool=True) -> None:
+    def _add_targets(self, train_set: Dataset,labels_to_add: List[int],use_label:bool) -> None:
         '''
             Adds the respective targets to the dataset. The targets are determined by querying the target model.
         '''
-        if use_label:
-            for index in labels_to_add:
-                train_set.targets[index] = torch.max(self.target_model(torch.unsqueeze(train_set[index][0],0)),1)[1]
-        else:
-            for index in labels_to_add:
-                train_set.targets[index] = torch.nn.functional.softmax(self.target_model(torch.unsqueeze(train_set[index][0],0)),dim=0)
-
+        # TODO: Adapt to gpu usage
+        with torch.no_grad():
+            if use_label:
+                for index in labels_to_add:
+                    cur_elem = train_set[index][0].cuda() if self.use_gpu else train_set[index][0]
+                    train_set.targets[index] = torch.max(self.target_model(torch.unsqueeze(cur_elem,0)),1)[1]
+            else:
+                for index in labels_to_add:
+                    cur_elem = train_set[index][0].cuda() if self.use_gpu else train_set[index][0]
+                    current_example = torch.unsqueeze(cur_elem,0)
+                    output = torch.squeeze(self.target_model(current_example))
+                    softmax_res = torch.nn.functional.softmax(output,dim=0)
+                    train_set.targets[index] = softmax_res
     
     def _compute_agreement(self, val_loader: DataLoader) -> None:
         agreed_predictions = 0
         for inputs,_ in val_loader:
+            inputs = inputs.cuda() if self.use_gpu else inputs
             _, target_model_preds = torch.max(self.target_model(inputs).data,1)
             _, substitute_model_preds = torch.max(self.cl_strat.model(inputs).data,1)
             agreed_predictions += torch.sum(target_model_preds == substitute_model_preds).item()

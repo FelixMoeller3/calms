@@ -18,7 +18,7 @@ from data import TinyImageNet
 import pickle
 
 CONFIG = ["SUBSTITUTE_MODEL", "BATCH_SIZE", "CYCLES", "RESULTS_FILE", "RESULTS_FILE", "TARGET_MODEL", "EPOCHS","RECOVER_STATE","SAVE_STATE","STATE_DIR"]
-SUBSTITUTE_MODEL_CONFIG = ["NAME", "DATASET", "AL_METHOD", "CL_METHOD"]
+SUBSTITUTE_MODEL_CONFIG = ["NAME", "DATASET", "AL_METHOD", "CL_METHOD","USE_LABEL"]
 AL_CONFIG = ["NAME", "INIT_BUDGET", "BUDGET", "LOOKBACK"]
 AL_METHODS = ['LC','BALD','Badge','CoreSet', 'Random']
 CL_CONFIG = ["NAME", "OPTIMIZER"]
@@ -52,9 +52,9 @@ def run_config(config_path: str) -> ModelStealingProcess:
     state_dir = None
     if yaml_cfg["SAVE_STATE"]:
         state_dir = yaml_cfg["STATE_DIR"]
-    ms_process = ModelStealingProcess(target_model,al_method,cl_method,state_dir)
+    ms_process = ModelStealingProcess(target_model,al_method,cl_method,state_dir,use_gpu)
     num_epochs = yaml_cfg["EPOCHS"]
-    accuracies,agreements = ms_process.steal_model(train_set,val_set,batch_size,cycles,num_epochs,**prev_state)
+    accuracies,agreements = ms_process.steal_model(train_set,val_set,batch_size,cycles,num_epochs,yaml_cfg["SUBSTITUTE_MODEL"]["USE_LABEL"],**prev_state)
     duration = time.time() - start
     hours = int(duration)//3600
     minutes = (int(duration) % 3600) // 60

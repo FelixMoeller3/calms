@@ -41,6 +41,7 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
         '''
             TODO: Add method description
         '''
+        # TODO: Fix so we can work with class label when having softmax label
         num_samples = (len(train_dataset) * sample_size) if train_dataset else 0
         self.fisher = {}
         for name,param in self.model.named_parameters():
@@ -48,13 +49,18 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
         for _ in range(int(num_samples)):
             cur_index = random.randint(0,len(train_dataset)-1)
             elem, label = train_dataset[cur_index]
+            # Labels can be an array when they are the softmax output of the target model
+            if isinstance(label,torch.Tensor):
+                class_label = torch.argmax(label).item()
+            else:
+                class_label = label
             self.optim.zero_grad()
             input = torch.unsqueeze(elem,0)
             if self.use_gpu:
                 input = input.cuda()
             output = self.model(input)
             sm = F.log_softmax(output,dim=1)
-            label_tensor = torch.tensor([label],dtype=torch.long).cuda() if self.use_gpu else torch.tensor([label],dtype=torch.long)
+            label_tensor = torch.tensor([class_label],dtype=torch.long).cuda() if self.use_gpu else torch.tensor([class_label],dtype=torch.long)
             loss = F.nll_loss(sm,label_tensor)
             loss.backward()
 

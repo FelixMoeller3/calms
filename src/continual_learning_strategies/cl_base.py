@@ -66,6 +66,11 @@ class ContinualLearningStrategy(ABC):
             # Stop updating the regularization params during training
             #self._update_reg_params(outputs,labels.size(0))
             _, preds = torch.max(outputs.data, 1)
+            # The labels might be softmax labels, therefore here the class label is computed
+            if labels.dim() > 1:
+                _, class_labels = torch.max(labels.data, 1)
+            else:
+                class_labels = labels
             loss = self.crit(outputs, labels) + self._compute_regularization_loss()
 
             loss.backward()
@@ -73,7 +78,7 @@ class ContinualLearningStrategy(ABC):
                 clip_grad.clip_grad_norm_(self.model.parameters(),self.clip_grad)
             self.optim.step()
             total_loss += loss.item()
-            correct_predictions += torch.sum(preds == labels.data).item()
+            correct_predictions += torch.sum(preds == class_labels.data).item()
         epoch_loss = total_loss / len(train_loader.dataset)
         epoch_acc = correct_predictions / len(train_loader.dataset)
         print('Training Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))

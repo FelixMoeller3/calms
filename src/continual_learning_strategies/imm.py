@@ -110,10 +110,14 @@ class IMM(ContinualLearningStrategy):
                 elem = torch.tensor(elem)
             if self.use_gpu:
                 elem = elem.cuda()
+            if isinstance(label,torch.Tensor):
+                class_label = torch.argmax(label).item()
+            else:
+                class_label = label
             self.optim.zero_grad()
             output = self.model(elem)
             sm = F.log_softmax(output,dim=1)
-            label_tensor = torch.tensor([label],dtype=torch.long).cuda() if self.use_gpu else torch.tensor([label],dtype=torch.long)
+            label_tensor = torch.tensor([class_label],dtype=torch.long).cuda() if self.use_gpu else torch.tensor([class_label],dtype=torch.long)
             loss = F.nll_loss(sm,label_tensor)
             loss.backward()
 
