@@ -24,8 +24,8 @@ configs=(
 )
 for conf in "${configs[@]}"
 do 
-    echo "Running $conf with mode AL"
-    python ./src/main.py -c $conf -m "AL"
+    echo "Running $conf with mode MS"
+    python ./src/main.py -c $conf -m "MS"
 done
 deactivate
 
