@@ -1,0 +1,46 @@
+Run completed at 2023-03-13 23:28:06 after 00h:20m:19s
+Config File: BATCH_SIZE: 128
+CYCLES: 49
+EPOCHS: 80
+RECOVER_STATE: false
+RESULTS_FILE: results_50epochs.txt
+RESULTS_FOLDER: ./experiments/Target_Model_Training/
+SAVE_STATE: false
+STATE_DIR: ./experiments/temp/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BUDGET: 1000
+    INIT_BUDGET: 1000
+    LOOKBACK: 1
+    NAME: LC
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+  DATASET: CIFAR-10
+  NAME: Resnet18
+TARGET_MODEL:
+  DATASET: MNIST
+  EPOCHS: 50
+  MODEL: Resnet18
+  OPTIMIZER:
+    LR: 0.1
+    MILESTONES:
+    - 40
+    - 180
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.001
+  TARGET_MODEL_FILE: resnet.pt
+  TARGET_MODEL_FOLDER: ./data/models/mnist/
+  TRAIN_MODEL: true
+
+Target model: Resnet18, trained on MNIST
+Model saved at: ./data/models/mnist/resnet.pt
+----------------------------------------------------------------------

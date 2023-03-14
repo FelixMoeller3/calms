@@ -220,15 +220,15 @@ def build_target_model(target_model_config: dict,batch_size:int,use_gpu:bool) ->
 
 def build_model(name: str, input_dim:tuple[int], num_classes: int, use_gpu:bool) -> nn.Module:
     if name == "Resnet18":
-        model = ResNet(BasicBlock, [2,2,2,2], num_classes)
+        model = ResNet(BasicBlock, [2,2,2,2], input_dim[0], num_classes)
     elif name == "Resnet34":
-        model = ResNet(BasicBlock, [3,4,6,3], num_classes)
+        model = ResNet(BasicBlock, [3,4,6,3], input_dim[0], num_classes)
     elif name == "Resnet50":
-        model = ResNet(Bottleneck, [3,4,6,3], num_classes)
+        model = ResNet(Bottleneck, [3,4,6,3], input_dim[0], num_classes)
     elif name == "Resnet101":
-        model = ResNet(Bottleneck, [3,4,23,3], num_classes)
+        model = ResNet(Bottleneck, [3,4,23,3], input_dim[0], num_classes)
     elif name == "Resnet152":
-        model = ResNet(Bottleneck, [3,8,36,3], num_classes)
+        model = ResNet(Bottleneck, [3,8,36,3], input_dim[0], num_classes)
     elif name == "TestConv":
         model = testConv(input_dim,num_classes)
     elif name == "ActiveThiefConv":

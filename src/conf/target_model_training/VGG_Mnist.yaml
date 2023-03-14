@@ -17,18 +17,21 @@ SUBSTITUTE_MODEL:
 BATCH_SIZE: 128 # batch size used for training
 CYCLES: 49 # number of cycles in the model stealing process
 EPOCHS: 80
+RECOVER_STATE: False
+SAVE_STATE: False
+STATE_DIR: './experiments/temp/'
 RESULTS_FOLDER: './experiments/Target_Model_Training/'
-RESULTS_FILE: 'results_200epochs.txt'
+RESULTS_FILE: 'results_50epochs.txt'
 TARGET_MODEL:
   TARGET_MODEL_FOLDER: './data/models/mnist/'
-  TARGET_MODEL_FILE: 'active_thief_l3.pt'
+  TARGET_MODEL_FILE: 'vgg.pt'
   TRAIN_MODEL: True
-  MODEL: 'ActiveThiefConv'
+  MODEL: 'VGG16'
   DATASET: 'MNIST'
-  EPOCHS : 200
+  EPOCHS : 50
   OPTIMIZER:
-    NAME: 'ADAM'
-    LR: 0.001
+    NAME: 'SGD'
+    LR: 0.1
     MOMENTUM: 0.9
     WDECAY: 0.001
-    MILESTONES: [120,180]
+    MILESTONES: [40,180]

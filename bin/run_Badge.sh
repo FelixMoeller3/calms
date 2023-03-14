@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=Run_Badge       # job name
 #SBATCH --partition=gpu_4_a100                  # queue for the resource allocation.
-#SBATCH --time=2800:00                     # wall-clock time limit  
+#SBATCH --time=2880:00                     # wall-clock time limit  
 #SBATCH --mem=10000                        # memory per node
 #SBATCH --nodes=1                          # number of nodes to be used
 #SBATCH --cpus-per-task=2                 # number of CPUs required per MPI task
@@ -17,8 +17,8 @@ source ../ba_env/bin/activate
 files=("./src/conf/basic_model_stealing/Badge_Naive.yaml")
 for file in "${files[@]}"
 do 
-    echo "Running $file with mode CL"
-    python ./src/main.py -c $file -m "CL"
+    echo "Running $file with mode AL"
+    python ./src/main.py -c $file -m "AL"
 done
 deactivate
 

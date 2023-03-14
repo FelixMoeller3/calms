@@ -1,8 +1,8 @@
 SUBSTITUTE_MODEL: 
   NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
-  DATASET: 'CIFAR-10' # Possible values: MNIST,FashionMNIST
+  DATASET: 'CIFAR-10'
   AL_METHOD: 
-    NAME: 'Badge' # Possible values: LC,BALD,Badge,CoreSet,Random
+    NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
     INIT_BUDGET: 1000
     BUDGET: 1000
     LOOKBACK: 1
@@ -16,20 +16,22 @@ SUBSTITUTE_MODEL:
       MILESTONES: [60,120]
 BATCH_SIZE: 128 # batch size used for training
 CYCLES: 49 # number of cycles in the model stealing process
-EPOCHS: 200
-USE_GPU: True # Whether or not to use GPU Acceleration
+EPOCHS: 80
 RECOVER_STATE: False
-SAVE_STATE: True
-STATE_DIR: './experiments/temp/Badge_Pure_Al_1000/'
-RESULTS_FOLDER: './experiments/AL/'
-RESULTS_FILE: 'correct_results_200epochs.txt'
+SAVE_STATE: False
+STATE_DIR: './experiments/temp/'
+RESULTS_FOLDER: './experiments/Target_Model_Training/'
+RESULTS_FILE: 'results_50epochs.txt'
 TARGET_MODEL:
-  MODEL: 'TestConv'
-  DATASET: 'FashionMNIST'
-  EPOCHS : 3
+  TARGET_MODEL_FOLDER: './data/models/mnist/'
+  TARGET_MODEL_FILE: 'resnet.pt'
+  TRAIN_MODEL: True
+  MODEL: 'Resnet18'
+  DATASET: 'MNIST'
+  EPOCHS : 50
   OPTIMIZER:
     NAME: 'SGD'
-    LR: 0.001
+    LR: 0.1
     MOMENTUM: 0.9
-    WDECAY: 0.0005
-    MILESTONES: [160,240]
+    WDECAY: 0.001
+    MILESTONES: [40,180]

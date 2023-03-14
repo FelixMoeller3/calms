@@ -97,14 +97,14 @@ class testConv(nn.Module):
         return self.final.in_features
 
 class ResNet(nn.Module):
-    def __init__(self, block, num_blocks, num_classes=10, train_deterministic=False, fixed_model_parameter_seed=None):
+    def __init__(self, block, num_blocks, input_channels:int=3,num_classes=10, train_deterministic=False, fixed_model_parameter_seed=None):
         super(ResNet, self).__init__()
         if fixed_model_parameter_seed:
             torch.manual_seed(fixed_model_parameter_seed)
 
         self.in_planes = 64
 
-        self.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
+        self.conv1 = nn.Conv2d(input_channels, 64, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(64)
         self.layer1 = self._make_layer(block, 64, num_blocks[0], stride=1)
         self.layer2 = self._make_layer(block, 128, num_blocks[1], stride=2)

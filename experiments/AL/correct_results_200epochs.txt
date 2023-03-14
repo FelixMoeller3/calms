@@ -411,3 +411,50 @@ Model: Resnet18, trained on CIFAR-10
 Active Learning Strategy: CoreSet
 Accuracy results at the end of each cycle: [0.4254, 0.5469, 0.6106, 0.6762, 0.7309, 0.793, 0.8314, 0.8538, 0.8703, 0.8814, 0.8947, 0.9056, 0.9124, 0.9226, 0.9236, 0.9282, 0.9346, 0.9359, 0.9391, 0.9381, 0.9412, 0.9431, 0.9441, 0.9447, 0.9438, 0.9449, 0.9437, 0.9407, 0.9399, 0.9342, 0.9344, 0.9356, 0.9325, 0.9296, 0.922, 0.9199, 0.9102, 0.9106, 0.8987, 0.9025, 0.8985, 0.8995, 0.9021, 0.8889, 0.8893, 0.8859, 0.887, 0.8821, 0.8781, 0.8779]
 ----------------------------------------------------------------------
+Run completed at 2023-03-13 22:39:42 after 22h:41m:29s
+Config File: BATCH_SIZE: 128
+CYCLES: 24
+EPOCHS: 200
+RESULTS_FILE: correct_results_200epochs.txt
+RESULTS_FOLDER: ./experiments/AL/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    DROPOUT_ITER: 25
+    INIT_BUDGET: 2000
+    LOOKBACK: 1
+    NAME: BALD
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  DATASET: CIFAR-10
+  NAME: Resnet18
+TARGET_MODEL:
+  DATASET: FashionMNIST
+  EPOCHS: 3
+  MODEL: TestConv
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+USE_GPU: true
+
+Model: Resnet18, trained on CIFAR-10
+Active Learning Strategy: BALD
+Accuracy results at the end of each cycle: [0.5214, 0.6954, 0.8064, 0.862, 0.8902, 0.9111, 0.9224, 0.9313, 0.9395, 0.9425, 0.9463, 0.9452, 0.9456, 0.9468, 0.9466, 0.9457, 0.9467, 0.9453, 0.9429, 0.937, 0.9357, 0.9297, 0.9278, 0.9233, 0.9211]
+----------------------------------------------------------------------
