@@ -1,6 +1,7 @@
 SUBSTITUTE_MODEL: 
   NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
-  DATASET: 'CIFAR-10'
+  DATASET: 'TinyImageNet'
+  USE_LABEL: True
   AL_METHOD: 
     NAME: 'BALD' # Possible values: LC,BALD,Badge,CoreSet,Random
     DROPOUT_ITER: 25
@@ -16,14 +17,19 @@ SUBSTITUTE_MODEL:
       WDECAY: 0.0005
       MILESTONES: [60,120]
 BATCH_SIZE: 128 # batch size used for training
-CYCLES: 49 # number of cycles in the model stealing process
-EPOCHS: 200
-USE_GPU: True # Whether or not to use GPU Acceleration
-RESULTS_FOLDER: './experiments/AL/'
-RESULTS_FILE: 'correct_results_200epochs.txt'
+CYCLES: 49  # number of cycles in the model stealing process
+EPOCHS: 80
+RECOVER_STATE: False
+SAVE_STATE: False
+STATE_DIR: './experiments/temp/'
+RESULTS_FOLDER: './experiments/ModelStealing/'
+RESULTS_FILE: 'Test_results.txt'
 TARGET_MODEL:
-  MODEL: 'TestConv'
-  DATASET: 'FashionMNIST'
+  TARGET_MODEL_FOLDER: './data/models/cifar10/'
+  TARGET_MODEL_FILE: 'resnet.pt'
+  TRAIN_MODEL: False
+  MODEL: 'Resnet18'
+  DATASET: 'CIFAR-10'
   EPOCHS : 3
   OPTIMIZER:
     NAME: 'SGD'
