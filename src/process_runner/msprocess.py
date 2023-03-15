@@ -44,12 +44,17 @@ class ModelStealingProcess(BaseProcess):
         loaders_dict = {'train': None, 'val': val_loader}
         if start_cycle == 0:
             unlabeled_set = [i for i in range(len(train_set))]
-            labeled_set = []
+            labeled_set = [i for i in range(len(train_set))]
             val_accuracies = []
             agreements = []
-            for i in range(self.al_strat.INIT_BUDGET):
-                labeled_set.append(random.randint(0,len(train_set)-1))
+            random.shuffle(labeled_set)
+            #labeled_set = labeled_set[:self.al_strat.INIT_BUDGET]
+            labeled_set = [i for i in range(0,1000)]
             self._add_targets(train_set,labeled_set,use_label)
+            print(train_set.targets[0])
+            print(train_set.targets[2])
+            print(train_set[0])
+            print(train_set[2])
             self._train_cycle(train_set,labeled_set,loaders_dict,batch_size,num_epochs,val_accuracies)
             agreements.append(self._compute_agreement(loaders_dict['val']))
             unlabeled_set = [i for i in unlabeled_set if i not in labeled_set]
@@ -80,7 +85,10 @@ class ModelStealingProcess(BaseProcess):
             if use_label:
                 for index in labels_to_add:
                     cur_elem = train_set[index][0].cuda() if self.use_gpu else train_set[index][0]
-                    train_set.targets[index] = torch.max(self.target_model(torch.unsqueeze(cur_elem,0)),1)[1]
+                    a,b = torch.max(self.target_model(torch.unsqueeze(cur_elem,0)),1)
+                    if b.item() > 9:
+                        print("Error")
+                    train_set.targets[index] = b.item()
             else:
                 for index in labels_to_add:
                     cur_elem = train_set[index][0].cuda() if self.use_gpu else train_set[index][0]
