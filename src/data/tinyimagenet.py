@@ -18,8 +18,8 @@
 import os
 
 import shutil
-from typing import Callable, Optional
-
+from typing import Callable, Optional, Tuple
+import torch
 from torchvision.datasets import ImageFolder
 from torchvision.datasets.utils import verify_str_arg
 from torchvision.datasets.utils import download_and_extract_archive
@@ -105,3 +105,6 @@ class TinyImageNet(ImageFolder):
         assert 'val' in self.splits
         normalize_tin_val_folder_structure(
             os.path.join(self.dataset_folder, 'val'))
+        
+    def __getitem__(self, index: int) -> Tuple[torch.Tensor, int]:
+        return super().__getitem__(index)[0],self.targets[index]

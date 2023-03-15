@@ -41,7 +41,7 @@ class MAS(ContinualLearningStrategy):
         # The number of samples from the current task that is learned that have been classified until now
         self.n_samples_cur = 0
         self.regularization_params_cur = {}
-        
+        self.n_tasks = 0
         self.prev_params = {}
         self._init_regularization_params()
 
@@ -64,6 +64,7 @@ class MAS(ContinualLearningStrategy):
         self._save_prev_params()
 
     def _after_train(self,train_set:Dataset=None) -> None:
+        self._update_weight()
         self._update_regularization_params()
 
     def _save_prev_params(self) -> None:
@@ -131,3 +132,10 @@ class MAS(ContinualLearningStrategy):
 
     def _after_pred_val(self,outputs:torch.Tensor,batch_size:int) -> None:
         self._update_reg_params(outputs,batch_size)
+
+    def _update_weight(self) -> None:
+        self.n_tasks += 1
+        if self.n_tasks % 5 == 0:
+            self.n_tasks = 0
+            prev_weight = self.weight.item()
+            self.weight = torch.tensor(2*prev_weight).cuda() if self.use_gpu else torch.tensor(2*prev_weight)

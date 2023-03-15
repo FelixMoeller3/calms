@@ -41,8 +41,9 @@ def run_config(config_path: str) -> ModelStealingProcess:
     check_attribute_presence(yaml_cfg,CONFIG,"config")
     batch_size = yaml_cfg["BATCH_SIZE"]
     use_gpu = detect_gpu()
-    target_model,num_classes = build_target_model(yaml_cfg["TARGET_MODEL"],batch_size,use_gpu)
-    al_method,cl_method,train_set,val_set = build_substitute_model(yaml_cfg["SUBSTITUTE_MODEL"],batch_size,use_gpu,num_classes)
+    target_model,num_classes,num_channels = build_target_model(yaml_cfg["TARGET_MODEL"],batch_size,use_gpu)
+    val_set = yaml_cfg["TARGET_MODEL"]["DATASET"]
+    al_method,cl_method,train_set,val_set = build_substitute_model(yaml_cfg["SUBSTITUTE_MODEL"],batch_size,use_gpu,num_classes,val_set,num_channels)
     prev_state = {}
     if yaml_cfg["RECOVER_STATE"]:
         with open(os.path.join(yaml_cfg["STATE_DIR"],"latest_state.pkl"),'rb') as f:
@@ -169,7 +170,7 @@ def run_target_model_config(config_path: str) -> None:
     batch_size = yaml_cfg["BATCH_SIZE"]
     use_gpu = detect_gpu()
     print(f"Testing target model: {yaml_cfg['TARGET_MODEL']['MODEL']}")
-    model = build_target_model(yaml_cfg["TARGET_MODEL"],batch_size,use_gpu)
+    model,_,_ = build_target_model(yaml_cfg["TARGET_MODEL"],batch_size,use_gpu)
     os.makedirs(yaml_cfg["TARGET_MODEL"]["TARGET_MODEL_FOLDER"],exist_ok=True)
     torch.save(model, os.path.join(yaml_cfg["TARGET_MODEL"]["TARGET_MODEL_FOLDER"],yaml_cfg["TARGET_MODEL"]["TARGET_MODEL_FILE"]))
     duration = time.time() - start
@@ -203,7 +204,7 @@ def check_attribute_presence(config: dict, attributes: list[str],config_name: st
         if elem not in config:
             raise AttributeError(f"{elem} must to be specified in {config_name}")
 
-def build_target_model(target_model_config: dict,batch_size:int,use_gpu:bool) -> tuple[nn.Module,int]:
+def build_target_model(target_model_config: dict,batch_size:int,use_gpu:bool) -> tuple[nn.Module,int,int]:
     check_attribute_presence(target_model_config,TARGET_MODEL_CONFIG,"target model config")
     train_set,input_dim,num_classes = load_dataset(target_model_config['DATASET'],True)
     if not target_model_config["TRAIN_MODEL"]:
@@ -217,7 +218,7 @@ def build_target_model(target_model_config: dict,batch_size:int,use_gpu:bool) ->
     val_loader = DataLoader(val_set,batch_size,True)
     optimizer,scheduler = build_optimizer(target_model_config["OPTIMIZER"],target_model)
     train_model(target_model,train_loader,val_loader,optimizer,scheduler,target_model_config["EPOCHS"],use_gpu)
-    return target_model,num_classes
+    return target_model,num_classes,input_dim[0]
 
 def build_model(name: str, input_dim:tuple[int], num_classes: int, use_gpu:bool) -> nn.Module:
     if name == "Resnet18":
@@ -242,19 +243,27 @@ def build_model(name: str, input_dim:tuple[int], num_classes: int, use_gpu:bool)
         model.cuda()
     return model
 
-def load_dataset(name: str,train:bool) -> tuple[Dataset,torch.Size,int]:
+def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[Dataset,torch.Size,int]:
     '''
         Loads a dataset into memory and returns it along with the dimension of a single instance
         and the number of target classes the dataset has.
     '''
+    channel_change_greyscale = [] if num_channels is None or num_channels == 1 else [transforms.Grayscale(num_channels)]
+    channel_change_color = [] if num_channels is None or num_channels == 3 else [transforms.Grayscale(num_channels)]
     if name == "MNIST":
-        dataset = datasets.MNIST("./data",train,transform=transforms.Compose([
+        dataset = datasets.MNIST("./data",train,transform=transforms.Compose(
+                channel_change_greyscale + 
+                [
                        transforms.ToTensor(),
+                       transforms.Resize(32),
                        transforms.Normalize((0.1307,), (0.3081,))
                    ]),download=True)
     elif name == "FashionMNIST":
-        dataset = datasets.FashionMNIST("./data",train,transform=transforms.Compose([
-                       transforms.ToTensor()
+        dataset = datasets.FashionMNIST("./data",train,transform=transforms.Compose(
+                channel_change_greyscale + 
+                [
+                       transforms.ToTensor(),
+                       transforms.Resize(32)
                    ]),download=True)
     elif name == "CIFAR-10":
         augmentation = [
@@ -265,7 +274,8 @@ def load_dataset(name: str,train:bool) -> tuple[Dataset,torch.Size,int]:
             transforms.ToTensor(),
             transforms.Normalize([0.4914, 0.4822, 0.4465], [0.2023, 0.1994, 0.2010])
         ]
-        transform = augmentation + normalization if train else normalization
+        transform = channel_change_color
+        transform += augmentation + normalization if train else normalization
         dataset = datasets.CIFAR10("./data",train,transform=transforms.Compose(transform),download=True)
     elif name == "CIFAR-100":
         augmentation = [
@@ -276,15 +286,17 @@ def load_dataset(name: str,train:bool) -> tuple[Dataset,torch.Size,int]:
             transforms.ToTensor(),
             transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761))
         ]
+        transform = channel_change_color
         transform = augmentation + normalization if train else normalization
         dataset = datasets.CIFAR100("./data",train,transform=transforms.Compose(transform),download=True)
     elif name == "TinyImageNet":
         augmentation = [
-            transforms.RandomCrop(64,padding=8),
+            transforms.RandomCrop(32,padding=4),
             transforms.RandomHorizontalFlip(),
         ]
         normalization = [
             transforms.ToTensor(),
+            transforms.Resize(32),
             transforms.Normalize(mean=[0.5, 0.5, 0.5], 
                             std=[0.5, 0.5, 0.5])
         ]
@@ -350,13 +362,16 @@ def run_val_epoch(model: nn.Module, val_loader: DataLoader, criterion: nn.CrossE
     epoch_acc = correct_predictions / len(val_loader.dataset)
     print('Validation Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
 
-def build_substitute_model(config: dict,batch_size:int,use_gpu:bool,num_classes:Optional[int]=None) -> tuple[Strategy,ContinualLearningStrategy,Dataset,Dataset]:
+def build_substitute_model(config: dict,batch_size:int,use_gpu:bool,num_classes:Optional[int]=None,val_set:Optional[str]=None,num_channels:Optional[str]=None) -> tuple[Strategy,ContinualLearningStrategy,Dataset,Dataset]:
     check_attribute_presence(config,SUBSTITUTE_MODEL_CONFIG,"substitute model config")
-    train_set,input_dim,num_classes_new = load_dataset(config["DATASET"],True)
+    train_set,input_dim,num_classes_new = load_dataset(config["DATASET"],True,num_channels)
     if num_classes is None:
         num_classes = num_classes_new
     substitute_model = build_model(config["NAME"],input_dim,num_classes,use_gpu)
-    val_set, _, _ = load_dataset(config["DATASET"],False)
+    if val_set is not None:
+        val_set, _, _ = load_dataset(val_set,False)
+    else:
+        val_set, _, _ = load_dataset(config["DATASET"],False,num_channels)
     al_strategy = build_al_strategy(config["AL_METHOD"],substitute_model,train_set,batch_size,num_classes,use_gpu)
     cl_strategy = build_cl_strategy(config["CL_METHOD"],substitute_model,use_gpu)
     return al_strategy,cl_strategy,train_set,val_set
