@@ -41,7 +41,7 @@ def run_config(config_path: str) -> ModelStealingProcess:
     check_attribute_presence(yaml_cfg,CONFIG,"config")
     batch_size = yaml_cfg["BATCH_SIZE"]
     use_gpu = detect_gpu()
-    target_model,num_classes,num_channels = build_target_model(yaml_cfg["TARGET_MODEL"],batch_size,use_gpu)
+    target_model,num_classes,num_channels,_ = build_target_model(yaml_cfg["TARGET_MODEL"],batch_size,use_gpu)
     val_set = yaml_cfg["TARGET_MODEL"]["DATASET"]
     al_method,cl_method,train_set,val_set = build_substitute_model(yaml_cfg["SUBSTITUTE_MODEL"],batch_size,use_gpu,num_classes,val_set,num_channels)
     prev_state = {}
@@ -133,7 +133,7 @@ def run_target_model_config(config_path: str) -> None:
     batch_size = yaml_cfg["BATCH_SIZE"]
     use_gpu = detect_gpu()
     print(f"Testing target model: {yaml_cfg['TARGET_MODEL']['MODEL']}")
-    model,_,_ = build_target_model(yaml_cfg["TARGET_MODEL"],batch_size,use_gpu)
+    model,_,_,val_acc = build_target_model(yaml_cfg["TARGET_MODEL"],batch_size,use_gpu)
     os.makedirs(yaml_cfg["TARGET_MODEL"]["TARGET_MODEL_FOLDER"],exist_ok=True)
     torch.save(model, os.path.join(yaml_cfg["TARGET_MODEL"]["TARGET_MODEL_FOLDER"],yaml_cfg["TARGET_MODEL"]["TARGET_MODEL_FILE"]))
     duration = time.time() - start
@@ -146,6 +146,7 @@ def run_target_model_config(config_path: str) -> None:
         f.write(f'Run completed at {datetime.today().strftime("%Y-%m-%d %H:%M:%S")} after {time_string}\n'
                 f'Config File: {yaml.dump(yaml_cfg)}\n'
                 f'Target model: {yaml_cfg["TARGET_MODEL"]["MODEL"]}, trained on {yaml_cfg["TARGET_MODEL"]["DATASET"]}\n'
+                f'Validation accuracy of the model: {val_acc:.4f}\n'
                 f'Model saved at: {yaml_cfg["TARGET_MODEL"]["TARGET_MODEL_FOLDER"] + yaml_cfg["TARGET_MODEL"]["TARGET_MODEL_FILE"]}\n'
                 f'{"-"* 70}'+ "\n"
             )
@@ -167,21 +168,22 @@ def check_attribute_presence(config: dict, attributes: list[str],config_name: st
         if elem not in config:
             raise AttributeError(f"{elem} must to be specified in {config_name}")
 
-def build_target_model(target_model_config: dict,batch_size:int,use_gpu:bool) -> tuple[nn.Module,int,int]:
+def build_target_model(target_model_config: dict,batch_size:int,use_gpu:bool) -> tuple[nn.Module,int,int,float]:
     check_attribute_presence(target_model_config,TARGET_MODEL_CONFIG,"target model config")
     train_set,input_dim,num_classes = load_dataset(target_model_config['DATASET'],True)
     if not target_model_config["TRAIN_MODEL"]:
         print(f'Loading model located at {target_model_config["TARGET_MODEL_FOLDER"] + target_model_config["TARGET_MODEL_FILE"]}')
         target_model = torch.load(target_model_config["TARGET_MODEL_FOLDER"] + target_model_config["TARGET_MODEL_FILE"])
-        return target_model,num_classes
+        # input_dim[0] contains the number of channels of the image
+        return target_model,num_classes,input_dim[0],0.0
     print("Training target model from scratch")
     target_model = build_model(target_model_config["MODEL"],input_dim,num_classes,use_gpu)
     train_loader = DataLoader(train_set,batch_size,True)
     val_set,_,_ = load_dataset(target_model_config['DATASET'],False)
     val_loader = DataLoader(val_set,batch_size,True)
     optimizer,scheduler = build_optimizer(target_model_config["OPTIMIZER"],target_model)
-    train_model(target_model,train_loader,val_loader,optimizer,scheduler,target_model_config["EPOCHS"],use_gpu)
-    return target_model,num_classes,input_dim[0]
+    val_acc = train_model(target_model,train_loader,val_loader,optimizer,scheduler,target_model_config["EPOCHS"],use_gpu)
+    return target_model,num_classes,input_dim[0],val_acc
 
 def build_model(name: str, input_dim:tuple[int], num_classes: int, use_gpu:bool) -> nn.Module:
     if name == "Resnet18":
@@ -284,7 +286,7 @@ def build_optimizer(config: dict,model:nn.Module) -> tuple[torch.optim.Optimizer
         raise AttributeError(f"Optimizer unknown. Got {config['NAME']}, but expected one of {','.join(OPTIMIZERS)}")
     return optimizer,scheduler
 
-def train_model(model: nn.Module,train_loader:DataLoader,val_loader:DataLoader,optimizer: torch.optim.Optimizer,scheduler:lr_scheduler._LRScheduler,num_epochs:int,use_gpu:bool) -> None:
+def train_model(model: nn.Module,train_loader:DataLoader,val_loader:DataLoader,optimizer: torch.optim.Optimizer,scheduler:lr_scheduler._LRScheduler,num_epochs:int,use_gpu:bool) -> float:
     criterion = nn.CrossEntropyLoss()
     print("Training model...\n")
     for epoch in range(num_epochs):
@@ -307,10 +309,11 @@ def train_model(model: nn.Module,train_loader:DataLoader,val_loader:DataLoader,o
         if scheduler:
             scheduler.step()
         print('Training Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
-        run_val_epoch(model,val_loader,criterion,use_gpu)
+        val_acc = run_val_epoch(model,val_loader,criterion,use_gpu)
     print("Training completed\n")
+    return val_acc
 
-def run_val_epoch(model: nn.Module, val_loader: DataLoader, criterion: nn.CrossEntropyLoss,use_gpu:bool) -> None:
+def run_val_epoch(model: nn.Module, val_loader: DataLoader, criterion: nn.CrossEntropyLoss,use_gpu:bool) -> float:
     total_loss = 0.0
     correct_predictions = 0.0
     for data in tqdm(val_loader,desc=f"Computing validation"):
@@ -325,6 +328,7 @@ def run_val_epoch(model: nn.Module, val_loader: DataLoader, criterion: nn.CrossE
     epoch_loss = total_loss / len(val_loader.dataset)
     epoch_acc = correct_predictions / len(val_loader.dataset)
     print('Validation Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
+    return epoch_acc
 
 def build_substitute_model(config: dict,batch_size:int,use_gpu:bool,num_classes:Optional[int]=None,val_set:Optional[str]=None,num_channels:Optional[str]=None) -> tuple[Strategy,ContinualLearningStrategy,Dataset,Dataset]:
     check_attribute_presence(config,SUBSTITUTE_MODEL_CONFIG,"substitute model config")
