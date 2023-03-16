@@ -10,13 +10,11 @@ parser.add_argument("-c","--config",type=str,help="The location of the config fi
 parser.add_argument("-m","--mode",type=str,help="Which mode shall be run. Can be one of [AL,CL,MS,TR]" \
     "for active learning, continual and active learning, model stealing and target model training respectively")
 args = parser.parse_args()
-if args.mode == "AL":
-    config.run_al_config(args.config)
-elif args.mode == "CL":
+if args.mode == "CL":
     config.run_cl_al_config(args.config)
 elif args.mode == "MS":
     config.run_config(args.config)
 elif args.mode == "TR":
     config.run_target_model_config(args.config)
 else:
-    raise ValueError(f"Unknown run mode: {args.mode}. Mode must be one of AL,CL,MS,TR")
+    raise ValueError(f"Unknown run mode: {args.mode}. Mode must be one of CL,MS,TR")

@@ -1,6 +1,8 @@
 SUBSTITUTE_MODEL: 
   NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
   DATASET: 'TinyImageNet'
+  CONTINUAL: False
+  USE_LABEL: True
   AL_METHOD: 
     NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
     INIT_BUDGET: 4000
@@ -18,17 +20,16 @@ SUBSTITUTE_MODEL:
 BATCH_SIZE: 128 # batch size used for training
 CYCLES: 12 # number of cycles in the model stealing process
 EPOCHS: 150
-USE_GPU: True # Whether or not to use GPU Acceleration
 RECOVER_STATE: False
 SAVE_STATE: False
 STATE_DIR: './experiments/temp/'
 RESULTS_FOLDER: './experiments/Model_Stealing/'
 RESULTS_FILE: 'results_150epochs.txt'
 TARGET_MODEL:
-  MODEL: 'Resnet18'
   TARGET_MODEL_FOLDER: './data/models/cifar10/'
   TARGET_MODEL_FILE: 'resnet.pt'
   TRAIN_MODEL: False
+  MODEL: 'Resnet18'
   DATASET: 'CIFAR-10'
   EPOCHS : 3
   OPTIMIZER:

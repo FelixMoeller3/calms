@@ -1,6 +1,7 @@
 SUBSTITUTE_MODEL: 
   NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
-  DATASET: 'TinyImageNet'
+  DATASET: 'MNIST'
+  CONTINUAL: False
   USE_LABEL: True
   AL_METHOD: 
     NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random

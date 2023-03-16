@@ -1,10 +1,13 @@
 SUBSTITUTE_MODEL: 
   NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
   DATASET: 'CIFAR-10' # Possible values: MNIST,FashionMNIST
+  CONTINUAL: False
+  USE_LABEL: True
   AL_METHOD: 
     NAME: 'Badge' # Possible values: LC,BALD,Badge,CoreSet,Random
     INIT_BUDGET: 1000
     BUDGET: 1000
+    LOOKBACK: 1
   CL_METHOD: 
     NAME: 'Alasso' # Possible values : Alasso,EWC,MAS,IMM,Naive
     WEIGHT: 0.01
@@ -20,10 +23,15 @@ SUBSTITUTE_MODEL:
 BATCH_SIZE: 128 # batch size used for training
 CYCLES: 10 # number of cycles in the model stealing process
 EPOCHS: 5
-USE_GPU: True # Whether or not to use GPU Acceleration
+RECOVER_STATE: False
+SAVE_STATE: False
+STATE_DIR: ''
 RESULTS_FOLDER: './experiments/CL_AL/'
 RESULTS_FILE: 'results_10epochs.txt'
 TARGET_MODEL:
+  TARGET_MODEL_FOLDER: './data/models/cifar10/'
+  TARGET_MODEL_FILE: 'resnet.pt'
+  TRAIN_MODEL: False
   MODEL: 'TestConv'
   DATASET: 'FashionMNIST'
   EPOCHS : 3

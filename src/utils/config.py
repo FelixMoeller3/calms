@@ -4,7 +4,7 @@ from active_learning_strategies.strategy import Strategy
 import active_learning_strategies as al_strats
 import continual_learning_strategies as cl_strats
 from continual_learning_strategies.cl_base import ContinualLearningStrategy
-from process_runner import ModelStealingProcess,ClProcess,AlProcess
+from process_runner import ModelStealingProcess,ClAlProcess
 import torch.nn as nn
 import torch.optim.lr_scheduler as lr_scheduler
 from torch.utils.data import DataLoader,Dataset
@@ -19,7 +19,7 @@ from data import TinyImageNet
 import pickle
 
 CONFIG = ["SUBSTITUTE_MODEL", "BATCH_SIZE", "CYCLES", "RESULTS_FILE", "RESULTS_FILE", "TARGET_MODEL", "EPOCHS","RECOVER_STATE","SAVE_STATE","STATE_DIR"]
-SUBSTITUTE_MODEL_CONFIG = ["NAME", "DATASET", "AL_METHOD", "CL_METHOD","USE_LABEL"]
+SUBSTITUTE_MODEL_CONFIG = ["NAME", "DATASET", "AL_METHOD", "CL_METHOD","USE_LABEL","CONTINUAL"]
 AL_CONFIG = ["NAME", "INIT_BUDGET", "BUDGET", "LOOKBACK"]
 AL_METHODS = ['LC','BALD','Badge','CoreSet', 'Random']
 CL_CONFIG = ["NAME", "OPTIMIZER"]
@@ -50,13 +50,16 @@ def run_config(config_path: str) -> ModelStealingProcess:
             prev_state = pickle.load(f)
         cl_method.model.load_state_dict(torch.load(os.path.join(yaml_cfg["STATE_DIR"],"model.pth")))
     cycles = yaml_cfg["CYCLES"]
+    use_label = yaml_cfg["SUBSTITUTE_MODEL"]["USE_LABEL"]
+    num_epochs = yaml_cfg["EPOCHS"]
     print(f'Model stealing with strategies {yaml_cfg["SUBSTITUTE_MODEL"]["AL_METHOD"]["NAME"]} and {yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["NAME"]}')
     state_dir = None
     if yaml_cfg["SAVE_STATE"]:
         state_dir = yaml_cfg["STATE_DIR"]
-    ms_process = ModelStealingProcess(target_model,al_method,cl_method,state_dir,use_gpu)
-    num_epochs = yaml_cfg["EPOCHS"]
-    accuracies,agreements = ms_process.steal_model(train_set,val_set,batch_size,cycles,num_epochs,yaml_cfg["SUBSTITUTE_MODEL"]["USE_LABEL"],**prev_state)
+    ms_process = ModelStealingProcess(target_model,al_method,cl_method,train_set,val_set,batch_size,cycles,num_epochs,
+                                      yaml_cfg["SUBSTITUTE_MODEL"]["CONTINUAL"],build_optimizer,yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["OPTIMIZER"],
+                                      use_label,state_dir,use_gpu)
+    accuracies,agreements = ms_process.steal_model(**prev_state)
     duration = time.time() - start
     hours = int(duration)//3600
     minutes = (int(duration) % 3600) // 60
@@ -93,14 +96,14 @@ def run_cl_al_config(config_path: str) -> ModelStealingProcess:
             prev_state = pickle.load(f)
         cl_method.model.load_state_dict(torch.load(os.path.join(yaml_cfg["STATE_DIR"],"model.pth")))
     cycles = yaml_cfg["CYCLES"]
+    num_epochs = yaml_cfg["EPOCHS"]
+    is_continual = yaml_cfg["SUBSTITUTE_MODEL"]["CONTINUAL"]
     state_dir = None
     if yaml_cfg["SAVE_STATE"]:
         state_dir = yaml_cfg["STATE_DIR"]
-    process_runner = ClProcess(al_method,cl_method,state_dir)
-    num_epochs = yaml_cfg["EPOCHS"]
-    print(f'Running continual active learning with strategies {yaml_cfg["SUBSTITUTE_MODEL"]["AL_METHOD"]["NAME"]} and {yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["NAME"]}')
-    accuracies = process_runner.continual_learning(train_set,val_set,batch_size,cycles,num_epochs,
-                                                           yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["OPTIMIZER"],build_optimizer,**prev_state)
+    process_runner = ClAlProcess(al_method,cl_method,train_set,val_set,batch_size,cycles,num_epochs,is_continual,yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["OPTIMIZER"],build_optimizer,state_dir)
+    print(f'Running{"continual" if is_continual else ""} active learning with strategies {yaml_cfg["SUBSTITUTE_MODEL"]["AL_METHOD"]["NAME"]} and {yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["NAME"]}')
+    accuracies = process_runner.continual_learning(**prev_state)
     duration = time.time() - start
     hours = int(duration)//3600
     minutes = (int(duration) % 3600) // 60
@@ -115,46 +118,6 @@ def run_cl_al_config(config_path: str) -> ModelStealingProcess:
                 f'Active Learning Strategy: {yaml_cfg["SUBSTITUTE_MODEL"]["AL_METHOD"]["NAME"]}\n'
                 f'Accuracy results at the end of each cycle: {accuracies}\n'
                 #f'Class distribution for each query: {",".join([str(dist) for dist in query_dists])}\n'
-                f'{"-"* 70}'+ "\n"
-            )
-
-def run_al_config(config_path: str) -> None:
-    '''
-        Parses and runs the config file located at 'config_path'. 
-        The expected structure can be seen in the 'Example_conf.yaml' file in the 'conf' folder.
-    '''
-    start = time.time()
-    with open(config_path,"r") as f:
-        yaml_cfg = yaml.safe_load(f)
-    check_attribute_presence(yaml_cfg,CONFIG,"config")
-    batch_size = yaml_cfg["BATCH_SIZE"]
-    use_gpu = detect_gpu()
-    al_method,cl_method,train_set,val_set = build_substitute_model(yaml_cfg["SUBSTITUTE_MODEL"],batch_size,use_gpu)
-    cycles = yaml_cfg["CYCLES"]
-    prev_state = {}
-    if yaml_cfg["RECOVER_STATE"]:
-        with open(os.path.join(yaml_cfg["STATE_DIR"],"latest_state.pkl"),'rb') as f:
-            prev_state = pickle.load(f)
-        cl_method.model.load_state_dict(torch.load(os.path.join(yaml_cfg["STATE_DIR"],"model.pth")))
-    state_dir = None
-    if yaml_cfg["SAVE_STATE"]:
-        state_dir = yaml_cfg["STATE_DIR"]
-    ms_process = AlProcess(al_method,cl_method,state_dir)
-    num_epochs = yaml_cfg["EPOCHS"]
-    print(f'Running active learning with strategy {yaml_cfg["SUBSTITUTE_MODEL"]["AL_METHOD"]["NAME"]}')
-    accuracies = ms_process.active_learning(train_set,val_set,batch_size,cycles,num_epochs,yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["OPTIMIZER"],build_optimizer,**prev_state)
-    duration = time.time() - start
-    hours = int(duration)//3600
-    minutes = (int(duration) % 3600) // 60
-    seconds = int(duration) % 60
-    time_string = "{:02}h:{:02}m:{:02}s".format(hours,minutes,seconds)
-    os.makedirs(yaml_cfg["RESULTS_FOLDER"],exist_ok=True)
-    with open(os.path.join(yaml_cfg["RESULTS_FOLDER"], yaml_cfg["RESULTS_FILE"]),'a+') as f:
-        f.write(f'Run completed at {datetime.today().strftime("%Y-%m-%d %H:%M:%S")} after {time_string}\n'
-                f'Config File: {yaml.dump(yaml_cfg)}\n'
-                f'Model: {yaml_cfg["SUBSTITUTE_MODEL"]["NAME"]}, trained on {yaml_cfg["SUBSTITUTE_MODEL"]["DATASET"]}\n'
-                f'Active Learning Strategy: {yaml_cfg["SUBSTITUTE_MODEL"]["AL_METHOD"]["NAME"]}\n'
-                f'Accuracy results at the end of each cycle: {accuracies}\n'
                 f'{"-"* 70}'+ "\n"
             )
 
@@ -304,6 +267,7 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
         dataset = TinyImageNet("./data",train,transform=transforms.Compose(transform),download=True)
     else:
         raise AttributeError(f"Dataset unknown. Got {name}, but expected one of {','.join(DATASET_NAMES)}")
+    print(f"Loaded {name} as {'training' if train else 'validation'} set")
     return dataset,dataset[0][0].shape,len(dataset.class_to_idx)
 
 def build_optimizer(config: dict,model:nn.Module) -> tuple[torch.optim.Optimizer,lr_scheduler.MultiStepLR]:
