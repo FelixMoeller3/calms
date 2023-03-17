@@ -57,7 +57,7 @@ def run_config(config_path: str) -> ModelStealingProcess:
     if yaml_cfg["SAVE_STATE"]:
         state_dir = yaml_cfg["STATE_DIR"]
     ms_process = ModelStealingProcess(target_model,al_method,cl_method,train_set,val_set,batch_size,cycles,num_epochs,
-                                      yaml_cfg["SUBSTITUTE_MODEL"]["CONTINUAL"],build_optimizer,yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["OPTIMIZER"],
+                                      yaml_cfg["SUBSTITUTE_MODEL"]["CONTINUAL"],num_classes,build_optimizer,yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["OPTIMIZER"],
                                       use_label,state_dir,use_gpu)
     accuracies,agreements = ms_process.steal_model(**prev_state)
     duration = time.time() - start
@@ -132,7 +132,7 @@ def run_target_model_config(config_path: str) -> None:
     check_attribute_presence(yaml_cfg,CONFIG,"config")
     batch_size = yaml_cfg["BATCH_SIZE"]
     use_gpu = detect_gpu()
-    print(f"Testing target model: {yaml_cfg['TARGET_MODEL']['MODEL']}")
+    print(f"Training target model: {yaml_cfg['TARGET_MODEL']['MODEL']}")
     model,_,_,val_acc = build_target_model(yaml_cfg["TARGET_MODEL"],batch_size,use_gpu)
     os.makedirs(yaml_cfg["TARGET_MODEL"]["TARGET_MODEL_FOLDER"],exist_ok=True)
     torch.save(model, os.path.join(yaml_cfg["TARGET_MODEL"]["TARGET_MODEL_FOLDER"],yaml_cfg["TARGET_MODEL"]["TARGET_MODEL_FILE"]))
@@ -228,7 +228,8 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
                 channel_change_greyscale + 
                 [
                        transforms.ToTensor(),
-                       transforms.Resize(32)
+                       transforms.Resize(32),
+                       transforms.Normalize((0.1307,), (0.3081,))
                    ]),download=True)
     elif name == "CIFAR-10":
         augmentation = [
@@ -262,8 +263,8 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
         normalization = [
             transforms.ToTensor(),
             transforms.Resize(32),
-            transforms.Normalize(mean=[0.5, 0.5, 0.5], 
-                            std=[0.5, 0.5, 0.5])
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], 
+                            std=[0.229, 0.224, 0.225])
         ]
         transform = augmentation + normalization if train else normalization
         dataset = TinyImageNet("./data",train,transform=transforms.Compose(transform),download=True)

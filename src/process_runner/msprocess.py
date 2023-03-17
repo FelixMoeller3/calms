@@ -11,7 +11,7 @@ from data import Softmax_label_set
 class ModelStealingProcess(BaseProcess):
 
     def __init__(self,targetModel:nn.Module,activeLearningStrategy: Strategy,continualLearningStrategy: ContinualLearningStrategy,train_set: Dataset,
-                 val_set: Dataset,batch_size:int,num_cycles:int,num_epochs:int,continual,optimizer_builder: Callable,optimizer_config:dict,
+            val_set: Dataset,batch_size:int,num_cycles:int,num_epochs:int,continual:bool,num_classes:int,optimizer_builder: Callable,optimizer_config:dict,
                  use_label:bool=True,state_dir:str=None,use_gpu:bool=False):
         '''
             :param targetModel: the target model in the model stealing process (i.e. the one that will be stolen). Needs to be pretrained!!
@@ -28,6 +28,7 @@ class ModelStealingProcess(BaseProcess):
         super(ModelStealingProcess,self).__init__(activeLearningStrategy,continualLearningStrategy,train_set,val_set,batch_size,num_cycles,num_epochs,
                                                   continual,optimizer_builder,optimizer_config,use_gpu,state_dir)
         self.target_model = targetModel
+        self.num_classes = num_classes
         self.substitute_model = self.cl_strat.model
         self.use_label = use_label
 
@@ -40,7 +41,7 @@ class ModelStealingProcess(BaseProcess):
         # set all labels to -1 to ensure no labels are given before
         #train_set.targets[train_set.targets > -1] = -1
         if not self.use_label:
-            self.train_set = Softmax_label_set(self.train_set)
+            self.train_set = Softmax_label_set(self.train_set,self.num_classes)
         val_loader = DataLoader(self.val_set,self.batch_size,shuffle=True)
         loaders_dict = {'train': None, 'val': val_loader}
         if start_cycle == 0:
@@ -72,7 +73,7 @@ class ModelStealingProcess(BaseProcess):
                     self.train_set.targets[index] = torch.max(self.target_model(torch.unsqueeze(cur_elem,0)),1)[1].item()
             else:
                 for index in labels_to_add:
-                    cur_elem = self.train_set[index][0].cuda() if self.use_gpu else self.dataset[index][0]
+                    cur_elem = self.train_set[index][0].cuda() if self.use_gpu else self.train_set[index][0]
                     current_example = torch.unsqueeze(cur_elem,0)
                     output = torch.squeeze(self.target_model(current_example))
                     softmax_res = torch.nn.functional.softmax(output,dim=0)

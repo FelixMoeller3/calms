@@ -550,3 +550,53 @@ Model: Resnet18, trained on CIFAR-10
 Active Learning Strategy: BALD
 Accuracy results at the end of each cycle: [0.4306, 0.5629, 0.6569, 0.7242, 0.7727, 0.8258, 0.8565, 0.8756, 0.8923, 0.9057, 0.9113, 0.9212, 0.926, 0.9324, 0.9356, 0.9403, 0.9403, 0.9457, 0.945, 0.9457, 0.9428, 0.946, 0.9473, 0.9483, 0.9415, 0.9429, 0.9405, 0.9408, 0.9409, 0.9369, 0.9336, 0.9279, 0.9238, 0.9203, 0.9179, 0.9142, 0.9084, 0.9079, 0.8965, 0.8972, 0.8929, 0.8874, 0.8872, 0.883, 0.8808, 0.8795, 0.875, 0.8751, 0.8764, 0.8748]
 ----------------------------------------------------------------------
+Run completed at 2023-03-16 13:45:26 after 04h:50m:44s
+Config File: BATCH_SIZE: 128
+CYCLES: 49
+EPOCHS: 200
+RECOVER_STATE: true
+RESULTS_FILE: correct_results_200epochs.txt
+RESULTS_FOLDER: ./experiments/AL/
+SAVE_STATE: true
+STATE_DIR: ./experiments/temp/Badge_Pure_Al_1000/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 1000
+    INIT_BUDGET: 1000
+    LOOKBACK: 1
+    NAME: Badge
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  DATASET: CIFAR-10
+  NAME: Resnet18
+  USE_LABEL: true
+TARGET_MODEL:
+  DATASET: FashionMNIST
+  EPOCHS: 3
+  MODEL: TestConv
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+USE_GPU: true
+
+Model: Resnet18, trained on CIFAR-10
+Active Learning Strategy: Badge
+Accuracy results at the end of each cycle: [0.4555, 0.5972, 0.669, 0.7279, 0.7878, 0.8315, 0.8596, 0.8741, 0.8872, 0.899, 0.9066, 0.9148, 0.9232, 0.9309, 0.9357, 0.9351, 0.9398, 0.9411, 0.9434, 0.9443, 0.942, 0.9467, 0.945, 0.9453, 0.9461, 0.9446, 0.9489, 0.9449, 0.9418, 0.9387, 0.9372, 0.9338, 0.9303, 0.9223, 0.9228, 0.9129, 0.9057, 0.9065, 0.9039, 0.9054, 0.8991, 0.8971, 0.8941, 0.8876, 0.8791, 0.8834, 0.8803, 0.8822, 0.877, 0.8762]
+----------------------------------------------------------------------

@@ -1,16 +1,16 @@
 SUBSTITUTE_MODEL: 
   NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
   DATASET: 'CIFAR-10' # Possible values: MNIST,FashionMNIST
-  CONTINUAL: False
+  CONTINUAL: True
   USE_LABEL: True
   AL_METHOD: 
     NAME: 'CoreSet' # Possible values: LC,BALD,Badge,CoreSet,Random
-    INIT_BUDGET: 1000
-    BUDGET: 1000
+    INIT_BUDGET: 4000
+    BUDGET: 4000
     LOOKBACK: 1
   CL_METHOD: 
     NAME: 'MAS' # Possible values : Alasso,EWC,MAS,IMM,Naive
-    WEIGHT: 1.0
+    WEIGHT: 0.1
     OPTIMIZER:
       NAME: 'SGD'
       LR: 0.1
@@ -18,13 +18,13 @@ SUBSTITUTE_MODEL:
       WDECAY: 0.0005
       MILESTONES: [60,120]
 BATCH_SIZE: 128 # batch size used for training
-CYCLES: 49 # number of cycles in the model stealing process
-EPOCHS: 80
+CYCLES: 12 # number of cycles in the model stealing process
+EPOCHS: 150
 RECOVER_STATE: False
 SAVE_STATE: False
 STATE_DIR: ''
 RESULTS_FOLDER: './experiments/CL_AL/'
-RESULTS_FILE: 'correct_results_80epochs.txt'
+RESULTS_FILE: 'correct_results_150epochs.txt'
 TARGET_MODEL:
   TARGET_MODEL_FOLDER: './data/models/cifar10/'
   TARGET_MODEL_FILE: 'resnet.pt'
