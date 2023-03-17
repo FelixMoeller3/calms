@@ -24,6 +24,7 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
         self._save_model_params()
         self.fisher = {}
         self._update_fisher_params()
+        self.n_tasks = 0
 
     def _save_model_params(self) -> None:
         '''
@@ -79,4 +80,10 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
             diff.mul_(self.fisher[name])
             loss += diff.sum()
         return loss * (self.weight / 2)
-        
+       
+    def _update_weight(self) -> None:
+        self.n_tasks += 1
+        if self.n_tasks % 5 == 0:
+            self.n_tasks = 0
+            prev_weight = self.weight.item()
+            self.weight = torch.tensor(2*prev_weight).cuda() if self.use_gpu else torch.tensor(2*prev_weight)

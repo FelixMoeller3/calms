@@ -1,7 +1,7 @@
 SUBSTITUTE_MODEL: 
   NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
   DATASET: 'CIFAR-10' # Possible values: MNIST,FashionMNIST
-  CONTINUAL: False
+  CONTINUAL: True
   USE_LABEL: True
   AL_METHOD: 
     NAME: 'Badge' # Possible values: LC,BALD,Badge,CoreSet,Random
@@ -10,7 +10,7 @@ SUBSTITUTE_MODEL:
     LOOKBACK: 1
   CL_METHOD: 
     NAME: 'EWC' # Possible values : Alasso,EWC,MAS,IMM,Naive
-    WEIGHT: 1.0
+    WEIGHT: 0.2
     OPTIMIZER:
       NAME: 'SGD'
       LR: 0.1
