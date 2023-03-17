@@ -1,7 +1,7 @@
 SUBSTITUTE_MODEL: 
   NAME: 'TestConv' # Possible values: Resnet18,Resnext50,TestConv
   DATASET: 'FashionMNIST'
-  CONTINUAL: True
+  CONTINUAL: 0
   USE_LABEL: False
   AL_METHOD: 
     NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
