@@ -8,7 +8,7 @@ from typing import Callable,List
 class ClAlProcess(BaseProcess):
 
     def __init__(self,activeLearningStrategy: Strategy,continualLearningStrategy: ContinualLearningStrategy,train_set: Dataset,
-                 val_set: Dataset,batch_size:int,num_cycles:int,num_epochs:int,continual:bool,optimizer_config:dict,
+                 val_set: Dataset,batch_size:int,num_cycles:int,num_epochs:int,continual:int,optimizer_config:dict,
                  optimizer_builder: Callable,state_dir:str=None):
         '''
             :param targetModel: the target model in the model stealing process (i.e. the one that will be stolen). Needs to be pretrained!!
@@ -35,7 +35,9 @@ class ClAlProcess(BaseProcess):
         
         for i in range(start_cycle,self.num_cycles):
             print(f'Running cycle {i+1}/{self.num_cycles}')
-            self._query_cycle(i,labeled_set,unlabeled_set,loaders_dict,score_list)
+            if i == self.continualStart:
+                print("Switching from pure active learning to continual active learning")
+            labeled_set,unlabeled_set = self._query_cycle(i,labeled_set,unlabeled_set,loaders_dict,score_list)
             if self.state_dir is not None:
                 state_dict = {'start_cycle': i+1, 'labeled_set': labeled_set, 'unlabeled_set': unlabeled_set,'score_list': score_list}
                 self._save_state(state_dict)

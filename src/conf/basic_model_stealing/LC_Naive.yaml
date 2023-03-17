@@ -1,11 +1,11 @@
 SUBSTITUTE_MODEL: 
-  NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
+  NAME: 'TestConv' # Possible values: Resnet18,Resnext50,TestConv
   DATASET: 'FashionMNIST'
-  CONTINUAL: False
+  CONTINUAL: True
   USE_LABEL: False
   AL_METHOD: 
     NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
-    INIT_BUDGET: 2000
+    INIT_BUDGET: 58000
     BUDGET: 2000
     LOOKBACK: 1
   CL_METHOD: 
@@ -17,8 +17,8 @@ SUBSTITUTE_MODEL:
       WDECAY: 0.0005
       MILESTONES: [60,120]
 BATCH_SIZE: 128 # batch size used for training
-CYCLES: 49 # number of cycles in the model stealing process
-EPOCHS: 10
+CYCLES: 2 # number of cycles in the model stealing process
+EPOCHS: 1
 RECOVER_STATE: False
 SAVE_STATE: False
 STATE_DIR: ''

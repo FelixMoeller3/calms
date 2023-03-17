@@ -10,7 +10,7 @@ import random
 class BaseProcess:
 
     def __init__(self,activeLearningStrategy: Strategy,continualLearningStrategy: ContinualLearningStrategy, train_set: Dataset,
-                 val_set: Dataset,batch_size:int,num_cycles:int,num_epochs:int,continual:bool,optimizerBuilder: Callable, optimizerConfig: dict,use_gpu:bool=False,state_dir:str=None):
+                 val_set: Dataset,batch_size:int,num_cycles:int,num_epochs:int,continual:int,optimizerBuilder: Callable, optimizerConfig: dict,use_gpu:bool=False,state_dir:str=None):
         self.al_strat = activeLearningStrategy
         self.cl_strat = continualLearningStrategy
         self.train_set = train_set
@@ -18,7 +18,7 @@ class BaseProcess:
         self.batch_size = batch_size
         self.num_cycles = num_cycles
         self.num_epochs = num_epochs
-        self.isContinual = continual
+        self.continualStart = continual
         self.optimizer_builder = optimizerBuilder
         self.optimizer_config = optimizerConfig
         self.use_gpu = use_gpu
@@ -37,15 +37,16 @@ class BaseProcess:
     def _add_targets(self,labeled_set: List[int]) -> None:
         pass
 
-    def _query_cycle(self, cycle_number: int, labeled_set: List[int], unlabeled_set: List[int], loaders_dict: dict[str,DataLoader],val_accuracies: List[float]) -> None:
+    def _query_cycle(self, cycle_number: int, labeled_set: List[int], unlabeled_set: List[int], loaders_dict: dict[str,DataLoader],val_accuracies: List[float]) -> tuple[List[int],List[int]]:
         self.al_strat.feed_current_state(cycle_number,unlabeled_set,labeled_set)
         training_examples = self.al_strat.query()
         training_examples_absolute_indices = [unlabeled_set[elem] for elem in training_examples]
         self._add_targets(training_examples_absolute_indices)
         labeled_set += training_examples_absolute_indices
         unlabeled_set = [i for i in unlabeled_set if i not in training_examples_absolute_indices]
-        cur_train_set = training_examples_absolute_indices if self.isContinual else labeled_set
+        cur_train_set = training_examples_absolute_indices if self.continualStart <= cycle_number else labeled_set
         self._train_cycle(self.train_set,cur_train_set,loaders_dict,self.batch_size,self.num_epochs,val_accuracies)
+        return labeled_set,unlabeled_set
 
     def _train_cycle(self,train_set: Dataset,training_examples: List[int],loaders_dict: dict[str,DataLoader],batch_size:int,num_epochs:int,score_list:List[float]) -> None:
         '''
