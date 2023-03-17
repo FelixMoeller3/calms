@@ -27,7 +27,7 @@ class IMM(ContinualLearningStrategy):
             self.alphas = ALPHAS
         self.weight = torch.tensor(WEIGHT).cuda() if self.use_gpu else torch.tensor(WEIGHT)
         self.mean = MEAN
-        self.num_tasks = 0
+        self.n_tasks = 0
         self.prev_param_list = []
         self._save_model_params()
         self.prev_fishers = []
@@ -49,6 +49,7 @@ class IMM(ContinualLearningStrategy):
     def _after_train(self,train_set: Dataset) -> None:
         self._save_model_params()
         self._merge_models(train_set)
+        self._update_weight()
 
     def _set_model_params(self) -> None:
         for name,param in self.model.named_parameters():
@@ -148,3 +149,10 @@ class IMM(ContinualLearningStrategy):
                 sigma[name] = 1/sigma[name]
 
         return sigma
+
+    def _update_weight(self) -> None:
+        self.n_tasks += 1
+        if self.n_tasks % 5 == 0:
+            self.n_tasks = 0
+            prev_weight = self.weight.item()
+            self.weight = torch.tensor(2*prev_weight).cuda() if self.use_gpu else torch.tensor(2*prev_weight)
