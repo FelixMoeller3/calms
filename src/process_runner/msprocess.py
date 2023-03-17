@@ -11,7 +11,7 @@ from data import Softmax_label_set
 class ModelStealingProcess(BaseProcess):
 
     def __init__(self,targetModel:nn.Module,activeLearningStrategy: Strategy,continualLearningStrategy: ContinualLearningStrategy,train_set: Dataset,
-            val_set: Dataset,batch_size:int,num_cycles:int,num_epochs:int,continual:bool,num_classes:int,optimizer_builder: Callable,optimizer_config:dict,
+            val_set: Dataset,batch_size:int,num_cycles:int,num_epochs:int,continual:int,num_classes:int,optimizer_builder: Callable,optimizer_config:dict,
                  use_label:bool=True,state_dir:str=None,use_gpu:bool=False):
         '''
             :param targetModel: the target model in the model stealing process (i.e. the one that will be stolen). Needs to be pretrained!!
@@ -53,7 +53,9 @@ class ModelStealingProcess(BaseProcess):
         
         for i in range(start_cycle,self.num_cycles):
             print(f'Running cycle {i+1}/{self.num_cycles}')
-            self._query_cycle(i,labeled_set,unlabeled_set,loaders_dict,val_accuracies)
+            if i == self.continualStart:
+                print("Switching from pure active learning to continual active learning")
+            labeled_set,unlabeled_set = self._query_cycle(i,labeled_set,unlabeled_set,loaders_dict,val_accuracies)
             cur_agreement = self._compute_agreement(loaders_dict['val'])
             print("Current agreement is: {:.4f}".format(cur_agreement))
             agreements.append(cur_agreement)

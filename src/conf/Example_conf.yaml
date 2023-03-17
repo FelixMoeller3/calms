@@ -2,7 +2,7 @@ SUBSTITUTE_MODEL:
   NAME: 'TestConv' # Possible values: Resnet18,Resnext50,TestConv
   DATASET: 'FashionMNIST' # Possible values: MNIST,FashionMNIST,TinyImageNet
   USE_LABEL: True # Whether to use the label that the target model predicted. If false, then the softmax output will be used.
-  CONTINUAL: False # Whether to train with only the newly queried data or with all the data queried so far.
+  CONTINUAL: 0 # From which cycle on one should use continual learning (0-indeded). If active learning should be used all the time, set the value to num_cycles or more.
   AL_METHOD: 
     NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
     INIT_BUDGET: 1000

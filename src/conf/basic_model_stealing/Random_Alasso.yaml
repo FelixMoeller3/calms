@@ -1,7 +1,7 @@
 SUBSTITUTE_MODEL: 
   NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
   DATASET: 'CIFAR-10'
-  CONTINUAL: False
+  CONTINUAL: 0
   USE_LABEL: True
   AL_METHOD: 
     NAME: 'Random' # Possible values: LC,BALD,Badge,CoreSet,Random
