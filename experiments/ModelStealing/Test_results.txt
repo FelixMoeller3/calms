@@ -1,0 +1,221 @@
+Run completed at 2023-03-15 17:04:35 after 01h:44m:04s
+Config File:
+BATCH_SIZE: 128
+CYCLES: 49
+EPOCHS: 80
+RECOVER_STATE: false
+RESULTS_FILE: Test_results.txt
+RESULTS_FOLDER: ./experiments/ModelStealing/
+SAVE_STATE: false
+STATE_DIR: ./experiments/temp/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 1000
+    INIT_BUDGET: 1000
+    LOOKBACK: 1
+    NAME: Random
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0001
+    USE_GPU: true
+  DATASET: TinyImageNet
+  NAME: Resnet18
+  USE_LABEL: true
+TARGET_MODEL:
+  DATASET: CIFAR-10
+  EPOCHS: 3
+  MODEL: Resnet18
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: resnet.pt
+  TARGET_MODEL_FOLDER: ./data/models/cifar10/
+  TRAIN_MODEL: false
+Target model: Resnet18, trained on CIFAR-10
+Substitute model: Resnet18, trained on TinyImageNet
+Continual Learning Strategy: Naive
+Active Learning Strategy: Random
+Accuracy results at the end of each cycle: [0.099, 0.1, 0.099, 0.0999, 0.0998, 0.0997, 0.1, 0.1, 0.1, 0.0994, 0.1, 0.0988, 0.1, 0.1, 0.1, 0.1, 0.0982, 0.0983, 0.0985, 0.1, 0.0999, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.0999, 0.1, 0.1, 0.1, 0.1, 0.0999, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
+Model agreement at the end of each cycle: [0.0999, 0.1029, 0.101, 0.103, 0.1011, 0.1028, 0.1052, 0.1049, 0.1039, 0.1023, 0.1032, 0.1006, 0.1035, 0.1031, 0.1041, 0.1038, 0.0988, 0.1, 0.1008, 0.1038, 0.1031, 0.1036, 0.1035, 0.1024, 0.1034, 0.1042, 0.1038, 0.1038, 0.1041, 0.1025, 0.1026, 0.1041, 0.1044, 0.103, 0.103, 0.1035, 0.1045, 0.1045, 0.1038, 0.1037, 0.1029, 0.1036, 0.1042, 0.1035, 0.1042, 0.1027, 0.1046, 0.1041, 0.1039, 0.1032]
+----------------------------------------------------------------------
+Run completed at 2023-03-16 09:40:52 after 00h:48m:31s
+Config File:
+BATCH_SIZE: 128
+CYCLES: 49
+EPOCHS: 80
+RECOVER_STATE: false
+RESULTS_FILE: Test_results.txt
+RESULTS_FOLDER: ./experiments/ModelStealing/
+SAVE_STATE: false
+STATE_DIR: ./experiments/temp/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 1000
+    INIT_BUDGET: 1000
+    LOOKBACK: 1
+    NAME: Random
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0001
+    USE_GPU: true
+  DATASET: CIFAR-10
+  NAME: Resnet18
+  USE_LABEL: true
+TARGET_MODEL:
+  DATASET: CIFAR-10
+  EPOCHS: 3
+  MODEL: Resnet18
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: resnet.pt
+  TARGET_MODEL_FOLDER: ./data/models/cifar10/
+  TRAIN_MODEL: false
+Target model: Resnet18, trained on CIFAR-10
+Substitute model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: Naive
+Active Learning Strategy: Random
+Accuracy results at the end of each cycle: [0.1043, 0.1007, 0.1013, 0.1074, 0.1051, 0.1003, 0.1107, 0.1021, 0.1023, 0.1022, 0.1056, 0.1021, 0.1013, 0.1004, 0.1209, 0.1111, 0.1078, 0.1109, 0.1061, 0.1182, 0.1095, 0.1379, 0.1086, 0.1162, 0.1263, 0.1372, 0.117, 0.1362, 0.1433, 0.1326, 0.1406, 0.135, 0.13, 0.1322, 0.1338, 0.1253, 0.1305, 0.1226, 0.1327, 0.1464, 0.1351, 0.132, 0.1271, 0.1318, 0.1329, 0.1329, 0.1277, 0.1382, 0.1436, 0.1294]
+Model agreement at the end of each cycle: [0.1082, 0.1052, 0.1043, 0.112, 0.1089, 0.1052, 0.1153, 0.1067, 0.1065, 0.1059, 0.1098, 0.1047, 0.105, 0.1056, 0.1248, 0.1139, 0.1108, 0.1146, 0.1088, 0.1221, 0.1138, 0.1423, 0.1129, 0.1192, 0.1307, 0.1398, 0.1214, 0.1384, 0.1487, 0.1381, 0.1448, 0.1381, 0.1349, 0.1368, 0.1365, 0.1277, 0.1339, 0.1249, 0.1366, 0.1527, 0.1405, 0.1341, 0.1311, 0.1354, 0.1343, 0.1372, 0.1288, 0.1407, 0.1468, 0.1335]
+----------------------------------------------------------------------
+Run completed at 2023-03-16 11:14:04 after 01h:20m:34s
+Config File:
+BATCH_SIZE: 128
+CYCLES: 12
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: Test_results.txt
+RESULTS_FOLDER: ./experiments/ModelStealing/
+SAVE_STATE: false
+STATE_DIR: ./experiments/temp/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 4000
+    INIT_BUDGET: 4000
+    LOOKBACK: 1
+    NAME: Random
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0001
+    USE_GPU: true
+  DATASET: CIFAR-10
+  NAME: Resnet18
+  USE_LABEL: true
+TARGET_MODEL:
+  DATASET: CIFAR-10
+  EPOCHS: 3
+  MODEL: Resnet18
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: resnet.pt
+  TARGET_MODEL_FOLDER: ./data/models/cifar10/
+  TRAIN_MODEL: false
+Target model: Resnet18, trained on CIFAR-10
+Substitute model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: Naive
+Active Learning Strategy: Random
+Accuracy results at the end of each cycle: [0.1497, 0.1448, 0.1493, 0.1496, 0.1476, 0.1389, 0.1461, 0.152, 0.1527, 0.1507, 0.1509, 0.151, 0.1483]
+Model agreement at the end of each cycle: [0.1555, 0.1486, 0.1511, 0.1505, 0.1502, 0.1418, 0.1507, 0.1543, 0.1594, 0.1539, 0.153, 0.1525, 0.1517]
+----------------------------------------------------------------------
+Run completed at 2023-03-16 14:47:24 after 00h:14m:23s
+Config File:
+BATCH_SIZE: 128
+CYCLES: 49
+EPOCHS: 10
+RECOVER_STATE: false
+RESULTS_FILE: Test_results.txt
+RESULTS_FOLDER: ./experiments/ModelStealing/
+SAVE_STATE: false
+STATE_DIR: ''
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 1000
+    INIT_BUDGET: 1000
+    LOOKBACK: 1
+    NAME: LC
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  CONTINUAL: true
+  DATASET: FashionMNIST
+  NAME: Resnet18
+  USE_LABEL: false
+TARGET_MODEL:
+  DATASET: MNIST
+  EPOCHS: 3
+  MODEL: Resnet18
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: resnet.pt
+  TARGET_MODEL_FOLDER: ./data/models/mnist/
+  TRAIN_MODEL: false
+Target model: Resnet18, trained on MNIST
+Substitute model: Resnet18, trained on FashionMNIST
+Continual Learning Strategy: Naive
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.1009, 0.1672, 0.0981, 0.1568, 0.1003, 0.1009, 0.115, 0.0982, 0.1366, 0.1009, 0.1218, 0.101, 0.1032, 0.1032, 0.1494, 0.1289, 0.0989, 0.1054, 0.1084, 0.2038, 0.0599, 0.0431, 0.0491, 0.1037, 0.1148, 0.0669, 0.1185, 0.0194, 0.0643, 0.0844, 0.0782, 0.1144, 0.1088, 0.1285, 0.1002, 0.1068, 0.0918, 0.0907, 0.0986, 0.0895, 0.1011, 0.084, 0.1384, 0.12, 0.1206, 0.0922, 0.1088, 0.091, 0.1403, 0.1246]
+Model agreement at the end of each cycle: [0.1002, 0.1674, 0.0983, 0.1569, 0.1005, 0.1004, 0.1142, 0.0987, 0.1369, 0.1003, 0.1214, 0.1012, 0.1033, 0.1035, 0.1494, 0.1291, 0.0994, 0.1056, 0.1084, 0.2039, 0.0601, 0.0428, 0.0494, 0.1038, 0.1151, 0.0673, 0.1185, 0.0194, 0.0647, 0.0842, 0.0779, 0.1137, 0.1082, 0.1276, 0.0998, 0.1058, 0.0915, 0.0902, 0.0984, 0.0894, 0.1002, 0.0837, 0.1381, 0.1198, 0.1202, 0.0916, 0.1088, 0.091, 0.1402, 0.1247]
+----------------------------------------------------------------------

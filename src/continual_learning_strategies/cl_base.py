@@ -12,7 +12,7 @@ class ContinualLearningStrategy(ABC):
     '''
         This is the base class for all continual learning strategies
     '''
-    def __init__(self, model:nn.Module,optim: torch.optim.Optimizer, scheduler:lr_scheduler._LRScheduler, crit: nn.CrossEntropyLoss, use_gpu:bool, clip_grad: float=100000.0):
+    def __init__(self, model:nn.Module,optim: torch.optim.Optimizer, scheduler:lr_scheduler._LRScheduler, crit: nn.CrossEntropyLoss, use_gpu:bool, clip_grad: float=20.0):
         self.model = model
         self.optim = optim
         self.scheduler = scheduler

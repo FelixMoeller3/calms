@@ -344,3 +344,101 @@ TARGET_MODEL:
 Target model: VGG16, trained on CIFAR-10
 Model saved at: ./data/models/cifar10/vgg.pt
 ----------------------------------------------------------------------
+Run completed at 2023-03-16 13:58:27 after 01h:48m:48s
+Config File: BATCH_SIZE: 128
+CYCLES: 49
+EPOCHS: 80
+RECOVER_STATE: false
+RESULTS_FILE: results_200epochs.txt
+RESULTS_FOLDER: ./experiments/Target_Model_Training/
+SAVE_STATE: false
+STATE_DIR: ./experiments/temp/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BUDGET: 1000
+    INIT_BUDGET: 1000
+    LOOKBACK: 1
+    NAME: LC
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+  CONTINUAL: false
+  DATASET: CIFAR-10
+  NAME: Resnet18
+  USE_LABEL: true
+TARGET_MODEL:
+  DATASET: CIFAR-10
+  EPOCHS: 200
+  MODEL: Resnet18
+  OPTIMIZER:
+    LR: 0.1
+    MILESTONES:
+    - 120
+    - 180
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.001
+  TARGET_MODEL_FILE: resnet.pt
+  TARGET_MODEL_FOLDER: ./data/models/cifar10/
+  TRAIN_MODEL: true
+
+Target model: Resnet18, trained on CIFAR-10
+Validation accuracy of the model: 0.9232
+Model saved at: ./data/models/cifar10/resnet.pt
+----------------------------------------------------------------------
+Run completed at 2023-03-16 15:43:56 after 01h:23m:14s
+Config File: BATCH_SIZE: 128
+CYCLES: 49
+EPOCHS: 80
+RECOVER_STATE: false
+RESULTS_FILE: results_200epochs.txt
+RESULTS_FOLDER: ./experiments/Target_Model_Training/
+SAVE_STATE: false
+STATE_DIR: ./experiments/temp/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BUDGET: 1000
+    INIT_BUDGET: 1000
+    LOOKBACK: 1
+    NAME: LC
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+  CONTINUAL: false
+  DATASET: CIFAR-10
+  NAME: Resnet18
+  USE_LABEL: true
+TARGET_MODEL:
+  DATASET: CIFAR-10
+  EPOCHS: 200
+  MODEL: VGG16
+  OPTIMIZER:
+    LR: 0.1
+    MILESTONES:
+    - 120
+    - 180
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.001
+  TARGET_MODEL_FILE: vgg.pt
+  TARGET_MODEL_FOLDER: ./data/models/cifar10/
+  TRAIN_MODEL: true
+
+Target model: VGG16, trained on CIFAR-10
+Validation accuracy of the model: 0.9157
+Model saved at: ./data/models/cifar10/vgg.pt
+----------------------------------------------------------------------

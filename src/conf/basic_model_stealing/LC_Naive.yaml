@@ -1,12 +1,12 @@
 SUBSTITUTE_MODEL: 
   NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
-  DATASET: 'MNIST'
+  DATASET: 'FashionMNIST'
   CONTINUAL: False
-  USE_LABEL: True
+  USE_LABEL: False
   AL_METHOD: 
     NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
-    INIT_BUDGET: 1000
-    BUDGET: 1000
+    INIT_BUDGET: 2000
+    BUDGET: 2000
     LOOKBACK: 1
   CL_METHOD: 
     NAME: 'Naive' # Possible values : Alasso,EWC,MAS,IMM,Naive
@@ -18,18 +18,18 @@ SUBSTITUTE_MODEL:
       MILESTONES: [60,120]
 BATCH_SIZE: 128 # batch size used for training
 CYCLES: 49 # number of cycles in the model stealing process
-EPOCHS: 80
+EPOCHS: 10
 RECOVER_STATE: False
 SAVE_STATE: False
 STATE_DIR: ''
 RESULTS_FOLDER: './experiments/ModelStealing/'
 RESULTS_FILE: 'Test_results.txt'
 TARGET_MODEL:
-  TARGET_MODEL_FOLDER: './data/models/cifar10/'
+  TARGET_MODEL_FOLDER: './data/models/mnist/'
   TARGET_MODEL_FILE: 'resnet.pt'
   TRAIN_MODEL: False
   MODEL: 'Resnet18'
-  DATASET: 'CIFAR-10'
+  DATASET: 'MNIST'
   EPOCHS : 3
   OPTIMIZER:
     NAME: 'SGD'
