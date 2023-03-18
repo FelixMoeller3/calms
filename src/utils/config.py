@@ -254,7 +254,7 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
             transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761))
         ]
         transform = augmentation + normalization if train else normalization
-        transform + = channel_change_color
+        transform += channel_change_color
         dataset = datasets.CIFAR100("./data",train,transform=transforms.Compose(transform),download=True)
     elif name == "TinyImageNet":
         augmentation = [
