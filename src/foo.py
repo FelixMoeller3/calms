@@ -82,6 +82,7 @@ with open("data/experiments/results.txt",'a') as f:
 if __name__ == "__main__":
     from utils import config
     config.run_cl_al_config("./src/conf/basic_model_stealing/LC_Naive.yaml")
+    print("Hello world")
     #a = torch.tensor([1,2,3])
     #a[0] = 7
     #print(a)

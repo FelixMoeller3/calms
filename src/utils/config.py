@@ -58,7 +58,7 @@ def run_config(config_path: str) -> ModelStealingProcess:
         state_dir = yaml_cfg["STATE_DIR"]
     ms_process = ModelStealingProcess(target_model,al_method,cl_method,train_set,val_set,batch_size,cycles,num_epochs,
                                       yaml_cfg["SUBSTITUTE_MODEL"]["CONTINUAL"],num_classes,build_optimizer,yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["OPTIMIZER"],
-                                      use_label,state_dir,use_gpu)
+                                      use_label,state_dir,use_gpu,yaml_cfg["SUBSTITUTE_MODEL"]["AL_METHOD"]["INIT_MODE"])
     accuracies,agreements = ms_process.steal_model(**prev_state)
     duration = time.time() - start
     hours = int(duration)//3600
@@ -101,7 +101,8 @@ def run_cl_al_config(config_path: str) -> ModelStealingProcess:
     state_dir = None
     if yaml_cfg["SAVE_STATE"]:
         state_dir = yaml_cfg["STATE_DIR"]
-    process_runner = ClAlProcess(al_method,cl_method,train_set,val_set,batch_size,cycles,num_epochs,is_continual,yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["OPTIMIZER"],build_optimizer,state_dir)
+    process_runner = ClAlProcess(al_method,cl_method,train_set,val_set,batch_size,cycles,num_epochs,is_continual,yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["OPTIMIZER"],
+                                 build_optimizer,yaml_cfg["SUBSTITUTE_MODEL"]["AL_METHOD"]["INIT_MODE"],state_dir)
     print(f'Running{"continual" if is_continual else ""} active learning with strategies {yaml_cfg["SUBSTITUTE_MODEL"]["AL_METHOD"]["NAME"]} and {yaml_cfg["SUBSTITUTE_MODEL"]["CL_METHOD"]["NAME"]}')
     accuracies = process_runner.continual_learning(**prev_state)
     duration = time.time() - start
