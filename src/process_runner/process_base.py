@@ -25,6 +25,8 @@ class BaseProcess:
         self.state_dir = state_dir
 
     def _before_first_cycle(self,loaders_dict:dict[str,DataLoader],val_accuracies: List[int]) -> tuple[List[int],List[int]]:
+        if self.continualStart > -1:
+            self.cl_strat.deactivate()
         unlabeled_set = [i for i in range(len(self.train_set))]
         labeled_set = [i for i in range(len(self.train_set))]
         random.shuffle(labeled_set)
@@ -38,6 +40,9 @@ class BaseProcess:
         pass
 
     def _query_cycle(self, cycle_number: int, labeled_set: List[int], unlabeled_set: List[int], loaders_dict: dict[str,DataLoader],val_accuracies: List[float]) -> tuple[List[int],List[int]]:
+        if cycle_number == self.continualStart:
+            print("Switching from pure active learning to continual active learning")
+            self.cl_strat.activate()
         self.al_strat.feed_current_state(cycle_number,unlabeled_set,labeled_set)
         training_examples = self.al_strat.query()
         training_examples_absolute_indices = [unlabeled_set[elem] for elem in training_examples]

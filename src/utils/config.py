@@ -216,21 +216,21 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
     channel_change_greyscale = [] if num_channels is None or num_channels == 1 else [transforms.Grayscale(num_channels)]
     channel_change_color = [] if num_channels is None or num_channels == 3 else [transforms.Grayscale(num_channels)]
     if name == "MNIST":
-        dataset = datasets.MNIST("./data",train,transform=transforms.Compose(
-                channel_change_greyscale + 
+        dataset = datasets.MNIST("./data",train,transform=transforms.Compose( 
                 [
                        transforms.ToTensor(),
                        transforms.Resize(32),
                        transforms.Normalize((0.1307,), (0.3081,))
-                   ]),download=True)
+                   ]
+                + channel_change_greyscale),download=True)
     elif name == "FashionMNIST":
         dataset = datasets.FashionMNIST("./data",train,transform=transforms.Compose(
-                channel_change_greyscale + 
-                [
+               [
                        transforms.ToTensor(),
                        transforms.Resize(32),
                        transforms.Normalize((0.1307,), (0.3081,))
-                   ]),download=True)
+                   ]
+               + channel_change_greyscale),download=True)
     elif name == "CIFAR-10":
         augmentation = [
             transforms.RandomHorizontalFlip(),
@@ -240,8 +240,8 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
             transforms.ToTensor(),
             transforms.Normalize([0.4914, 0.4822, 0.4465], [0.2023, 0.1994, 0.2010])
         ]
-        transform = channel_change_color
-        transform += augmentation + normalization if train else normalization
+        transform = augmentation + normalization if train else normalization
+        transform += channel_change_color
         dataset = datasets.CIFAR10("./data",train,transform=transforms.Compose(transform),download=True)
     elif name == "CIFAR-100":
         augmentation = [
@@ -252,8 +252,8 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
             transforms.ToTensor(),
             transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761))
         ]
-        transform = channel_change_color
         transform = augmentation + normalization if train else normalization
+        transform + = channel_change_color
         dataset = datasets.CIFAR100("./data",train,transform=transforms.Compose(transform),download=True)
     elif name == "TinyImageNet":
         augmentation = [
@@ -267,6 +267,7 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
                             std=[0.229, 0.224, 0.225])
         ]
         transform = augmentation + normalization if train else normalization
+        transform += channel_change_color
         dataset = TinyImageNet("./data",train,transform=transforms.Compose(transform),download=True)
     else:
         raise AttributeError(f"Dataset unknown. Got {name}, but expected one of {','.join(DATASET_NAMES)}")

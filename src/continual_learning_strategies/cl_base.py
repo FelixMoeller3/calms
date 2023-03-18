@@ -19,6 +19,7 @@ class ContinualLearningStrategy(ABC):
         self.crit = crit
         self.use_gpu = use_gpu
         self.clip_grad = clip_grad
+        self.isActive = True
 
 
     def train(self,dataloaders: dict[str,DataLoader],num_epochs:int,val_step:int,result_list:List[float]=[],early_stopping:int=-1) -> None:
@@ -26,7 +27,8 @@ class ContinualLearningStrategy(ABC):
             :param early_stopping: Patience (number of epochs) for early stopping. If <0 then no early stopping is used.
         '''
         start_time = time.time()
-        self._before_train()
+        if self.isActive:
+            self._before_train()
         val_scores = []
         for epoch in range(num_epochs):
             print(f'Running epoch {epoch+1}/{num_epochs}')
@@ -41,7 +43,8 @@ class ContinualLearningStrategy(ABC):
                     print(f"Stopping training after {epoch+1} epochs")
                     break 
         result_list.append(val_acc)
-        self._after_train(dataloaders['train'].dataset)
+        if self.isActive:
+            self._after_train(dataloaders['train'].dataset)
         time_elapsed = time.time() - start_time
         print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
 
@@ -71,7 +74,9 @@ class ContinualLearningStrategy(ABC):
                 _, class_labels = torch.max(labels.data, 1)
             else:
                 class_labels = labels
-            loss = self.crit(outputs, labels) + self._compute_regularization_loss()
+            loss = self.crit(outputs, labels)
+            if self.isActive:
+                loss +=  self._compute_regularization_loss()
 
             loss.backward()
             if self.clip_grad > 0:
@@ -96,7 +101,8 @@ class ContinualLearningStrategy(ABC):
                 inputs, labels = inputs.cuda(), labels.cuda()
             outputs = self.model(inputs)
             _, preds = torch.max(outputs.data,1)
-            self._after_pred_val(outputs,labels.size(0))
+            if self.isActive:
+                self._after_pred_val(outputs,labels.size(0))
             loss = self.crit(outputs,labels)
             total_loss += loss.item()
             correct_predictions += torch.sum(preds == labels.data).item()
@@ -126,3 +132,9 @@ class ContinualLearningStrategy(ABC):
 
     def load(self, filename: str):
         self.model = torch.load(filename)
+
+    def deactivate(self) -> None:
+        self.isActive = False
+
+    def activate(self) -> None:
+        self.isActive = True

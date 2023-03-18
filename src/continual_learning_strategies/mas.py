@@ -19,7 +19,7 @@ class MAS(ContinualLearningStrategy):
     '''
 
     def __init__(self,model:nn.Module,optimizer: torch.optim.Optimizer, scheduler: lr_scheduler._LRScheduler,criterion: torch.nn.CrossEntropyLoss,
-            WEIGHT:float=1.0,FREEZE_LAYERS:List[str]=[],USE_GPU:bool=False,clip_grad:float=2.0,**kwargs):
+            WEIGHT:float=1.0,SCHEDULE:bool=False,FREEZE_LAYERS:List[str]=[],USE_GPU:bool=False,clip_grad:float=2.0,**kwargs):
         '''
         Initializes the Memory Aware Synapses (MAS) class.
 
@@ -34,6 +34,7 @@ class MAS(ContinualLearningStrategy):
         '''
         super(MAS,self).__init__(model,optimizer,scheduler,criterion,USE_GPU,clip_grad)
         self.weight = torch.tensor(WEIGHT).cuda() if self.use_gpu else torch.tensor(WEIGHT)
+        self.schedule_weight = SCHEDULE
         self.freeze_layers = FREEZE_LAYERS
         # The total number of samples that have been classified before training the current task
         self.n_samples_prev = 0
@@ -134,6 +135,8 @@ class MAS(ContinualLearningStrategy):
         self._update_reg_params(outputs,batch_size)
 
     def _update_weight(self) -> None:
+        if not self.schedule_weight:
+            return
         self.n_tasks += 1
         if self.n_tasks % 5 == 0:
             self.n_tasks = 0

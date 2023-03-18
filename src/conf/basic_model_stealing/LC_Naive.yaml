@@ -1,11 +1,11 @@
 SUBSTITUTE_MODEL: 
-  NAME: 'TestConv' # Possible values: Resnet18,Resnext50,TestConv
-  DATASET: 'FashionMNIST'
-  CONTINUAL: 0
-  USE_LABEL: False
+  NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
+  DATASET: 'TinyImageNet'
+  CONTINUAL: -1
+  USE_LABEL: True
   AL_METHOD: 
     NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
-    INIT_BUDGET: 58000
+    INIT_BUDGET: 2000
     BUDGET: 2000
     LOOKBACK: 1
   CL_METHOD: 
@@ -17,8 +17,8 @@ SUBSTITUTE_MODEL:
       WDECAY: 0.0005
       MILESTONES: [60,120]
 BATCH_SIZE: 128 # batch size used for training
-CYCLES: 2 # number of cycles in the model stealing process
-EPOCHS: 1
+CYCLES: 24 # number of cycles in the model stealing process
+EPOCHS: 40
 RECOVER_STATE: False
 SAVE_STATE: False
 STATE_DIR: ''
@@ -27,10 +27,10 @@ RESULTS_FILE: 'Test_results.txt'
 TARGET_MODEL:
   TARGET_MODEL_FOLDER: './data/models/mnist/'
   TARGET_MODEL_FILE: 'resnet.pt'
-  TRAIN_MODEL: False
-  MODEL: 'Resnet18'
-  DATASET: 'MNIST'
-  EPOCHS : 3
+  TRAIN_MODEL: True
+  MODEL: 'TestConv'
+  DATASET: 'FashionMNIST'
+  EPOCHS : 50
   OPTIMIZER:
     NAME: 'SGD'
     LR: 0.001

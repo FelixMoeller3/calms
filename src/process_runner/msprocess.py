@@ -53,8 +53,6 @@ class ModelStealingProcess(BaseProcess):
         
         for i in range(start_cycle,self.num_cycles):
             print(f'Running cycle {i+1}/{self.num_cycles}')
-            if i == self.continualStart:
-                print("Switching from pure active learning to continual active learning")
             labeled_set,unlabeled_set = self._query_cycle(i,labeled_set,unlabeled_set,loaders_dict,val_accuracies)
             cur_agreement = self._compute_agreement(loaders_dict['val'])
             print("Current agreement is: {:.4f}".format(cur_agreement))
