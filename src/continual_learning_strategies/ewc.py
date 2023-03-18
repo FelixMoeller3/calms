@@ -17,13 +17,14 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
         https://github.com/thuyngch/Overcoming-Catastrophic-Forgetting
     '''
 
-    def __init__(self,model:nn.Module,optim: torch.optim.Optimizer,scheduler: lr_scheduler._LRScheduler,crit: nn.CrossEntropyLoss,WEIGHT:float=1.0,USE_GPU:bool=False,**kwargs):
+    def __init__(self,model:nn.Module,optim: torch.optim.Optimizer,scheduler: lr_scheduler._LRScheduler,crit: nn.CrossEntropyLoss,WEIGHT:float=1.0,SCHEDULE:bool=False,USE_GPU:bool=False,**kwargs):
         super(ElasticWeightConsolidation,self).__init__(model,optim,scheduler,crit,USE_GPU)
         self.weight = torch.tensor(WEIGHT).cuda() if self.use_gpu else torch.tensor(WEIGHT)
         self.prev_params = {}
         self._save_model_params()
         self.fisher = {}
         self._update_fisher_params()
+        self.schedule_weight = SCHEDULE 
         self.n_tasks = 0
 
     def _save_model_params(self) -> None:
@@ -82,6 +83,8 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
         return loss * (self.weight / 2)
        
     def _update_weight(self) -> None:
+        if not self.schedule_weight:
+            return
         self.n_tasks += 1
         if self.n_tasks % 5 == 0:
             self.n_tasks = 0
