@@ -1,12 +1,12 @@
-from models.test_model import testNN,testConv
-import continual_learning_strategies as cl_strat
-import active_learning_strategies as al_strat
-from torch.optim import SGD
-import torch.nn as nn
-from torchvision import datasets, transforms
-from torch.utils.data import DataLoader
-import process_runner as ms
-import torch
+#from models.test_model import testNN,testConv
+#import continual_learning_strategies as cl_strat
+#import active_learning_strategies as al_strat
+#from torch.optim import SGD
+#import torch.nn as nn
+#from torchvision import datasets, transforms
+#from torch.utils.data import DataLoader
+#import process_runner as ms
+#import torch
 num_cycles = 10
 init_budget = 5000
 cycle_budget = 1000
@@ -80,8 +80,9 @@ with open("data/experiments/results.txt",'a') as f:
 '''
 
 if __name__ == "__main__":
-    from utils import config
-    config.run_cl_al_config("./src/conf/basic_model_stealing/LC_Naive.yaml")
+    #from utils import config
+    #config.run_cl_al_config("./src/conf/basic_model_stealing/LC_Naive.yaml")
+    import submodlib
     print("Hello world")
     #a = torch.tensor([1,2,3])
     #a[0] = 7

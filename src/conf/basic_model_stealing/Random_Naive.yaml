@@ -1,13 +1,14 @@
 SUBSTITUTE_MODEL: 
   NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
-  DATASET: 'TinyImageNet'
-  CONTINUAL: 0
+  DATASET: 'CIFAR-10'
+  CONTINUAL: -1
   USE_LABEL: False
   AL_METHOD: 
     NAME: 'Random' # Possible values: LC,BALD,Badge,CoreSet,Random
-    INIT_BUDGET: 4000
-    BUDGET: 4000
+    INIT_BUDGET: 2000
+    BUDGET: 2000
     LOOKBACK: 1
+    INIT_MODE: 'random'
   CL_METHOD: 
     NAME: 'Naive' # Possible values : Alasso,EWC,MAS,IMM,Naive
     OPTIMIZER:
@@ -27,10 +28,10 @@ RESULTS_FILE: 'Test_results.txt'
 TARGET_MODEL:
   TARGET_MODEL_FOLDER: './data/models/cifar10/'
   TARGET_MODEL_FILE: 'resnet.pt'
-  TRAIN_MODEL: False
-  MODEL: 'Resnet18'
+  TRAIN_MODEL: True
+  MODEL: 'VGG16'
   DATASET: 'CIFAR-10'
-  EPOCHS : 3
+  EPOCHS : 80
   OPTIMIZER:
     NAME: 'SGD'
     LR: 0.001

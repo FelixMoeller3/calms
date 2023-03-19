@@ -1,13 +1,14 @@
 SUBSTITUTE_MODEL: 
   NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
   DATASET: 'CIFAR-10'
-  CONTINUAL: 0
+  CONTINUAL: -1
   USE_LABEL: True
   AL_METHOD: 
     NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
     INIT_BUDGET: 1000
     BUDGET: 1000
     LOOKBACK: 1
+    INIT_MODE: 'random'
   CL_METHOD: 
     NAME: 'IMM' # Possible values : Alasso,EWC,MAS,IMM,Naive
     WEIGHT: 0.3

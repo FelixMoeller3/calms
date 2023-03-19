@@ -11,6 +11,7 @@ parser.add_argument("-m","--mode",type=str,help="Which mode shall be run. Can be
     "for active learning, continual and active learning, model stealing and target model training respectively")
 args = parser.parse_args()
 if args.mode == "CL":
+    print("Testing Continual Learning")
     config.run_cl_al_config(args.config)
 elif args.mode == "MS":
     config.run_config(args.config)

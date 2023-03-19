@@ -1,17 +1,18 @@
 SUBSTITUTE_MODEL: 
   NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
   DATASET: 'CIFAR-10' # Possible values: MNIST,FashionMNIST
-  CONTINUAL: 6
+  CONTINUAL: -1
   USE_LABEL: True
   AL_METHOD: 
     NAME: 'Badge' # Possible values: LC,BALD,Badge,CoreSet,Random
     INIT_BUDGET: 4000
     BUDGET: 4000
     LOOKBACK: 1
+    INIT_MODE: 'facility_location'
   CL_METHOD: 
     NAME: 'MAS' # Possible values : Alasso,EWC,MAS,IMM,Naive
-    WEIGHT: 1.0
-    SCHEDULE: False
+    WEIGHT: 0.2
+    SCHEDULE: True
     OPTIMIZER:
       NAME: 'SGD'
       LR: 0.1

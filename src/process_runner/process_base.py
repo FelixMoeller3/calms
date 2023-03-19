@@ -6,7 +6,12 @@ from torch.utils.data import Dataset,DataLoader,Subset
 import os
 import pickle
 import random
+import time
+print("start importing submodlib")
+start = time.time()
 import submodlib
+end = time.time() - start
+print(f"end importing submodlib after:{time} seconds")
 import numpy as np
 from functools import reduce
 
@@ -40,7 +45,6 @@ class BaseProcess:
             labeled_set = self._init_random()
         else:
             raise ValueError(f"Got unknown mode {self.init_mode} as initialization mode. Mode must be one of {','.join(INIT_MODES)}")
-        self._init_facility_location()
         self._add_targets(labeled_set)
         self._train_cycle(self.train_set,labeled_set,loaders_dict,self.batch_size,self.num_epochs,val_accuracies)
         unlabeled_set = [i for i in unlabeled_set if i not in labeled_set]
