@@ -1,13 +1,9 @@
 import torch
 import torch.nn as nn
-from torch.nn.parameter import Parameter
-import torch.optim as optim
-import time
-from torch.utils.data import DataLoader,Dataset
+from torch.utils.data import Dataset
 from typing import List
 from .cl_base import ContinualLearningStrategy
 import torch.optim.lr_scheduler as lr_scheduler
-from tqdm import tqdm
 
 class MAS(ContinualLearningStrategy):
     '''

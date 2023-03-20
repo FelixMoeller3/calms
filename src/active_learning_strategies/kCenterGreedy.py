@@ -31,7 +31,6 @@ from typing import List
 
 import numpy as np
 from sklearn.metrics import pairwise_distances
-from scipy.spatial import distance
 
 import abc
 import numpy as np

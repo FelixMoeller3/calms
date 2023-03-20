@@ -2,7 +2,7 @@ from .strategy import Strategy
 import random
 import numpy as np
 import torch.nn as nn
-from torch.utils.data import DataLoader,Dataset
+from torch.utils.data import Dataset
 
 class RandomSelection(Strategy):
     '''

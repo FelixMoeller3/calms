@@ -1,4 +1,3 @@
-from typing import List
 import torch.nn as nn
 from .cl_base import ContinualLearningStrategy
 import torch

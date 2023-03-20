@@ -10,7 +10,7 @@ import torch.optim.lr_scheduler as lr_scheduler
 from torch.utils.data import DataLoader,Dataset
 from torchvision import datasets, transforms
 import torch
-from models import testConv,testNN,ResNet,BasicBlock,Bottleneck,ThiefConvNet,VGG16
+from models import testConv,ResNet,BasicBlock,Bottleneck,ThiefConvNet,VGG16
 from tqdm import tqdm
 from datetime import datetime
 import time

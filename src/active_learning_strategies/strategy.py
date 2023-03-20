@@ -1,10 +1,6 @@
 from typing import List
 import numpy as np
 import torch.nn as nn
-from torch.utils.data import DataLoader
-# Custom
-# from influence_function import calc_influence_function
-# from Influence_function import calc_influence_function, calc_influence_function_param
 
 class Strategy:
     '''

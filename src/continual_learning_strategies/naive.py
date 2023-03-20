@@ -1,4 +1,3 @@
-from typing import List
 from .cl_base import ContinualLearningStrategy
 from torch import nn
 import torch

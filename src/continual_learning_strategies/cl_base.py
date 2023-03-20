@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader,Dataset

@@ -1,6 +1,4 @@
 import torch.nn as nn
-from functools import reduce
-from torch import flatten
 import torch
 import torch.nn.functional as F
 
