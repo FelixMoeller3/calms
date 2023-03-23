@@ -59,7 +59,8 @@ class ContinualLearningStrategy(ABC):
         total_loss = 0.0
         correct_predictions = 0
         for data in tqdm(train_loader):
-
+            if self.isActive:
+                self._before_training_iteration()
             inputs, labels = data
             if self.use_gpu:
                 inputs, labels = inputs.cuda(), labels.cuda()
@@ -79,6 +80,7 @@ class ContinualLearningStrategy(ABC):
                 loss +=  self._compute_regularization_loss()
 
             loss.backward()
+            self._after_backward()
             if self.clip_grad > 0:
                 clip_grad.clip_grad_norm_(self.model.parameters(),self.clip_grad)
             self.optim.step()
@@ -138,3 +140,9 @@ class ContinualLearningStrategy(ABC):
 
     def activate(self) -> None:
         self.isActive = True
+
+    def _after_backward(self) -> None:
+        pass
+
+    def _before_training_iteration(self) -> None:
+        pass

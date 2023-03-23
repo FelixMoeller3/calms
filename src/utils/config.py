@@ -21,9 +21,9 @@ import pickle
 CONFIG = ["SUBSTITUTE_MODEL", "BATCH_SIZE", "CYCLES", "RESULTS_FILE", "RESULTS_FILE", "TARGET_MODEL", "EPOCHS","RECOVER_STATE","SAVE_STATE","STATE_DIR"]
 SUBSTITUTE_MODEL_CONFIG = ["NAME", "DATASET", "AL_METHOD", "CL_METHOD","USE_LABEL","CONTINUAL"]
 AL_CONFIG = ["NAME", "INIT_BUDGET", "BUDGET", "LOOKBACK"]
-AL_METHODS = ['LC','BALD','Badge','CoreSet', 'Random']
+AL_METHODS = ['LC','BALD','Badge','CoreSet', 'Random', 'VAAL']
 CL_CONFIG = ["NAME", "OPTIMIZER"]
-CL_METHODS = ["Alasso", "IMM", "Naive", "EWC", "MAS"]
+CL_METHODS = ["Alasso", "IMM", "Naive", "EWC", "MAS", "AGEM"]
 OPTIMIZERS =["SGD", "ADAM"]
 MODELS = ['Resnet18', 'Resnet34', 'Resnet50', 'Resnet101', 'Resnet152', 'TestConv','ActiveThiefConv', 'VGG16']
 TARGET_MODEL_CONFIG = ['MODEL','DATASET','EPOCHS','OPTIMIZER','TARGET_MODEL_FOLDER','TARGET_MODEL_FILE','TRAIN_MODEL']
@@ -221,7 +221,7 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
                 [
                        transforms.ToTensor(),
                        transforms.Resize(32),
-                       transforms.Normalize((0.1307,), (0.3081,))
+                       transforms.Normalize((0.1309,), (0.2892,)),
                    ]
                 + channel_change_greyscale),download=True)
     elif name == "FashionMNIST":
@@ -229,7 +229,7 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
                [
                        transforms.ToTensor(),
                        transforms.Resize(32),
-                       transforms.Normalize((0.1307,), (0.3081,))
+                       transforms.Normalize((0.2854,), (0.3384,))
                    ]
                + channel_change_greyscale),download=True)
     elif name == "CIFAR-10":
@@ -239,7 +239,7 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
         ]
         normalization = [
             transforms.ToTensor(),
-            transforms.Normalize([0.4914, 0.4822, 0.4465], [0.2023, 0.1994, 0.2010])
+            transforms.Normalize([0.4914, 0.4822, 0.4465], [0.2470, 0.2435, 0.2616])
         ]
         transform = augmentation + normalization if train else normalization
         transform += channel_change_color
@@ -264,8 +264,8 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
         normalization = [
             transforms.ToTensor(),
             transforms.Resize(32),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], 
-                            std=[0.229, 0.224, 0.225])
+            transforms.Normalize(mean=[0.4802, 0.4481, 0.3975], 
+                            std=[0.2618, 0.2537, 0.2677])
         ]
         transform = augmentation + normalization if train else normalization
         transform += channel_change_color
@@ -363,6 +363,8 @@ def build_al_strategy(al_config: dict,substitute_model: nn.Module, dataset: Data
         al_strat = al_strats.CoreSet(substitute_model,dataset,**al_config)
     elif al_config["NAME"] == "Random":
         al_strat = al_strats.RandomSelection(substitute_model,dataset,**al_config)
+    elif al_config["NAME"] == "VAAL":
+        al_strat = al_strats.VAAL(substitute_model,dataset,**al_config)
     else:
         raise AttributeError(f"Continual learning strategy unknown. Got {al_config['NAME']}, but expected one of {','.join(AL_METHODS)}")
     return al_strat
@@ -382,6 +384,8 @@ def build_cl_strategy(cl_config:dict,substitute_model: nn.Module,use_gpu) -> Con
         cl_strat = cl_strats.ElasticWeightConsolidation(substitute_model,optimizer,scheduler,nn.CrossEntropyLoss(),**cl_config)
     elif cl_config["NAME"] == "Naive":
         cl_strat = cl_strats.Naive(substitute_model,optimizer,scheduler,nn.CrossEntropyLoss(),**cl_config)
+    elif cl_config["NAME"] == "AGEM":
+        cl_strat = cl_strats.AGem(substitute_model,optimizer,scheduler,nn.CrossEntropyLoss(),**cl_config)
     else:
         raise AttributeError(f"Continual learning strategy unknown. Got {cl_config['NAME']}, but expected one of {','.join(CL_METHODS)}")
     return cl_strat

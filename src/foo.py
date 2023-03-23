@@ -3,10 +3,10 @@
 #import active_learning_strategies as al_strat
 #from torch.optim import SGD
 #import torch.nn as nn
-#from torchvision import datasets, transforms
-#from torch.utils.data import DataLoader
+from torchvision import datasets, transforms
+from torch.utils.data import DataLoader
 #import process_runner as ms
-#import torch
+import torch
 num_cycles = 10
 init_budget = 5000
 cycle_budget = 1000
@@ -78,12 +78,34 @@ with open("data/experiments/results.txt",'a') as f:
             f'{"-"* 70}'+ "\n"
         )
 '''
+def get_mean_and_std(dataloader):
+    channels_sum, channels_squared_sum, num_batches = 0, 0, 0
+    for data, _ in dataloader:
+        # Mean over batch, height and width, but not over the channels
+        channels_sum += torch.mean(data, dim=[0,2,3])
+        channels_squared_sum += torch.mean(data**2, dim=[0,2,3])
+        num_batches += 1
+    
+    mean = channels_sum / num_batches
+
+    # std = sqrt(E[X^2] - (E[X])^2)
+    std = (channels_squared_sum / num_batches - mean ** 2) ** 0.5
+
+    return mean, std
+
+def get_min_max(dataloader):
+    #channels_sum, channels_squared_sum, num_batches = 0, 0, 0
+    maximum = -200.0
+    minimum = 200.0
+    for data, _ in dataloader:
+        # Mean over batch, height and width, but not over the channels
+        maximum = max(torch.max(data).item(),maximum)
+        minimum = min(torch.min(data).item(),minimum)
+    
+    return minimum,maximum
+    
+    
 
 if __name__ == "__main__":
-    #from utils import config
-    #config.run_cl_al_config("./src/conf/basic_model_stealing/LC_Naive.yaml")
-    import submodlib
-    print("Hello world")
-    #a = torch.tensor([1,2,3])
-    #a[0] = 7
-    #print(a)
+    from utils import config
+    config.run_cl_al_config("./src/conf/basic_model_stealing/LC_Naive.yaml")

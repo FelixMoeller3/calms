@@ -107,4 +107,6 @@ class TinyImageNet(ImageFolder):
             os.path.join(self.dataset_folder, 'val'))
         
     def __getitem__(self, index: int) -> Tuple[torch.Tensor, int]:
-        return super().__getitem__(index)[0],self.targets[index]
+        if isinstance(index,int):
+            return super().__getitem__(index)[0],self.targets[index]
+        #elif isinstance(index,iterab)

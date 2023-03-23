@@ -1,0 +1,3 @@
+Thief Dataset should be more "complex" than the dataset that the target model was trained on 
+(e.g. stealing MNIST with FashionMNIST is doable, vice-versa it is a lot harder)
+When doing MS with Continual Active Learning it seems to be more erratic
