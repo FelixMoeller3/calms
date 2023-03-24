@@ -107,7 +107,7 @@
 %% --------------
 
 % Logos
-\newcommand{\thegrouplogo}{sdqlogo}
+\newcommand{\thegrouplogo}{seckit-logo-en}
 \newcommand{\grouplogo}[1]{\renewcommand{\thegrouplogo}{#1}}
 \newcommand{\printgrouplogo}{\includegraphics[height=1.8cm]{logos/\thegrouplogo}}
 \newcommand{\nogrouplogo}{\renewcommand{\printgrouplogo}{}}

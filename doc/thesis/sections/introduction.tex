@@ -84,3 +84,21 @@ f(x)=\Omega(g(x))\ (x\rightarrow\infty)\;\Leftrightarrow\;
 %% --------------------
 %% | /Example content |
 %% --------------------
+
+
+\textbf{Contributions} \hspace{0.2cm} The objective of this thesis is to combine existing approaches of the continual learning domain
+ with approaches in the active learning domain. More specifically, we are focusing on regularization-based continual learning methods
+whereas we use both uncertainty-based and diversity-based active learning methods. The continual learning methods we use are Elastic
+Weight Consolidation (EWC) \cite{Kirkpatrick2017}, Memory Aware Synapses (MAS) \cite{aljundi2018memory}, Incremental Moment Matching
+(IMM) \cite{lee2017overcoming} and Asymmetric Loss Approximation by Single-Side Overestimation (ALASSO) \cite{park2019continual}.
+Concerning active learning, we compare random sampling, Least Confidence (LC) \cite{lewis1994sequential} sampling, Batch Active Learning by
+Diverse, uncertain Gradient lower Bound (BADGE) \cite{ash2019deep}, Bayesian Active Learning by Disagreement (BALD) \cite{houlsby2011bayesian} and
+CoreSet \cite{sener2017active}.
+We analyze how the continual learning methods can speed up the active learning process, which combinations of continual and active learning methods
+are most effective and how the trade-off between accuracy and speed up is. While the focus of this thesis is on regularization-based continual
+learning methods, we briefly explore the effectiveness of exemplar rehearsal continual learning using the Average Gradient Episodic Memory (AGEM)
+approach \cite{chaudhry2018efficient} combined with representation-based active learning in form of Variational Adversarial Active Learning (VAAL)
+\cite{sinha2019variational}. \\
+After exploring the effectiveness of the different combinations of continual and active learning methods, we apply these combinations in the model stealing
+domain. More specifically, we build upon the model extraction framework ActiveThief \cite{pal2020activethief} and investigate the performance of continual
+active learning methods in the model stealing domain.

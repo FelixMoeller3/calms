@@ -99,13 +99,11 @@
   year={2018}
 }
 
-@inproceedings{gal2017deep,
-  title={Deep bayesian active learning with image data},
-  author={Gal, Yarin and Islam, Riashat and Ghahramani, Zoubin},
-  booktitle={International Conference on Machine Learning},
-  pages={1183--1192},
-  year={2017},
-  organization={PMLR}
+@article{houlsby2011bayesian,
+  title={Bayesian active learning for classification and preference learning},
+  author={Houlsby, Neil and Husz{\'a}r, Ferenc and Ghahramani, Zoubin and Lengyel, M{\'a}t{\'e}},
+  journal={arXiv preprint arXiv:1112.5745},
+  year={2011}
 }
 
 @article{kirkpatrick2017overcoming,
@@ -161,15 +159,19 @@
   publisher={ACM New York, NY}
 }
 
-@inproceedings{lewis1995sequential,
-  title={A sequential algorithm for training text classifiers: Corrigendum and additional data},
-  author={Lewis, David D},
-  booktitle={Acm Sigir Forum},
-  volume={29},
-  number={2},
-  pages={13--19},
-  year={1995},
-  organization={ACM New York, NY, USA}
+@article{lewis1994sequential,
+  author    = {David D. Lewis and
+               William A. Gale},
+  title     = {A Sequential Algorithm for Training Text Classifiers},
+  journal   = {CoRR},
+  volume    = {abs/cmp-lg/9407020},
+  year      = {1994},
+  url       = {http://arxiv.org/abs/cmp-lg/9407020},
+  eprinttype = {arXiv},
+  eprint    = {cmp-lg/9407020},
+  timestamp = {Mon, 13 Aug 2018 16:47:16 +0200},
+  biburl    = {https://dblp.org/rec/journals/corr/LewisG94.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
 
@@ -260,4 +262,111 @@
   booktitle={Proceedings of the IEEE International Conference on Computer Vision},
   pages={1320--1328},
   year={2017}
+}
+
+// Resnet paper as an example for deep learning breakthroughs
+@inproceedings{he2016deep,
+  title={Deep residual learning for image recognition},
+  author={He, Kaiming and Zhang, Xiangyu and Ren, Shaoqing and Sun, Jian},
+  booktitle={Proceedings of the IEEE conference on computer vision and pattern recognition},
+  pages={770--778},
+  year={2016}
+}
+
+// GAN paper as an example of deep learning breakthroughs
+@article{goodfellow2020generative,
+  title={Generative adversarial networks},
+  author={Goodfellow, Ian and Pouget-Abadie, Jean and Mirza, Mehdi and Xu, Bing and Warde-Farley, David and Ozair, Sherjil and Courville, Aaron and Bengio, Yoshua},
+  journal={Communications of the ACM},
+  volume={63},
+  number={11},
+  pages={139--144},
+  year={2020},
+  publisher={ACM New York, NY, USA}
+}
+
+// Backprop paper as an example of deep learning breakthroughs
+@article{lecun1989backpropagation,
+  title={Backpropagation applied to handwritten zip code recognition},
+  author={LeCun, Yann and Boser, Bernhard and Denker, John S and Henderson, Donnie and Howard, Richard E and Hubbard, Wayne and Jackel, Lawrence D},
+  journal={Neural computation},
+  volume={1},
+  number={4},
+  pages={541--551},
+  year={1989},
+  publisher={MIT Press}
+}
+
+// Example of how training data can be stolen
+@inproceedings{shokri2017membership,
+  title={Membership inference attacks against machine learning models},
+  author={Shokri, Reza and Stronati, Marco and Song, Congzheng and Shmatikov, Vitaly},
+  booktitle={2017 IEEE symposium on security and privacy (SP)},
+  pages={3--18},
+  year={2017},
+  organization={IEEE}
+}
+
+// Example of how architecture of model can be stolen
+@article{oh2019towards,
+  title={Towards reverse-engineering black-box neural networks},
+  author={Oh, Seong Joon and Schiele, Bernt and Fritz, Mario},
+  journal={Explainable AI: Interpreting, Explaining and Visualizing Deep Learning},
+  pages={121--144},
+  year={2019},
+  publisher={Springer}
+}
+
+// Model stealing example
+@inproceedings{tramer2016stealing,
+  title={Stealing Machine Learning Models via Prediction APIs.},
+  author={Tram{\`e}r, Florian and Zhang, Fan and Juels, Ari and Reiter, Michael K and Ristenpart, Thomas},
+  booktitle={USENIX security symposium},
+  volume={16},
+  pages={601--618},
+  year={2016}
+}
+
+// Model stealing example
+@inproceedings{papernot2017practical,
+  title={Practical black-box attacks against machine learning},
+  author={Papernot, Nicolas and McDaniel, Patrick and Goodfellow, Ian and Jha, Somesh and Celik, Z Berkay and Swami, Ananthram},
+  booktitle={Proceedings of the 2017 ACM on Asia conference on computer and communications security},
+  pages={506--519},
+  year={2017}
+}
+
+// Model stealing defense example
+@article{orekondy2019prediction,
+  title={Prediction poisoning: Towards defenses against dnn model stealing attacks},
+  author={Orekondy, Tribhuvanesh and Schiele, Bernt and Fritz, Mario},
+  journal={arXiv preprint arXiv:1906.10908},
+  year={2019}
+}
+
+// PRADA as one example of a model stealing defence attack
+@inproceedings{juuti2019prada,
+  title={PRADA: protecting against DNN model stealing attacks},
+  author={Juuti, Mika and Szyller, Sebastian and Marchal, Samuel and Asokan, N},
+  booktitle={2019 IEEE European Symposium on Security and Privacy (EuroS\&P)},
+  pages={512--527},
+  year={2019},
+  organization={IEEE}
+}
+
+// AGEM paper
+@article{chaudhry2018efficient,
+  title={Efficient lifelong learning with a-gem},
+  author={Chaudhry, Arslan and Ranzato, Marc'Aurelio and Rohrbach, Marcus and Elhoseiny, Mohamed},
+  journal={arXiv preprint arXiv:1812.00420},
+  year={2018}
+}
+
+// VAAL paper
+@inproceedings{sinha2019variational,
+  title={Variational adversarial active learning},
+  author={Sinha, Samarth and Ebrahimi, Sayna and Darrell, Trevor},
+  booktitle={Proceedings of the IEEE/CVF International Conference on Computer Vision},
+  pages={5972--5981},
+  year={2019}
 }

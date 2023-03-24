@@ -1,0 +1,13 @@
+1. Abstract 1 Seite
+2. Deutsche Zsmfassung 1 Seite
+3. Introduction und Contribution 1-2 Seiten
+4. Related Work 10-20 Seiten
+    4.1 Active Learning 2-4 Seiten (Allgemein, pool-based, query synthesis,... und dann zu jeder der verwendeten Methoden)
+    4.2 Continual Learning 2-4 Seiten (Allgemein, regularization-based, exemplar-rehearsal,... und dann zu jeder der verwendeten Methoden)
+    4.3 Model Stealing 2-4 (Allgemein, kurz defenses anreißen, Brücke zwischen Active Learning und Model Stealing und dann zu Active Thief noch was sagen)
+5. Experiment Setup 2 Seiten (Datensätze, Modelle)
+6. Methodology 10 Seiten (Welche Metrik wird zur Bestimmung der Güte zweier Ansätze benutzt? Wie viele Experimente gemacht? Welche Werte werden angegeben?)
+7. Evaluation 15 Seiten (Zuerst reines Active Learning, dann Kombination aus Active Learning und Continual Learning. Dann Model stealing zuerst nur mit Active Thief
+und dann auch mit Continual Learning)
+8. Conclusion und future work 2 Seiten
+9. Anhang
