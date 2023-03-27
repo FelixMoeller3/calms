@@ -108,4 +108,4 @@ def get_min_max(dataloader):
 
 if __name__ == "__main__":
     from utils import config
-    config.run_cl_al_config("./src/conf/basic_model_stealing/LC_Naive.yaml")
+    config.run_config("./src/conf/basic_model_stealing/LC_Naive.yaml")
