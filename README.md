@@ -34,7 +34,8 @@ Description of the installation process
 ...
 
 ## Installation
-
+To get the SmallImageNet dataset, please run the following line first from the base directory (i.e. 'fmoeller')
+python src/utils/prepare_dataset.py --dataset SmallImageNet --resolution 32 --data-dir data --download-dir data/compressed
 ...
 
 # Documentation

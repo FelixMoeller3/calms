@@ -15,7 +15,7 @@ from tqdm import tqdm
 from datetime import datetime
 import time
 import os
-from data import TinyImageNet
+from data import TinyImageNet,SmallImagenet
 import pickle
 
 CONFIG = ["SUBSTITUTE_MODEL", "BATCH_SIZE", "CYCLES", "RESULTS_FILE", "RESULTS_FILE", "TARGET_MODEL", "EPOCHS","RECOVER_STATE","SAVE_STATE","STATE_DIR"]
@@ -27,7 +27,7 @@ CL_METHODS = ["Alasso", "IMM", "Naive", "EWC", "MAS", "AGEM"]
 OPTIMIZERS =["SGD", "ADAM"]
 MODELS = ['Resnet18', 'Resnet34', 'Resnet50', 'Resnet101', 'Resnet152', 'TestConv','ActiveThiefConv', 'VGG16']
 TARGET_MODEL_CONFIG = ['MODEL','DATASET','EPOCHS','OPTIMIZER','TARGET_MODEL_FOLDER','TARGET_MODEL_FILE','TRAIN_MODEL']
-DATASET_NAMES = ["MNIST","FashionMNIST", "CIFAR-10","TinyImageNet"]
+DATASET_NAMES = ["MNIST","FashionMNIST", "CIFAR-10","TinyImageNet","SmallImageNet"]
 OPTIMIZER_CONFIG = ["NAME", "LR", "MOMENTUM", "WDECAY"]
 
 def run_config(config_path: str) -> ModelStealingProcess:
@@ -270,6 +270,19 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
         transform = augmentation + normalization if train else normalization
         transform += channel_change_color
         dataset = TinyImageNet("./data",train,transform=transforms.Compose(transform),download=True)
+    elif name == "SmallImageNet":
+        augmentation = [
+            transforms.RandomCrop(32,padding=4),
+            transforms.RandomHorizontalFlip(),
+        ]
+        normalization = [
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.4802, 0.4481, 0.3975], 
+                            std=[0.2618, 0.2537, 0.2677])
+        ]
+        transform = augmentation + normalization if train else normalization
+        transform += channel_change_color
+        dataset = SmallImagenet("./data",train,transform=transforms.Compose(transform))
     else:
         raise AttributeError(f"Dataset unknown. Got {name}, but expected one of {','.join(DATASET_NAMES)}")
     print(f"Loaded {name} as {'training' if train else 'validation'} set")
