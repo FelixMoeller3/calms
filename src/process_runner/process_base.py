@@ -91,7 +91,8 @@ class BaseProcess:
     def _init_facility_location(self) -> List[int]:
         print("Running facility location")
         num_features = reduce(lambda x,y:x*y,self.train_set[0][0].shape,1)
-        num_samples = len(self.train_set)
+        #num_samples = len(self.train_set)
+        num_samples = 5000
         data = np.zeros((num_samples,num_features))
         for i in range(num_samples):
             data[i] = self.train_set[i][0].numpy().flatten()
