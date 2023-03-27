@@ -1,3 +1,4 @@
+print("Start importing something")
 from utils import config
 import argparse
 

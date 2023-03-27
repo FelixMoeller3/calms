@@ -1,16 +1,18 @@
 SUBSTITUTE_MODEL: 
   NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
-  DATASET: 'FashionMNIST'
-  CONTINUAL: 100
+  DATASET: 'CIFAR-10'
+  CONTINUAL: -1
   USE_LABEL: True
   AL_METHOD: 
-    NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
+    NAME: 'Random' # Possible values: LC,BALD,Badge,CoreSet,Random
     INIT_BUDGET: 2000
     BUDGET: 2000
     LOOKBACK: 1
     INIT_MODE: 'random'
   CL_METHOD: 
-    NAME: 'Naive' # Possible values : Alasso,EWC,MAS,IMM,Naive
+    NAME: 'AGEM' # Possible values : Alasso,EWC,MAS,IMM,Naive
+    PATTERNS_PER_EXPERIENCE: 400
+    SAMPLE_SIZE: 2000
     OPTIMIZER:
       NAME: 'SGD'
       LR: 0.1
@@ -23,18 +25,18 @@ EPOCHS: 150
 RECOVER_STATE: False
 SAVE_STATE: False
 STATE_DIR: ''
-RESULTS_FOLDER: './experiments/ModelStealing/'
-RESULTS_FILE: 'Test_results.txt'
+RESULTS_FOLDER: './experiments/CL_AL/'
+RESULTS_FILE: 'correct_results_150epochs.txt'
 TARGET_MODEL:
   TARGET_MODEL_FOLDER: './data/models/mnist/'
   TARGET_MODEL_FILE: 'resnet.pt'
   TRAIN_MODEL: True
-  MODEL: 'TestConv'
-  DATASET: 'MNIST'
-  EPOCHS : 20
+  MODEL: 'Resnet18'
+  DATASET: 'CIFAR-10'
+  EPOCHS : 50
   OPTIMIZER:
     NAME: 'SGD'
-    LR: 0.05
+    LR: 0.001
     MOMENTUM: 0.9
     WDECAY: 0.0005
     MILESTONES: [160,240]

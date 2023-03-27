@@ -1011,3 +1011,288 @@ Active Learning Strategy: LC
 Accuracy results at the end of each cycle: [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
 Model agreement at the end of each cycle: [0.1187, 0.118, 0.1171, 0.119, 0.1177, 0.1184, 0.117, 0.1147, 0.1175, 0.1176, 0.1182, 0.1182, 0.1163]
 ----------------------------------------------------------------------
+Run completed at 2023-03-24 16:11:36 after 01h:37m:01s
+Config File:
+BATCH_SIZE: 128
+CYCLES: 12
+EPOCHS: 40
+RECOVER_STATE: false
+RESULTS_FILE: Test_results.txt
+RESULTS_FOLDER: ./experiments/ModelStealing/
+SAVE_STATE: false
+STATE_DIR: ''
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 4000
+    INIT_BUDGET: 4000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: LC
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  CONTINUAL: -1
+  DATASET: TinyImageNet
+  NAME: Resnet18
+  USE_LABEL: false
+TARGET_MODEL:
+  DATASET: CIFAR-10
+  EPOCHS: 50
+  MODEL: Resnet18
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: resnet.pt
+  TARGET_MODEL_FOLDER: ./data/models/mnist/
+  TRAIN_MODEL: true
+Target model: Resnet18, trained on CIFAR-10
+Substitute model: Resnet18, trained on TinyImageNet
+Continual Learning Strategy: Naive
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
+Model agreement at the end of each cycle: [0.109, 0.1085, 0.1095, 0.1075, 0.108, 0.1066, 0.1079, 0.1073, 0.1082, 0.1082, 0.1081, 0.1088, 0.1084]
+----------------------------------------------------------------------
+Run completed at 2023-03-25 00:33:53 after 07h:14m:11s
+Config File:
+BATCH_SIZE: 128
+CYCLES: 24
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: Test_results.txt
+RESULTS_FOLDER: ./experiments/ModelStealing/
+SAVE_STATE: false
+STATE_DIR: ''
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    INIT_BUDGET: 2000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: LC
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  CONTINUAL: 100
+  DATASET: FashionMNIST
+  NAME: Resnet18
+  USE_LABEL: false
+TARGET_MODEL:
+  DATASET: MNIST
+  EPOCHS: 20
+  MODEL: TestConv
+  OPTIMIZER:
+    LR: 0.05
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: resnet.pt
+  TARGET_MODEL_FOLDER: ./data/models/mnist/
+  TRAIN_MODEL: true
+Target model: TestConv, trained on MNIST
+Substitute model: Resnet18, trained on FashionMNIST
+Continual Learning Strategy: Naive
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.56, 0.7558, 0.8064, 0.8519, 0.907, 0.9111, 0.9231, 0.9266, 0.9287, 0.9318, 0.9394, 0.9398, 0.951, 0.9527, 0.9582, 0.9543, 0.9576, 0.9596, 0.9608, 0.9624, 0.9617, 0.9641, 0.9686, 0.9708, 0.9677]
+Model agreement at the end of each cycle: [0.5615, 0.7589, 0.8104, 0.8566, 0.9116, 0.9164, 0.9285, 0.9315, 0.9338, 0.9367, 0.9449, 0.9455, 0.9566, 0.9581, 0.9637, 0.9593, 0.9628, 0.9651, 0.965, 0.9674, 0.9665, 0.9696, 0.9735, 0.9757, 0.9725]
+----------------------------------------------------------------------
+Run completed at 2023-03-25 00:35:15 after 07h:06m:41s
+Config File:
+BATCH_SIZE: 128
+CYCLES: 24
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: Test_results.txt
+RESULTS_FOLDER: ./experiments/ModelStealing/
+SAVE_STATE: false
+STATE_DIR: ''
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    INIT_BUDGET: 2000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: LC
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  CONTINUAL: 100
+  DATASET: FashionMNIST
+  NAME: Resnet18
+  USE_LABEL: true
+TARGET_MODEL:
+  DATASET: MNIST
+  EPOCHS: 20
+  MODEL: TestConv
+  OPTIMIZER:
+    LR: 0.05
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: resnet.pt
+  TARGET_MODEL_FOLDER: ./data/models/mnist/
+  TRAIN_MODEL: true
+Target model: TestConv, trained on MNIST
+Substitute model: Resnet18, trained on FashionMNIST
+Continual Learning Strategy: Naive
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.2319, 0.3769, 0.5645, 0.6053, 0.7203, 0.7838, 0.819, 0.864, 0.8702, 0.8739, 0.8848, 0.9035, 0.8987, 0.9134, 0.9166, 0.9202, 0.9181, 0.9221, 0.9272, 0.9257, 0.9372, 0.9255, 0.9187, 0.9251, 0.9286]
+Model agreement at the end of each cycle: [0.2334, 0.378, 0.5647, 0.6069, 0.7215, 0.7866, 0.821, 0.867, 0.8736, 0.8763, 0.8865, 0.9056, 0.8992, 0.915, 0.9187, 0.9225, 0.9211, 0.9253, 0.9299, 0.9288, 0.9397, 0.9264, 0.9214, 0.9276, 0.9316]
+----------------------------------------------------------------------
+Run completed at 2023-03-27 03:19:49 after 04h:00m:05s
+Config File:
+BATCH_SIZE: 128
+CYCLES: 10
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: Test_results.txt
+RESULTS_FOLDER: ./experiments/ModelStealing/
+SAVE_STATE: false
+STATE_DIR: ./experiments/temp/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    INIT_BUDGET: 2000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: Random
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0001
+    USE_GPU: true
+  CONTINUAL: 100
+  DATASET: TinyImageNet
+  NAME: ActiveThiefConv
+  USE_LABEL: true
+TARGET_MODEL:
+  DATASET: MNIST
+  EPOCHS: 50
+  MODEL: ActiveThiefConv
+  OPTIMIZER:
+    LR: 0.1
+    MILESTONES:
+    - 80
+    - 130
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: resnet.pt
+  TARGET_MODEL_FOLDER: ./data/models/cifar10/
+  TRAIN_MODEL: true
+Target model: ActiveThiefConv, trained on MNIST
+Substitute model: ActiveThiefConv, trained on TinyImageNet
+Continual Learning Strategy: Naive
+Active Learning Strategy: Random
+Accuracy results at the end of each cycle: [0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1032, 0.1032, 0.1032, 0.1032, 0.1032, 0.1032]
+Model agreement at the end of each cycle: [0.1138, 0.1141, 0.1138, 0.1135, 0.1139, 0.1021, 0.1035, 0.1027, 0.1026, 0.1025, 0.1026]
+----------------------------------------------------------------------
+Run completed at 2023-03-27 03:26:07 after 04h:10m:46s
+Config File:
+BATCH_SIZE: 128
+CYCLES: 10
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: Test_results.txt
+RESULTS_FOLDER: ./experiments/ModelStealing/
+SAVE_STATE: false
+STATE_DIR: ./experiments/temp/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    INIT_BUDGET: 2000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: Random
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0001
+    USE_GPU: true
+  CONTINUAL: 100
+  DATASET: TinyImageNet
+  NAME: ActiveThiefConv
+  USE_LABEL: true
+TARGET_MODEL:
+  DATASET: CIFAR-10
+  EPOCHS: 150
+  MODEL: ActiveThiefConv
+  OPTIMIZER:
+    LR: 0.1
+    MILESTONES:
+    - 80
+    - 130
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: resnet.pt
+  TARGET_MODEL_FOLDER: ./data/models/cifar10/
+  TRAIN_MODEL: true
+Target model: ActiveThiefConv, trained on CIFAR-10
+Substitute model: ActiveThiefConv, trained on TinyImageNet
+Continual Learning Strategy: Naive
+Active Learning Strategy: Random
+Accuracy results at the end of each cycle: [0.1498, 0.1613, 0.2034, 0.2079, 0.2072, 0.2012, 0.2092, 0.2084, 0.2091, 0.21, 0.2049]
+Model agreement at the end of each cycle: [0.1392, 0.1533, 0.1997, 0.2003, 0.1981, 0.1917, 0.2028, 0.1993, 0.2037, 0.2017, 0.2015]
+----------------------------------------------------------------------
