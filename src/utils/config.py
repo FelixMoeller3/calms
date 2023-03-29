@@ -23,7 +23,7 @@ SUBSTITUTE_MODEL_CONFIG = ["NAME", "DATASET", "AL_METHOD", "CL_METHOD","USE_LABE
 AL_CONFIG = ["NAME", "INIT_BUDGET", "BUDGET", "LOOKBACK"]
 AL_METHODS = ['LC','BALD','Badge','CoreSet', 'Random', 'VAAL']
 CL_CONFIG = ["NAME", "OPTIMIZER"]
-CL_METHODS = ["Alasso", "IMM", "Naive", "EWC", "MAS", "AGEM"]
+CL_METHODS = ["Alasso", "IMM", "Naive", "EWC", "MAS", "AGEM", "Replay"]
 OPTIMIZERS =["SGD", "ADAM"]
 MODELS = ['Resnet18', 'Resnet34', 'Resnet50', 'Resnet101', 'Resnet152', 'TestConv','ActiveThiefConv2','ActiveThiefConv3','ActiveThiefConv4' , 'VGG16']
 TARGET_MODEL_CONFIG = ['MODEL','DATASET','EPOCHS','OPTIMIZER','TARGET_MODEL_FOLDER','TARGET_MODEL_FILE','TRAIN_MODEL']
@@ -409,6 +409,8 @@ def build_cl_strategy(cl_config:dict,substitute_model: nn.Module,use_gpu) -> Con
         cl_strat = cl_strats.Naive(substitute_model,optimizer,scheduler,nn.CrossEntropyLoss(),**cl_config)
     elif cl_config["NAME"] == "AGEM":
         cl_strat = cl_strats.AGem(substitute_model,optimizer,scheduler,nn.CrossEntropyLoss(),**cl_config)
+    elif cl_config["NAME"] == "Replay":
+        cl_strat = cl_strats.Replay(substitute_model,optimizer,scheduler,nn.CrossEntropyLoss(),**cl_config)
     else:
         raise AttributeError(f"Continual learning strategy unknown. Got {cl_config['NAME']}, but expected one of {','.join(CL_METHODS)}")
     return cl_strat
