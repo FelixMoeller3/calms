@@ -50,9 +50,7 @@ class AGem(ContinualLearningStrategy):
             targets = torch.zeros([num_to_sample] + list(self.buffer_targets[0].shape))
         else:
             targets = torch.zeros(num_to_sample,dtype=torch.long)
-        indexes = [i for i in range(len(self.buffer_data))]
-        random.shuffle(indexes)
-        indexes = indexes[:num_to_sample]
+        indexes = random.sample([i for i in range(len(self.buffer_data))],num_to_sample)
         for i,index in enumerate(indexes):
             data[i] = self.buffer_data[index]
             targets[i] = self.buffer_targets[index]
@@ -99,9 +97,7 @@ class AGem(ContinualLearningStrategy):
 
     def _after_train(self,train_set: Dataset=None) -> None:
         num_elems = min(len(train_set),self.patterns_per_experience)
-        indexes = [i for i in range(len(train_set))]
-        random.shuffle(indexes)
-        indexes = indexes[:num_elems]
+        indexes = random.sample([i for i in range(len(train_set))],num_elems)
         data = torch.zeros([num_elems] + list(train_set[0][0].shape))
         if isinstance(train_set[0][1],torch.TensorType):
             targets = torch.zeros([num_elems] + list(train_set[0][1].shape))
