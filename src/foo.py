@@ -5,6 +5,7 @@
 #import torch.nn as nn
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
+from data import SmallImagenet
 #import process_runner as ms
 import torch
 num_cycles = 10
@@ -107,5 +108,8 @@ def get_min_max(dataloader):
     
 
 if __name__ == "__main__":
-    from utils import config
-    config.run_config("./src/conf/basic_model_stealing/LC_Naive.yaml")
+    #from utils import config
+    #config.run_config("./src/conf/basic_model_stealing/LC_Naive.yaml")
+    dataset = SmallImagenet("./data",train=True,transform=transforms.ToTensor())
+    dl = DataLoader(dataset,128)
+    print(get_mean_and_std(dl))

@@ -23,8 +23,8 @@ BATCH_SIZE: 128 # batch size used for training
 CYCLES: 12 # number of cycles in the model stealing process
 EPOCHS: 150
 RECOVER_STATE: False
-SAVE_STATE: False
-STATE_DIR: ''
+SAVE_STATE: True
+STATE_DIR: './experiments/temp/fl_full_cifar10/'
 RESULTS_FOLDER: './experiments/CL_AL/'
 RESULTS_FILE: 'correct_results_150epochs.txt'
 TARGET_MODEL:

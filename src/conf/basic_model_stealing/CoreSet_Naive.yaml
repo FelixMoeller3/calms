@@ -1,13 +1,14 @@
 SUBSTITUTE_MODEL: 
-  NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
-  DATASET: 'CIFAR-10' # Possible values: MNIST,FashionMNIST
-  CONTINUAL: 0
-  USE_LABEL: True
+  NAME: 'ActiveThiefConv3' # Possible values: Resnet18,Resnext50,TestConv
+  DATASET: 'SmallImageNet' # Possible values: MNIST,FashionMNIST
+  CONTINUAL: 100
+  USE_LABEL: False
   AL_METHOD: 
     NAME: 'CoreSet' # Possible values: LC,BALD,Badge,CoreSet,Random
-    INIT_BUDGET: 4000
-    BUDGET: 4000
+    INIT_BUDGET: 2000
+    BUDGET: 2000
     LOOKBACK: 1
+    INIT_MODE: 'random'
   CL_METHOD: 
     NAME: 'Naive' # Possible values : Alasso,EWC,MAS,IMM,Naive
     OPTIMIZER:
@@ -15,25 +16,25 @@ SUBSTITUTE_MODEL:
       LR: 0.1
       MOMENTUM: 0.9
       WDECAY: 0.0005
-      MILESTONES: [60,120]
+      MILESTONES: [80,130]
 BATCH_SIZE: 128 # batch size used for training
-CYCLES: 12 # number of cycles in the model stealing process
+CYCLES: 10 # number of cycles in the model stealing process
 EPOCHS: 150
 RECOVER_STATE: False
 SAVE_STATE: False
 STATE_DIR: ''
-RESULTS_FOLDER: './experiments/CL_AL/'
-RESULTS_FILE: 'correct_results_150epochs.txt'
+RESULTS_FOLDER: './experiments/ModelStealing/'
+RESULTS_FILE: 'Active_Thief_Results.txt'
 TARGET_MODEL:
   TARGET_MODEL_FOLDER: './data/models/cifar10/'
   TARGET_MODEL_FILE: 'resnet.pt'
-  TRAIN_MODEL: False
-  MODEL: 'TestConv'
-  DATASET: 'FashionMNIST'
-  EPOCHS : 3
+  TRAIN_MODEL: True
+  MODEL: 'ActiveThiefConv3'
+  DATASET: 'MNIST'
+  EPOCHS : 50
   OPTIMIZER:
     NAME: 'SGD'
-    LR: 0.001
+    LR: 0.1
     MOMENTUM: 0.9
     WDECAY: 0.0005
-    MILESTONES: [160,240]
+    MILESTONES: [70,240]

@@ -2,8 +2,8 @@
 
 #SBATCH --job-name=Badge_MAS       # job name
 #SBATCH --partition=gpu_4_a100             # queue for the resource allocation.
-#SBATCH --time=2000:00                     # wall-clock time limit  
-#SBATCH --mem=80000                        # memory per node
+#SBATCH --time=2400:00                     # wall-clock time limit  
+#SBATCH --mem=200000                        # memory per node
 #SBATCH --nodes=1                          # number of nodes to be used
 #SBATCH --cpus-per-task=2                 # number of CPUs required per MPI task
 #SBATCH --ntasks-per-node=1                # maximum count of tasks per node

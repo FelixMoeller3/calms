@@ -1,0 +1,285 @@
+Run completed at 2023-03-27 22:15:07 after 07h:45m:07s
+Config File:
+BATCH_SIZE: 128
+CYCLES: 10
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: Active_Thief_Results.txt
+RESULTS_FOLDER: ./experiments/ModelStealing/
+SAVE_STATE: false
+STATE_DIR: ''
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    INIT_BUDGET: 2000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: CoreSet
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  CONTINUAL: 100
+  DATASET: SmallImageNet
+  NAME: ActiveThiefConv
+  USE_LABEL: false
+TARGET_MODEL:
+  DATASET: MNIST
+  EPOCHS: 50
+  MODEL: ActiveThiefConv
+  OPTIMIZER:
+    LR: 0.1
+    MILESTONES:
+    - 70
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: resnet.pt
+  TARGET_MODEL_FOLDER: ./data/models/cifar10/
+  TRAIN_MODEL: true
+Target model: ActiveThiefConv, trained on MNIST
+Substitute model: ActiveThiefConv, trained on SmallImageNet
+Continual Learning Strategy: Naive
+Active Learning Strategy: CoreSet
+Accuracy results at the end of each cycle: [0.1183, 0.4114, 0.7486, 0.7998, 0.8134, 0.8263, 0.8456, 0.8608, 0.8465, 0.8507, 0.8682]
+Model agreement at the end of each cycle: [0.1195, 0.4134, 0.7504, 0.8023, 0.8151, 0.8286, 0.8474, 0.8632, 0.8486, 0.8543, 0.8709]
+----------------------------------------------------------------------
+Run completed at 2023-03-28 03:03:18 after 04h:22m:45s
+Config File:
+BATCH_SIZE: 128
+CYCLES: 10
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: Active_Thief_Results.txt
+RESULTS_FOLDER: ./experiments/ModelStealing/
+SAVE_STATE: false
+STATE_DIR: ''
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    INIT_BUDGET: 2000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: CoreSet
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  CONTINUAL: 100
+  DATASET: SmallImageNet
+  NAME: ActiveThiefConv
+  USE_LABEL: false
+TARGET_MODEL:
+  DATASET: MNIST
+  EPOCHS: 50
+  MODEL: ActiveThiefConv
+  OPTIMIZER:
+    LR: 0.1
+    MILESTONES:
+    - 70
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: resnet.pt
+  TARGET_MODEL_FOLDER: ./data/models/cifar10/
+  TRAIN_MODEL: true
+Target model: ActiveThiefConv, trained on MNIST
+Substitute model: ActiveThiefConv, trained on SmallImageNet
+Continual Learning Strategy: Naive
+Active Learning Strategy: CoreSet
+Accuracy results at the end of each cycle: [0.0892, 0.3827, 0.7268, 0.65, 0.684, 0.6592, 0.651, 0.7015, 0.7984, 0.7777, 0.7499]
+Model agreement at the end of each cycle: [0.0907, 0.3861, 0.7277, 0.6519, 0.686, 0.6608, 0.6524, 0.7038, 0.8011, 0.7791, 0.7524]
+----------------------------------------------------------------------
+Run completed at 2023-03-28 16:22:54 after 05h:01m:52s
+Config File:
+BATCH_SIZE: 128
+CYCLES: 10
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: Active_Thief_Results.txt
+RESULTS_FOLDER: ./experiments/ModelStealing/
+SAVE_STATE: false
+STATE_DIR: ''
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    INIT_BUDGET: 2000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: CoreSet
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 80
+      - 130
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  CONTINUAL: 100
+  DATASET: SmallImageNet
+  NAME: ActiveThiefConv4
+  USE_LABEL: false
+TARGET_MODEL:
+  DATASET: MNIST
+  EPOCHS: 50
+  MODEL: ActiveThiefConv4
+  OPTIMIZER:
+    LR: 0.1
+    MILESTONES:
+    - 70
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: resnet.pt
+  TARGET_MODEL_FOLDER: ./data/models/cifar10/
+  TRAIN_MODEL: true
+Target model: ActiveThiefConv4, trained on MNIST
+Substitute model: ActiveThiefConv4, trained on SmallImageNet
+Continual Learning Strategy: Naive
+Active Learning Strategy: CoreSet
+Accuracy results at the end of each cycle: [0.0892, 0.2685, 0.5982, 0.6308, 0.6739, 0.6327, 0.6399, 0.6475, 0.716, 0.7704, 0.7984]
+Model agreement at the end of each cycle: [0.0916, 0.2697, 0.6, 0.6311, 0.6752, 0.632, 0.6404, 0.6483, 0.7172, 0.7715, 0.7986]
+----------------------------------------------------------------------
+Run completed at 2023-03-28 21:33:35 after 10h:16m:07s
+Config File:
+BATCH_SIZE: 128
+CYCLES: 10
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: Active_Thief_Results.txt
+RESULTS_FOLDER: ./experiments/ModelStealing/
+SAVE_STATE: false
+STATE_DIR: ''
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    INIT_BUDGET: 2000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: CoreSet
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 80
+      - 130
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  CONTINUAL: 100
+  DATASET: TinyImageNet
+  NAME: ActiveThiefConv4
+  USE_LABEL: false
+TARGET_MODEL:
+  DATASET: MNIST
+  EPOCHS: 50
+  MODEL: ActiveThiefConv4
+  OPTIMIZER:
+    LR: 0.1
+    MILESTONES:
+    - 70
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: resnet.pt
+  TARGET_MODEL_FOLDER: ./data/models/cifar10/
+  TRAIN_MODEL: true
+Target model: ActiveThiefConv4, trained on MNIST
+Substitute model: ActiveThiefConv4, trained on TinyImageNet
+Continual Learning Strategy: Naive
+Active Learning Strategy: CoreSet
+Accuracy results at the end of each cycle: [0.0892, 0.0892, 0.1879, 0.1879, 0.1807, 0.222, 0.199, 0.2048, 0.1946, 0.1857, 0.1892]
+Model agreement at the end of each cycle: [0.0896, 0.0899, 0.1881, 0.1883, 0.1807, 0.2223, 0.1995, 0.2054, 0.1955, 0.1861, 0.1891]
+----------------------------------------------------------------------
+Run completed at 2023-03-28 22:32:57 after 05h:01m:01s
+Config File:
+BATCH_SIZE: 128
+CYCLES: 10
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: Active_Thief_Results.txt
+RESULTS_FOLDER: ./experiments/ModelStealing/
+SAVE_STATE: false
+STATE_DIR: ''
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    INIT_BUDGET: 2000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: CoreSet
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 80
+      - 130
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  CONTINUAL: 100
+  DATASET: SmallImageNet
+  NAME: ActiveThiefConv4
+  USE_LABEL: false
+TARGET_MODEL:
+  DATASET: MNIST
+  EPOCHS: 50
+  MODEL: ActiveThiefConv2
+  OPTIMIZER:
+    LR: 0.1
+    MILESTONES:
+    - 70
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: resnet.pt
+  TARGET_MODEL_FOLDER: ./data/models/cifar10/
+  TRAIN_MODEL: true
+Target model: ActiveThiefConv2, trained on MNIST
+Substitute model: ActiveThiefConv4, trained on SmallImageNet
+Continual Learning Strategy: Naive
+Active Learning Strategy: CoreSet
+Accuracy results at the end of each cycle: [0.1553, 0.2801, 0.2841, 0.3482, 0.463, 0.4664, 0.4415, 0.5171, 0.619, 0.706, 0.7227]
+Model agreement at the end of each cycle: [0.1626, 0.2848, 0.2891, 0.3502, 0.4646, 0.4698, 0.4428, 0.519, 0.6205, 0.7067, 0.7262]
+----------------------------------------------------------------------

@@ -25,7 +25,7 @@ AL_METHODS = ['LC','BALD','Badge','CoreSet', 'Random', 'VAAL']
 CL_CONFIG = ["NAME", "OPTIMIZER"]
 CL_METHODS = ["Alasso", "IMM", "Naive", "EWC", "MAS", "AGEM"]
 OPTIMIZERS =["SGD", "ADAM"]
-MODELS = ['Resnet18', 'Resnet34', 'Resnet50', 'Resnet101', 'Resnet152', 'TestConv','ActiveThiefConv', 'VGG16']
+MODELS = ['Resnet18', 'Resnet34', 'Resnet50', 'Resnet101', 'Resnet152', 'TestConv','ActiveThiefConv2','ActiveThiefConv3','ActiveThiefConv4' , 'VGG16']
 TARGET_MODEL_CONFIG = ['MODEL','DATASET','EPOCHS','OPTIMIZER','TARGET_MODEL_FOLDER','TARGET_MODEL_FILE','TRAIN_MODEL']
 DATASET_NAMES = ["MNIST","FashionMNIST", "CIFAR-10","TinyImageNet","SmallImageNet"]
 OPTIMIZER_CONFIG = ["NAME", "LR", "MOMENTUM", "WDECAY"]
@@ -199,8 +199,12 @@ def build_model(name: str, input_dim:tuple[int], num_classes: int, use_gpu:bool)
         model = ResNet(Bottleneck, [3,8,36,3], input_dim[0], num_classes)
     elif name == "TestConv":
         model = testConv(input_dim,num_classes)
-    elif name == "ActiveThiefConv":
-        model = ThiefConvNet(input_channels=input_dim[0],num_classes=num_classes,input_dim=input_dim[1])
+    elif name == "ActiveThiefConv2":
+        model = ThiefConvNet(num_conv_blocks=2,input_channels=input_dim[0],num_classes=num_classes,input_dim=input_dim[1])
+    elif name == "ActiveThiefConv3":
+        model = ThiefConvNet(num_conv_blocks=3,input_channels=input_dim[0],num_classes=num_classes,input_dim=input_dim[1])
+    elif name == "ActiveThiefConv4":
+        model = ThiefConvNet(num_conv_blocks=4,input_channels=input_dim[0],num_classes=num_classes,input_dim=input_dim[1])
     elif name == "VGG16":
         model = VGG16(input_dim[0],num_classes,input_dim[1])
     else:
@@ -224,6 +228,7 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
                        transforms.Normalize((0.1309,), (0.2892,)),
                    ]
                 + channel_change_greyscale),download=True)
+        num_classes = 10
     elif name == "FashionMNIST":
         dataset = datasets.FashionMNIST("./data",train,transform=transforms.Compose(
                [
@@ -232,6 +237,7 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
                        transforms.Normalize((0.2854,), (0.3384,))
                    ]
                + channel_change_greyscale),download=True)
+        num_classes = 10
     elif name == "CIFAR-10":
         augmentation = [
             transforms.RandomHorizontalFlip(),
@@ -244,6 +250,7 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
         transform = augmentation + normalization if train else normalization
         transform += channel_change_color
         dataset = datasets.CIFAR10("./data",train,transform=transforms.Compose(transform),download=True)
+        num_classes = 10
     elif name == "CIFAR-100":
         augmentation = [
             transforms.RandomHorizontalFlip(),
@@ -256,6 +263,7 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
         transform = augmentation + normalization if train else normalization
         transform += channel_change_color
         dataset = datasets.CIFAR100("./data",train,transform=transforms.Compose(transform),download=True)
+        num_classes = 100
     elif name == "TinyImageNet":
         augmentation = [
             transforms.RandomCrop(32,padding=4),
@@ -270,6 +278,7 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
         transform = augmentation + normalization if train else normalization
         transform += channel_change_color
         dataset = TinyImageNet("./data",train,transform=transforms.Compose(transform),download=True)
+        num_classes = 200
     elif name == "SmallImageNet":
         augmentation = [
             transforms.RandomCrop(32,padding=4),
@@ -277,16 +286,17 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
         ]
         normalization = [
             transforms.ToTensor(),
-            transforms.Normalize(mean=[0.4802, 0.4481, 0.3975], 
-                            std=[0.2618, 0.2537, 0.2677])
+            transforms.Normalize(mean=[0.4813, 0.4577, 0.4082], 
+                            std=[0.2602, 0.2531, 0.2681])
         ]
         transform = augmentation + normalization if train else normalization
         transform += channel_change_color
-        dataset = SmallImagenet("./data",train,transform=transforms.Compose(transform))
+        dataset = SmallImagenet(root="./data",train=train,transform=transforms.Compose(transform))
+        num_classes = 1000
     else:
         raise AttributeError(f"Dataset unknown. Got {name}, but expected one of {','.join(DATASET_NAMES)}")
     print(f"Loaded {name} as {'training' if train else 'validation'} set")
-    return dataset,dataset[0][0].shape,len(dataset.class_to_idx)
+    return dataset,dataset[0][0].shape,num_classes
 
 def build_optimizer(config: dict,model:nn.Module) -> tuple[torch.optim.Optimizer,lr_scheduler.MultiStepLR]:
     check_attribute_presence(config,OPTIMIZER_CONFIG,"optimizer config")
