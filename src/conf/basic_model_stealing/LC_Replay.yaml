@@ -4,10 +4,9 @@ SUBSTITUTE_MODEL:
   CONTINUAL: -1
   USE_LABEL: True
   AL_METHOD: 
-    NAME: 'VAAL' # Possible values: LC,BALD,Badge,CoreSet,Random
-    TRAIN_EPOCHS: 100
-    INIT_BUDGET: 4000
-    BUDGET: 4000
+    NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
+    INIT_BUDGET: 2000
+    BUDGET: 2000
     LOOKBACK: 1
     INIT_MODE: 'random'
   CL_METHOD: 
@@ -19,22 +18,22 @@ SUBSTITUTE_MODEL:
       WDECAY: 0.0005
       MILESTONES: [60,120]
 BATCH_SIZE: 128 # batch size used for training
-CYCLES: 12 # number of cycles in the model stealing process
+CYCLES: 24 # number of cycles in the model stealing process
 EPOCHS: 150
 RECOVER_STATE: False
 SAVE_STATE: False
 STATE_DIR: ''
-RESULTS_FOLDER: './experiments/CL_AL/'
-RESULTS_FILE: 'correct_results_150epochs.txt'
+RESULTS_FOLDER: './experiments/ModelStealing/'
+RESULTS_FILE: 'Test_results.txt'
 TARGET_MODEL:
   TARGET_MODEL_FOLDER: './data/models/mnist/'
   TARGET_MODEL_FILE: 'resnet.pt'
   TRAIN_MODEL: True
-  MODEL: 'Resnet18'
-  DATASET: 'CIFAR-10'
-  EPOCHS : 50
+  MODEL: 'ActiveThiefConv4'
+  DATASET: 'MNIST'
+  EPOCHS : 100
   OPTIMIZER:
-    NAME: 'SGD'
+    NAME: 'ADAM'
     LR: 0.001
     MOMENTUM: 0.9
     WDECAY: 0.0005
