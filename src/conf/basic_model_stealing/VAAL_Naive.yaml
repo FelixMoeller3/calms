@@ -5,7 +5,7 @@ SUBSTITUTE_MODEL:
   USE_LABEL: True
   AL_METHOD: 
     NAME: 'VAAL' # Possible values: LC,BALD,Badge,CoreSet,Random
-    TRAIN_EPOCHS: 20
+    TRAIN_EPOCHS: 100
     INIT_BUDGET: 4000
     BUDGET: 4000
     LOOKBACK: 1

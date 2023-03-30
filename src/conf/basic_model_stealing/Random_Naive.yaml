@@ -1,6 +1,6 @@
 SUBSTITUTE_MODEL: 
-  NAME: 'ActiveThiefConv' # Possible values: Resnet18,Resnext50,TestConv
-  DATASET: 'TinyImageNet'
+  NAME: 'Resnet50' # Possible values: Resnet18,Resnext50,TestConv
+  DATASET: 'SmallImageNet'
   CONTINUAL: 100
   USE_LABEL: False
   AL_METHOD: 
@@ -29,9 +29,9 @@ TARGET_MODEL:
   TARGET_MODEL_FOLDER: './data/models/cifar10/'
   TARGET_MODEL_FILE: 'resnet.pt'
   TRAIN_MODEL: True
-  MODEL: 'ActiveThiefConv'
+  MODEL: 'ActiveThiefConv2'
   DATASET: 'CIFAR-10'
-  EPOCHS : 50
+  EPOCHS : 100
   OPTIMIZER:
     NAME: 'SGD'
     LR: 0.1

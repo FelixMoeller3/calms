@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=LC_AGEM      # job name
+#SBATCH --job-name=Badge_AGEM      # job name
 #SBATCH --partition=gpu_4                  # queue for the resource allocation.
 #SBATCH --time=1400:00                     # wall-clock time limit  
 #SBATCH --mem=20000                        # memory per node
