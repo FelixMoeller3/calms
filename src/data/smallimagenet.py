@@ -8,7 +8,7 @@ from torchvision.datasets.vision import VisionDataset
 
 class SmallImagenet(VisionDataset):
     batch_nums_to_use = [1]
-    train_list = ['train_data_batch_{}'.format(i + 1) for i in batch_nums_to_use]
+    train_list = ['train_data_batch_{}'.format(i) for i in batch_nums_to_use]
     val_list = ['val_data']
 
     def __init__(self, root="data", size=32, train=True, transform=None, classes=None):

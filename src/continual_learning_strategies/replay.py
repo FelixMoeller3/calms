@@ -20,12 +20,12 @@ class Replay(ContinualLearningStrategy):
     #         return random.sample(self.indices,self.mem_size)
 
     def train(self,dataloaders: dict[str,DataLoader],num_epochs:int,val_step:int,result_list:List[float]=[],early_stopping:int=-1) -> None:
-        if self.isActive or not isinstance(dataloaders["train"].dataset,Subset):
+        if not self.isActive or not isinstance(dataloaders["train"].dataset,Subset):
             super(Replay,self).train(dataloaders,num_epochs,val_step,result_list,early_stopping)
         else:
             subset = dataloaders["train"].dataset
             indices = subset.indices + self.indices
-            dataloaders["train"].dataset = Subset(subset.dataset,indices)
+            dataloaders["train"] = DataLoader(Subset(subset.dataset,indices),dataloaders["train"].batch_size,shuffle=True)
             super(Replay,self).train(dataloaders,num_epochs,val_step,result_list,early_stopping)
 
 
@@ -33,4 +33,7 @@ class Replay(ContinualLearningStrategy):
     def _after_train(self,train_set: Dataset=None) -> None:
         if not isinstance(train_set,Subset):
             return
-        self.indices += random.sample(train_set.indices,self.patterns_per_experience)
+        if len(train_set.indices) <= self.patterns_per_experience:
+            self.indices += train_set.indices
+        else:
+            self.indices += random.sample(train_set.indices,self.patterns_per_experience)

@@ -1,7 +1,7 @@
 SUBSTITUTE_MODEL: 
   NAME: 'ActiveThiefConv4' # Possible values: Resnet18,Resnext50,TestConv
   DATASET: 'SmallImageNet'
-  CONTINUAL: -1
+  CONTINUAL: 100
   USE_LABEL: False
   AL_METHOD: 
     NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
@@ -16,10 +16,10 @@ SUBSTITUTE_MODEL:
       LR: 0.001
       MOMENTUM: 0.9
       WDECAY: 0.0005
-      MILESTONES: [160,180]
+      MILESTONES: [260,180]
 BATCH_SIZE: 128 # batch size used for training
 CYCLES: 10 # number of cycles in the model stealing process
-EPOCHS: 150
+EPOCHS: 200
 RECOVER_STATE: False
 SAVE_STATE: False
 STATE_DIR: ''
