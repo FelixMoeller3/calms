@@ -9,7 +9,7 @@ class ClAlProcess(BaseProcess):
 
     def __init__(self,activeLearningStrategy: Strategy,continualLearningStrategy: ContinualLearningStrategy,train_set: Dataset,
                  val_set: Dataset,batch_size:int,num_cycles:int,num_epochs:int,continual:int,optimizer_config:dict,
-                 optimizer_builder: Callable,init_mode:str='random',state_dir:str=None):
+                 optimizer_builder: Callable,cold_start:bool=False,init_mode:str='random',state_dir:str=None):
         '''
             :param targetModel: the target model in the model stealing process (i.e. the one that will be stolen). Needs to be pretrained!!
             :param activeLearningStrategy: the active learning strategy to use in the model stealing process.
@@ -17,7 +17,7 @@ class ClAlProcess(BaseProcess):
             substitute model.
         '''
         super(ClAlProcess,self).__init__(activeLearningStrategy,continualLearningStrategy,train_set,val_set,batch_size,num_cycles,
-                                         num_epochs,continual,optimizer_builder,optimizer_config,init_mode,False,state_dir)
+                                         num_epochs,continual,optimizer_builder,optimizer_config,init_mode,False,cold_start,state_dir)
 
 
     def continual_learning(self,start_cycle:int=0,labeled_set:List[int]=[],unlabeled_set:List[int]=[],score_list:List[float]=[]) -> tuple[List[float],List[List[float]]]:

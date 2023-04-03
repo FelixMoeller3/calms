@@ -16,7 +16,7 @@ INIT_MODES = ["facility_location", "random"]
 class BaseProcess:
 
     def __init__(self,activeLearningStrategy: Strategy,continualLearningStrategy: ContinualLearningStrategy, train_set: Dataset,
-                 val_set: Dataset,batch_size:int,num_cycles:int,num_epochs:int,continual:int,optimizerBuilder: Callable, optimizerConfig: dict,init_mode:str='random',use_gpu:bool=False,state_dir:str=None):
+                 val_set: Dataset,batch_size:int,num_cycles:int,num_epochs:int,continual:int,optimizerBuilder: Callable, optimizerConfig: dict,init_mode:str='random',use_gpu:bool=False,cold_start:bool=False,state_dir:str=None):
         self.al_strat = activeLearningStrategy
         self.cl_strat = continualLearningStrategy
         self.train_set = train_set
@@ -30,6 +30,7 @@ class BaseProcess:
         self.init_mode = init_mode
         self.use_gpu = use_gpu
         self.state_dir = state_dir
+        self.cold_start = cold_start and continual > num_cycles
 
     def _before_first_cycle(self,loaders_dict:dict[str,DataLoader],val_accuracies: List[int]) -> tuple[List[int],List[int]]:
         if self.continualStart > -1:
@@ -74,6 +75,8 @@ class BaseProcess:
         training_set = Subset(train_set,training_examples)
         loaders_dict['train'] = DataLoader(training_set,batch_size,shuffle=True)
         self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list)
+        if self.cold_start:
+            self.cl_strat.model.weight_reset()
         optim,scheduler = self.optimizer_builder(self.optimizer_config,self.cl_strat.model)
         self.cl_strat.optim = optim
         self.cl_strat.scheduler = scheduler
