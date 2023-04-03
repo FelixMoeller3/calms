@@ -12,7 +12,7 @@ class ModelStealingProcess(BaseProcess):
 
     def __init__(self,targetModel:nn.Module,activeLearningStrategy: Strategy,continualLearningStrategy: ContinualLearningStrategy,train_set: Dataset,
             val_set: Dataset,batch_size:int,num_cycles:int,num_epochs:int,continual:int,num_classes:int,optimizer_builder: Callable,optimizer_config:dict,
-                 use_label:bool=True,state_dir:str=None,use_gpu:bool=False,init_mode:str='random'):
+                 use_label:bool=True,state_dir:str=None,cold_start:bool=False,use_gpu:bool=False,init_mode:str='random'):
         '''
             :param targetModel: the target model in the model stealing process (i.e. the one that will be stolen). Needs to be pretrained!!
             :param activeLearningStrategy: the active learning strategy to use in the model stealing process.
@@ -26,7 +26,7 @@ class ModelStealingProcess(BaseProcess):
             :param use_label: Whether to train with the predicted label of the target model or with its softmax probablities
         '''
         super(ModelStealingProcess,self).__init__(activeLearningStrategy,continualLearningStrategy,train_set,val_set,batch_size,num_cycles,num_epochs,
-                                                  continual,optimizer_builder,optimizer_config,init_mode,use_gpu,state_dir)
+                                                  continual,optimizer_builder,optimizer_config,init_mode,use_gpu,cold_start,state_dir)
         self.target_model = targetModel
         self.num_classes = num_classes
         self.substitute_model = self.cl_strat.model

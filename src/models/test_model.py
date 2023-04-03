@@ -95,6 +95,11 @@ class testConv(nn.Module):
 
     def get_embedding_dim(self) -> int:
         return self.final.in_features
+    
+    def weight_reset(self) -> None:
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d) or isinstance(m, nn.Linear):
+                m.reset_parameters()
 
 class ResNet(nn.Module):
     def __init__(self, block, num_blocks, input_channels:int=3,num_classes=10, train_deterministic=False, fixed_model_parameter_seed=None):
@@ -147,6 +152,11 @@ class ResNet(nn.Module):
 
     def get_embedding_dim(self) :
         return self.linear.in_features
+    
+    def weight_reset(self) -> None:
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d) or isinstance(m, nn.Linear):
+                m.reset_parameters()
 
 class Bottleneck(nn.Module):
     expansion = 4
@@ -266,3 +276,7 @@ class VGG16(nn.Module):
         self.before_flatten_dim
         return 512*self.before_flatten_dim*self.before_flatten_dim
 
+    def weight_reset(self) -> None:
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d) or isinstance(m, nn.Linear):
+                m.reset_parameters()

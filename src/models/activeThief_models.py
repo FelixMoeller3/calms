@@ -20,7 +20,7 @@ class ConvBlock(nn.Module):
         out = F.relu(self.bn2(self.conv2(out)))
         out = self.dropout(self.pool(out))
         return out
-    
+        
 
 class ThiefConvNet(nn.Module):
 
@@ -39,6 +39,11 @@ class ThiefConvNet(nn.Module):
         before_flatten = self.before_final(x)
         flattened = before_flatten.view(before_flatten.size(0),-1)
         return self.final(flattened)
+    
+    def weight_reset(self) -> None:
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d) or isinstance(m, nn.Linear):
+                m.reset_parameters()
     
 
     def forward_embedding(self, x:torch.Tensor) -> tuple[torch.Tensor,torch.Tensor]:
