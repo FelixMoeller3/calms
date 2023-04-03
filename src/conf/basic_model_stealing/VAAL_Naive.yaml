@@ -1,11 +1,11 @@
 SUBSTITUTE_MODEL: 
   NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
   DATASET: 'CIFAR-10'
-  CONTINUAL: -1
+  CONTINUAL: 100
   USE_LABEL: True
   AL_METHOD: 
     NAME: 'VAAL' # Possible values: LC,BALD,Badge,CoreSet,Random
-    TRAIN_EPOCHS: 100
+    TRAIN_EPOCHS: 20
     INIT_BUDGET: 4000
     BUDGET: 4000
     LOOKBACK: 1

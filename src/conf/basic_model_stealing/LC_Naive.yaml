@@ -5,21 +5,21 @@ SUBSTITUTE_MODEL:
   USE_LABEL: False
   AL_METHOD: 
     NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
-    INIT_BUDGET: 2000
-    BUDGET: 2000
+    INIT_BUDGET: 1000
+    BUDGET: 1000
     LOOKBACK: 1
     INIT_MODE: 'random'
   CL_METHOD: 
     NAME: 'Naive' # Possible values : Alasso,EWC,MAS,IMM,Naive
     OPTIMIZER:
-      NAME: 'ADAM'
-      LR: 0.001
+      NAME: 'SGD'
+      LR: 0.1
       MOMENTUM: 0.9
       WDECAY: 0.0005
       MILESTONES: [260,180]
 BATCH_SIZE: 128 # batch size used for training
-CYCLES: 10 # number of cycles in the model stealing process
-EPOCHS: 200
+CYCLES: 20 # number of cycles in the model stealing process
+EPOCHS: 150
 RECOVER_STATE: False
 SAVE_STATE: False
 STATE_DIR: ''
@@ -29,12 +29,12 @@ TARGET_MODEL:
   TARGET_MODEL_FOLDER: './data/models/mnist/'
   TARGET_MODEL_FILE: 'resnet.pt'
   TRAIN_MODEL: True
-  MODEL: 'ActiveThiefConv4'
+  MODEL: 'ActiveThiefConv2'
   DATASET: 'MNIST'
   EPOCHS : 100
   OPTIMIZER:
-    NAME: 'ADAM'
-    LR: 0.001
+    NAME: 'SGD'
+    LR: 0.1
     MOMENTUM: 0.9
     WDECAY: 0.0005
     MILESTONES: [160,240]

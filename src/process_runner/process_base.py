@@ -7,11 +7,7 @@ import os
 import pickle
 import random
 import time
-print("start importing submodlib")
-start = time.time()
 import submodlib
-duration = time.time() - start
-print(f"end importing submodlib after {duration} seconds")
 import numpy as np
 from functools import reduce
 

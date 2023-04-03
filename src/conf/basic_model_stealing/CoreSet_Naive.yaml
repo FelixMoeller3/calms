@@ -5,8 +5,8 @@ SUBSTITUTE_MODEL:
   USE_LABEL: False
   AL_METHOD: 
     NAME: 'CoreSet' # Possible values: LC,BALD,Badge,CoreSet,Random
-    INIT_BUDGET: 2000
-    BUDGET: 2000
+    INIT_BUDGET: 1000
+    BUDGET: 1000
     LOOKBACK: 1
     INIT_MODE: 'random'
   CL_METHOD: 
@@ -18,7 +18,7 @@ SUBSTITUTE_MODEL:
       WDECAY: 0.0005
       MILESTONES: [80,130]
 BATCH_SIZE: 128 # batch size used for training
-CYCLES: 10 # number of cycles in the model stealing process
+CYCLES: 20 # number of cycles in the model stealing process
 EPOCHS: 150
 RECOVER_STATE: False
 SAVE_STATE: False
