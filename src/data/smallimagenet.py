@@ -7,13 +7,17 @@ from torchvision.datasets.vision import VisionDataset
 
 
 class SmallImagenet(VisionDataset):
-    batch_nums_to_use = [1]
-    train_list = ['train_data_batch_{}'.format(i) for i in batch_nums_to_use]
+    #batch_nums_to_use = [1]
+    #train_list = ['train_data_batch_{}'.format(i) for i in batch_nums_to_use]
     val_list = ['val_data']
 
-    def __init__(self, root="data", size=32, train=True, transform=None, classes=None):
+    def __init__(self, root="data", batch_num:int=1,size=32, train=True, transform=None, classes=None):
         super().__init__(root, transform=transform)
-        file_list = self.train_list if train else self.val_list
+        if batch_num < 1 or batch_num > 10:
+            raise ValueError("Batch number must be between 1 and 10")
+        batch_nums_to_use = [batch_num]
+        train_list = ['train_data_batch_{}'.format(i) for i in batch_nums_to_use]
+        file_list = train_list if train else self.val_list
         self.data = []
         self.targets = []
         self.root = os.path.join(root,"SmallImageNet_32x32")

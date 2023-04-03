@@ -279,7 +279,7 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
         transform += channel_change_color
         dataset = TinyImageNet("./data",train,transform=transforms.Compose(transform),download=True)
         num_classes = 200
-    elif name == "SmallImageNet":
+    elif name.startswith("SmallImageNet"):
         augmentation = [
             transforms.RandomCrop(32,padding=4),
             transforms.RandomHorizontalFlip(),
@@ -291,7 +291,12 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
         ]
         transform = augmentation + normalization if train else normalization
         transform += channel_change_color
-        dataset = SmallImagenet(root="./data",train=train,transform=transforms.Compose(transform))
+        batch_num = name[len("SmallImageNet"):]
+        if batch_num == "":
+            batch_num = 1
+        else:
+            batch_num = int(batch_num)
+        dataset = SmallImagenet(root="./data",batch_num=batch_num,train=train,transform=transforms.Compose(transform))
         num_classes = 1000
     else:
         raise AttributeError(f"Dataset unknown. Got {name}, but expected one of {','.join(DATASET_NAMES)}")
