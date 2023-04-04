@@ -5,3 +5,4 @@ from .imm import IMM
 from .alasso import Alasso
 from .agem import AGem
 from .replay import Replay
+from .dgr import DeepGenerativeReplay
