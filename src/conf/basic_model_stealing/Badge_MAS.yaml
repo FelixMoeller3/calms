@@ -9,6 +9,7 @@ SUBSTITUTE_MODEL:
     BUDGET: 4000
     LOOKBACK: 1
     INIT_MODE: 'facility_location'
+    COLD_START: False
   CL_METHOD: 
     NAME: 'MAS' # Possible values : Alasso,EWC,MAS,IMM,Naive
     WEIGHT: 0.2

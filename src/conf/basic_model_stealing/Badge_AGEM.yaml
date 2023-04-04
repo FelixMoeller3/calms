@@ -9,6 +9,7 @@ SUBSTITUTE_MODEL:
     BUDGET: 4000
     LOOKBACK: 1
     INIT_MODE: 'random'
+    COLD_START: False
   CL_METHOD: 
     NAME: 'AGEM' # Possible values : Alasso,EWC,MAS,IMM,Naive
     PATTERNS_PER_EXPERIENCE: 600

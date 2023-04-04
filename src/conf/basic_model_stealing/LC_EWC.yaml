@@ -8,6 +8,8 @@ SUBSTITUTE_MODEL:
     INIT_BUDGET: 1000
     BUDGET: 1000
     LOOKBACK: 1
+    INIT_MODE: 'random'
+    COLD_START: False
   CL_METHOD: 
     NAME: 'EWC' # Possible values : Alasso,EWC,MAS,IMM,Naive
     WEIGHT: 0.2

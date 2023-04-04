@@ -8,6 +8,7 @@ SUBSTITUTE_MODEL:
     INIT_BUDGET: 1000
     BUDGET: 1000
     LOOKBACK: 1
+    INIT_MODE: 'random'
   CL_METHOD:
     NAME: 'MAS' # Possible values : Alasso,EWC,MAS,IMM,Naive
     WEIGHT: 0.1
