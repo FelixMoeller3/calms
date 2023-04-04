@@ -9,6 +9,7 @@ SUBSTITUTE_MODEL:
     BUDGET: 1000
     LOOKBACK: 1
     INIT_MODE: 'random'
+    COLD_START: False
   CL_METHOD: 
     NAME: 'IMM' # Possible values : Alasso,EWC,MAS,IMM,Naive
     WEIGHT: 0.3

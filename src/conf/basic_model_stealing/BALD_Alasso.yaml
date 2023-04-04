@@ -8,6 +8,8 @@ SUBSTITUTE_MODEL:
     DROPOUT_ITER: 2
     INIT_BUDGET: 2000
     BUDGET: 2000
+    INIT_MODE: 'random'
+    COLD_START: False
   CL_METHOD: 
     NAME: 'Alasso' # Possible values : Alasso,EWC,MAS,IMM,Naive
     WEIGHT: 0.01
