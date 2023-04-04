@@ -111,9 +111,13 @@ class WGAN():
             image_size=self.image_size,
             num_channels=self.num_channels
         )
+        self.critic_iter = 10
+        learning_rate = 1e-4
+        beta1 = 0.5
+        beta2 = 0.999
         if self.use_gpu:
             self.critic.cuda()
-        self.critic_optimizer = torch.optim.Adam(self.critic.parameters(),lr=1e-4,betas=(0.5,0.9),weight_decay=1e-5)
+        self.critic_optimizer = torch.optim.Adam(self.critic.parameters(),lr=learning_rate,betas=(beta1,beta2))
         self.generator = GANGenerator(
             z_size=self.z_size,
             image_size=self.image_size,
@@ -121,42 +125,43 @@ class WGAN():
         )
         if self.use_gpu:
             self.generator.cuda()
-        self.generator_optimizer = torch.optim.Adam(self.generator.parameters(),lr=1e-4,betas=(0.5,0.9),weight_decay=1e-5)
-        self.lamda = 1.0
+        self.generator_optimizer = torch.optim.Adam(self.generator.parameters(),lr=learning_rate,betas=(beta1,beta2))
+        self.lamda = 10.0
 
     def train_a_batch(self, train_x:torch.Tensor, generated_x:torch.Tensor, importance_of_new_task=.5):
         assert generated_x is None or train_x.size() == generated_x.size()
 
-        # run the critic and backpropagate the errors.
-        self.critic_optimizer.zero_grad()
-        z = self._noise(train_x.size(0))
+        for _ in range(self.critic_iter):
+            # run the critic and backpropagate the errors.
+            self.critic_optimizer.zero_grad()
+            z = self._noise(train_x.size(0))
 
-        # run the critic on the real data.
-        c_loss_real, g_real = self._critic_loss(train_x, z, return_g=True)
-        c_loss_real_gp = (
-            c_loss_real + self._gradient_penalty(train_x, g_real, self.lamda)
-        )
-
-        # run the critic on the replayed data.
-        if generated_x is not None:
-            c_loss_replay, g_replay = self._critic_loss(generated_x, z, return_g=True)
-            c_loss_replay_gp = (c_loss_replay + self._gradient_penalty(
-                generated_x, g_replay, self.lamda
-            ))
-            c_loss = (
-                importance_of_new_task * c_loss_real +
-                (1-importance_of_new_task) * c_loss_replay
+            # run the critic on the real data.
+            c_loss_real, g_real = self._critic_loss(train_x, z, return_g=True)
+            c_loss_real_gp = (
+                c_loss_real + self._gradient_penalty(train_x, g_real, self.lamda)
             )
-            c_loss_gp = (
-                importance_of_new_task * c_loss_real_gp +
-                (1-importance_of_new_task) * c_loss_replay_gp
-            )
-        else:
-            c_loss = c_loss_real
-            c_loss_gp = c_loss_real_gp
 
-        c_loss_gp.backward()
-        self.critic_optimizer.step()
+            # run the critic on the replayed data.
+            if generated_x is not None:
+                c_loss_replay, g_replay = self._critic_loss(generated_x, z, return_g=True)
+                c_loss_replay_gp = (c_loss_replay + self._gradient_penalty(
+                    generated_x, g_replay, self.lamda
+                ))
+                c_loss = (
+                    importance_of_new_task * c_loss_real +
+                    (1-importance_of_new_task) * c_loss_replay
+                )
+                c_loss_gp = (
+                    importance_of_new_task * c_loss_real_gp +
+                    (1-importance_of_new_task) * c_loss_replay_gp
+                )
+            else:
+                c_loss = c_loss_real
+                c_loss_gp = c_loss_real_gp
+
+            c_loss_gp.backward()
+            self.critic_optimizer.step()
 
         # run the generator and backpropagate the errors.
         self.generator_optimizer.zero_grad()
