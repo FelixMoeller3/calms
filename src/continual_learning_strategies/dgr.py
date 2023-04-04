@@ -4,6 +4,7 @@ import torch.nn as nn
 import torch
 import torch.optim.lr_scheduler as lr_scheduler
 from torch.utils.data import DataLoader,Dataset
+from torch.nn.utils import clip_grad
 from typing import List
 import time
 from tqdm import tqdm
@@ -85,9 +86,12 @@ class DeepGenerativeReplay(ContinualLearningStrategy):
                 gen_outputs = prev_solver(gen_data)
                 loss += self.crit(self.model(gen_data),gen_outputs)
             loss.backward()
+            if self.clip_grad > 0:
+                clip_grad.clip_grad_norm_(self.model.parameters(),self.clip_grad)
             self.optim.step()
             total_loss += loss.item()
             _,preds = torch.max(outputs.data,1)
             correct_predictions += torch.sum(preds == labels.data)
-        print(f'Training loss: {total_loss/len(train_loader)}')
-        print(f'Training accuracy: {correct_predictions/len(train_loader.dataset)}')
+        epoch_loss = total_loss / len(train_loader.dataset)
+        epoch_acc = correct_predictions / len(train_loader.dataset)
+        print('Training Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))

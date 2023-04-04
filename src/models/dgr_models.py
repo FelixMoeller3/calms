@@ -122,7 +122,7 @@ class WGAN():
         if self.use_gpu:
             self.generator.cuda()
         self.generator_optimizer = torch.optim.Adam(self.generator.parameters(),lr=1e-4,betas=(0.5,0.9),weight_decay=1e-5)
-        self.lamda = 10.0
+        self.lamda = 1.0
 
     def train_a_batch(self, train_x:torch.Tensor, generated_x:torch.Tensor, importance_of_new_task=.5):
         assert generated_x is None or train_x.size() == generated_x.size()
