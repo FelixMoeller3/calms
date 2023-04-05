@@ -20,7 +20,7 @@ class DeepGenerativeReplay(ContinualLearningStrategy):
                  crit: nn.CrossEntropyLoss,USE_GPU:bool=False,clip_grad: float=2.0,**kwargs):
         super(DeepGenerativeReplay,self).__init__(model,optim,scheduler,crit,USE_GPU,clip_grad)
         self.generator = None
-        self.num_gen_epochs = 20
+        self.num_gen_epochs = 50
 
     def _train_generator(self,train_loader: DataLoader) -> None:
         '''
@@ -30,13 +30,24 @@ class DeepGenerativeReplay(ContinualLearningStrategy):
         self.generator = WGAN(image_size=train_loader.dataset[0][0].shape[1],num_channels=train_loader.dataset[0][0].shape[0],use_gpu=self.use_gpu)
         for i in range(self.num_gen_epochs):
             print(f"Running generator epoch {i+1}/{self.num_gen_epochs}")
+            generator_loss = 0.0
+            discriminator_loss = 0.0
             for data,labels in tqdm(train_loader,desc="Training generator"):
                 if self.use_gpu:
                     data = data.cuda()
                 generated_imgs = None
                 if prev_generator is not None:
-                    generated_imgs = prev_generator.sample(train_loader.batch_size)
-                self.generator.train_a_batch(data,generated_imgs)
+                    generated_imgs = prev_generator.sample(data.size(0))
+                    generated_imgs = generated_imgs.data
+                cur_d_loss,cur_g_loss = self.generator.train_a_batch(data,generated_imgs)
+                discriminator_loss += cur_d_loss
+                generator_loss += cur_g_loss
+            generator_loss /= len(train_loader.dataset)
+            discriminator_loss /= len(train_loader.dataset)
+            if prev_generator is not None:
+                generator_loss /= 2
+                discriminator_loss /= 2
+            print('Generator Loss: {:.4f} Discriminator Loss: {:.4f}'.format(generator_loss, discriminator_loss))
 
     def train(self,dataloaders: dict[str,DataLoader],num_epochs:int,val_step:int,result_list:List[float]=[],early_stopping:int=-1) -> None:
         '''
