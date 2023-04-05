@@ -128,7 +128,7 @@ class WGAN():
         self.generator_optimizer = torch.optim.Adam(self.generator.parameters(),lr=learning_rate,betas=(beta1,beta2))
         self.lamda = 10.0
 
-    def train_a_batch(self, train_x:torch.Tensor, generated_x:torch.Tensor, importance_of_new_task=.5):
+    def train_a_batch(self, train_x:torch.Tensor, generated_x:torch.Tensor, importance_of_new_task=.2):
         assert generated_x is None or train_x.size() == generated_x.size()
 
         for _ in range(self.critic_iter):
@@ -170,7 +170,7 @@ class WGAN():
         g_loss.backward()
         self.generator_optimizer.step()
 
-        return {'c_loss': c_loss.item(), 'g_loss': g_loss.item()}
+        return c_loss.item(), g_loss.item()
 
     def sample(self, size):
         return self.generator(self._noise(size))

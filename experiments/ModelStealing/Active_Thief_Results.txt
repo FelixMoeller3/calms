@@ -455,3 +455,61 @@ Active Learning Strategy: CoreSet
 Accuracy results at the end of each cycle: [0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135]
 Model agreement at the end of each cycle: [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0]
 ----------------------------------------------------------------------
+Run completed at 2023-04-05 02:50:04 after 09h:59m:41s
+Config File:
+BATCH_SIZE: 128
+CYCLES: 20
+EPOCHS: 200
+RECOVER_STATE: false
+RESULTS_FILE: Active_Thief_Results.txt
+RESULTS_FOLDER: ./experiments/ModelStealing/
+SAVE_STATE: false
+STATE_DIR: ''
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 1000
+    COLD_START: true
+    INIT_BUDGET: 1000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: CoreSet
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 100
+      - 150
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  CONTINUAL: 100
+  DATASET: SmallImageNet1
+  NAME: ActiveThiefConv3
+  USE_LABEL: false
+TARGET_MODEL:
+  DATASET: MNIST
+  EPOCHS: 50
+  MODEL: ActiveThiefConv3
+  OPTIMIZER:
+    LR: 0.1
+    MILESTONES:
+    - 70
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: resnet.pt
+  TARGET_MODEL_FOLDER: ./data/models/cifar10/
+  TRAIN_MODEL: true
+Target model: ActiveThiefConv3, trained on MNIST
+Substitute model: ActiveThiefConv3, trained on SmallImageNet1
+Continual Learning Strategy: Naive
+Active Learning Strategy: CoreSet
+Accuracy results at the end of each cycle: [0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135, 0.1135]
+Model agreement at the end of each cycle: [0.0, 0.0095, 0.0, 0.2458, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+----------------------------------------------------------------------

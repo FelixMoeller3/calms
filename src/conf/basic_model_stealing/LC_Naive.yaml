@@ -1,6 +1,6 @@
 SUBSTITUTE_MODEL: 
-  NAME: 'ActiveThiefConv3' # Possible values: Resnet18,Resnext50,TestConv
-  DATASET: 'SmallImageNet2'
+  NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
+  DATASET: 'SmallImageNet1'
   CONTINUAL: 100
   USE_LABEL: False
   AL_METHOD: 
@@ -9,7 +9,7 @@ SUBSTITUTE_MODEL:
     BUDGET: 1000
     LOOKBACK: 1
     INIT_MODE: 'random'
-    COLD_START: True
+    COLD_START: False
   CL_METHOD: 
     NAME: 'Naive' # Possible values : Alasso,EWC,MAS,IMM,Naive
     OPTIMIZER:
@@ -30,7 +30,7 @@ TARGET_MODEL:
   TARGET_MODEL_FOLDER: './data/models/mnist/'
   TARGET_MODEL_FILE: 'resnet.pt'
   TRAIN_MODEL: True
-  MODEL: 'ActiveThiefConv3'
+  MODEL: 'Resnet18'
   DATASET: 'MNIST'
   EPOCHS : 100
   OPTIMIZER:
