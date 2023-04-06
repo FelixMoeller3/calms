@@ -9,6 +9,7 @@ from typing import List
 import time
 from tqdm import tqdm
 from copy import deepcopy
+import os
 
 class DeepGenerativeReplay(ContinualLearningStrategy):
     '''
@@ -77,6 +78,9 @@ class DeepGenerativeReplay(ContinualLearningStrategy):
             self._after_train(dataloaders['train'].dataset)
         time_elapsed = time.time() - start_time
         print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
+        path = "./data/models/GAN/"
+        os.makedirs(path,exist_ok=True)
+        torch.save(self.generator.generator.state_dict(),os.path.join(path,"generator.pth"))
 
     def _run_solver_epoch(self,train_loader: DataLoader,prev_solver: nn.Module,importance_of_new_task:float=0.2) -> None:
         '''

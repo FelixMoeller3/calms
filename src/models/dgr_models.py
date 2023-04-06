@@ -93,7 +93,8 @@ class WGAN():
             image_size=self.image_size,
             num_channels=self.num_channels
         )
-        self.critic_iter = 10
+        self.critic_iter = 5
+        self.gen_iter = 20
         learning_rate = 1e-4
         beta1 = 0.5
         beta2 = 0.999
@@ -144,13 +145,14 @@ class WGAN():
 
             c_loss_gp.backward()
             self.critic_optimizer.step()
-
+        
         # run the generator and backpropagate the errors.
-        self.generator_optimizer.zero_grad()
-        z = self._noise(train_x.size(0))
-        g_loss = self._generator_loss(z)
-        g_loss.backward()
-        self.generator_optimizer.step()
+        for _ in range(self.gen_iter):
+            self.generator_optimizer.zero_grad()
+            z = self._noise(train_x.size(0))
+            g_loss = self._generator_loss(z)
+            g_loss.backward()
+            self.generator_optimizer.step()
 
         return c_loss.item(), g_loss.item()
 

@@ -5,8 +5,8 @@ SUBSTITUTE_MODEL:
   USE_LABEL: False
   AL_METHOD: 
     NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
-    INIT_BUDGET: 4000
-    BUDGET: 4000
+    INIT_BUDGET: 2000
+    BUDGET: 2000
     LOOKBACK: 1
     INIT_MODE: 'random'
     COLD_START: True
