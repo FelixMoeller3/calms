@@ -5499,47 +5499,47 @@ Continual Learning Strategy: Naive
 Active Learning Strategy: VAAL
 Accuracy results at the end of each cycle: [0.6765, 0.7681, 0.801, 0.8239, 0.8337, 0.8377, 0.8406, 0.8413, 0.8435, 0.8518, 0.8445, 0.8512, 0.8264]
 ----------------------------------------------------------------------
-Run completed at 2023-04-03 15:40:20 after 06h:30m:48s
+Run completed at 2023-04-04 18:59:49 after 01h:58m:42s
 Config File: BATCH_SIZE: 128
-CYCLES: 12
+CYCLES: 20
 EPOCHS: 150
 RECOVER_STATE: false
-RESULTS_FILE: correct_results_150epochs.txt
-RESULTS_FOLDER: ./experiments/CL_AL/
+RESULTS_FILE: Test_results.txt
+RESULTS_FOLDER: ./experiments/ModelStealing/
 SAVE_STATE: false
 STATE_DIR: ''
 SUBSTITUTE_MODEL:
   AL_METHOD:
     BATCH: 128
-    BUDGET: 4000
-    INIT_BUDGET: 4000
+    BUDGET: 2000
+    COLD_START: true
+    INIT_BUDGET: 2000
     INIT_MODE: random
     LOOKBACK: 1
-    NAME: VAAL
+    NAME: LC
     NO_CLASSES: 10
-    TRAIN_EPOCHS: 20
     USE_GPU: true
   CL_METHOD:
-    NAME: Naive
+    NAME: DGR
     OPTIMIZER:
       LR: 0.1
       MILESTONES:
-      - 60
+      - 80
       - 120
       MOMENTUM: 0.9
       NAME: SGD
       WDECAY: 0.0005
     USE_GPU: true
-  CONTINUAL: 100
+  CONTINUAL: -1
   DATASET: CIFAR-10
   NAME: Resnet18
-  USE_LABEL: true
+  USE_LABEL: false
 TARGET_MODEL:
-  DATASET: CIFAR-10
-  EPOCHS: 50
-  MODEL: Resnet18
+  DATASET: MNIST
+  EPOCHS: 100
+  MODEL: ActiveThiefConv3
   OPTIMIZER:
-    LR: 0.001
+    LR: 0.1
     MILESTONES:
     - 160
     - 240
@@ -5551,7 +5551,7 @@ TARGET_MODEL:
   TRAIN_MODEL: true
 
 Model: Resnet18, trained on CIFAR-10
-Continual Learning Strategy: Naive
-Active Learning Strategy: VAAL
-Accuracy results at the end of each cycle: [0.7267, 0.8462, 0.8823, 0.9054, 0.9184, 0.9299, 0.9321, 0.9372, 0.939, 0.9426, 0.9399, 0.9419, 0.9434]
+Continual Learning Strategy: DGR
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.3775, 0.4021, 0.3504, 0.3286, 0.3465, 0.3279, 0.3734, 0.4524, 0.427, 0.4583, 0.4297, 0.382, 0.3572, 0.3956, 0.3841, 0.3689, 0.3669, 0.3763, 0.3561, 0.3775, 0.355]
 ----------------------------------------------------------------------
