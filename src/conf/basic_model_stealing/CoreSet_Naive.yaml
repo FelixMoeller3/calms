@@ -2,7 +2,7 @@ SUBSTITUTE_MODEL:
   NAME: 'ActiveThiefConv3' # Possible values: Resnet18,Resnext50,TestConv
   DATASET: 'SmallImageNet1' # Possible values: MNIST,FashionMNIST
   CONTINUAL: 100
-  USE_LABEL: False
+  USE_LABEL: True
   AL_METHOD: 
     NAME: 'CoreSet' # Possible values: LC,BALD,Badge,CoreSet,Random
     INIT_BUDGET: 1000

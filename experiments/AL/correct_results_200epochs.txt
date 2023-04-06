@@ -600,3 +600,60 @@ Model: Resnet18, trained on CIFAR-10
 Active Learning Strategy: Badge
 Accuracy results at the end of each cycle: [0.4555, 0.5972, 0.669, 0.7279, 0.7878, 0.8315, 0.8596, 0.8741, 0.8872, 0.899, 0.9066, 0.9148, 0.9232, 0.9309, 0.9357, 0.9351, 0.9398, 0.9411, 0.9434, 0.9443, 0.942, 0.9467, 0.945, 0.9453, 0.9461, 0.9446, 0.9489, 0.9449, 0.9418, 0.9387, 0.9372, 0.9338, 0.9303, 0.9223, 0.9228, 0.9129, 0.9057, 0.9065, 0.9039, 0.9054, 0.8991, 0.8971, 0.8941, 0.8876, 0.8791, 0.8834, 0.8803, 0.8822, 0.877, 0.8762]
 ----------------------------------------------------------------------
+Run completed at 2023-04-06 01:32:12 after 16h:01m:15s
+Config File: BATCH_SIZE: 128
+CYCLES: 12
+EPOCHS: 200
+RECOVER_STATE: false
+RESULTS_FILE: correct_results_200epochs.txt
+RESULTS_FOLDER: ./experiments/AL/
+SAVE_STATE: false
+STATE_DIR: ''
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 4000
+    COLD_START: false
+    INIT_BUDGET: 4000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: VAAL
+    NO_CLASSES: 10
+    TRAIN_EPOCHS: 20
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  CONTINUAL: 100
+  DATASET: CIFAR-10
+  NAME: Resnet18
+  USE_LABEL: true
+TARGET_MODEL:
+  DATASET: CIFAR-10
+  EPOCHS: 50
+  MODEL: Resnet18
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: resnet.pt
+  TARGET_MODEL_FOLDER: ./data/models/mnist/
+  TRAIN_MODEL: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: Naive
+Active Learning Strategy: VAAL
+Accuracy results at the end of each cycle: [0.7001, 0.8249, 0.8791, 0.9019, 0.9157, 0.9252, 0.934, 0.9359, 0.9389, 0.9391, 0.9402, 0.936, 0.94]
+----------------------------------------------------------------------
