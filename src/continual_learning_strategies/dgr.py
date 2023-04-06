@@ -78,7 +78,7 @@ class DeepGenerativeReplay(ContinualLearningStrategy):
         time_elapsed = time.time() - start_time
         print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
 
-    def _run_solver_epoch(self,train_loader: DataLoader,prev_solver: nn.Module) -> None:
+    def _run_solver_epoch(self,train_loader: DataLoader,prev_solver: nn.Module,importance_of_new_task:float=0.2) -> None:
         '''
             Runs one epoch of the training procedure with the data given by the dataloader.
         '''
@@ -99,7 +99,11 @@ class DeepGenerativeReplay(ContinualLearningStrategy):
                 replay_scores = prev_solver(gen_data)
                 _,replay_labels = torch.max(replay_scores.data,1)
                 gen_outputs = self.model(gen_data)
-                loss += self.crit(gen_outputs,replay_labels)
+                replay_loss = self.crit(gen_outputs,replay_labels)
+                loss += (
+                    importance_of_new_task * loss +
+                    (1 - importance_of_new_task) * replay_loss
+                )
             loss.backward()
             if self.clip_grad > 0:
                 clip_grad.clip_grad_norm_(self.model.parameters(),self.clip_grad)

@@ -74,9 +74,9 @@ class BaseProcess:
         '''
         training_set = Subset(train_set,training_examples)
         loaders_dict['train'] = DataLoader(training_set,batch_size,shuffle=True)
-        self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list)
         if self.cold_start:
             self.cl_strat.model.weight_reset()
+        self.cl_strat.train(loaders_dict,num_epochs,num_epochs,score_list)
         optim,scheduler = self.optimizer_builder(self.optimizer_config,self.cl_strat.model)
         self.cl_strat.optim = optim
         self.cl_strat.scheduler = scheduler
