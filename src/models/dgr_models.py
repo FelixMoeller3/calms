@@ -3,6 +3,8 @@ from torch.nn import functional as F
 import torch
 from torch.autograd import Variable
 from torch import autograd
+from tqdm import tqdm
+from torch.utils.data import Dataset,DataLoader
 
 EPSILON = 1e-16
 
@@ -94,10 +96,10 @@ class WGAN():
             num_channels=self.num_channels
         )
         self.critic_iter = 5
-        self.gen_iter = 20
-        learning_rate = 1e-4
-        beta1 = 0.5
-        beta2 = 0.999
+        self.gen_iter = 100
+        learning_rate = 2e-4
+        beta1 = 0.0
+        beta2 = 0.9
         if self.use_gpu:
             self.critic.cuda()
         self.critic_optimizer = torch.optim.Adam(self.critic.parameters(),lr=learning_rate,betas=(beta1,beta2))
@@ -111,25 +113,52 @@ class WGAN():
         self.generator_optimizer = torch.optim.Adam(self.generator.parameters(),lr=learning_rate,betas=(beta1,beta2))
         self.lamda = 10.0
 
-    def train_a_batch(self, train_x:torch.Tensor, generated_x:torch.Tensor, importance_of_new_task=.2):
-        assert generated_x is None or train_x.size() == generated_x.size()
+    def train(self, num_epochs:int,prev_generator, train_loader: DataLoader, importance_of_new_task=.2):
 
+        for i in range(num_epochs):
+            print(f"Running generator epoch {i+1}/{num_epochs}")
+            generator_loss = 0.0
+            discriminator_loss = 0.0
+            train_data = self._get_infinite_batches(train_loader)
+            for gen_iter in tqdm(range(self.gen_iter),desc="Training WGAN"):
+                # Train discriminator
+                discriminator_loss += self._train_critic(train_data,prev_generator,importance_of_new_task)
+                # Train generator
+                self.generator_optimizer.zero_grad()
+                z = self._noise(next(train_data).size(0))
+                g_loss = self._generator_loss(z)
+                g_loss.backward()
+                self.generator_optimizer.step()
+                generator_loss += g_loss.item()
+
+
+
+            generator_loss /= gen_iter
+            discriminator_loss /= gen_iter
+            if prev_generator is not None:
+                discriminator_loss /= 2
+            print('Generator Loss: {:.4f} Discriminator Loss: {:.4f}'.format(generator_loss, discriminator_loss))
+
+    
+    def _train_critic(self,train_data,prev_generator,importance_of_new_task:float=0.2) -> float:
+        critic_loss = 0.0
         for _ in range(self.critic_iter):
-            # run the critic and backpropagate the errors.
+            data = next(train_data)
+            z = self._noise(data.size(0))
+            if self.use_gpu:
+                data = data.cuda()
             self.critic_optimizer.zero_grad()
-            z = self._noise(train_x.size(0))
-
-            # run the critic on the real data.
-            c_loss_real, g_real = self._critic_loss(train_x, z, return_g=True)
+            c_loss_real, g_real = self._critic_loss(data, z, return_g=True)
             c_loss_real_gp = (
-                c_loss_real + self._gradient_penalty(train_x, g_real, self.lamda)
+                c_loss_real + self._gradient_penalty(data, g_real, self.lamda)
             )
 
             # run the critic on the replayed data.
-            if generated_x is not None:
-                c_loss_replay, g_replay = self._critic_loss(generated_x, z, return_g=True)
+            if prev_generator is not None:
+                gen_data = prev_generator.sample(data.size(0))
+                c_loss_replay, g_replay = self._critic_loss(gen_data, z, return_g=True)
                 c_loss_replay_gp = (c_loss_replay + self._gradient_penalty(
-                    generated_x, g_replay, self.lamda
+                    gen_data, g_replay, self.lamda
                 ))
                 c_loss = (
                     importance_of_new_task * c_loss_real +
@@ -145,16 +174,14 @@ class WGAN():
 
             c_loss_gp.backward()
             self.critic_optimizer.step()
-        
-        # run the generator and backpropagate the errors.
-        for _ in range(self.gen_iter):
-            self.generator_optimizer.zero_grad()
-            z = self._noise(train_x.size(0))
-            g_loss = self._generator_loss(z)
-            g_loss.backward()
-            self.generator_optimizer.step()
+            critic_loss += c_loss.item()
 
-        return c_loss.item(), g_loss.item()
+        return critic_loss/self.critic_iter
+    
+    def _get_infinite_batches(self, data_loader):
+        while True:
+            for data,_ in data_loader:
+                yield data
 
     def sample(self, size):
         return self.generator(self._noise(size))
