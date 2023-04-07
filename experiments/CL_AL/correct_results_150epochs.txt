@@ -5778,4 +5778,117 @@ Model: Resnet18, trained on CIFAR-10
 Continual Learning Strategy: DGR
 Active Learning Strategy: LC
 Accuracy results at the end of each cycle: [0.1851, 0.135, 0.1329, 0.1156, 0.1022, 0.1434, 0.1155, 0.1833, 0.1833, 0.1448, 0.1218, 0.1071, 0.1073, 0.1045, 0.1111, 0.1305, 0.1161, 0.1127, 0.1554, 0.147, 0.1346, 0.1234, 0.1247, 0.1166, 0.1026]
+----------------------------------------------------------------------Run completed at 2023-04-06 19:45:07 after 02h:42m:34s
+Config File: BATCH_SIZE: 128
+CYCLES: 12
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: correct_results_150epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SAVE_STATE: false
+STATE_DIR: ''
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    COLD_START: true
+    INIT_BUDGET: 2000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: LC
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: DGR
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 80
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  CONTINUAL: -1
+  DATASET: CIFAR-10
+  NAME: Resnet18
+  USE_LABEL: false
+TARGET_MODEL:
+  DATASET: MNIST
+  EPOCHS: 100
+  MODEL: ActiveThiefConv3
+  OPTIMIZER:
+    LR: 0.1
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: resnet.pt
+  TARGET_MODEL_FOLDER: ./data/models/mnist/
+  TRAIN_MODEL: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: DGR
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.3401, 0.5612, 0.6728, 0.6202, 0.4664, 0.2832, 0.3325, 0.3053, 0.2584, 0.2534, 0.3398, 0.252, 0.427]
+----------------------------------------------------------------------
+Run completed at 2023-04-07 08:06:53 after 10h:04m:54s
+Config File: BATCH_SIZE: 128
+CYCLES: 24
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: correct_results_150epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SAVE_STATE: false
+STATE_DIR: ''
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    COLD_START: false
+    INIT_BUDGET: 2000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: LC
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: AGEM
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    PATTERNS_PER_EXPERIENCE: 2000
+    SAMPLE_SIZE: 2000
+    USE_GPU: true
+  CONTINUAL: -1
+  DATASET: CIFAR-10
+  NAME: Resnet18
+  USE_LABEL: true
+TARGET_MODEL:
+  DATASET: CIFAR-10
+  EPOCHS: 50
+  MODEL: Resnet18
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: resnet.pt
+  TARGET_MODEL_FOLDER: ./data/models/mnist/
+  TRAIN_MODEL: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: AGEM
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.6623, 0.7262, 0.7668, 0.7732, 0.7823, 0.7865, 0.7859, 0.7841, 0.7596, 0.76, 0.742, 0.6902, 0.6864, 0.6214, 0.6215, 0.6334, 0.6541, 0.6277, 0.6511, 0.6323, 0.585, 0.605, 0.6047, 0.6524, 0.653]
 ----------------------------------------------------------------------
