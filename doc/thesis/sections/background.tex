@@ -108,7 +108,7 @@ In more general terms, research in Continual Learning is looking not only to all
 should ideally be stable enough to retain their performance on old tasks while simultaneously being plastic enough to adapt to new tasks. This is a dilemma
 because both properties are designed even though they are in conflict with each other. In practice, Machine Learning Models are rather plastic than stable.
 This is especially true for Deep Neural Networks, but generally for all Machine Learning Models that are trained by greedily updating their parameters using
-gradient descent. \\
+gradient descent \cite{mundt2020wholistic}. \\
 Continual Learning is mainly used in scenarios where new tasks arrive over time or where the data distribution changes over time. Despite being useful
 in these classic scenarios, Continual Learning approaches can also be used in cases where the data cannot be stored for legal reasons or due to memory
 constraints, i.e. when the normal batch learning approach with a large training set cannot be applied. 
@@ -116,9 +116,12 @@ constraints, i.e. when the normal batch learning approach with a large training 
 
 \subsection{Continual Learning Scenarios}
 \label{sec:ContinualLearningScenarios}
+Continual Learning is a rapidly evolving research field and terminology and taxonomy are still being established. Among the most important factors to distinguish
+is the way in which new tasks arrive. In the following, we will introduce the three typical Continual Learning Scenarios as established in . 
 
 \subsubsection{Task-Incremental Continual Learning}
 \label{sec:TaskIncrementalContinualLearning}
+In the Task-Incremental setting, a model is informed
 
 \subsubsection{Domain-Incremental Continual Learning}
 \label{sec:DomainIncrementalContinualLearning}
