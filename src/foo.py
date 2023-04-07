@@ -110,6 +110,12 @@ def get_min_max(dataloader):
 if __name__ == "__main__":
     #from utils import config
     #config.run_config("./src/conf/basic_model_stealing/LC_Naive.yaml")
-    dataset = SmallImagenet("./data",train=True,transform=transforms.ToTensor())
-    dl = DataLoader(dataset,128)
-    print(get_mean_and_std(dl))
+    from models import WGAN
+    import torchvision.utils as vutils
+    import torch
+    wgan = WGAN(32,3)
+    wgan.generator.load_state_dict(torch.load("./data/generator.pth",map_location=torch.device('cpu')))
+    sampled_imgs = wgan.sample(1)
+    p = transforms.Resize((64,64))
+    sampled_imgs = p(sampled_imgs)
+    vutils.save_image(sampled_imgs,"./data/sample.png",normalize=True)
