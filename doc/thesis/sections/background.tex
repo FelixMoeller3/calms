@@ -68,7 +68,8 @@ explanation can be found in \href{alg:PoolBasedActiveLearning}{Algorithm 1}. Poo
 The main difference between them is the informative measure, i.e. the criterion with which they select which data points to label next. Within the 
 Pool-based Active Learning category, there are two subcategories: \textbf{Uncertainty-based} sampling and \textbf{Diversity-based} sampling. 
 Uncertainty-based sampling strategies select the data points that the model is most uncertain about. Diversity-based sampling strategies on the other
-hand aim to select data points that best represent the data distribution in the unlabeled pool.
+hand aim to select data points that best represent the data distribution in the unlabeled pool. All the active learning strategies that we will use
+are pool-based Active Learning Strategies, stemming both from the Uncertainty-based and Diversity-based subcategories.
 
 \begin{algorithm}
     \caption{Pool-based Active Learning} \label{alg:PoolBasedActiveLearning}
@@ -87,11 +88,55 @@ hand aim to select data points that best represent the data distribution in the 
 
 \subsection{Stream-based Active Learning}
 \label{sec:StreamBasedActiveLearning}
-Stream-based Active Learning is closer to Pool-based Active Learning than Query Synthesis Active Learning. The main difference is that data arrives
-sequentially instead of have a batch of data points at once.
+Stream-based Active Learning is closer to Pool-based Active Learning than Query Synthesis Active Learning. It was first introduced by Cohn et al. 
+\cite{cohn1994improving}. The main difference between Stream-based Active Learning and Pool-based Active Learning is that data arrives sequentially
+instead of having a batch of data points at once. In the stream-based Active Learning scenario, the learner draws a data point from the data source
+one at a time. For each data point, the learner can then decide to query the oracle for its label or to discard it. The decision whether to label a
+data point can either be made on the basis of its informativeness \cite{dagan1995committee} or its location within the instance space \cite{cohn1994improving}.
+In the latter case the learner would label the data point if it is located in a region of the instance space that the learner is not confident about.
 
 \section{Continual Learning}
 \label{sec:ContinualLearning}
+Continual Learning is a subfield of Machine Learning that aims to solve the problem of catastrophic forgetting. To elaborate further on this problem,
+it is important to remember that most machine learning services are deployed in an environment where constant changes occur. To adapt to this, it is
+necessary for Machine Learning Models to learn continually, i.e. to learn new tasks without forgetting the knowledge they have acquired in the past.
+This is a common case for humans. For example, if a child has once learned to walk, it does not forget how to walk when it learns to ride a bike.
+In contrast to human behavior, the performance of Machine Learning Models on old tasks rapidly decreases when they are trained on new tasks. This phenomenon
+is known as \enquote{Catastrophic Forgetting} and was already discovered in the early days of Machine Learning research \cite{mccloskey1989catastrophic}.
+In more general terms, research in Continual Learning is looking not only to alleviate Catastrophic Forgetting, but to solve the 
+\enquote{stabiliy / plasticity dilemma} \cite{carpenter1988art}. The stability / plasticity dilemma refers to the fact that Machine Learning Models
+should ideally be stable enough to retain their performance on old tasks while simultaneously being plastic enough to adapt to new tasks. This is a dilemma
+because both properties are designed even though they are in conflict with each other. In practice, Machine Learning Models are rather plastic than stable.
+This is especially true for Deep Neural Networks, but generally for all Machine Learning Models that are trained by greedily updating their parameters using
+gradient descent. \\
+Continual Learning is mainly used in scenarios where new tasks arrive over time or where the data distribution changes over time. Despite being useful
+in these classic scenarios, Continual Learning approaches can also be used in cases where the data cannot be stored for legal reasons or due to memory
+constraints, i.e. when the normal batch learning approach with a large training set cannot be applied. 
+
+
+\subsection{Continual Learning Scenarios}
+\label{sec:ContinualLearningScenarios}
+
+\subsubsection{Task-Incremental Continual Learning}
+\label{sec:TaskIncrementalContinualLearning}
+
+\subsubsection{Domain-Incremental Continual Learning}
+\label{sec:DomainIncrementalContinualLearning}
+
+\subsubsection{Class-Incremental Continual Learning}
+\label{sec:ClassIncrementalContinualLearning}
+
+\subsection{Continual Learning Approaches}
+\label{sec:ContinualLearningApproaches}
+
+\subsubsection{Architectural Approaches}
+\label{sec:ArchitecturalApproaches}
+
+\subsubsection{Functional Approaches}
+\label{sec:FunctionalApproaches}
+
+\subsubsection{Structural Approaches}
+\label{sec:StructuralApproaches}
 
 \section{Model Stealing}
 \label{sec:ModelStealing}
