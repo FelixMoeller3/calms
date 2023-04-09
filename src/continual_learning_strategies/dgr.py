@@ -21,7 +21,7 @@ class DeepGenerativeReplay(ContinualLearningStrategy):
                  crit: nn.CrossEntropyLoss,USE_GPU:bool=False,clip_grad: float=2.0,**kwargs):
         super(DeepGenerativeReplay,self).__init__(model,optim,scheduler,crit,USE_GPU,clip_grad)
         self.generator = None
-        self.num_gen_epochs = 50
+        self.num_gen_epochs = 20
 
     def _train_generator(self,train_loader: DataLoader) -> None:
         '''

@@ -20,7 +20,7 @@ SUBSTITUTE_MODEL:
       MILESTONES: [80,120]
 BATCH_SIZE: 128 # batch size used for training
 CYCLES: 12 # number of cycles in the model stealing process
-EPOCHS: 150
+EPOCHS: 120
 RECOVER_STATE: False
 SAVE_STATE: False
 STATE_DIR: ''
