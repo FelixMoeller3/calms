@@ -117,20 +117,51 @@ constraints, i.e. when the normal batch learning approach with a large training 
 \subsection{Continual Learning Scenarios}
 \label{sec:ContinualLearningScenarios}
 Continual Learning is a rapidly evolving research field and terminology and taxonomy are still being established. Among the most important factors to distinguish
-is the way in which new tasks arrive. In the following, we will introduce the three typical Continual Learning Scenarios as established in . 
+is the way in which new tasks arrive. In the following, we will introduce the three typical Continual Learning Scenarios as presented in \cite{van2022three}. 
 
 \subsubsection{Task-Incremental Continual Learning}
 \label{sec:TaskIncrementalContinualLearning}
-In the Task-Incremental setting, a model is informed
-
+%TODO: Add a figure that shows the difference between the three scenarios. For Task-Incremental learning mention tuple with task id.
+In the Task-Incremental setting, a model is informed about which task it will be trained on or which task the data whose label it is supposed to predict belongs to.
+The task-information is supplied via a task identifier which is usually an integer. Because the model does not have to infer the task which it is supposed to predict
+or learn, it is possible to have task-specific components in the model. For neural networks, this means that there is one output layer per task and for each task the
+respective output layer is used while all other layers are shared between all tasks. These classifiers are also known as \enquote{multi-head} classifiers \cite{van2018generative}.
+An example would be the following: The first task is to classify images of cats and dogs. The second task is to classify cows and sheep. The model would have one output layer 
+used to classify cats and dogs and a second output layer to classify cows and sheep. When training for the first task, only the first output layer is used. When the second task
+arrives the model is retrained with the second output layer.  The mapping that is learned is 
+\begin{equation}
+    f: X \times T \rightarrow Y
+\end{equation}
+Where $X = \mathbb{R}^{N x N x C}$ is the input space (i.e. all possible input images of size $N x N$ with $C$ channels), $T = \{1,2,\ldots\}$ is the task space (i.e. all possible
+tasks that the model can be trained on) and $Y = \mathbb{Z}_{k}$ is the label space with $k$ being the number of possible classes.
+% Figure with decision tree for the continual learning scenarios like in https://www.nature.com/articles/s42256-022-00568-3
 \subsubsection{Domain-Incremental Continual Learning}
 \label{sec:DomainIncrementalContinualLearning}
+In the Domain-Incremental setting, task identities are not given during evaluation. Since the underlying task does not change, this is also not necessary. While the structure of the task
+stays the same it is rather the distribution of the data that changes. An example of Domain-Incremental Continual Learning would be the classification of digits between 0 and 9 (such as
+those in the MNIST dataset) where the digits for one subtask are green and blue for the other. The mapping that is learned is 
+\begin{equation}
+    f: X \rightarrow Y
+\end{equation}
+Where $X = \mathbb{R}^{N x N x C}$ is the input space (i.e. all possible input images of size $N x N$ with $C$ channels), and $Y = \mathbb{Z}_{k}$ is the label space with $k$ being the
+number of possible classes.
 
 \subsubsection{Class-Incremental Continual Learning}
 \label{sec:ClassIncrementalContinualLearning}
+Class-Incremental Continual Learning is the most challenging scenario. Like in the Domain-Incremental setting, task identities are not provided at evaluation time, however, this time they
+need to be inferred by the model. In this scenario, a classifier would be incrementally exposed to multiple tasks which contain different classes. An example would be again the classification
+of digits between 0 and 9, where this time each task contains a disjoint subset of digits. The classifier would be trained on the first task, containing the digits 0 and 1, the second task,
+containing the digits 2 and 3 and so on. During evaluation, the classifier would not only have to classify the digits correctly, but also to infer which task they belong to. The mapping that
+is learned is 
+\begin{equation}
+    f: X \rightarrow Y \times T
+\end{equation}
+Where $X = \mathbb{R}^{N x N x C}$ is the input space (i.e. all possible input images of size $N x N$ with $C$ channels), $T = \{1,2,\ldots\}$ is the task space (i.e. all possible
+tasks that the model can be trained on) and $Y = \mathbb{Z}_{k}$ is the label space with $k$ being the number of possible classes.
 
 \subsection{Continual Learning Approaches}
 \label{sec:ContinualLearningApproaches}
+Because achieving Continual Learning for Artificial Intelligence is a major step to make Machine Learning more 
 
 \subsubsection{Architectural Approaches}
 \label{sec:ArchitecturalApproaches}
