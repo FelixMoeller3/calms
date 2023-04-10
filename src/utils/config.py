@@ -416,7 +416,7 @@ def build_cl_strategy(cl_config:dict,substitute_model: nn.Module,use_gpu,train_s
     elif cl_config["NAME"] == "AGEM":
         cl_strat = cl_strats.AGem(substitute_model,optimizer,scheduler,nn.CrossEntropyLoss(),**cl_config)
     elif cl_config["NAME"] == "Replay":
-        cl_strat = cl_strats.Replay(substitute_model,optimizer,scheduler,nn.CrossEntropyLoss(),train_set,**cl_config)
+        cl_strat = cl_strats.Replay(substitute_model,optimizer,scheduler,nn.CrossEntropyLoss(),train_set,use_gpu,cl_config["BUFFER_SIZE"])
     elif cl_config["NAME"] == "DGR":
         cl_strat = cl_strats.DeepGenerativeReplay(substitute_model,optimizer,scheduler,nn.CrossEntropyLoss(),**cl_config)
     else:

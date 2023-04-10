@@ -12,6 +12,7 @@ SUBSTITUTE_MODEL:
     COLD_START: False
   CL_METHOD: 
     NAME: 'Replay' # Possible values : Alasso,EWC,MAS,IMM,Naive
+    BUFFER_SIZE: 2000
     OPTIMIZER:
       NAME: 'SGD'
       LR: 0.1
