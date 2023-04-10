@@ -41,7 +41,7 @@ def run_config(config_path: str) -> None:
     check_attribute_presence(yaml_cfg,CONFIG,"config")
     batch_size = yaml_cfg["BATCH_SIZE"]
     use_gpu = detect_gpu()
-    target_model,num_classes,num_channels,_ = build_target_model(yaml_cfg["TARGET_MODEL"],batch_size,use_gpu)
+    target_model,num_classes,num_channels,val_acc = build_target_model(yaml_cfg["TARGET_MODEL"],batch_size,use_gpu)
     val_set = yaml_cfg["TARGET_MODEL"]["DATASET"]
     al_method,cl_method,train_set,val_set = build_substitute_model(yaml_cfg["SUBSTITUTE_MODEL"],batch_size,use_gpu,num_classes,val_set,num_channels)
     prev_state = {}
@@ -373,7 +373,7 @@ def build_substitute_model(config: dict,batch_size:int,use_gpu:bool,num_classes:
     else:
         val_set, _, _ = load_dataset(config["DATASET"],False,num_channels)
     al_strategy = build_al_strategy(config["AL_METHOD"],substitute_model,train_set,batch_size,num_classes,use_gpu)
-    cl_strategy = build_cl_strategy(config["CL_METHOD"],substitute_model,use_gpu)
+    cl_strategy = build_cl_strategy(config["CL_METHOD"],substitute_model,use_gpu,train_set)
     return al_strategy,cl_strategy,train_set,val_set
 
 
@@ -399,7 +399,7 @@ def build_al_strategy(al_config: dict,substitute_model: nn.Module, dataset: Data
     return al_strat
 
 
-def build_cl_strategy(cl_config:dict,substitute_model: nn.Module,use_gpu) -> ContinualLearningStrategy:
+def build_cl_strategy(cl_config:dict,substitute_model: nn.Module,use_gpu,train_set: Dataset) -> ContinualLearningStrategy:
     check_attribute_presence(cl_config,CL_CONFIG,"continual learning config")
     optimizer,scheduler = build_optimizer(cl_config["OPTIMIZER"],substitute_model)
     cl_config["USE_GPU"] = use_gpu
@@ -416,7 +416,7 @@ def build_cl_strategy(cl_config:dict,substitute_model: nn.Module,use_gpu) -> Con
     elif cl_config["NAME"] == "AGEM":
         cl_strat = cl_strats.AGem(substitute_model,optimizer,scheduler,nn.CrossEntropyLoss(),**cl_config)
     elif cl_config["NAME"] == "Replay":
-        cl_strat = cl_strats.Replay(substitute_model,optimizer,scheduler,nn.CrossEntropyLoss(),**cl_config)
+        cl_strat = cl_strats.Replay(substitute_model,optimizer,scheduler,nn.CrossEntropyLoss(),train_set,**cl_config)
     elif cl_config["NAME"] == "DGR":
         cl_strat = cl_strats.DeepGenerativeReplay(substitute_model,optimizer,scheduler,nn.CrossEntropyLoss(),**cl_config)
     else:

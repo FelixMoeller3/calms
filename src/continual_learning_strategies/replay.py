@@ -5,13 +5,15 @@ import torch.optim.lr_scheduler as lr_scheduler
 import random
 from torch.utils.data import Dataset,DataLoader,Subset
 from typing import List
+from active_learning_strategies import CoreSet
 
 class Replay(ContinualLearningStrategy):
 
-    def __init__(self,model:nn.Module,optimizer: torch.optim.Optimizer,scheduler: lr_scheduler._LRScheduler,criterion: torch.nn.CrossEntropyLoss,USE_GPU:bool=False,PATTERNS_PER_EXPERIENCE: int=300,**kwargs):
+    def __init__(self,model:nn.Module,optimizer: torch.optim.Optimizer,scheduler: lr_scheduler._LRScheduler,criterion: torch.nn.CrossEntropyLoss,dataset:Dataset,USE_GPU:bool=False,BUFFER_SIZE: int=2000,**kwargs):
         super(Replay,self).__init__(model,optimizer,scheduler,criterion,USE_GPU)
-        self.patterns_per_experience = PATTERNS_PER_EXPERIENCE
+        self.buffer_size = BUFFER_SIZE
         self.indices = []
+        self.buffer_selection_strategy = CoreSet(model,dataset,0,128,self.buffer_size,self.buffer_size,1,USE_GPU)
 
     # def _get_memory_sample(self) -> List[int]:
     #     if len(self.indices) < self.mem_size:
@@ -33,7 +35,9 @@ class Replay(ContinualLearningStrategy):
     def _after_train(self,train_set: Dataset=None) -> None:
         if not isinstance(train_set,Subset):
             return
-        if len(train_set.indices) <= self.patterns_per_experience:
-            self.indices += train_set.indices
-        else:
-            self.indices += random.sample(train_set.indices,self.patterns_per_experience)
+        self.indices += train_set.indices
+        if len(train_set.indices) <= self.buffer_size:
+            return
+        self.buffer_selection_strategy.feed_current_state(0,self.indices,[])
+        samples = self.buffer_selection_strategy.query()
+        self.indices = [self.indices[i] for i in samples]
