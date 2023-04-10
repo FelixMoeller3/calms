@@ -161,16 +161,48 @@ tasks that the model can be trained on) and $Y = \mathbb{Z}_{k}$ is the label sp
 
 \subsection{Continual Learning Approaches}
 \label{sec:ContinualLearningApproaches}
-Because achieving Continual Learning for Artificial Intelligence is a major step to make Machine Learning more 
+The Continual Learning approaches which have been proposed so far can be grouped into three categories according to, \cite{parisi2019continual} \cite{mundt2020wholistic} and \cite{zenke2017continual}.
+Parisi et al. \cite{parisi2019continual} propose to group Continual Learning approaches into \textbf{regularization}, \textbf{rehearsal} and \textbf{architectural} approaches whereas Zenke et al.
+\cite{zenke2017continual} group Continual Learning approaches into \textbf{architectural},\textbf{functional} and \textbf{structural} approaches. In the following, we will stick to the
+categorization proposed by Parisi et al. because it is broader and fully encompasses the categorization by Zenke et al. Furthermore, Parisi et al.'s classification has been adopted by
+recent continual learning reviews \cite{mundt2020wholistic}.
+
+\subsubsection{Regularization Approaches}
+\label{sec:RegularizationApproaches}
+Regularization-based approaches to Continual Learning aim to prevent the forgetting of previous tasks by adding a regularization
+term to the model's loss function. The regularization term is used as a proxy for how much the performance of the model on previous
+tasks will decrease, i.e. a high regularization term indicates that the model will perform poorly on the old tasks with the current
+weights and a low regularization term indicates that the model has not lost much knowledge of the old tasks. The way the
+regularization term is computed can further be divided into two groups. There are \textbf{structural} approaches which regularize
+based on weight changes to the model and there are \textbf{functional} approaches which regularize based on the output of the model.
+Notable examples of structural approaches include Elastic Weight Consolidation (EWC) \cite{kirkpatrick2017overcoming},Memory Aware
+Synapses (MAS) \cite{aljundi2018memory}, Incremental Moment Matching (IMM) \cite{lee2017overcoming} as well as Asymmetric Loss
+Approximation by Single-Side Overestimation (ALASSO) \cite{park2019continual} which is an extension of Synaptic Intelligence (SI)
+\cite{zenke2017continual}. All the structural regularization approaches will be covered in more detail in the section on
+\href{sec:Related_work:Continual_Learning:Experiments}{the continual learning approaches used in the experiments}. \\
+Functional regularization approaches are inspired by knowledge distillation \cite{hinton2015distilling}. They add a distillation
+loss to the objective function which is computed based on the prediction of a data sample stored for future use. These data samples
+are called soft targets. Li et al. \cite{li2017learning} compute the distillation loss by using the output of the newly arrived task
+given by the model trained on the old tasks. The distillation loss they introduce aims to retain the prediction of the old model on
+the new task even if the prediction itself may be inaccurate. The approach of Rannen et al. \cite{rannen2017encoder}, called Encoder
+Based Lifelong Learning (EBLL) is based on the approach of Li et al., however in EBLL the distillation loss is computed based on
+autoencoder reconstructions of old tasks.
+
+\subsubsection{Rehearsal Approaches}
+\label{sec:RehearsalApproaches}
+Rehearsal approaches to Continual Learning aim to prevent catastrophic forgetting by fitting a model's parameters to the distribution
+of an incoming task and all previous tasks simultaneously. Within Rehearsal approaches it is important to remember the trade-off between
+model performance and computational cost. In general, the more data from previous tasks is used to train the model, the better the accuracy is. 
+However, in order to train on more data, the data has to be stored and fed into the training process which is costly in terms of memory and This can either be done by replaying stored data from previous tasks or by
+retraining on generated data drawn from the distribution of previous tasks. Continual Learning Methods that rely on the former idea are
+categorized as \textbf{exemplar rehearsal} approaches while those that rely on the latter idea are categorized as \textbf{generative replay}
+approaches. \\
+Exemplar Rehearsal Techniques store data from previous tasks in a so-called \enquote{Replay Buffer} which data is sampled
+
+
 
 \subsubsection{Architectural Approaches}
 \label{sec:ArchitecturalApproaches}
-
-\subsubsection{Functional Approaches}
-\label{sec:FunctionalApproaches}
-
-\subsubsection{Structural Approaches}
-\label{sec:StructuralApproaches}
 
 \section{Model Stealing}
 \label{sec:ModelStealing}
