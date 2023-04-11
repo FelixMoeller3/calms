@@ -1,5 +1,5 @@
 SUBSTITUTE_MODEL: 
-  NAME: 'ActiveThiefConv4' # Possible values: Resnet18,Resnext50,TestConv
+  NAME: 'ActiveThiefConv3' # Possible values: Resnet18,Resnext50,TestConv
   DATASET: 'SmallImageNet1' # Possible values: MNIST,FashionMNIST
   CONTINUAL: 100
   USE_LABEL: False
