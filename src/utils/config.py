@@ -219,8 +219,9 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
         Loads a dataset into memory and returns it along with the dimension of a single instance
         and the number of target classes the dataset has.
     '''
+    
     channel_change_greyscale = [] if num_channels is None or num_channels == 1 else [transforms.Grayscale(num_channels)]
-    channel_change_color = [] if num_channels is None or num_channels == 3 else [transforms.Grayscale(num_channels)]
+    channel_change_color = [] if num_channels is None or num_channels == 3 else [transforms.Lambda(lambda x: x.mean(dim=0))]
     if name == "MNIST":
         dataset = datasets.MNIST("./data",train,transform=transforms.Compose( 
                 [
