@@ -206,3 +206,45 @@ Exemplar Rehearsal Techniques store data from previous tasks in a so-called \enq
 
 \section{Model Stealing}
 \label{sec:ModelStealing}
+% TODO: Add figure with model stealing process
+% Model Stealing notes: 
+% Taxonomy provided by Jagielski et al. based on attacker's goal 
+% Four types of attacks presented by He et al.: model extraction, model inversion, model poisoning and adversarial attack.
+% Model extraction is a subfield of adversarial machine learning.
+% Look at section 4.3 of Oliynyk et al. paper for taxonomy of adversarial ml.
+% Mention some notation as in Olinyk et al. paper in section 5.1.
+% Metrics to measure attack in 5.4 of Olinyk et al. paper.
+% Have a look at Fig3 of Olinyk et al. paper and use it to tell which attacks we use (e.g. NNPD, Computer Vision, etc.)
+% Based on Olinyk et al., our approach falls into the consistency category of section 6.1
+% Model Stealing defenses are either used for attack detection or attack prevention.
+With the advent of Machine Learning as a Service (MLaaS), an increasing amount of machine learning models are being exposed to the public via 
+prediction APIs. The idea of these prediction APIs is that a user can request a prediction from a model by sending a request containing an unlabeled data
+point to the API. The response to the request is then the prediction of the model for the data point. Prediction APIs are monetized by charging the user
+on a pay-per-query principle. That means that each request has a fixed price for each query which is usually subtracted from his or her account balance on
+a monthly basis. Providing public access to a machine learning model is a win-win situation because the model developer is compensated for his or her efforts
+on gathering and labeling appropriate training data, choosing a proper model architecture, training the model and fine-tuning its hyperparameters while the user
+of the prediction API can benefit from the model's predictions without having to train the model himself or herself. \\
+Since the developed model is the intellectual property of the model developer, it is important that only the model's predictions are exposed to the public and
+not the model (i.e. its architecture and the model weights)itself. However, in the last years numerous research papers have been published which demonstrate how
+several features of a machine learning model can be extracted, i.e. its functionality \cite{tramer2016stealing}, its architecture \cite{oh2019towards} and its
+training data \cite{shokri2017membership}. This newly created field of research is called \textbf{Model Stealing} or \textbf{Model Extraction}, and it is a subfield
+of \textbf{Adversarial Machine Learning} according to Oliynyk et al. \cite{oliynyk2022know}. Because Model Extraction attacks are so effective, further research works
+concerning model stealing defense mechanisms have been published. In the following we will use the taxonomy provided by Oliynyk et al.
+\cite{oliynyk2022know} as a basis for our categorization of Model Stealing attacks and defenses. \\
+
+\subsection{Terminology}
+\label{sec:ModelStealing:Terminology}
+Since Model Stealing is a rather new field it comes with numerous terms that are not commonly used in other fields of machine learning and others that are used 
+synonymously. In order to avoid confusion, we will define the terms we use in this section in the following. \\
+\textbf{Model Stealing Attack}: The process of maliciously querying a machine learning model in order to extract some or all of the model's features, such as its
+architecture, its weights or its training data. Model Stealing Attacks are also known as Model Extraction Attacks or Model Inference Attacks among others. \\
+\textbf{Target Model}: The model that is queried via the prediction API and whose features the attacker aims to extract. The target model has also been referred to 
+as Oracle, Victim Model or Secret Model. \\
+
+
+
+\subsection{Model Stealing Attacks}
+\label{sec:ModelStealing:Attacks}
+
+\subsection{Model Stealing Defenses}
+\label{sec:ModelStealing:Defenses}
