@@ -1,0 +1,57 @@
+Run completed at 2023-04-11 11:36:53 after 02h:56m:16s
+Config File: BATCH_SIZE: 128
+CYCLES: 24
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: correct_results_150epochs.txt
+RESULTS_FOLDER: ./experiments/CL/
+SAVE_STATE: false
+STATE_DIR: ''
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    COLD_START: false
+    INIT_BUDGET: 2000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: CoreSet
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    BUFFER_SIZE: 4000
+    NAME: Replay
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  CONTINUAL: -1
+  DATASET: CIFAR-10
+  NAME: Resnet18
+  USE_LABEL: true
+TARGET_MODEL:
+  DATASET: MNIST
+  EPOCHS: 100
+  MODEL: ActiveThiefConv4
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: ADAM
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: active_thief_conv4.pt
+  TARGET_MODEL_FOLDER: ./data/models/mnist/
+  TRAIN_MODEL: false
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: Replay
+Active Learning Strategy: CoreSet
+Accuracy results at the end of each cycle: [0.5736, 0.7122, 0.7961, 0.834, 0.8483, 0.8569, 0.859, 0.8692, 0.8668, 0.8678, 0.8669, 0.8744, 0.8731, 0.8755, 0.8767, 0.8746, 0.869, 0.8682, 0.8664, 0.8664, 0.8562, 0.8498, 0.8455, 0.8406, 0.8301]
+----------------------------------------------------------------------

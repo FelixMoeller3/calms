@@ -6119,3 +6119,117 @@ Continual Learning Strategy: Replay
 Active Learning Strategy: CoreSet
 Accuracy results at the end of each cycle: [0.7125, 0.8303, 0.8616, 0.8717, 0.879, 0.8793, 0.8819, 0.8796, 0.878, 0.8721, 0.8621, 0.8434, 0.8273]
 ----------------------------------------------------------------------
+Run completed at 2023-04-11 11:12:28 after 01h:59m:08s
+Config File: BATCH_SIZE: 128
+CYCLES: 12
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: correct_results_150epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SAVE_STATE: false
+STATE_DIR: ''
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 4000
+    COLD_START: false
+    INIT_BUDGET: 4000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: CoreSet
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    BUFFER_SIZE: 4000
+    NAME: Replay
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  CONTINUAL: -1
+  DATASET: CIFAR-10
+  NAME: Resnet18
+  USE_LABEL: true
+TARGET_MODEL:
+  DATASET: MNIST
+  EPOCHS: 100
+  MODEL: ActiveThiefConv4
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: ADAM
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: active_thief_conv4.pt
+  TARGET_MODEL_FOLDER: ./data/models/mnist/
+  TRAIN_MODEL: false
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: Replay
+Active Learning Strategy: CoreSet
+Accuracy results at the end of each cycle: [0.6932, 0.847, 0.8758, 0.8891, 0.8954, 0.8945, 0.8956, 0.89, 0.888, 0.8783, 0.8638, 0.8442, 0.8156]
+----------------------------------------------------------------------
+Run completed at 2023-04-11 12:19:14 after 02h:01m:33s
+Config File: BATCH_SIZE: 128
+CYCLES: 12
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: correct_results_150epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SAVE_STATE: false
+STATE_DIR: ''
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 4000
+    COLD_START: false
+    INIT_BUDGET: 2000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: CoreSet
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    BUFFER_SIZE: 4000
+    NAME: Replay
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  CONTINUAL: -1
+  DATASET: CIFAR-10
+  NAME: Resnet18
+  USE_LABEL: true
+TARGET_MODEL:
+  DATASET: MNIST
+  EPOCHS: 100
+  MODEL: ActiveThiefConv4
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: ADAM
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: active_thief_conv4.pt
+  TARGET_MODEL_FOLDER: ./data/models/mnist/
+  TRAIN_MODEL: false
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: Replay
+Active Learning Strategy: CoreSet
+Accuracy results at the end of each cycle: [0.5652, 0.786, 0.8672, 0.8819, 0.8874, 0.8901, 0.8938, 0.8959, 0.892, 0.8925, 0.8837, 0.8722, 0.8588]
+----------------------------------------------------------------------
