@@ -5,7 +5,7 @@ import torch.optim.lr_scheduler as lr_scheduler
 import random
 from torch.utils.data import Dataset,DataLoader,Subset
 from typing import List
-from active_learning_strategies import CoreSet
+from active_learning_strategies import CoreSet,RandomSelection
 
 class Replay(ContinualLearningStrategy):
 
@@ -13,6 +13,7 @@ class Replay(ContinualLearningStrategy):
         super(Replay,self).__init__(model,optimizer,scheduler,criterion,USE_GPU)
         self.buffer_size = BUFFER_SIZE
         self.indices = []
+        #self.buffer_selection_strategy = RandomSelection(model,dataset,0,128,self.buffer_size,0,1,USE_GPU)
         self.buffer_selection_strategy = CoreSet(model,dataset,0,128,self.buffer_size,0,1,USE_GPU)
 
     # def _get_memory_sample(self) -> List[int]:
