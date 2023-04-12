@@ -235,11 +235,24 @@ concerning model stealing defense mechanisms have been published. In the followi
 \subsection{Terminology}
 \label{sec:ModelStealing:Terminology}
 Since Model Stealing is a rather new field it comes with numerous terms that are not commonly used in other fields of machine learning and others that are used 
-synonymously. In order to avoid confusion, we will define the terms we use in this section in the following. \\
+synonymously. In order to avoid confusion, we will define and explain the terms we use in this section and. \\
 \textbf{Model Stealing Attack}: The process of maliciously querying a machine learning model in order to extract some or all of the model's features, such as its
 architecture, its weights or its training data. Model Stealing Attacks are also known as Model Extraction Attacks or Model Inference Attacks among others. \\
 \textbf{Target Model}: The model that is queried via the prediction API and whose features the attacker aims to extract. The target model has also been referred to 
 as Oracle, Victim Model or Secret Model. \\
+\textbf{Substitute Model}: The model that is used by the attacker to extract the target model's features. Synonyms for Substitute Model are Adversarial Classifier,
+Knockoff Model or Inferred Model. \cite{orekondy2019knockoff} have demonstrated that is favorable to choose a rather complex model architecture which is in line with 
+our findings.\\
+\textbf{Target Model Dataset}: The dataset that the target model has been trained on. The term Target Model Dataset has not been used in the literature before (to 
+the best of our knowledge), but we choose this term of the synonymous term Secret Dataset because we believe it is more expressive. During Model Stealing Attacks,
+the attacker does not have access to the target model's dataset, i.e. it is kept secret. For research purposes however, a test set of the Target Model Dataset is
+used to evaluate the performance of the Substitute Model. \\
+\textbf{Thief Dataset}: The dataset that is used by the attacker to train the Substitute Model. The Thief Dataset is also known as Fake dataset, Attacker Set or 
+Transfer Set. When constructing the Thief Dataset, the attacker can either use \textbf{Natural Non-Problem Domain} (NNPD) or \textbf{Synthetic Non-Problem Domain} (SNPD)
+data. NNPD data is data that is collected from the real world but does not (knowingly) overlap with the Target Model Dataset whereas SNPD data is artificially created,
+usually by drawing from a given distribution such as a multidimensional Uniform Distribution \cite{pal2020activethief}. 
+
+
 
 
 
