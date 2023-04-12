@@ -221,7 +221,7 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
     '''
     
     channel_change_greyscale = [] if num_channels is None or num_channels == 1 else [transforms.Grayscale(num_channels)]
-    channel_change_color = [] if num_channels is None or num_channels == 3 else [transforms.Lambda(lambda x: x.mean(dim=0))]
+    channel_change_color = [] if num_channels is None or num_channels == 3 else [transforms.Lambda(lambda x: x.mean(dim=0,keepdim=True))]
     if name == "MNIST":
         dataset = datasets.MNIST("./data",train,transform=transforms.Compose( 
                 [
