@@ -244,20 +244,37 @@ as Oracle, Victim Model or Secret Model. \\
 Knockoff Model or Inferred Model. \cite{orekondy2019knockoff} have demonstrated that is favorable to choose a rather complex model architecture which is in line with 
 our findings.\\
 \textbf{Target Model Dataset}: The dataset that the target model has been trained on. The term Target Model Dataset has not been used in the literature before (to 
-the best of our knowledge), but we choose this term of the synonymous term Secret Dataset because we believe it is more expressive. During Model Stealing Attacks,
+the best of our knowledge), but we choose this term over the synonymous term Secret Dataset because we believe it is more expressive. During Model Stealing Attacks,
 the attacker does not have access to the target model's dataset, i.e. it is kept secret. For research purposes however, a test set of the Target Model Dataset is
 used to evaluate the performance of the Substitute Model. \\
 \textbf{Thief Dataset}: The dataset that is used by the attacker to train the Substitute Model. The Thief Dataset is also known as Fake dataset, Attacker Set or 
 Transfer Set. When constructing the Thief Dataset, the attacker can either use \textbf{Natural Non-Problem Domain} (NNPD) or \textbf{Synthetic Non-Problem Domain} (SNPD)
 data. NNPD data is data that is collected from the real world but does not (knowingly) overlap with the Target Model Dataset whereas SNPD data is artificially created,
-usually by drawing from a given distribution such as a multidimensional Uniform Distribution \cite{pal2020activethief}. 
-
+usually by drawing from a given distribution such as a multidimensional Uniform Distribution \cite{pal2020activethief}. Empirical observations show that using NNPD data
+yields significantly better results than using SNPD data. Even when using NNPD data, significant differences between different datasets have been observed 
+\cite{pal2020activethief}. In general, it is wise to choose a dataset that is as diverse as possible. Regardless of using SNPD or NNPD data, the adversary should keep the
+dimensions of the Target Model Dataset, i.e. image size and especially the number of channels for image datasets, in mind and adapt the Thief Dataset accordingly. \\
+\textbf{Agreement}: The relative agreement between the predictions of the Substitute Model and the Target Model. The agreement is computed on a test set of the Target 
+Model dataset, meaning that it is not accessible by the attacker. The agreement is also known as Extraction accuracy, label prediction match or similarity. More formally,
+the agreement between Target Model $f$ and Substitute Model $\tilde{f}$ is defined as follows:
+\begin{equation}
+    Agreement(f,\tilde{f}) = \frac{1}{|X_{tm}^{test}|} \sum_{x \in X_{tm}^{test}} \mathds{1}(f(x) = \tilde{f}(x))
+\end{equation}
 
 
 
 
 \subsection{Model Stealing Attacks}
 \label{sec:ModelStealing:Attacks}
+Model Stealing attacks can be performed in a variety of ways. The methodology with which such an attack is executed depends on the goal of the attacker. If the attacker
+
+\begin{figure} [ht]
+  \centering
+  \includegraphics[width=.9\linewidth]{images/MS_Taxonomy.png}
+  \caption[Model Stealing Taxonomy]{Taxonomy of Model Stealing Attacks by \cite{oliynyk2022know}}
+  \label{fig:ModelStealing:Taxonomy}
+\end{figure}
+
 
 \subsection{Model Stealing Defenses}
 \label{sec:ModelStealing:Defenses}
