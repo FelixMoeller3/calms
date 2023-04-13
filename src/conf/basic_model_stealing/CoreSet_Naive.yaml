@@ -29,13 +29,13 @@ RESULTS_FILE: 'Active_Thief_Results.txt'
 TARGET_MODEL:
   TARGET_MODEL_FOLDER: './data/models/mnist/'
   TARGET_MODEL_FILE: 'active_thief_conv3.pt'
-  TRAIN_MODEL: False
+  TRAIN_MODEL: True
   MODEL: 'ActiveThiefConv3'
   DATASET: 'MNIST'
   EPOCHS : 50
   OPTIMIZER:
     NAME: 'SGD'
-    LR: 0.05
+    LR: 0.1
     MOMENTUM: 0.9
     WDECAY: 0.0005
     MILESTONES: [100,240]
