@@ -267,6 +267,14 @@ the agreement between Target Model $f$ and Substitute Model $\tilde{f}$ is defin
 \subsection{Model Stealing Attacks}
 \label{sec:ModelStealing:Attacks}
 Model Stealing attacks can be performed in a variety of ways. The methodology with which such an attack is executed depends on the goal of the attacker. If the attacker
+aims to extract training hyperparameters, then he or she can use an equation-solving approach \cite{wang2018stealing} or train a meta-model to predict the hyperparameters
+\cite{oh2019towards}. The meta-model approach proposed by Oh et al. can also be used to extract the model architecture. This is the only approach that does not rely on either
+software or hardware access to the target model. Other approaches, such as the one proposed by Yan et al. \cite{yan2020cache}, make use of side-channel attacks to extract
+the architecture of the target model and therefore require software or hardware access to the target model. \\
+Apart from extracting training hyperparameters or model architecture, the attacker might also be interested in the target model's weights, also called learned parameters. This
+is especially the case if the model architecture and/or training hyperparameters are already known. These can be known because they are not kept secret but also by using the 
+aforementioned attacks to extract them. It is important to note here that different Model Stealing Attacks should not be seen as mutually exclusive but rather as a toolkit that,
+while often used individually, can be combined to 
 
 \begin{figure} [ht]
   \centering
