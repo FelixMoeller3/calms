@@ -39,15 +39,6 @@
   year={2020}
 }
 
-@inproceedings{juuti2019prada,
-  title={PRADA: protecting against DNN model stealing attacks},
-  author={Juuti, Mika and Szyller, Sebastian and Marchal, Samuel and Asokan, N},
-  booktitle={2019 IEEE European Symposium on Security and Privacy (EuroS\&P)},
-  pages={512--527},
-  year={2019},
-  organization={IEEE}
-}
-
 @article{danka2018modal,
   title={modAL: A modular active learning framework for Python},
   author={Danka, Tivadar and Horvath, Peter},
@@ -481,4 +472,204 @@
   author={Yan, Mengjia and Fletcher, Christopher and Torrellas, Josep},
   booktitle={USENIX Security Symposium},
   year={2020}
+}
+
+// extracting the weights of a binary classifier
+@inproceedings{lowd2005adversarial,
+  title={Adversarial learning},
+  author={Lowd, Daniel and Meek, Christopher},
+  booktitle={Proceedings of the eleventh ACM SIGKDD international conference on Knowledge discovery in data mining},
+  pages={641--647},
+  year={2005}
+}
+
+// extracting the weights for support vector regression
+@inproceedings{reith2019efficiently,
+  title={Efficiently stealing your machine learning models},
+  author={Reith, Robert Nikolai and Schneider, Thomas and Tkachenko, Oleksandr},
+  booktitle={Proceedings of the 18th ACM Workshop on Privacy in the Electronic Society},
+  pages={198--210},
+  year={2019}
+}
+
+// Example of model watermarking after training
+@inproceedings{szyller2021dawn,
+  title={Dawn: Dynamic adversarial watermarking of neural networks},
+  author={Szyller, Sebastian and Atli, Buse Gul and Marchal, Samuel and Asokan, N},
+  booktitle={Proceedings of the 29th ACM International Conference on Multimedia},
+  pages={4417--4425},
+  year={2021}
+}
+
+// Example of model watermarking during training
+@inproceedings{zhang2018protecting,
+  title={Protecting intellectual property of deep neural networks with watermarking},
+  author={Zhang, Jialong and Gu, Zhongshu and Jang, Jiyong and Wu, Hui and Stoecklin, Marc Ph and Huang, Heqing and Molloy, Ian},
+  booktitle={Proceedings of the 2018 on Asia Conference on Computer and Communications Security},
+  pages={159--172},
+  year={2018}
+}
+
+// Model stealing defense for Decision Trees (checks how much of the data space has been covered)
+@inproceedings{kesarwani2018model,
+  title={Model extraction warning in mlaas paradigm},
+  author={Kesarwani, Manish and Mukhoty, Bhaskar and Arya, Vijay and Mehta, Sameep},
+  booktitle={Proceedings of the 34th Annual Computer Security Applications Conference},
+  pages={371--380},
+  year={2018}
+}
+
+// Model stealing defense where multiple models are trained and their output is chosen randomly
+@inproceedings{alabdulmohsin2014adding,
+  title={Adding robustness to support vector machines against adversarial reverse engineering},
+  author={Alabdulmohsin, Ibrahim M and Gao, Xin and Zhang, Xiangliang},
+  booktitle={Proceedings of the 23rd ACM International Conference on Conference on Information and Knowledge Management},
+  pages={231--240},
+  year={2014}
+}
+
+// Example for model stealing defense by re-training from scratch.
+@inproceedings{atli2020extraction,
+  title={Extraction of complex dnn models: Real threat or boogeyman?},
+  author={Atli, Buse Gul and Szyller, Sebastian and Juuti, Mika and Marchal, Samuel and Asokan, N},
+  booktitle={Engineering Dependable and Secure Machine Learning Systems: Third International Workshop, EDSMLS 2020, New York City, NY, USA, February 7, 2020, Revised Selected Papers 3},
+  pages={42--57},
+  year={2020},
+  organization={Springer}
+}
+
+// Model stealing defense via input perturbation
+@inproceedings{guiga2020neural,
+  title={Neural Network Security: Hiding CNN Parameters with Guided Grad-CAM.},
+  author={Guiga, Linda and Roscoe, AW},
+  booktitle={ICISSP},
+  pages={611--618},
+  year={2020}
+}
+
+// Model stealing defense via output perturbation (label flipping)
+@inproceedings{shi2017evasion,
+  title={Evasion and causative attacks with adversarial deep learning},
+  author={Shi, Yi and Sagduyu, Yalin E},
+  booktitle={MILCOM 2017-2017 IEEE Military Communications Conference (MILCOM)},
+  pages={243--248},
+  year={2017},
+  organization={IEEE}
+}
+
+// Model stealing defense using differential privacy
+@inproceedings{zheng2019bdpl,
+  title={Bdpl: A boundary differentially private layer against machine learning model extraction attacks},
+  author={Zheng, Huadi and Ye, Qingqing and Hu, Haibo and Fang, Chengfang and Shi, Jie},
+  booktitle={Computer Security--ESORICS 2019: 24th European Symposium on Research in Computer Security, Luxembourg, September 23--27, 2019, Proceedings, Part I 24},
+  pages={66--83},
+  year={2019},
+  organization={Springer}
+}
+
+// Model stealing defense by adding redundant layers
+@article{chabanne2020protection,
+  title={A protection against the extraction of neural network models},
+  author={Chabanne, Herv{\'e} and Despiegel, Vincent and Guiga, Linda},
+  journal={arXiv preprint arXiv:2005.12782},
+  year={2020}
+}
+
+// Model stealing defense by using knowledge distillation
+@article{xu2018deepobfuscation,
+  title={Deepobfuscation: Securing the structure of convolutional neural networks via knowledge distillation},
+  author={Xu, Hui and Su, Yuxin and Zhao, Zirui and Zhou, Yangfan and Lyu, Michael R and King, Irwin},
+  journal={arXiv preprint arXiv:1806.10313},
+  year={2018}
+}
+
+// Model stealing defense by increasing NN sensitivity
+@inproceedings{szentannai2020preventing,
+  title={Preventing Neural Network Weight Stealing via Network Obfuscation},
+  author={Szentannai, K{\'a}lm{\'a}n and Al-Afandi, Jalal and Horv{\'a}th, Andr{\'a}s},
+  booktitle={Intelligent Computing: Proceedings of the 2020 Computing Conference, Volume 3},
+  pages={1--11},
+  year={2020},
+  organization={Springer}
+}
+
+// k-Center problem used for CoreSet
+@misc{wolf2011facility,
+  title={Facility location: concepts, models, algorithms and case studies.},
+  author={Wolf, Gert W},
+  year={2011},
+  publisher={Taylor \& Francis}
+}
+
+// Shannon's entropy
+@article{cover1991information,
+  title={Information theory and statistics},
+  author={Cover, Thomas M and Thomas, Joy A},
+  journal={Elements of information theory},
+  volume={1},
+  number={1},
+  pages={279--335},
+  year={1991},
+  publisher={Wiley New York}
+}
+
+// Monte Carlo Dropout
+@inproceedings{gal2016dropout,
+  title={Dropout as a bayesian approximation: Representing model uncertainty in deep learning},
+  author={Gal, Yarin and Ghahramani, Zoubin},
+  booktitle={international conference on machine learning},
+  pages={1050--1059},
+  year={2016},
+  organization={PMLR}
+}
+
+// Example of active learning using gradients
+@inproceedings{zhang2017active,
+  title={Active discriminative text representation learning},
+  author={Zhang, Ye and Lease, Matthew and Wallace, Byron},
+  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume={31},
+  number={1},
+  year={2017}
+}
+
+// Example of active learning using gradients
+@article{settles2007multiple,
+  title={Multiple-instance active learning},
+  author={Settles, Burr and Craven, Mark and Ray, Soumya},
+  journal={Advances in neural information processing systems},
+  volume={20},
+  year={2007}
+}
+
+// k-means++ paper cited for Badge
+@inproceedings{arthur2007k,
+  title={K-means++ the advantages of careful seeding},
+  author={Arthur, David and Vassilvitskii, Sergei},
+  booktitle={Proceedings of the eighteenth annual ACM-SIAM symposium on Discrete algorithms},
+  pages={1027--1035},
+  year={2007}
+}
+
+// Book on information theory
+@book{mackay2003information,
+  title={Information theory, inference and learning algorithms, chapter 27: Laplace's method},
+  author={MacKay, David JC and Mac Kay, David JC},
+  year={2003},
+  publisher={Cambridge university press}
+}
+
+// Deep dive into the statistics behind Elastic Weight Consolidation
+@article{aich2021elastic,
+  author       = {Abhishek Aich},
+  title        = {Elastic Weight Consolidation (EWC): Nuts and Bolts},
+  journal      = {CoRR},
+  volume       = {abs/2105.04093},
+  year         = {2021},
+  url          = {https://arxiv.org/abs/2105.04093},
+  eprinttype    = {arXiv},
+  eprint       = {2105.04093},
+  timestamp    = {Fri, 14 May 2021 12:13:30 +0200},
+  biburl       = {https://dblp.org/rec/journals/corr/abs-2105-04093.bib},
+  bibsource    = {dblp computer science bibliography, https://dblp.org}
 }

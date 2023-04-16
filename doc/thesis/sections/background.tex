@@ -20,7 +20,8 @@ give an introduction to each of these fields.
 \section{Active Learning}
 \label{sec:ActiveLearning}
 
-%TODO: Hier learner-Beschreibung anpassen
+%TODO: Hier learner-Beschreibung anpassen und ggf. Batch Active Learning einführen (Warum nötig? Für NNs)
+% Representation-based active learning und diversity-based active learning sind quasi gleich, das noch erwähnen
 Active Learning is a subfield of Machine Learning that focuses on the problem of how to select the most informative data points to label.
 Research in Active Learning is motivated by the fact that data acquisition is often easy because it can be automated whereas labeling is
 difficult and time-consuming. Therefore, the goal of research in Active Learning is to develop methods which maximize model performance
@@ -64,7 +65,12 @@ struggled to assign any class to them in the survey of \cite{baum1992query}.
 Pool-based Active Learning is the most widely studied and used type of Active Learning. The idea behind pool-based Active Learning approaches
 is to iteratively select the most informative data points from the current unlabeled pool, query the oracle for their labels and add them to the
 labeled pool. Next, the ML model is trained on the current labeled pool. This process is repeated until the query budget is exhausted. A more detailed
-explanation can be found in \href{alg:PoolBasedActiveLearning}{Algorithm 1}. Pool-based Active Learning strategies share this structure among each other.
+explanation can be found in \ref{alg:PoolBasedActiveLearning}. More formally, the pool-based Active Learning problem can be defined as:
+\begin{equation}
+    \min_{s^1 \subseteq U: |s^1| \leq b} E_{x,y \sim P_{(X,Y)}}[l(x,y;L \cup b)]
+\end{equation}
+In other words, a pool-based Active Learning algorithm aims to select the points that minimize the expected loss of the model on the labeled pool when
+being added to it. As can be seen from  \ref{alg:PoolBasedActiveLearning} the structure across Pool-based Active Learning strategies is very similar.
 The main difference between them is the informative measure, i.e. the criterion with which they select which data points to label next. Within the 
 Pool-based Active Learning category, there are two subcategories: \textbf{Uncertainty-based} sampling and \textbf{Diversity-based} sampling. 
 Uncertainty-based sampling strategies select the data points that the model is most uncertain about. Diversity-based sampling strategies on the other
@@ -179,7 +185,7 @@ Notable examples of structural approaches include Elastic Weight Consolidation (
 Synapses (MAS) \cite{aljundi2018memory}, Incremental Moment Matching (IMM) \cite{lee2017overcoming} as well as Asymmetric Loss
 Approximation by Single-Side Overestimation (ALASSO) \cite{park2019continual} which is an extension of Synaptic Intelligence (SI)
 \cite{zenke2017continual}. All the structural regularization approaches will be covered in more detail in the section on
-\href{sec:Related_work:Continual_Learning:Experiments}{the continual learning approaches used in the experiments}. \\
+\hyperref[sec:Related_work:Continual_Learning:Experiments]{the continual learning approaches used in the experiments}. \\
 Functional regularization approaches are inspired by knowledge distillation \cite{hinton2015distilling}. They add a distillation
 loss to the objective function which is computed based on the prediction of a data sample stored for future use. These data samples
 are called soft targets. Li et al. \cite{li2017learning} compute the distillation loss by using the output of the newly arrived task
@@ -229,8 +235,8 @@ not the model (i.e. its architecture and the model weights)itself. However, in t
 several features of a machine learning model can be extracted, i.e. its functionality \cite{tramer2016stealing}, its architecture \cite{oh2019towards} and its
 training data \cite{shokri2017membership}. This newly created field of research is called \textbf{Model Stealing} or \textbf{Model Extraction}, and it is a subfield
 of \textbf{Adversarial Machine Learning} according to Oliynyk et al. \cite{oliynyk2022know}. Because Model Extraction attacks are so effective, further research works
-concerning model stealing defense mechanisms have been published. In the following we will use the taxonomy provided by Oliynyk et al.
-\cite{oliynyk2022know} as a basis for our categorization of Model Stealing attacks and defenses. \\
+concerning model stealing defense mechanisms have been published. In the following we will use the taxonomy provided by Oliynyk et al. (see Figure 
+\ref{fig:ModelStealing:Taxonomy}) \cite{oliynyk2022know} as a basis for our categorization of Model Stealing attacks and defenses. \\
 
 \subsection{Terminology}
 \label{sec:ModelStealing:Terminology}
@@ -274,7 +280,15 @@ the architecture of the target model and therefore require software or hardware 
 Apart from extracting training hyperparameters or model architecture, the attacker might also be interested in the target model's weights, also called learned parameters. This
 is especially the case if the model architecture and/or training hyperparameters are already known. These can be known because they are not kept secret but also by using the 
 aforementioned attacks to extract them. It is important to note here that different Model Stealing Attacks should not be seen as mutually exclusive but rather as a toolkit that,
-while often used individually, can be combined to 
+while often used individually, can be combined to extract a wholistic view of the target model. So far, attacks have been proposed to extract the weights of a binary classifier
+\cite{lowd2005adversarial},logistic regression \cite{tramer2016stealing}, simple Neural Networks \cite{tramer2016stealing} and support vector regression \cite{reith2019efficiently}. \\
+Many attackers are not interested in specific model features, such as architecture or (hyper-) parameters but rather in reproducing the target model's \textit{functionality}, i.e.
+its ability to predict a label for a given input. When stealing model functionality, attackers either aim to maximize the accuracy of the substitute model on the target model's
+test set or maximize the agreement between the predictions of the substitute model and the target model. While Oliynyk et al. list these as separate attacks, we believe that it is
+rather a matter of what the optimization objective is. Regardless of whether the attacker aims to maximize the accuracy or agreement, the attacker has to train a substitute model
+and choose an appropriate thief dataset. Empirical observation have shown that choosing a rather complex model architecture for the substitute model yields better results if the
+model architecture is unknown whereas choosing a model architecture that is a similar to the target model's architecture as possible yields better results if the model architecture
+is known \cite{orekondy2019knockoff} \cite{pal2020activethief}. \\
 
 \begin{figure} [ht]
   \centering
@@ -286,3 +300,44 @@ while often used individually, can be combined to
 
 \subsection{Model Stealing Defenses}
 \label{sec:ModelStealing:Defenses}
+Because of the detrimental effect of Model Stealing Attacks, many defenses have been proposed to protect against them. Defenses can be categorized into proactive and
+reactive defenses. While proactive defenses actively aim to prevent or at least complicate Model Stealing Attacks, reactive approaches purely aim to detect them.
+
+\subsubsection{Reactive Model Stealing Defenses (Detection)}
+\label{sec:ModelStealing:Defenses:Detection}
+Reactive Model Stealing Defenses solely aim to detect Model Stealing Attacks, not prevent them from happening. So far there exist Model Stealing Detection Approaches which
+rely either on Watermarking or on Monitoring. Watermarking is a way to prove ownership of a machine learning model. This is usually achieved by \enquote{hiding} information
+in the model which can only be restored by the original owner. A watermark can be a predefined prediction value for outlier samples which are unlikely to be part of the thief
+dataset. Watermarking can be applied during training \cite{zhang2018protecting} or afterwards \cite{szyller2021dawn}. Monitoring is a way to detect Model Stealing Attacks by
+investigating the queries that a user made to the target model. Kesarwani et al. \cite{kesarwani2018model} proposed a method that estimates the relative amount of the data space that a user has
+covered with his queries. Based on this metric they can infer the status of a possible extraction attack. Another approach named PRADA \cite{juuti2019prada} analyses the distribution of the
+samples that a user has queried so far. They assume that the distance between queries of a benign user follows a normal distribution and any user whose query distances are not normally
+distributed is considered to be an attacker. \\
+
+\begin{figure} [ht]
+    \centering
+    \includegraphics[width=.9\linewidth]{images/MS_defenses_Taxonomy.png}
+    \caption[Model Stealing Defenses Taxonomy]{Taxonomy of Model Stealing Defenses by \cite{oliynyk2022know}}
+    \label{fig:ModelStealingDefenses:Taxonomy}
+  \end{figure}
+
+\subsubsection{Proactive Model Stealing Defenses (Prevention)}
+\label{sec:ModelStealing:Defenses:Prevention}
+Proactive Model Stealing Defenses aim to complicate or prevent Model Stealing Attacks from happening. It is important to note that the success of a Model Stealing attack is not binary,
+compared to breaking into a house for example. Model Stealing Attacks will always be successful to some degree, but their success mainly depends on the accuracy that the substitute model
+can achieve (or the achieved model agreement in case the attacker tries to optimize for that). So the quality of a Proactive Model Stealing Defense should be measured by how much it can 
+decrease the accuracy of the substitute model compared to a Model Stealing Attack with no defense. A key challenge in developing Proactive Model Stealing Defenses is that, on one hand,
+it should be complicated to extract the target model while on the other hand the user experience of benign users should not be affected. \\
+Early on, a few basic approaches against Model Stealing Attacks were proposed. These include training several models and randomly choosing the output of one of them 
+\cite{alabdulmohsin2014adding}. An even simpler albeit effective approach is to output only the predicted label instead of the vector of output probabilities \cite{tramer2016stealing}.
+A downside to this is that a benign user loses a lot of information about the output and the model is less interpretable. Another approach that is similar in complexity is to renounce
+using pre-trained models \cite{atli2020extraction} and instead train the target model from scratch. \\
+In order to prevent Model Stealing Attacks, researchers have proposed to use data perturbation. One can either choose to perturb the data that is fed to the target model or its prediction.
+Input perturbation can for example be performed by adding noise to unimportant pixels determined via Gradient Class Activation Maps \cite{guiga2020neural}. To perform output perturbation,
+the developer of the target model can either use Maximizing Angular Deviation (MAD) \cite{orekondy2019prediction} or flip a few labels to obfuscate the model's decision boundary
+\cite{shi2017evasion}. \\
+Furthermore, a few approaches have been proposed that bring differential privacy into the Model Stealing domain. Differential Privacy is a way to protect the privacy of a dataset so that 
+it is impossible for an adversary to determine if a particular individual is part of the dataset. One of these approaches was proposed by Zheng et al. \cite{zheng2019bdpl} who add a so-
+called \enquote{Boundary Differential Privacy Layer} to the target model. \\
+A final type of Proactive Model Stealing Defense is to modify the target model's architecture. Approaches falling into this category add redundant layers to the target model 
+\cite{chabanne2020protection}, propose novel model layers \cite{xu2018deepobfuscation} or increase model sensitivity \cite{szentannai2020preventing}.

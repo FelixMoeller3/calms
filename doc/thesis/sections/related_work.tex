@@ -12,19 +12,16 @@
 
 \chapter{Related Work}
 \label{ch:Related_work}
-Related work for this thesis can be grouped into three different categories:
-The first category is \href{sec:Related_work:Active_Learning}{Active Learning}.
-Active Learning is a special form of machine learning where an oracle is present
-which can label arbitrary data points. A Machine Learning model trained using Active
-Learning iteratively queries the oracle with unlabeled data points, trains a new model
-and determines which data should be queried next. The second category is
-\href{sec:Related_work:Continual_Learning}{Continual Learning}. Continual learning is a
-machine learning technique which aims to make a given machine learning model learn new tasks
-without forgetting the knowledge of previous tasks. 
-The third category is \href{sec:Related_work:Model_Stealing}{Model Stealing}. Model Stealing is the
-process of strategically querying a third-party machine learning model (also referred to as target model)
-to train a local model (also referred to as substitute model) which is supposed to approximate the target model as
-good as possible.
+Related work for this thesis can be grouped into three different categories: The first category is \hyperref[sec:Related_work:Active_Learning]
+{Active Learning}. Active Learning is a special form of machine learning where an oracle is present which can label arbitrary data points.
+A Machine Learning model trained using Active Learning iteratively queries the oracle with unlabeled data points, trains a new model and
+determines which data should be queried next. The second category is \hyperref[sec:Related_work:Continual_Learning]{Continual Learning}.
+Continual learning is a machine learning technique which aims to make a given machine learning model learn new tasks without forgetting
+the knowledge of previous tasks. The third category is \hyperref[sec:Related_work:Model_Stealing]{Model Stealing}. Model Stealing is the process
+of strategically querying a third-party machine learning model (also referred to as target model) to train a local model (also referred to as
+substitute model) which is supposed to approximate the target model as good as possible. These three categories have been covered in the background
+\ref{ch:Background} chapter on more detail. In this chapter, we will focus on the specific approaches from these three research directions which
+are either used in the experiments of this thesis or are related to the approaches used in the experiments.
 
 % use Settles as reference for the general introduction
 % Mention that active learning is a specific form of semi-supervised learning (according to Mundt et al.)
@@ -38,9 +35,83 @@ is assigning labels to them. Active Learning aims to overcome this issue by prod
  as a model trained on all available data.
 \subsection{Active Learning Approaches used in the Experiments}
 \subsubsection{Least Confidence}
+Least Confidence (LC) is one of the earlier and simpler approaches to Active Learning. LC is an uncertainty-based Active Learning
+approach proposed by Lewis et al. \cite{lewis1994sequential} in 1994. The idea behind LC is that the next points to label should be the 
+ones with the lowest prediction probability. More formally, the data queried will be the following:
+\begin{equation}
+    \argmin_{x \in \mathcal{U}} \max_{y \in \mathcal{Y}} p(y|x)
+\end{equation}
 \subsubsection{CoreSet}
+CoreSet, sometimes also referred to as k-center strategy, is an Active Learning approach specifically proposed for Convolutional Neural
+Networks \cite{sener2017active}. Sener \& Savarese redefine the pool-based Active Learning problem (for original definition see \ref{sec:PoolBasedActiveLearning})
+as 
+\begin{equation}
+    \min_{s^1 \subseteq U: |s^1| \leq b } \abs{\frac{1}{|L \cup U|} \sum_{x_i,y_i \in L \cup U} l(x_i,y_i;L \cup s^1) - \frac{1}{|L \cup s^1|} \sum_{j \in L \cup s^1} l(x_j,y_j,L \cup s^1)} 
+\end{equation}
+Informally, this can be seen as selecting the data points to add to the labeled pool which ensure best the best loss approximation of a model trained on the labeled set compared
+to a model trained on the whole dataset. The authors assume zero training error, which simplifies the equation above to
+\begin{equation}
+    \frac{1}{|L \cup U|} \sum_{x_i,y_i \in L \cup U} l(x_i,y_i;L \cup s^1)
+\end{equation}
+Sener \& Savarese show that minimizing this equation is equivalent to solving the k-Center problem \cite{wolf2011facility}, i.e.
+\begin{equation}
+    \min_{s^1: |s^1| \leq b} \max_i \min_{j \in s^1 \cup L}  \Delta (x_i,x_j)
+\end{equation}
+This problem is NP-Hard but can be solved by a 2-OPT Greedy Algorithm.
+\begin{algorithm}
+    \caption{k-Center-Greedy} \label{alg:kCenterGreedy}
+    \begin{algorithmic}
+        \Require data $x_i$, labeled pool $L$ and budget $b$
+        \State Initialize s = $L$
+        \Repeat
+        \State $u = \argmax_{x_i \in U \setminus s} \min_{x_j \in s} \Delta(x_i,x_j)$
+        \State $s = s \cup \{u\}$
+        \Until{$|s| = b$}
+        \return $s \setminus L$
+    \end{algorithmic}
+\end{algorithm}
+The authors propose a more sophisticated algorithm which performs marginally better than the greedy solution but is approximately 4 times slower. We therefore omit the proposed algorithm in this 
+section.
+% Talk about distance metric used here.
 \subsubsection{BALD}
+% Hier noch Monte Carlo Dropout von Gal et al. erwähnen (2017)
+Bayesian Active Learning by Disagreement (BALD) is an uncertainty-based Active Learning Strategy proposed by Houlsby et al. \cite{houlsby2011bayesian}. BALD uses Shannon's entropy \cite{cover1991information}
+to determine a model's prediction uncertainty for a given unlabeled data point. More precisely, a learner using  BALD will query the sample(s) fulfilling the following condition:
+\begin{equation}
+    \argmax_x H[y \mid x, L] - \mathbb{E}_{\theta \sim p(\theta \mid L)} [H[y \mid x, \theta]]
+\end{equation}
+Informally, BALD selects those data points with the biggest gap between the model's actual prediction uncertainty and the model's expected prediction uncertainty. Since the expected prediction uncertainty cannot
+be computed given that the parameter distribution conditioned on the previously observed data is unknown, BALD uses Monte Carlo sampling to approximate the expected prediction uncertainty. For neural networks, Monte
+Carlo Dropout \cite{gal2016dropout} can be applied.
 \subsubsection{Badge}
+Batch Active Learning by Diverse Gradient Embeddings (Badge) \cite{ash2019deep} is a Batch Active Learning strategy which combines both model uncertainty and batch-diversity to select the next batch of data points
+to label. The authors were inspired to develop Badge by the observation that diversity-based Active Learning strategies perform well in the first few iterations diversity-based approaches perform well while in the
+later stages of Active Learning uncertainty-based approaches perform well. Badge therefore incorporates both uncertainty and diversity in its selection strategy. Badge uses the gradient with respect to the output
+layer as a measure of model uncertainty, similar to the ideas of \cite{zhang2017active} and \cite{settles2007multiple}. Since Badge works on unlabeled data points, the gradient cannot be computed exactly because
+the label is unknown. Therefore, Badge uses the hypothetical label $\hat{y}(x)$ as a proxy for the true label and computes the gradient of the cross-entropy loss on the hypothetical label as an approximation of the
+real gradient. To incorporate diversity, Badge uses $k$-means++ clustering \cite{arthur2007k} for the gradient embeddings to sample the next batch of data points to label. The authors demonstrate Badge's agnosticism
+towards model architecture, training hyperparameters and dataset in a variety of experiments. 
+\begin{algorithm}
+    \caption{BADGE} \label{alg:Badge}
+    \begin{algorithmic}[1]
+        \Require Neural network $f(x;\theta)$, unlabeled pool $U$, labeled pool $L=\emptyset$, number of iterations $T$, bath size $b$
+        \State Labeled dataset $L \leftarrow k$ random samples from $U$ together with their labels
+        \State Train initial model $\theta_1$ on $L$
+        \For{$t = 1,2,\ldots,T$}
+            \State For all examples $x$ in $U \setminus L$:
+            \begin{enumerate}[leftmargin=0.8in]
+                \item Compute its hypothetical label $\hat{y}(x) = h_{\theta_t}(x)$
+                \item Compute gradient embeddings $g_x = \frac{\partial}{\partial \theta_{out}} l_{\text{CE}}(f(x;\theta_t),\hat{y}(x))$, where $\theta_{out}$ refers to
+                parameters of the final (output) layer.
+            \end{enumerate}
+            \State Compute $S_t$, a subset of $U \setminus L$ of size $b$, using the $k$-MEANS++ seeding algorithm on {\color{white} 123}$\{ g_x: x \in U \setminus L\}$ and query for
+            their labels.
+            \State Update labeled pool $L \leftarrow L \cup S_t$
+            \State Train new model $\theta_{t+1}$ on $L$
+        \EndFor
+        \return Final model $\theta_T$
+    \end{algorithmic}
+\end{algorithm}
 % Structure: First some general introduction then present
 % the different approaches used in the experiments (LC, CoreSet, BALD, Badge)
 
@@ -75,7 +146,7 @@ Notable examples of structural approaches include Elastic Weight Consolidation (
 Synapses (MAS) \cite{aljundi2018memory}, Incremental Moment Matching (IMM) \cite{lee2017overcoming} as well as Asymmetric Loss
 Approximation by Single-Side Overestimation (ALASSO) \cite{park2019continual} which is an extension of Synaptic Intelligence (SI)
 \cite{zenke2017continual}. All the structural regularization approaches will be covered in more detail in the section on
-\href{sec:Related_work:Continual_Learning:Experiments}{the continual learning approaches used in the experiments}. \\
+\hyperref[sec:Related_work:Continual_Learning:Experiments]{the continual learning approaches used in the experiments}. \\
 Functional regularization approaches are inspired by knowledge distillation \cite{hinton2015distilling}. They add a distillation
 loss to the objective function which is computed based on the prediction of a data sample stored for future use. These data samples
 are called soft targets. Li et al. \cite{li2017learning} compute the distillation loss by using the output of the newly arrived task
@@ -86,7 +157,40 @@ distillation loss is computed based on autoencoder reconstructions of old tasks.
 \subsection{Continual Learning Approaches used in the Experiments}
 \label{sec:Related_work:Continual_Learning:Experiments}
 \subsubsection{EWC}
+Elastic Weight Consolidation (EWC) \cite{kirkpatrick2017overcoming} is structural regularization approach proposed by Kirkpatrick et al.
+EWC was the first approach that aims to overcome catastrophic forgetting by regularizing model parameters. This is done by adding a regularization
+term to the loss function which resembles L2-regularization. The goal of introducing the regularization loss is to constrain parameters which
+are important for task $N-1$ to stay close to their previous values when training on task $N$. To come up with an importance measure for the parameters,
+Kirkpatrick et al. view  Neural Network training from a probabilistic perspective, modeling the weight distribution using the Bayes Rule:
+\begin{equation}
+    p(\theta \mid D) = \frac{p(D \mid \theta) \cdot p(\theta)}{p(D)}
+\end{equation}
+when applying the logarithm, this can be rewritten as
+\begin{equation}
+    \log p(\theta \mid D) = \log p(D \mid \theta) + \log p(\theta) - \log p(D)
+\end{equation}
+And when splitting the whole dataset $D$ into $D_{1:N-1}$ and $D_N$, this equates to
+\begin{equation}
+    \log p(\theta \mid D) = \log p(D_N \mid \theta) + \log p(\theta \mid D_{1:N-1}) - \log p(D_N),
+\end{equation}
+meaning that only the term $\log p(\theta \mid D_{1:N-1})$ is dependent on the previous tasks, and therefore it must contain the full information 
+about all previous tasks. Since $\log p(\theta \mid D_{1:N-1})$ cannot be computed, Kirkpatrick et al. approximate it using Laplace's approximation
+\cite{mackay2003information}, obtaining a Gaussian Distribution with mean of $\theta^*_{1:N-1}$ and covariance matrix $[\mathbb{I}_{D_{1:N-1}}]^{-1}$,
+where
+\begin{equation}
+    $\mathbb{I}_{D_{1:N-1}} = \mathbb{E} [- \frac{\partial^2 \theta (\log (p(\theta \mid D_{1:N-1})))}{\partial^2 \theta} \mid_{\theta^*_{D_{1:N-1}}}]$
+\end{equation} 
+which is the Fisher Information Matrix (FIM) as shown by \cite{aich2021elastic}. $F_i$, the $i$-th diagonal of the FIM is used as an importance measure
+for the $i$-th parameter because a large value of $F_i$ indicates a small variance in the posterior distribution of the parameter, meaning that it is
+important for previous tasks. To conclude, the loss function for a Task $N$ is altered to
+\begin{equation}
+    L(\theta) = L_B(\theta) + \sum_i \frac{\lambda}{2} F_i \cdot (\theta_i - \theta^*_{N-1,i})^2,
+\end{equation}
+where $L_B(\theta)$ is the loss function of the model on the current task (e.g. cross-entropy loss), $\theta_i$ is the $i$-th parameter of the model,
+and $\theta^*_{N-1,i}$ is the $i$-th parameter of the model trained on the previous task. 
+
 \subsubsection{MAS}
+
 \subsubsection{ALASSO}
 \subsubsection{IMM}
 

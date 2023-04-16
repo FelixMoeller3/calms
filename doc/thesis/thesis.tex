@@ -59,9 +59,19 @@
 
 %% Use biber instead of BibTeX, see README
 \usepackage{dsfont}
+\usepackage{hyperref}
 \usepackage[citestyle=numeric,style=numeric,backend=biber]{biblatex}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+%\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\newcommand{\algorithmicoutput}{\textbf{return}}
+\newcommand{\return}{\item[\algorithmicoutput]}
+
+\usepackage{amsmath}
+\usepackage{commath}
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+\DeclareMathOperator*{\argmin}{\arg\!\min}
 \addbibresource{thesis.bib}
 
 %% ====================================
