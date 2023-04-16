@@ -19,8 +19,8 @@ determines which data should be queried next. The second category is \hyperref[s
 Continual learning is a machine learning technique which aims to make a given machine learning model learn new tasks without forgetting
 the knowledge of previous tasks. The third category is \hyperref[sec:Related_work:Model_Stealing]{Model Stealing}. Model Stealing is the process
 of strategically querying a third-party machine learning model (also referred to as target model) to train a local model (also referred to as
-substitute model) which is supposed to approximate the target model as good as possible. These three categories have been covered in the background
-\ref{ch:Background} chapter on more detail. In this chapter, we will focus on the specific approaches from these three research directions which
+substitute model) which is supposed to approximate the target model as good as possible. These three categories have been covered in chapter
+\ref{ch:Background} in more detail. In this chapter, we will focus on the specific approaches from these three research directions which
 are either used in the experiments of this thesis or are related to the approaches used in the experiments.
 
 % use Settles as reference for the general introduction
@@ -178,7 +178,7 @@ about all previous tasks. Since $\log p(\theta \mid D_{1:N-1})$ cannot be comput
 \cite{mackay2003information}, obtaining a Gaussian Distribution with mean of $\theta^*_{1:N-1}$ and covariance matrix $[\mathbb{I}_{D_{1:N-1}}]^{-1}$,
 where
 \begin{equation}
-    $\mathbb{I}_{D_{1:N-1}} = \mathbb{E} [- \frac{\partial^2 \theta (\log (p(\theta \mid D_{1:N-1})))}{\partial^2 \theta} \mid_{\theta^*_{D_{1:N-1}}}]$
+    \mathbb{I}_{D_{1:N-1}} = \mathbb{E} [- \frac{\partial^2 \theta (\log (p(\theta \mid D_{1:N-1})))}{\partial^2 \theta} \mid_{\theta^*_{D_{1:N-1}}}]
 \end{equation} 
 which is the Fisher Information Matrix (FIM) as shown by \cite{aich2021elastic}. $F_i$, the $i$-th diagonal of the FIM is used as an importance measure
 for the $i$-th parameter because a large value of $F_i$ indicates a small variance in the posterior distribution of the parameter, meaning that it is
@@ -187,13 +187,59 @@ important for previous tasks. To conclude, the loss function for a Task $N$ is a
     L(\theta) = L_B(\theta) + \sum_i \frac{\lambda}{2} F_i \cdot (\theta_i - \theta^*_{N-1,i})^2,
 \end{equation}
 where $L_B(\theta)$ is the loss function of the model on the current task (e.g. cross-entropy loss), $\theta_i$ is the $i$-th parameter of the model,
-and $\theta^*_{N-1,i}$ is the $i$-th parameter of the model trained on the previous task. 
+and $\theta^*_{N-1,i}$ is the $i$-th parameter of the model trained on the previous task. The hyperparameter $\lambda$ is used to trade-off between
+learning new tasks as good as possible and retaining knowledge of previous tasks.
 
 \subsubsection{MAS}
-
+Memory Aware Synapses (MAS), like EWC, is a structural regularization method which was proposed by Aljundi et al. \cite{aljundi2018memory}. In line with
+EWC, MAS aims to prevent catastrophic forgetting by regularizing model parameters. The main difference between EWC and MAS is the way the importance of
+a parameter is measured. While EWC relies on Fisher Information to compute parameter importances, MAS uses gradient magnitude to estimate the importance
+of a parameter for previous tasks. To derive the importance measure, the authors first observe that the effect of small changes to the network parameters
+on the prediction can be approximated as follows
+\begin{equation}
+    f(x_k; \theta + \delta) - f(x_k; \theta) \approx = \sum_i g_i(x_k) \cdot \delta_i
+\end{equation}
+where $g_i(x_k) = \frac{\partial(f(x_k;\theta))}{\partial \theta_i}$  is the gradient with respect to parameter $\theta_i$ when evaluating the model at
+input $x_k$. Since most classification models, like neural networks for example, have a multi-dimensional output Aljundi et al. propose to use the gradient
+of the squared $l_2$-Norm in this setting, i.e. $g_i(x_k) =  \frac{\partial[l^2_2(f(x_k;\theta))]}{\partial \theta_i}$. With the approximation given by the
+equation above, the authors claim that the importance of a parameter $\theta_i$ can be computed as
+\begin{equation}
+    \omega_i = \frac{1}{n} \sum_{k=1}^n \lVert g_i(x_k) \rVert
+\end{equation}
+where $n$ is the number of data points observed so far. The advantage of computing the importance measure as state above is that it can be updated when-
+ever a new data point is observed, however it is more efficient to update the omegas in a batch-wise manner. The overall loss function for a task $N$ is
+then altered for the standard setting as follows
+\begin{equation}
+    L(\theta) = L_N(\theta) + \lambda \sum_i \omega_i \cdot (\theta_i - \theta^*_{N-1,i})^2
+\end{equation}
+where $\lambda$ again is the hyperparameter used to trade-off between learning new tasks and retaining the knowledge of previous tasks.
 \subsubsection{ALASSO}
-\subsubsection{IMM}
 
+\subsubsection{IMM}
+Incremental Moment Matching (IMM) is a structural regularization approach to prevent catastrophic forgetting, proposed by Lee et al. \cite{lee2017overcoming}.
+IMM deviates from approaches like MAS and EWC in that it should not be seen as a single method but rather a framework of multiple methods, many of which can be
+combined with each other. The main idea of IMM is to match the first and second moments of the posterior distribution $p(\theta \mid D_{1:N})$ of the model 
+parameters given all tasks up to the current one. As in EWC, the posterior distribution cannot be computed, it is approximated via a Gaussian distribution which
+we call $q_{1:N}$. The first approach to matching these moments is called \textbf{Mean-based Incremental Moment Matching}, also known as mean-IMM. The weight
+update of mean-IMM is the analytical solution of the problem to minimize the weighted sum of Kullback-Leibler (KL) divergences between each $q_i$ and $q_{1:N}$
+\cite{goldberger2004hierarchical}, i.e. the solution to
+\begin{equation}
+    \argmin_{\mu^*_{1:N},\Sigma^*_{1:N}} \sum_{i=N-k}^N \alpha_i \cdot KL(q_i \mid \mid q_{1:N})
+\end{equation}
+which is given by
+\begin{gather}
+    \mu^*_{1:N} = \sum_{i=N-k}^N \alpha_i \cdot \mu_i \\
+    \Sigma^*_{1:N} = \sum_{i=N-k}^N \alpha_i (\Sigma_i + (\mu_i - \mu^*_{1:N})(\mu_i - \mu^*_{1:N})^T)
+\end{gather}
+The $\alpha_i$ here are the mixing coefficents which weigh the previousl $k$ tasks and have the constraint $\sum_{i=N-k}^N \alpha_i = 1$.  \\
+The second approach to matching the moments is called \textbf{Mode-based Incremental Moment Matching}, and it is also known as mode-IMM. mode-IMM
+further incorporates covariance information from previous tasks to better match the first and second moments of the posterior distribution. 
+The mean and covariance update for mode-IMM is given by
+\begin{gather}
+    \mu^*_{1:N} = \sum_{i=N-k}^N \alpha_i \cdot (\sum_{i=N-k}^N \alpha_i \Sigma_i^{-1} \mu_i) \\
+    \Sigma^*_{1:N} = (\sum_{i=N-k}^N \alpha_i  \Sigma_i^{-1})^{-1}
+\end{gather}
+To approximate 
 % Structure: First some general introduction then present
 % the different approaches used in the experiments (EWC, MAS, ALASSO, IMM, potentially Replay?)
 
