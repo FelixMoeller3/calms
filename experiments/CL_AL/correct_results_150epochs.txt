@@ -6233,3 +6233,63 @@ Continual Learning Strategy: Replay
 Active Learning Strategy: CoreSet
 Accuracy results at the end of each cycle: [0.5652, 0.786, 0.8672, 0.8819, 0.8874, 0.8901, 0.8938, 0.8959, 0.892, 0.8925, 0.8837, 0.8722, 0.8588]
 ----------------------------------------------------------------------
+Run completed at 2023-04-13 21:43:26 after 06h:13m:47s
+Config File:
+BATCH_SIZE: 128
+CYCLES: 10
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: correct_results_150epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SAVE_STATE: false
+STATE_DIR: ''
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    COLD_START: false
+    INIT_BUDGET: 2000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: CoreSet
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    BUFFER_SIZE: 2000
+    NAME: Replay
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 60
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  CONTINUAL: -1
+  DATASET: SmallImageNet1
+  NAME: ActiveThiefConv3
+  USE_LABEL: true
+TARGET_MODEL:
+  DATASET: MNIST
+  EPOCHS: 100
+  MODEL: ActiveThiefConv3
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: ADAM
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: active_thief_conv3.pt
+  TARGET_MODEL_FOLDER: ./data/models/mnist/
+  TRAIN_MODEL: false
+Target model: ActiveThiefConv3, trained on MNIST
+Target model accuracy on validation set: unknown
+Substitute model: ActiveThiefConv3, trained on SmallImageNet1
+Continual Learning Strategy: Replay
+Active Learning Strategy: CoreSet
+Accuracy results at the end of each cycle: [0.1032, 0.2283, 0.508, 0.6616, 0.6272, 0.6821, 0.6754, 0.7483, 0.7269, 0.696, 0.7158]
+Model agreement at the end of each cycle: [0.1034, 0.2285, 0.5096, 0.663, 0.6275, 0.6828, 0.6762, 0.7486, 0.7264, 0.6953, 0.7168]
+----------------------------------------------------------------------

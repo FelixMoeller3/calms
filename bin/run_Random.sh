@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=Random_AL_Run       # job name
 #SBATCH --partition=gpu_4_a100                  # queue for the resource allocation.
-#SBATCH --time=1200:00                     # wall-clock time limit  
+#SBATCH --time=30:00                     # wall-clock time limit  
 #SBATCH --mem=12000                        # memory per node
 #SBATCH --nodes=1                          # number of nodes to be used
 #SBATCH --cpus-per-task=2                 # number of CPUs required per MPI task
@@ -24,8 +24,8 @@ configs=(
 )
 for conf in "${configs[@]}"
 do 
-    echo "Running $conf with mode MS"
-    python ./src/main.py -c $conf -m "MS"
+    echo "Running $conf with mode CL"
+    python ./src/main.py -c $conf -m "CL"
 done
 deactivate
 

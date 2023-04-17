@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=Run_AL_CoreSet       # job name
 #SBATCH --partition=gpu_4_a100                  # queue for the resource allocation.
-#SBATCH --time=1200:00                     # wall-clock time limit  
+#SBATCH --time=30:00                     # wall-clock time limit  
 #SBATCH --mem=15000                        # memory per node
 #SBATCH --nodes=1                          # number of nodes to be used
 #SBATCH --cpus-per-task=2                 # number of CPUs required per MPI task
@@ -17,8 +17,8 @@ source ../ba_env/bin/activate
 files=("./src/conf/basic_model_stealing/CoreSet_Naive.yaml")
 for file in "${files[@]}"
 do 
-    echo "Running $file with mode MS"
-    python ./src/main.py -c $file -m "MS"
+    echo "Running $file with mode CL"
+    python ./src/main.py -c $file -m "CL"
 done
 deactivate
 

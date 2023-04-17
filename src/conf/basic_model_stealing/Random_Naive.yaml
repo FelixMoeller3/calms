@@ -1,8 +1,8 @@
 SUBSTITUTE_MODEL: 
-  NAME: 'Resnet50' # Possible values: Resnet18,Resnext50,TestConv
-  DATASET: 'SmallImageNet'
-  CONTINUAL: 100
-  USE_LABEL: False
+  NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
+  DATASET: 'CIFAR-10'
+  CONTINUAL: -1
+  USE_LABEL: True
   AL_METHOD: 
     NAME: 'Random' # Possible values: LC,BALD,Badge,CoreSet,Random
     INIT_BUDGET: 2000

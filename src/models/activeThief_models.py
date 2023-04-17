@@ -16,8 +16,8 @@ class ConvBlock(nn.Module):
         self.dropout = nn.Dropout2d(0.2)
 
     def forward(self, x):
-        out = self.bn1(F.relu(self.conv1(x)))
-        out = self.bn2(F.relu(self.conv2(out)))
+        out = F.relu(self.bn1(self.conv1(x)))
+        out = F.relu(self.bn2(self.conv2(out)))
         out = self.dropout(self.pool(out))
         return out
         
