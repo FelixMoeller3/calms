@@ -1,7 +1,7 @@
 SUBSTITUTE_MODEL: 
-  NAME: 'Resnet50' # Possible values: Resnet18,Resnext50,TestConv
-  DATASET: 'SmallImageNet'
-  CONTINUAL: 100
+  NAME: 'ActiveThiefConv3' # Possible values: Resnet18,Resnext50,TestConv
+  DATASET: 'SmallImageNet1'
+  CONTINUAL: -1
   USE_LABEL: False
   AL_METHOD: 
     NAME: 'Random' # Possible values: LC,BALD,Badge,CoreSet,Random
@@ -16,21 +16,21 @@ SUBSTITUTE_MODEL:
       NAME: 'SGD'
       LR: 0.1
       MOMENTUM: 0.9
-      WDECAY: 0.0001
-      MILESTONES: [60,120]
+      WDECAY: 0.0005
+      MILESTONES: [80,120]
 BATCH_SIZE: 128 # batch size used for training
-CYCLES: 10  # number of cycles in the model stealing process
+CYCLES: 20  # number of cycles in the model stealing process
 EPOCHS: 150
 RECOVER_STATE: False
 SAVE_STATE: False
-STATE_DIR: './experiments/temp/'
+STATE_DIR: ''
 RESULTS_FOLDER: './experiments/ModelStealing/'
-RESULTS_FILE: 'Test_results.txt'
+RESULTS_FILE: 'Results_calms.txt'
 TARGET_MODEL:
   TARGET_MODEL_FOLDER: './data/models/cifar10/'
-  TARGET_MODEL_FILE: 'resnet.pt'
-  TRAIN_MODEL: True
-  MODEL: 'ActiveThiefConv2'
+  TARGET_MODEL_FILE: 'active_thief_conv3.pt'
+  TRAIN_MODEL: False
+  MODEL: 'ActiveThiefConv3'
   DATASET: 'CIFAR-10'
   EPOCHS : 100
   OPTIMIZER:
