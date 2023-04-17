@@ -5836,6 +5836,7 @@ Model: Resnet18, trained on CIFAR-10
 Continual Learning Strategy: AGEM
 Active Learning Strategy: LC
 Accuracy results at the end of each cycle: [0.6623, 0.7262, 0.7668, 0.7732, 0.7823, 0.7865, 0.7859, 0.7841, 0.7596, 0.76, 0.742, 0.6902, 0.6864, 0.6214, 0.6215, 0.6334, 0.6541, 0.6277, 0.6511, 0.6323, 0.585, 0.605, 0.6047, 0.6524, 0.653]
+----------------------------------------------------------------------
 Run completed at 2023-04-07 17:01:08 after 01h:30m:49s
 Config File: BATCH_SIZE: 128
 CYCLES: 12
