@@ -214,6 +214,40 @@ then altered for the standard setting as follows
 \end{equation}
 where $\lambda$ again is the hyperparameter used to trade-off between learning new tasks and retaining the knowledge of previous tasks.
 \subsubsection{ALASSO}
+Asymmetric Loss Approximation by Single-Side Overestimation (ALASSO) is a structural regularization method proposed by Park et al. \cite{park2019continual}.
+ALASSO is an extension of Synaptic Intelligence (SI) proposed by Zenke et al. \cite{zenke2017continual}
+% Alpha equation
+\begin{equation}
+    \alpha(\theta_k) = (\theta_k - \hat{\theta}^N_k) (\hat{\theta}^{N-1}_k - \hat{\theta}^N_k)
+\end{equation}
+% Loss estimation equation
+\begin{equation}
+    L_s^n(\theta_k,a) = \begin{cases} \hat{\Omega} (\theta_k - \hat{\theta}_k)^2 & \text{if} \alpha(\theta_k) > 0 \\
+    (a \hat{\Omega}^N_k + \epsilon)(\theta_k - \hat{\theta}_k)^2 & \text{if} \alpha(\theta_k) \leq 0 \end{cases}
+\end{equation}
+% Total loss equation
+\begin{equation}
+    \hat{L}^N = L^N + c \sum_k L_s^{N-1}(\theta_k,a)
+\end{equation}
+% Omega equation
+\begin{equation}
+    \hat{\Omega}^N_k = \frac{\omega^N_k + \omega^{1:N-1}_k}{(\hat{\theta}^N_k - \hat{\theta}^{N-1}_k)^2}
+\end{equation}
+% Small Omega equation
+\begin{gather}
+    \omega^N_k = L^N(\hat{\theta}^{N-1}_k) - L^N(\hat{\theta}^N_k) \\
+    \omega^{1:N-1}_k = -cL^{N-1}_s(\hat{\theta}^N_k,a)
+\end{gather}
+
+
+\begin{figure} [ht]
+    \centering
+    \includegraphics[width=.9\linewidth]{images/Alasso_Idea.png}
+    \caption[Visualization of ALASSO]{Illustration of the ALASSO idea taken from the paper \cite{park2019continual}. The authors of ALASSO state that, SI underestimates the 
+    unobserved side of the loss function and hence a better approximation of the loss function is achieved by overestimating it.}
+    \label{fig:Alasso}
+  \end{figure}
+%TODO: Include image of Alasso idea in here
 
 \subsubsection{IMM}
 Incremental Moment Matching (IMM) is a structural regularization approach to prevent catastrophic forgetting, proposed by Lee et al. \cite{lee2017overcoming}.
@@ -239,7 +273,44 @@ The mean and covariance update for mode-IMM is given by
     \mu^*_{1:N} = \sum_{i=N-k}^N \alpha_i \cdot (\sum_{i=N-k}^N \alpha_i \Sigma_i^{-1} \mu_i) \\
     \Sigma^*_{1:N} = (\sum_{i=N-k}^N \alpha_i  \Sigma_i^{-1})^{-1}
 \end{gather}
-To approximate 
+To approximate the covariance matrix, mode-IMM uses the inverse of the Fisher Information Matrix like EWC. Furthermore, the authors assume that
+the model parameters are pairwise independent, making the covariance matrix diagonal and therefore saving a lot of computation. \\ 
+Apart from moment matching methods, IMM also includes approaches to transfer model parameters from previous tasks. The first approach is called
+\textbf{Weight Transfer}. When using continual learning with Weight Transfer the model parameters of the previous task are used as initialization for the
+current task. This approach is very similar to the term Warm Start commonly used in Active Learning. \textbf{L2-transfer} is the next transfer technique
+which is a special form of L2-regularization. L2-transfer can be seen as a special form of EWC where all the $F_i$s are set to 1. With L2 transfer the loss
+function is altered to 
+\begin{equation}
+    \log p(y_N \mid X_N, \mu_N) - \lambda \cdot {\lVert \mu_N - \mu_{N-1} \rVert}^2_2
+\end{equation}
+with $\lambda$ being a hyperparameter. The third transfer technique is \textbf{Drop-transfer}. Drop-transfer
+\begin{equation}
+    \hat{\mu}_{N,i} = \begin{cases} \mu_{N,i}, & \text{if the }i \text{th node is turned off} \\
+    \frac{1}{1-p} \cdot \mu_{N,i} - \frac{p}{1-p} \cdot \mu_{N-1,i}, & \text{otherwise}  \end{cases}
+\end{equation}
+where $p$ is the dropout ratio. Dropout-transfer can be seen as a further regularizer for continual learning, with similar effect to L2-transfer albeit
+being orthogonal to it.
+\begin{algorithm}
+    \caption{IMM with weight-transfer, L2-transfer} \label{alg:IMM}
+    \begin{algorithmic}
+        \Require data $f\{ (X_1,Y_1),\ldots,(X_N,Y_N)\}$, balancing hyperparameter $\alpha$ with $\sum_{i=1}^k \alpha_i = 1$,
+        regularization hyperparameter $\lambda$
+        \return $w_{1:N}$
+        \State $w_0 \leftarrow $ InitializeNN()
+        \For{$i=1:N$}
+            \State $w_{i*} \leftarrow w_{i-1}$
+            \State Train($w_{i*},X_i,Y_i$) with $L(w_{i*},X_i,Y_i) + \lambda \cdot (\lVert w_{i*} - w_{i-1} \rVert)^2_2$
+            \State $m=\max (0,i-k)$
+            \If{type is mean-IMM}
+            \State $w_{i*} \leftarrow \sum_{t=max(0,i-k)}^i \alpha_t w_{t}$
+            \ElsIf{type is mode-IMM}
+            \State $F_{i*} \leftarrow$ CalculateFisherMatrix($w_{i*},X_i,Y_i$)
+            \State $\Sigma_{1:i} \leftarrow (\sum_{t=max(0,i-k)}^i \alpha_t F_{t*} w_{t*})^{-1}$
+            \State $w_{i*} \leftarrow \Sigma_{1:i} \cdot (\sum_{t=max(0,i-k)}^i \alpha_t F_{t*} w_{t*})$
+            \EndIf
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
 % Structure: First some general introduction then present
 % the different approaches used in the experiments (EWC, MAS, ALASSO, IMM, potentially Replay?)
 
