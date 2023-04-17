@@ -1,0 +1,243 @@
+Run completed at 2023-04-17 23:58:54 after 00h:36m:06s
+Config File:
+BATCH_SIZE: 128
+CYCLES: 20
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: Results_calms.txt
+RESULTS_FOLDER: ./experiments/ModelStealing/
+SAVE_STATE: false
+STATE_DIR: ''
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    COLD_START: false
+    INIT_BUDGET: 2000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: Random
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 80
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  CONTINUAL: -1
+  DATASET: SmallImageNet1
+  NAME: ActiveThiefConv3
+  USE_LABEL: false
+TARGET_MODEL:
+  DATASET: CIFAR-10
+  EPOCHS: 100
+  MODEL: ActiveThiefConv3
+  OPTIMIZER:
+    LR: 0.1
+    MILESTONES:
+    - 80
+    - 130
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: active_thief_conv3.pt
+  TARGET_MODEL_FOLDER: ./data/models/cifar10/
+  TRAIN_MODEL: false
+Target model: ActiveThiefConv3, trained on CIFAR-10
+Target model accuracy on validation set: unknown
+Substitute model: ActiveThiefConv3, trained on SmallImageNet1
+Continual Learning Strategy: Naive
+Active Learning Strategy: Random
+Accuracy results at the end of each cycle: [0.1, 0.2928, 0.4865, 0.5312, 0.5528, 0.5829, 0.5684, 0.6017, 0.5936, 0.5934, 0.5857, 0.5817, 0.5762, 0.6139, 0.6043, 0.5982, 0.5669, 0.5855, 0.5929, 0.6058, 0.5956]
+Model agreement at the end of each cycle: [0.1019, 0.2989, 0.5047, 0.5486, 0.5675, 0.602, 0.584, 0.6153, 0.6097, 0.608, 0.5993, 0.6012, 0.5984, 0.628, 0.6173, 0.6189, 0.5874, 0.6062, 0.6142, 0.6209, 0.6134]
+----------------------------------------------------------------------
+Run completed at 2023-04-18 00:00:23 after 00h:36m:55s
+Config File:
+BATCH_SIZE: 128
+CYCLES: 20
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: Results_calms.txt
+RESULTS_FOLDER: ./experiments/ModelStealing/
+SAVE_STATE: false
+STATE_DIR: ''
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    COLD_START: false
+    INIT_BUDGET: 2000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: Random
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: EWC
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 80
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    SCHEDULE: false
+    USE_GPU: true
+    WEIGHT: 1.0
+  CONTINUAL: -1
+  DATASET: SmallImageNet1
+  NAME: ActiveThiefConv3
+  USE_LABEL: false
+TARGET_MODEL:
+  DATASET: CIFAR-10
+  EPOCHS: 50
+  MODEL: ActiveThiefConv3
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: active_thief_conv3.pt
+  TARGET_MODEL_FOLDER: ./data/models/cifar10/
+  TRAIN_MODEL: false
+Target model: ActiveThiefConv3, trained on CIFAR-10
+Target model accuracy on validation set: unknown
+Substitute model: ActiveThiefConv3, trained on SmallImageNet1
+Continual Learning Strategy: EWC
+Active Learning Strategy: Random
+Accuracy results at the end of each cycle: [0.1787, 0.276, 0.3985, 0.4879, 0.4929, 0.5356, 0.5579, 0.5379, 0.5657, 0.5618, 0.5594, 0.5743, 0.5674, 0.5622, 0.5667, 0.5618, 0.5922, 0.5928, 0.573, 0.5866, 0.5911]
+Model agreement at the end of each cycle: [0.1868, 0.2901, 0.4163, 0.5039, 0.5151, 0.5596, 0.5729, 0.5496, 0.5785, 0.5867, 0.5796, 0.5917, 0.585, 0.5795, 0.5849, 0.5786, 0.6059, 0.6071, 0.591, 0.6061, 0.6065]
+----------------------------------------------------------------------
+Run completed at 2023-04-18 00:02:43 after 00h:39m:15s
+Config File:
+BATCH_SIZE: 128
+CYCLES: 20
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: Results_calms.txt
+RESULTS_FOLDER: ./experiments/ModelStealing/
+SAVE_STATE: false
+STATE_DIR: ''
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    COLD_START: false
+    INIT_BUDGET: 2000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: Random
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    ALPHAS:
+    - 0.45
+    - 0.55
+    NAME: IMM
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 80
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+    WEIGHT: 0.3
+  CONTINUAL: -1
+  DATASET: SmallImageNet1
+  NAME: ActiveThiefConv3
+  USE_LABEL: false
+TARGET_MODEL:
+  DATASET: CIFAR-10
+  EPOCHS: 50
+  MODEL: ActiveThiefConv3
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: active_thief_conv3.pt
+  TARGET_MODEL_FOLDER: ./data/models/cifar10/
+  TRAIN_MODEL: false
+Target model: ActiveThiefConv3, trained on CIFAR-10
+Target model accuracy on validation set: unknown
+Substitute model: ActiveThiefConv3, trained on SmallImageNet1
+Continual Learning Strategy: IMM
+Active Learning Strategy: Random
+Accuracy results at the end of each cycle: [0.1606, 0.325, 0.4989, 0.5517, 0.5701, 0.5584, 0.5667, 0.571, 0.5774, 0.5924, 0.6005, 0.5812, 0.5888, 0.5911, 0.5985, 0.5791, 0.5925, 0.6065, 0.6006, 0.6122, 0.595]
+Model agreement at the end of each cycle: [0.1679, 0.3341, 0.5166, 0.5693, 0.5892, 0.5744, 0.5882, 0.5871, 0.5944, 0.6078, 0.6164, 0.5995, 0.6053, 0.6064, 0.6146, 0.6025, 0.6141, 0.6268, 0.6173, 0.6281, 0.6112]
+----------------------------------------------------------------------
+Run completed at 2023-04-18 00:06:48 after 00h:37m:25s
+Config File:
+BATCH_SIZE: 128
+CYCLES: 20
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: Results_calms.txt
+RESULTS_FOLDER: ./experiments/ModelStealing/
+SAVE_STATE: false
+STATE_DIR: ''
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 2000
+    COLD_START: false
+    INIT_BUDGET: 2000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: Random
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: MAS
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 80
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+    WEIGHT: 1.0
+  CONTINUAL: -1
+  DATASET: SmallImageNet1
+  NAME: ActiveThiefConv3
+  USE_LABEL: false
+TARGET_MODEL:
+  DATASET: CIFAR-10
+  EPOCHS: 50
+  MODEL: ActiveThiefConv3
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: active_thief_conv3.pt
+  TARGET_MODEL_FOLDER: ./data/models/cifar10/
+  TRAIN_MODEL: false
+Target model: ActiveThiefConv3, trained on CIFAR-10
+Target model accuracy on validation set: unknown
+Substitute model: ActiveThiefConv3, trained on SmallImageNet1
+Continual Learning Strategy: MAS
+Active Learning Strategy: Random
+Accuracy results at the end of each cycle: [0.4725, 0.4781, 0.4803, 0.4833, 0.4739, 0.4746, 0.4704, 0.4918, 0.4926, 0.4891, 0.4938, 0.4993, 0.5034, 0.5005, 0.5052, 0.508, 0.515, 0.513, 0.507, 0.5156, 0.5093]
+Model agreement at the end of each cycle: [0.4929, 0.4978, 0.4986, 0.4953, 0.4913, 0.4901, 0.4936, 0.513, 0.5107, 0.5032, 0.5134, 0.519, 0.5238, 0.518, 0.5203, 0.5266, 0.5342, 0.5278, 0.523, 0.5311, 0.5284]
+----------------------------------------------------------------------
