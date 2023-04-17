@@ -21,6 +21,12 @@ class BALD(Strategy):
         if len(self.subset) <= self.BUDGET:
             arg = np.array([i for i in range(len(self.subset))])
         else:
+            if not self.contains_dropout():
+                print("Setting dropout iterations to 1 as the model does not contain dropout layers")
+                dropout_iter = 1
+            else:
+                self.activate_dropout()
+                dropout_iter = self.dropout_iter
             unlabeled_loader = DataLoader(self.data_unlabeled, batch_size=self.BATCH, 
                                         sampler=SubsetSequentialSampler(self.subset), 
                                         pin_memory=True)
@@ -31,7 +37,7 @@ class BALD(Strategy):
             all_entropy_dropout = np.zeros(shape=(n_uPts))
 
             for d in tqdm(
-                range(self.dropout_iter),
+                range(dropout_iter),
                 desc = "Dropout Iterations",
             ):
                 probs = self.get_predict_prob(unlabeled_loader).cpu().numpy()
@@ -54,10 +60,10 @@ class BALD(Strategy):
             U_X = G_X - F_X
             arg = np.argsort(-U_X)
         self.add_query(arg[:self.BUDGET])
+        self.model.eval()
         return np.concatenate(self.previous_queries)
 
     def get_predict_prob(self, unlabeled_loader: DataLoader) -> torch.Tensor:
-        self.model.eval()
         #TODO: let this run on cuda when running on cluster
         #with torch.cuda.device(self.device):
         #    predic_probs = torch.tensor([]).cuda()
@@ -76,3 +82,20 @@ class BALD(Strategy):
                 prob = F.softmax(outputs, dim=1)
                 predic_probs = torch.cat((predic_probs, prob), 0)
         return predic_probs
+
+    def contains_dropout(self) -> bool:
+        '''
+            Checks if the model contains dropout layers
+        '''
+        for module in self.model.modules():
+            if module.__class__.__name__.startswith('Dropout'):
+                return True
+        return False
+
+    def activate_dropout(self):
+        '''
+            Activates the dropout layers in the model 
+        '''
+        for module in self.model.modules():
+            if module.__class__.__name__.startswith('Dropout'):
+                module.train()
