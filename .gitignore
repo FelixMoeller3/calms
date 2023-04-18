@@ -467,3 +467,4 @@ TSWLatexianTemp*
 # ignore contents of datafolder
 data/*
 experiments/temp/*
+*.ist

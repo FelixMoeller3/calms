@@ -58,8 +58,12 @@
 %% --------------------------------
 
 %% Use biber instead of BibTeX, see README
+%\usepackage[nonumberlist,toc]{glossaries} 
+\usepackage{glossaries} 
+\input{sections/glossary.tex}
 \usepackage{dsfont}
 \usepackage{hyperref}
+\usepackage{tabularx}
 \usepackage[citestyle=numeric,style=numeric,backend=biber]{biblatex}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
@@ -110,6 +114,8 @@
 %% - sections/abstract
 
 \includeabstract
+\printglossaries
+\input{sections/notation.tex}
 
 %% ------------------------
 %% |   Table of Contents  |

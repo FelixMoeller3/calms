@@ -215,30 +215,47 @@ then altered for the standard setting as follows
 where $\lambda$ again is the hyperparameter used to trade-off between learning new tasks and retaining the knowledge of previous tasks.
 \subsubsection{ALASSO}
 Asymmetric Loss Approximation by Single-Side Overestimation (ALASSO) is a structural regularization method proposed by Park et al. \cite{park2019continual}.
-ALASSO is an extension of Synaptic Intelligence (SI) proposed by Zenke et al. \cite{zenke2017continual}
+ALASSO is an extension of Synaptic Intelligence (SI) proposed by Zenke et al. \cite{zenke2017continual} which \enquote{mitigates the limitations of SI}, as
+the authors claim. The main observation made by the Park et al. about SI is that it underestimates the true loss on the unobserved side of the loss function
+because it assumes that the loss function is symmetric. Park et al. first show that this assumption is not always true through empirical observation and then
+present a new approach to approximate the loss function on the unobserved side more precisely. The fundamental observation and idea of ALASSO can be seen in
+Figure \ref{fig:Alasso}. Since ALASSO extends the SI framework, we strongly recommend the reader to familiarize themselves with SI before trying to understand
+ALASSO. In the following we will assume that the reader is familiar with SI and only explain the extension that ALASSO brings to SI. \\
+Since ALASSO is a structural regularization method like MAS and EWC, it alters the loss function as follows
+% Total loss equation
+\begin{equation}
+    \tilde{L}^N = L^N + c \sum_k L_s^{N-1}(\theta_k,a),
+\end{equation}
+meaning that it adds a surrogate loss to the loss function which is controlled via the hyperparameter $c$. To understand how the surrogate loss is composed
+ALASSO first introduces $\alpha(\theta_k)$ which determines for a parameter of the model if it is on the observed or unobserved side of the loss function.
+$\alpha(\theta_k)$ is defined as follows
 % Alpha equation
 \begin{equation}
     \alpha(\theta_k) = (\theta_k - \hat{\theta}^N_k) (\hat{\theta}^{N-1}_k - \hat{\theta}^N_k)
 \end{equation}
+The surrogate loss $L^N_s(\theta_k,a)$ is then defined as follows
 % Loss estimation equation
 \begin{equation}
-    L_s^n(\theta_k,a) = \begin{cases} \hat{\Omega} (\theta_k - \hat{\theta}_k)^2 & \text{if} \alpha(\theta_k) > 0 \\
-    (a \hat{\Omega}^N_k + \epsilon)(\theta_k - \hat{\theta}_k)^2 & \text{if} \alpha(\theta_k) \leq 0 \end{cases}
+    L_s^n(\theta_k,a) = \begin{cases} \hat{\Omega}^N_k (\theta_k - \hat{\theta}_k)^2 & \text{if} \alpha(\theta_k) > 0 \\
+    (a \hat{\Omega}^N_k + \epsilon)(\theta_k - \hat{\theta}_k)^2 & \text{if} \alpha(\theta_k) \leq 0 \end{cases}.
 \end{equation}
-% Total loss equation
-\begin{equation}
-    \hat{L}^N = L^N + c \sum_k L_s^{N-1}(\theta_k,a)
-\end{equation}
+The Variable $a (>1)$ is again a hyperparameter which is used to control the amount of overestimation if the parameter is on the unobserved side of the loss function.
+The constant $\epsilon$ is used to make sure that the loss on the unobserved side is always overestimated, i.e. $(a \hat{\Omega}^N_k + \epsilon) > \hat{\Omega}^N_k$.
+The second contribution of ALASSO is its derivation of the optimal coefficient $\hat{\Omega}^N_k$ for the approximation of the loss function on the \textit{observed}
+side. According to Park et al., $\hat{\Omega}^N_k$ is determined by the following equation
 % Omega equation
 \begin{equation}
-    \hat{\Omega}^N_k = \frac{\omega^N_k + \omega^{1:N-1}_k}{(\hat{\theta}^N_k - \hat{\theta}^{N-1}_k)^2}
+    \hat{\Omega}^N_k = \frac{\omega^N_k + \omega^{1:N-1}_k}{(\hat{\theta}^N_k - \hat{\theta}^{N-1}_k)^2},
 \end{equation}
+where $\omega^N_k$ and $\omega^{1:N-1}_k$ are given by
 % Small Omega equation
 \begin{gather}
     \omega^N_k = L^N(\hat{\theta}^{N-1}_k) - L^N(\hat{\theta}^N_k) \\
     \omega^{1:N-1}_k = -cL^{N-1}_s(\hat{\theta}^N_k,a)
 \end{gather}
-
+Because of the ambiguous influence of the hyperparameters $c$ and $a$ to the approximation of the loss function, the authors of ALASSO propose to decouple them. More
+precisely, they suggest using $c'$ and $a'$ instead of $c$ and $a$ in equation 3.19.
+%\Gls{Hallo}
 
 \begin{figure} [ht]
     \centering
@@ -246,7 +263,7 @@ ALASSO is an extension of Synaptic Intelligence (SI) proposed by Zenke et al. \c
     \caption[Visualization of ALASSO]{Illustration of the ALASSO idea taken from the paper \cite{park2019continual}. The authors of ALASSO state that, SI underestimates the 
     unobserved side of the loss function and hence a better approximation of the loss function is achieved by overestimating it.}
     \label{fig:Alasso}
-  \end{figure}
+\end{figure}
 %TODO: Include image of Alasso idea in here
 
 \subsubsection{IMM}
@@ -318,6 +335,45 @@ being orthogonal to it.
 \section{Model Stealing}
 \label{sec:Related_work:Model_Stealing}
 % Hier Active Thief erwähnen und falls später noch defense strategies verwendet werden das ebenfalls noch erwähnen
+
+\subsection{Knockoff Nets}
+\label{sec:Related_work:Model_Stealing:Knockoff_Nets}
+Knockoff Nets was published by Orekondy et al. \cite{orekondy2019knockoff}, and it was the first approach which focused only on stealing the functionality
+of the model instead of inferring hyperparameters, model architecture etc. Orekondy et al. used a variety of substitute models, thief datasets and query
+selection strategies to empirically evaluate how these factors influence the model stealing process. More precisely, they test the substitute models
+Alexnet \cite{krizhevsky2017imagenet}, Resnet, VGG and Densenet \cite{huang2017densely} using Caltech-256,CUBS-200-2011, Indoor-Scenes, Diabetic-Retinopathy,
+ILSVRC and OpenImages as thief datasets as well as a random query selection strategy and a reinforcement learning approach. Orekondy et al. make the following
+key findings: 
+\begin{itemize}
+    \item The choice of substitute model has a negligible impact on the overall success of the model stealing attack. Nevertheless, it is advised to use a
+    substitute model with a rather complex architecture.
+    \item Randomly querying the target model with images from the thief dataset yields remarkably good results. It should be noted however, that the reinforcement
+    learning approach used by Orekondy et al. is able to achieve comparable accuracies with significantly less data points, depending on the dataset.
+    \item There is a direct correlation between the top-$k$ outputs generated by the target model and the maximum achievable accuracy of the model stealing attack.
+    In other words, more information about the prediction output directly leads to better results.
+\end{itemize}
+\subsection{ActiveThief}
+\label{sec:Related_work:Model_Stealing:ActiveThief}
+ActiveThief is a novel model stealing approach proposed by Pal et al. \cite{pal2020activethief}. Inspired by prior theoretical \cite{chandrasekaran2020exploring}
+and practical work \cite{shi2018active}, they use Active Learning to choose which samples to query the target model. Using Active Learning in the model stealing
+domain comes with three major benefits: First, it makes it easier for the attacker to create a thief dataset. Data is abundant nowadays while labeling large amounts
+of data to this day is a time-intensive task. By using Active Learning, which works on unlabeled data, the process of creating a thief dataset is sped up immensely.
+Second, Active Learning aims to query the most informative samples, yielding the most performant model with as little data as possible. Third, by using samples selected
+by Active Learning to query the target model, the model stealing attack can successfully be disguised as a benign query process. Pal et al. demonstrate this by showing 
+that ActiveThief successfully evades PRADA \cite{juuti2019prada}, a state-of-the-art model stealing defense which detects attacks by analyzing the distribution of distances
+between queries. \\
+The authors of ActiveThief evaluate their framework using the Active Learning strategies Random, Uncertainty \cite{lewis1994sequential}, CoreSet \cite{sener2017active},
+DeepFool-based Active Learning (DFAL) \cite{ducoffe2018adversarial} and a custom combination of DFAL and CoreSet. They use a custom CNN architecture for both target and
+substitute model and show that ActiveThief is able to successfully steal the target model for multiple benchmark datasets such as MNIST and CIFAR-10. A visualization of
+the model stealing workflow proposed by Pal et al. is shown in Figure \ref{fig:ActiveThief}.
+
+\begin{figure} [ht]
+    \centering
+    \includegraphics[width=.9\linewidth]{images/ActiveThief_Idea.png}
+    \caption[Visualization of ActiveThief]{Illustration of the model stealing workflow proposed by \cite{pal2020activethief}. Inspired by
+    \cite{chandrasekaran2020exploring}, Pal et al. use active learning to select the next samples to query the target model.}
+    \label{fig:ActiveThief}
+\end{figure}
 
 \dots
 %% ---------------------
