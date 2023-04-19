@@ -16,8 +16,12 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
         https://github.com/thuyngch/Overcoming-Catastrophic-Forgetting
     '''
 
-    def __init__(self,model:nn.Module,optim: torch.optim.Optimizer,scheduler: lr_scheduler._LRScheduler,crit: nn.CrossEntropyLoss,WEIGHT:float=1.0,SCHEDULE:bool=False,USE_GPU:bool=False,**kwargs):
+    def __init__(self,model:nn.Module,optim: torch.optim.Optimizer,scheduler: lr_scheduler._LRScheduler,crit: nn.CrossEntropyLoss,
+                 WEIGHT:float=1.0,SCHEDULE:bool=False,USE_GPU:bool=False,state_dict:dict=None,**kwargs):
         super(ElasticWeightConsolidation,self).__init__(model,optim,scheduler,crit,USE_GPU)
+        if state_dict is not None:
+            self.set_state(state_dict)
+            return
         self.weight = torch.tensor(WEIGHT).cuda() if self.use_gpu else torch.tensor(WEIGHT)
         self.prev_params = {}
         self._save_model_params()
@@ -89,3 +93,19 @@ class ElasticWeightConsolidation(ContinualLearningStrategy):
             self.n_tasks = 0
             prev_weight = self.weight.item()
             self.weight = torch.tensor(2*prev_weight).cuda() if self.use_gpu else torch.tensor(2*prev_weight)
+
+    def get_state(self) -> dict:
+        return {
+            'weight': self.weight,
+            'prev_params': self.prev_params,
+            'fisher': self.fisher,
+            'schedule_weight': self.schedule_weight,
+            'n_tasks': self.n_tasks
+        }
+
+    def set_state(self,state:dict) -> None:
+        self.weight = state['weight']
+        self.prev_params = state['prev_params']
+        self.fisher = state['fisher']
+        self.schedule_weight = state['schedule_weight']
+        self.n_tasks = state['n_tasks']

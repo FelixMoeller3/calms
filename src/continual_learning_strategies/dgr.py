@@ -18,8 +18,11 @@ class DeepGenerativeReplay(ContinualLearningStrategy):
     '''
 
     def __init__(self,model:nn.Module,optim: torch.optim.Optimizer, scheduler: lr_scheduler._LRScheduler,
-                 crit: nn.CrossEntropyLoss,USE_GPU:bool=False,clip_grad: float=2.0,**kwargs):
+                 crit: nn.CrossEntropyLoss,USE_GPU:bool=False,clip_grad: float=2.0,state_dict:dict=None,**kwargs):
         super(DeepGenerativeReplay,self).__init__(model,optim,scheduler,crit,USE_GPU,clip_grad)
+        if state_dict is not None:
+            self.set_state(state_dict)
+            return
         self.generator = None
         self.num_gen_epochs = 20
 
@@ -98,3 +101,13 @@ class DeepGenerativeReplay(ContinualLearningStrategy):
         epoch_loss = total_loss / len(train_loader.dataset)
         epoch_acc = correct_predictions / len(train_loader.dataset)
         print('Training Loss: {:.4f} Acc: {:.4f}'.format(epoch_loss, epoch_acc))
+
+    def get_state(self) -> dict:
+        return {
+            'generator': self.generator,
+            'num_gen_epochs': self.num_gen_epochs
+        }
+    
+    def set_state(self,state: dict) -> None:
+        self.generator = state['generator']
+        self.num_gen_epochs = state['num_gen_epochs']

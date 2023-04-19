@@ -15,7 +15,7 @@ class MAS(ContinualLearningStrategy):
     '''
 
     def __init__(self,model:nn.Module,optimizer: torch.optim.Optimizer, scheduler: lr_scheduler._LRScheduler,criterion: torch.nn.CrossEntropyLoss,
-            WEIGHT:float=1.0,SCHEDULE:bool=False,FREEZE_LAYERS:List[str]=[],USE_GPU:bool=False,clip_grad:float=2.0,**kwargs):
+            WEIGHT:float=1.0,SCHEDULE:bool=False,FREEZE_LAYERS:List[str]=[],USE_GPU:bool=False,clip_grad:float=2.0,state_dict:dict=None,**kwargs):
         '''
         Initializes the Memory Aware Synapses (MAS) class.
 
@@ -29,6 +29,9 @@ class MAS(ContinualLearningStrategy):
 
         '''
         super(MAS,self).__init__(model,optimizer,scheduler,criterion,USE_GPU,clip_grad)
+        if state_dict is not None:
+            self.set_state(state_dict)
+            return
         self.weight = torch.tensor(WEIGHT).cuda() if self.use_gpu else torch.tensor(WEIGHT)
         self.schedule_weight = SCHEDULE
         self.freeze_layers = FREEZE_LAYERS
@@ -138,3 +141,27 @@ class MAS(ContinualLearningStrategy):
             self.n_tasks = 0
             prev_weight = self.weight.item()
             self.weight = torch.tensor(2*prev_weight).cuda() if self.use_gpu else torch.tensor(2*prev_weight)
+
+    def get_state(self) -> dict:
+        return {
+            'weight' : self.weight,
+            'n_tasks' : self.n_tasks,
+            'schedule_weight' : self.schedule_weight,
+            'n_samples_prev' : self.n_samples_prev,
+            'n_samples_cur' : self.n_samples_cur,
+            'regularization_params_prev' : self.regularization_params_prev,
+            'regularization_params_cur' : self.regularization_params_cur,
+            'prev_params' : self.prev_params,
+            'freeze_layers' : self.freeze_layers
+        }
+    
+    def set_state(self,state:dict) -> None:
+        self.weight = state['weight']
+        self.n_tasks = state['n_tasks']
+        self.schedule_weight = state['schedule_weight']
+        self.n_samples_prev = state['n_samples_prev']
+        self.n_samples_cur = state['n_samples_cur']
+        self.regularization_params_prev = state['regularization_params_prev']
+        self.regularization_params_cur = state['regularization_params_cur']
+        self.prev_params = state['prev_params']
+        self.freeze_layers = state['freeze_layers']

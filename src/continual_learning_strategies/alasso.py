@@ -14,10 +14,12 @@ class Alasso(ContinualLearningStrategy):
     '''
 
     def __init__(self,model:nn.Module,optim: torch.optim.Optimizer, scheduler: lr_scheduler._LRScheduler,crit: nn.CrossEntropyLoss,
-    WEIGHT:float=1.0,WEIGHT_PRIME:float=1.0,A:float=1.0,A_PRIME:float=1.0,EPSILON:float=1e-4,USE_GPU:bool=False,clip_grad: float=0.05,**kwargs):
+    WEIGHT:float=1.0,WEIGHT_PRIME:float=1.0,A:float=1.0,A_PRIME:float=1.0,EPSILON:float=1e-4,USE_GPU:bool=False,clip_grad: float=0.05,
+    state_dict:dict=None, **kwargs):
         '''
             :param model: The model that should be trained using continual learning.
-            :param optim: The optimizer to be used during training. Beware: When using Alasso, one should set a rather low learning rate as Alasso easily overshoots when using a medium to high learning rate.
+            :param optim: The optimizer to be used during training. Beware: When using Alasso, one should set a rather low learning rate as Alasso
+            easily overshoots when using a medium to high learning rate.
             :param crit: The criterion function to use. Usually, this is Cross-Entropy loss.
             :param WEIGHT: The weight that should be used to weigh the surrogate loss. See the paper for details (it is called c there).
             :param WEIGHT_PRIME: This corresponds to c' in the paper. See section 4.4 (Parameter decoupling) for details.
@@ -25,8 +27,11 @@ class Alasso(ContinualLearningStrategy):
             :param A_PRIME: This corresponds to a' in the paper. See section 4.4 (Parameter decoupling) for details.
             :param EPSILON: This parameter is added to the denominator in equation (7) to make sure we are not dividing by zero. It should always be > 0.
         '''
-        #TODO: Issue warning when parameter a is <=1 
         super(Alasso,self).__init__(model,optim,scheduler,crit,USE_GPU,clip_grad)
+        if state_dict is not None:
+            self.set_state(state_dict)
+            return 
+        #TODO: Issue warning when parameter a is <=1 
         self.weight = torch.tensor(WEIGHT).cuda() if self.use_gpu else torch.tensor(WEIGHT)
         self.weight_prime = torch.tensor(WEIGHT_PRIME).cuda() if self.use_gpu else torch.tensor(WEIGHT_PRIME)
         self.a = torch.tensor(A).cuda() if self.use_gpu else torch.tensor(A)
@@ -180,3 +185,28 @@ class Alasso(ContinualLearningStrategy):
             loss += self.asymmetric_loss_func(name,param,self.a).sum()
         return loss * self.weight
 
+    def get_state(self) -> dict:
+        return {
+            'a' : self.a,
+            'a_prime' : self.a_prime,
+            'weight' : self.weight,
+            'weight_prime' : self.weight_prime,
+            'weights' : self.weights,
+            'omegas' : self.omegas,
+            'grads2' : self.grads2,
+            'unreg_grads' : self.unreg_grads,
+            'deltas' : self.deltas,
+            'epsilon' : self.epsilon
+        }
+    
+    def set_state(self,state:dict) -> None:
+        self.weight = state['weight']
+        self.weight_prime = state['weight_prime']
+        self.a = state['a']
+        self.a_prime = state['a_prime']
+        self.epsilon = state['epsilon']
+        self.weights = state['weights']
+        self.omegas = state['omegas']
+        self.grads2 = state['grads2']
+        self.unreg_grads = state['unreg_grads']
+        self.deltas = state['deltas']

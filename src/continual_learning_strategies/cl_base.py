@@ -146,3 +146,9 @@ class ContinualLearningStrategy(ABC):
 
     def _before_training_iteration(self) -> None:
         pass
+
+    def get_state(self) -> dict:
+        return {}
+    
+    def set_state(self,state:dict) -> None:
+        return

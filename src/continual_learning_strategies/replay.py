@@ -9,8 +9,12 @@ from active_learning_strategies import CoreSet,RandomSelection
 
 class Replay(ContinualLearningStrategy):
 
-    def __init__(self,model:nn.Module,optimizer: torch.optim.Optimizer,scheduler: lr_scheduler._LRScheduler,criterion: torch.nn.CrossEntropyLoss,dataset:Dataset,USE_GPU:bool=False,BUFFER_SIZE:int=2000,**kwargs):
+    def __init__(self,model:nn.Module,optimizer: torch.optim.Optimizer,scheduler: lr_scheduler._LRScheduler,criterion: torch.nn.CrossEntropyLoss,dataset:Dataset,
+                 USE_GPU:bool=False,BUFFER_SIZE:int=2000,state_dict:dict=None,**kwargs):
         super(Replay,self).__init__(model,optimizer,scheduler,criterion,USE_GPU)
+        if state_dict is not None:
+            self.set_state(state_dict)
+            return
         self.buffer_size = BUFFER_SIZE
         self.indices = []
         #self.buffer_selection_strategy = RandomSelection(model,dataset,0,128,self.buffer_size,0,1,USE_GPU)
@@ -43,3 +47,14 @@ class Replay(ContinualLearningStrategy):
         self.buffer_selection_strategy.feed_current_state(0,self.indices,[])
         samples = self.buffer_selection_strategy.query()
         self.indices = [self.indices[i] for i in samples]
+
+    def get_state(self) -> dict:
+        return {
+            'buffer_size': self.buffer_size,
+            'indices': self.indices,
+        }
+    
+    def set_state(self,state:dict) -> None:
+        self.buffer_size = state['buffer_size']
+        self.indices = state['indices']
+        self.buffer_selection_strategy.feed_current_state(0,self.indices,[])
