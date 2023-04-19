@@ -9,7 +9,7 @@ SUBSTITUTE_MODEL:
     BUDGET: 2000
     LOOKBACK: 1
     INIT_MODE: 'random'
-    COLD_START: True
+    COLD_START: False
   CL_METHOD: 
     NAME: 'Naive' # Possible values : Alasso,EWC,MAS,IMM,Naive
     OPTIMIZER:
