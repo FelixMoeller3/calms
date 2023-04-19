@@ -12,7 +12,8 @@ class IMM(ContinualLearningStrategy):
     Implementation of Incremental Moment Matching (IMM) according.
     '''
 
-    def __init__(self, model: nn.Module,optim: torch.optim.Optimizer, scheduler: lr_scheduler._LRScheduler, crit: nn.CrossEntropyLoss,ALPHAS:List[float]=None,WEIGHT:float=1.0,MEAN:bool=True,USE_GPU:bool=False,**kwargs):
+    def __init__(self, model: nn.Module,optim: torch.optim.Optimizer, scheduler: lr_scheduler._LRScheduler, crit: nn.CrossEntropyLoss,
+                 ALPHAS:List[float]=None,SCHEDULE:bool=False,WEIGHT:float=1.0,MEAN:bool=True,USE_GPU:bool=False,state_dict:dict=None,**kwargs):
         '''
             :param alphas: List of weights for models of previous tasks,
              i.e. how strongly previous tasks should be weighted. The sum of all entries in this list must be 1.
@@ -20,6 +21,9 @@ class IMM(ContinualLearningStrategy):
             :param mean: Whether to use mean-IMM or mode-IMM
         '''
         super(IMM,self).__init__(model,optim,scheduler,crit,USE_GPU)
+        if state_dict is not None:
+            self.set_state(state_dict)
+            return
         assert not ALPHAS or abs(sum(ALPHAS)-1.0) < 1e-8
         if ALPHAS:
             self.alphas = [torch.tensor(val).cuda() if self.use_gpu else torch.tensor(val) for val in ALPHAS]
@@ -28,6 +32,7 @@ class IMM(ContinualLearningStrategy):
         self.weight = torch.tensor(WEIGHT).cuda() if self.use_gpu else torch.tensor(WEIGHT)
         self.mean = MEAN
         self.n_tasks = 0
+        self.schedule_weight = SCHEDULE 
         self.prev_param_list = []
         self._save_model_params()
         self.prev_fishers = []
@@ -151,8 +156,30 @@ class IMM(ContinualLearningStrategy):
         return sigma
 
     def _update_weight(self) -> None:
+        if not self.schedule_weight:
+            return
         self.n_tasks += 1
         if self.n_tasks % 5 == 0:
             self.n_tasks = 0
             prev_weight = self.weight.item()
             self.weight = torch.tensor(2*prev_weight).cuda() if self.use_gpu else torch.tensor(2*prev_weight)
+
+    def get_state(self) -> dict:
+        return {
+            'alphas' : self.alphas,
+            'prev_param_list' : self.prev_param_list,
+            'prev_fishers' : self.prev_fishers,
+            'weight' : self.weight,
+            'n_tasks' : self.n_tasks,
+            'mean' : self.mean,
+            'schedule_weight' : self.schedule_weight
+        }
+    
+    def set_state(self,state:dict) -> None:
+        self.alphas = state['alphas']
+        self.weight = state['weight']
+        self.prev_param_list = state['prev_param_list']
+        self.schedule_weight = state['schedule_weight']
+        self.n_tasks = state['n_tasks']
+        self.mean = state['mean']
+        self.prev_fishers = state['prev_fishers']

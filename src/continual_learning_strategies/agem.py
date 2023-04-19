@@ -8,8 +8,11 @@ from torch.utils.data import Dataset
 class AGem(ContinualLearningStrategy):
 
     def __init__(self,model:nn.Module,optim: torch.optim.Optimizer, scheduler: lr_scheduler._LRScheduler,crit: nn.CrossEntropyLoss,
-    PATTERNS_PER_EXPERIENCE:int=30,SAMPLE_SIZE:int=100,USE_GPU:bool=False,clip_grad: float=2.0,**kwargs):
+    PATTERNS_PER_EXPERIENCE:int=30,SAMPLE_SIZE:int=100,USE_GPU:bool=False,clip_grad: float=2.0,state_dict:dict=None,**kwargs):
         super(AGem,self).__init__(model,optim,scheduler,crit,USE_GPU,clip_grad)
+        if state_dict is not None:
+            self.set_state(state_dict)
+            return
         self.patterns_per_experience = PATTERNS_PER_EXPERIENCE
         self.sample_size = SAMPLE_SIZE
         self.buffer_data = torch.empty(0)
@@ -112,4 +115,19 @@ class AGem(ContinualLearningStrategy):
         else:
             self.buffer_data = torch.cat([self.buffer_data,data])
             self.buffer_targets = torch.cat([self.buffer_targets,targets])
+
+    def get_state(self) -> dict:
+        return {
+            'patterns_per_experience': self.patterns_per_experience,
+            'sample_size': self.sample_size,
+            'buffer_data': self.buffer_data,
+            'buffer_targets': self.buffer_targets,
+            'reference_gradients': self.reference_gradients
+        }
         
+    def set_state(self,state:dict) -> None:
+        self.patterns_per_experience = state['patterns_per_experience']
+        self.sample_size = state['sample_size']
+        self.buffer_data = state['buffer_data']
+        self.buffer_targets = state['buffer_targets']
+        self.reference_gradients = state['reference_gradients']

@@ -16,7 +16,8 @@ INIT_MODES = ["facility_location", "random"]
 class BaseProcess:
 
     def __init__(self,activeLearningStrategy: Strategy,continualLearningStrategy: ContinualLearningStrategy, train_set: Dataset,
-                 val_set: Dataset,batch_size:int,num_cycles:int,num_epochs:int,continual:int,optimizerBuilder: Callable, optimizerConfig: dict,init_mode:str='random',use_gpu:bool=False,cold_start:bool=False,state_dir:str=None):
+                 val_set: Dataset,batch_size:int,num_cycles:int,num_epochs:int,continual:int,optimizerBuilder: Callable, optimizerConfig: dict,
+                 init_mode:str='random',use_gpu:bool=False,cold_start:bool=False,state_dir:str=None):
         self.al_strat = activeLearningStrategy
         self.cl_strat = continualLearningStrategy
         self.train_set = train_set

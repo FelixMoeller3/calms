@@ -33,13 +33,15 @@ class ModelStealingProcess(BaseProcess):
         self.use_label = use_label
 
     def steal_model(self,start_cycle:int=0,labeled_set:List[int]=[],unlabeled_set:List[int]=[],val_accuracies:List[float]=[],
-                    agreements:List[float]=[]) -> tuple[List[float],List[float]]:
+                    agreements:List[float]=[],cl_state:dict=None) -> tuple[List[float],List[float]]:
         '''
             Implements the actual model stealing process where the target model is iteratively queried and then the substitute model is trained using
             continual learning.
         '''
         # set all labels to -1 to ensure no labels are given before
         #train_set.targets[train_set.targets > -1] = -1
+        if cl_state is not None:
+            self.cl_strat.set_state(cl_state)
         if not self.use_label:
             self.train_set = Softmax_label_set(self.train_set,self.num_classes)
         val_loader = DataLoader(self.val_set,self.batch_size,shuffle=True)
@@ -58,7 +60,8 @@ class ModelStealingProcess(BaseProcess):
             print("Current agreement is: {:.4f}".format(cur_agreement))
             agreements.append(cur_agreement)
             if self.state_dir is not None:
-                state_dict = {'start_cycle': i+1, 'labeled_set': labeled_set, 'unlabeled_set': unlabeled_set,'val_accuracies': val_accuracies, 'agreements': agreements}
+                state_dict = {'start_cycle': i+1, 'labeled_set': labeled_set, 'unlabeled_set': unlabeled_set,
+                              'val_accuracies': val_accuracies, 'agreements': agreements, "cl_state": self.cl_strat.get_state()}
                 self._save_state(state_dict)
         return val_accuracies,agreements
     
