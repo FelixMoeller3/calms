@@ -86,6 +86,7 @@ are pool-based Active Learning Strategies, stemming both from the Uncertainty-ba
         \State Train $M$ on initial labeled set $L$
         \While{label budget $B$ not exhausted}
             \State Select $l$ data points from $U$ predicted to be the most informative by the Active Learning strategy
+            \State Obtain labels by querying $O$ for $x_i,\ldots,x_l$
             \State Set $L= L \cup \{x_i,\ldots,x_l\}$ and $U = U \setminus \{x_i,\ldots,x_l\}$
             \State Train $M$ on labeled set $L$
         \EndWhile

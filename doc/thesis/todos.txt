@@ -1,3 +1,6 @@
 Notation und Glossary am Ende einmal befüllen
 Tabellen mit Hyperparametern erstellen, Tabellen mit Hardwarespezifikation erstellen
 Acknowledgement für Unicluster?
+Abgrenzung hinzufügen? (Sprich was wird in der Thesis nicht gemacht)
+Falls es ein Problem mit \openbox gibt: Das habe ich in amsthm.sty geändert, dass renewcommand statt newcommand verwendet wird
+Liegt in usr/local/texlive/2022/texmf-dist/tex/amscls/amsthm.sty und die änderung ist in Zeile 422.

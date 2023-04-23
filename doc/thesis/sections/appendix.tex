@@ -19,9 +19,26 @@
 %% -------------------
 %% | Example content |
 %% -------------------
-\section{First Appendix Section}
+\section{Proof of Data points trained using Active Learning}
 \label{sec:appendix:FirstSection}
-		
+\begin{theorem}
+Let $X$ be a set of data points of size $n$, $b < n, b \mod n = 0$ be the batch size. Then a machine learning model trained
+using pool-based Active Learning is trained $\frac{n}{b}$ times on the current labeled pool of data points. Overall, the model
+is trained on $\frac{n(n+b)}{2b}$ data points
+\end{theorem}
+\begin{proof}
+    The first part is trivial, given that the model is trained until the labeled pool is exhausted and in each iteration $b$
+    points are queried for their label. To determine the total number of points used, we need to sum up the number of points
+    used in each iteration. 
+    \begin{equation}
+        \sum_{i=1}^{\frac{n}{b}} i \cdot b
+    \end{equation}
+    Using the formula for the sum of the first $n$ natural numbers, we get
+    \begin{equation}
+        \sum_{i=1}^{\frac{n}{b}} i \cdot b = b \cdot \sum_{i=1}^{\frac{n}{b}} i = b \cdot \frac{\frac{n}{b} (\frac{n}{b} + 1)}{2}
+        = \frac{n (\frac{n}{b} + 1)}{2} = \frac{n(n+b)}{2b}
+    \end{equation}
+\end{proof}
 % \setcounter{figure}{0}
 		
 % \begin{figure} [ht]
@@ -49,6 +66,73 @@
     \end{tabular}
     \caption{Hardware configuration for the three nodes used on BWUniCluster.}
     \label{fig:Testfig}
+\end{table}
+
+\begin{table}
+    \begin{tabular}{c | c c } 
+        \hline
+        Hyperparameter & Description & Value \\ 
+        \hline 
+        $\lambda$ & Balances between old and new tasks. A higher value indicates more focus
+        on preserving knowledge from the old task & 1.0  \\ 
+        Sample size & Relative size of the sample compared to the full training set that is used to 
+        compute the Fisher Matrix & 0.05  \\ 
+        Gradient Clip & Maximum Value of the $l2$-Norm of the gradient. If the current norm is larger, the
+        gradient is clipped to that value & 20.0 \\ 
+        \hline
+    \end{tabular}
+    \caption{Hyperparameter configuration for Elastic Weight Consolidation.}
+    \label{fig:EWCparams}
+\end{table}
+
+\begin{table}
+    \begin{tabular}{c | c c } 
+        \hline
+        Hyperparameter & Description & Value \\ 
+        \hline 
+        $\lambda$ & Balances between old and new tasks. A higher value indicates more focus
+        on preserving knowledge from the old task & 1.0  \\ 
+        Gradient Clip & Maximum Value of the $l2$-Norm of the gradient. If the current norm is larger, the
+        gradient is clipped to that value & 2.0 \\ 
+        \hline
+    \end{tabular}
+    \caption{Hyperparameter configuration for Memory Aware Synapses.}
+    \label{fig:MASparams}
+\end{table}
+
+\begin{table}
+    \begin{tabular}{c | c c } 
+        \hline
+        Hyperparameter & Description & Value \\ 
+        \hline 
+        $\lambda$ & Balances between old and new tasks. A higher value indicates more focus
+        on preserving knowledge from the old task & 1.0  \\ 
+        Gradient Clip & Maximum Value of the $l2$-Norm of the gradient. If the current norm is larger, the
+        gradient is clipped to that value & 20.0 \\ 
+        $\alpha$ & Weights the importance of the previous tasks. The sum of all $\alpha$ values must be 1.0 & 0.45,0.55 \\
+        \hline
+    \end{tabular}
+    \caption{Hyperparameter configuration for Incremental Moment Matching.}
+    \label{fig:IMMparams}
+\end{table}
+
+\begin{table}
+    \centering
+    \begin{tabularx}{\textwidth}{X | X X } 
+        \hline
+        Hyperparameter & Description & Value \\ 
+        \hline 
+        $a$ & Balances between old and new tasks. A higher value indicates more focus
+        on preserving knowledge from the old task & 1.0  \\ 
+        $a'$ & Used to update parameter importances in Equation TODO & 0.5  \\
+        Gradient Clip & Maximum Value of the $l2$-Norm of the gradient. If the current norm is larger, the
+        gradient is clipped to that value & 2.0 \\ 
+        $c$ & Determines the overestimation of the loss on the unobserved side & 3.0 \\
+        $c'$ & Used to update parameter importances in Equation TODO & 1.5 \\
+        \hline
+    \end{tabularx}
+    \caption{Hyperparameter configuration for Alasso.}
+    \label{fig:AlassoParams}
 \end{table}
 
 \dots
