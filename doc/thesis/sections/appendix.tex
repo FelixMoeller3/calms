@@ -31,6 +31,25 @@
 %   \label{fig:anotherfigure}
 % \end{figure}
 
+\begin{table}
+    \begin{tabular}{c | c c c} 
+        \hline
+         & GPU x4 & GPU x8 & GPU x4 A100 \\ 
+        \hline 
+        Processors & Intel Xeon Gold 6230 & Intel Xeon Gold 6248 & Intel Xeon Platinum 8358  \\ 
+        Number of sockets & 2 & 2 & 2  \\ 
+        Processor frequency (GHz) & 2.1 & 2.6 & 2.5  \\ 
+        Total number of cores & 40 & 40 & 64  \\ 
+        Main memory & 384 GB & 768 GB & 512 GB  \\ 
+        Local SSD & 3.2 TB NVMe & 15TB NVMe & 6.4 TB NVMe  \\ 
+        GPUs & 4x NVIDIA Tesla V100 & 8x NVIDIA Tesla V100 & 4x NVIDIA A100  \\ 
+        GPU Memory & 32 GB  & 32 GB & 80 GB  \\ 
+        Interconnect & IB HDR & IB HDR & IB HDR200  \\ 
+        \hline
+    \end{tabular}
+    \caption{Hardware configuration for the three nodes used on BWUniCluster.}
+    \label{fig:Testfig}
+\end{table}
 
 \dots
 %% ---------------------

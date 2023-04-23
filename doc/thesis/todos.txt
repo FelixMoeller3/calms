@@ -1,3 +1,3 @@
 Notation und Glossary am Ende einmal befüllen
-Tabellen mit Hyperparametern erstellen, tabellen mit Hardwarespezifikation erstellen
+Tabellen mit Hyperparametern erstellen, Tabellen mit Hardwarespezifikation erstellen
 Acknowledgement für Unicluster?
