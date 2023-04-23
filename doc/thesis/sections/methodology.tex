@@ -64,7 +64,10 @@ once it is deployed. In the continual learning setting however, the model is ret
 \label{sec:Methodology:CombiningCLandAL}
 The problem with classic Active Learning is that it is very resource intensive. When training a model using pool-based Active Learning on a dataset of size $n$,
 with batch size $b$, the model will be trained $\frac{n}{b}$ times on the current labeled pool, equating to $\frac{n^2}{b} + n$ data points overall (we provide a
-%short derivation of this number in \ref{sec:appendix:FirstSection}). compared to training on $n$
+short derivation of this number in \ref{sec:appendix:FirstSection}). The problem with the number of data points used for training is that it is dependent on the
+batch size $b$. While \cite{beck2021effective}When comparing this to the classic Continual Learning setting, where the model is trained
+once using $n$ data points, it is clear to see that Active Learning comes with a considerable overhead. The overhead of Active Learning is even more pronounced
+when considering the running time of the Active Learning Algorithms. For more details we refer to the TODO experimental sections.
 \begin{algorithm}
     \caption{Pool-based Continual Active Learning} \label{alg:PoolBasedContinualActiveLearning}
     \begin{algorithmic}[1]
