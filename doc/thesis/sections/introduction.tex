@@ -104,11 +104,11 @@ extraction framework ActiveThief \cite{pal2020activethief} which successfully ev
 Learning to determine which samples of the thief dataset it should query the target model on. Active Learning is an intensively studied research
 field which aims to minimize the labeling effort in the training process of Machine Learning models. The problem of Active Learning is however that it
 needs a lot of computing resources. In this work, we extend on the ActiveThief framework by using \textit{Continual} Active Learning in the model
-extraction process.\\
+extraction process.\par
 Continual Learning is a research field which aims to make Machine Learning Models more robust against the introduction of new data. The major problem
 of the classic training procedure is that a model trained on a new task rapidly loses the ability to perform any previous tasks it was trained on.
 Research in Continual Learning aims to develop methods which allow Machine Learning Models to learn new tasks without forgetting the knowledge of old 
-tasks. \\
+tasks. \par
 \textbf{Contributions} \hspace{0.2cm} The objective of this thesis is to combine existing approaches of the continual learning domain
  with approaches in the active learning domain. More specifically, we are focusing on regularization-based continual learning methods
 whereas we use both uncertainty-based and diversity-based active learning methods. The continual learning methods we use are Elastic
@@ -121,7 +121,7 @@ We analyze how the continual learning methods can speed up the active learning p
 are most effective and how the trade-off between accuracy and speed up is. While the focus of this thesis is on regularization-based continual
 learning methods, we briefly explore the effectiveness of exemplar rehearsal continual learning using the Average Gradient Episodic Memory (AGEM)
 approach \cite{chaudhry2018efficient} combined with representation-based active learning in form of Variational Adversarial Active Learning (VAAL)
-\cite{sinha2019variational}. \\
+\cite{sinha2019variational}. \par
 After exploring the effectiveness of the different combinations of continual and active learning methods, we apply these combinations in the model stealing
 domain. More specifically, we build upon the model extraction framework ActiveThief \cite{pal2020activethief} and investigate the performance of continual
 active learning methods in the model stealing domain.

@@ -70,12 +70,24 @@ is trained on $\frac{n(n+1)}{2}$ data points. While \cite{beck2021effective} not
 if any, a typical batch size is less than 10 \% of the full training set. Even in this more realistic case, the model is trained on $5.5n$ data points. When
 comparing this to the classic Continual Learning setting, where the model is trained once using $n$ data points, it is clear to see that Active Learning comes
 with a considerable overhead. The overhead of Active Learning is even more pronounced when considering the running time of the Active Learning Algorithms.
-For more details we refer to the TODO experimental sections. \\
+For more details we refer to the TODO experimental sections. \par
 On the other hand, a major problem with classic Continual Learning is that task-ordering has a significant impact on the performance of the model \cite{bell2022effect}.
+The problem of task-ordering has been studied before, and it has been shown that training samples in decreasing order of difficulty results in faster learning and 
+improved generalization error \cite{hacohen2019power}. This motivates us to use Active Learning as a tool to perform task-ordering. We should note here that We
+assume free choice of the next task. This assumption is not always realistic, especially when tasks arrive sequentially, but studying the effect of task-ordering
+benefits the study of these scenarios, too. Furthermore, insights in the field of task-ordering help towards a more rigorous evaluation of continual learning in 
+research because they allow to assess the influence of task-ordering on experiment results when using classic benchmark datasets. \par
 Our approach aims to overcome both the issue of the overhead of Active Learning and the issue of task-ordering by combining both learning paradigms. We modify the Active
 Learning process by training only on the currently selected batch instead of the entire labeled pool. This way, the model is trained on $\sum_{i=1}^{\frac{n}{b}} b = n$ 
 data points, which fully eliminates the overhead of Active Learning from a data-centric perspective. Nevertheless, the query time of the Active Learning Algorithm remains
-as an overhead. From a Continual Learning perspective.
+as an overhead. From a Continual Learning perspective, we join all tasks to a single dataset and use this dataset as the unlabeled pool for Active Learning. In each iteration
+of the Active Learning process, we select a batch $B$ of data points from the unlabeled pool using the given Active Learning Strategy. This batch is then labeled by the
+oracle if the initial dataset was unlabeled. If the initial dataset is labeled, we omit querying the oracle because the label is already known and simply add the labels
+to the respective data points. We then treat the current batch $B$ as a new task and train our model using only the data points of $B$ with the Continual Learning strategy of
+choice. This process is repeated until the unlabeled pool is empty. The full algorithm is described in Algorithm \ref{alg:PoolBasedContinualActiveLearning} where we high-
+list the difference between classic pool-based Active Learning and our new Continual Active Learning approach in red. \par
+%TODO: Mention here that we aim to increase the efficiency of the training process, i.e. we save time because we train on less
+% data points
 
 \begin{algorithm}
     \caption{Pool-based Continual Active Learning} \label{alg:PoolBasedContinualActiveLearning}
@@ -95,11 +107,34 @@ as an overhead. From a Continual Learning perspective.
 \end{algorithm}
 
 \section{Continual Active Learning for Model Stealing}
-\label{sec:Analysis:SecondSection}
+\label{sec:Methodolody:CALMS}
 % Transition to model stealing and elaborate why the continual active learning approach is interesting
 % in the model stealing domain. Explain how the continual active learning approach has to be modified
 % to apply it to model stealing. Best use a figure similar to the figure explaining the CAL approach
 % and highlight the parts that are different
+In this section, we describe how we apply the Continual Active Learning approach to the problem of model stealing. Using the Continual Active Learning approach
+in the model stealing domain allows us to figure out, if the Continual Active Learning achieves a similar performance in the model stealing domain compared to
+the standard setup where the oracle returns truthful labels. To motivate transferring our approach to the Active Learning domain, it is crucial to highlight the
+differences between the setup mentioned in \ref{sec:Methodology:CombiningCLandAL} and Continual Active Learning for Model Stealing. \par
+The first difference is that the labels returned by the oracle in the model stealing domain have a limited semantic meaning. This is because the oracle is another
+machine learning model in the model stealing domain. So even if the data point whose label is queried stems from the same distribution as the target model dataset,
+the label returned by the oracle is not necessarily correct since Machine Learning Models are not capable of generalizing perfectly. Since the target model dataset
+is unknown to the attacker, he or she cannot knowingly construct a thief dataset that overlaps with the target model dataset. Therefore, the data points that the
+attacker queries the target model with will most likely be from a different distribution than the target model dataset and the labels returned by the target model
+will be incorrect. The example in Figure \ref{fig:CalmsWorkflow} highlights the meaning of the associated label. In the given example, the target model is trained
+to classify planes which is why it associates the label \enquote{Fighter Jet} with a sparrow. \par
+The second difference between the standard Continual Active Learning approach and Continual Active Learning for Model Stealing lies again in the labels returned by
+the oracle. In the standard Continual Active Learning approach, the labels of the oracle are not only truthful, but the label is just a single value, i.e. the respective
+class. In the model stealing domain, the label returned by the oracle is either a single value or the per-class probabilities of the output layer of the target model.
+The latter is the more interesting case for Continual Active Learning because it reveals much more information about the function learned by the target model. \par
+After explaining the motivation for applying the Continual Active Learning approach to the model stealing domain, we now describe how Continual Active Learning can be
+applied for model stealing. The first step is to use the thief dataset as the initial unlabeled pool for Active Learning. The thief dataset is used by the Active Learning
+strategy in each iteration as it would have been done in classic Continual Active Learning. After selecting the most informative samples to label, the target model is
+queried for the labels of the selected samples. The label returned, which is either a single value or the per-class probabilities of the output layer of the target model,
+is then used as the label of the respective data point that was queried throughout the whole training process. This means specifically that the gradient updates during 
+training are based on the loss computed with a softmax label, allowing for a more fine-grained optimization of the weights to approximate the target model function. This
+process is then repeated until the unlabeled pool is empty. A visual example of the Continual Active Learning for Model Stealing workflow is shown in Figure
+\ref{fig:CalmsWorkflow}. \par
 \begin{figure}[ht]
     \centering
     \includegraphics[width=.9\linewidth]{images/Calms_workflow.png}
@@ -108,12 +143,9 @@ as an overhead. From a Continual Learning perspective.
     strategy first. Next, the target model is queried for the labels of the selected samples. Since our thief dataset is composed of NNPD data, the associated labels have
     an incorrect semantic meaning. The thief model is then trained only on the selected samples from the current batch. This process is repeated iteratively.}
     \label{fig:CalmsWorkflow}
-  \end{figure}
+\end{figure}
 
-\section{Third Section}
-\label{sec:Analysis:ThirdSection}
 
-\dots
 %% ---------------------
 %% | / Example content |
 %% ---------------------

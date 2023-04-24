@@ -115,7 +115,7 @@ In more general terms, research in Continual Learning is looking not only to all
 should ideally be stable enough to retain their performance on old tasks while simultaneously being plastic enough to adapt to new tasks. This is a dilemma
 because both properties are designed even though they are in conflict with each other. In practice, Machine Learning Models are rather plastic than stable.
 This is especially true for Deep Neural Networks, but generally for all Machine Learning Models that are trained by greedily updating their parameters using
-gradient descent \cite{mundt2020wholistic}. \\
+gradient descent \cite{mundt2020wholistic}. \par
 Continual Learning is mainly used in scenarios where new tasks arrive over time or where the data distribution changes over time. Despite being useful
 in these classic scenarios, Continual Learning approaches can also be used in cases where the data cannot be stored for legal reasons or due to memory
 constraints, i.e. when the normal batch learning approach with a large training set cannot be applied. 
@@ -197,13 +197,14 @@ autoencoder reconstructions of old tasks.
 
 \subsubsection{Rehearsal Approaches}
 \label{sec:RehearsalApproaches}
+%TODO: Finish this section
 Rehearsal approaches to Continual Learning aim to prevent catastrophic forgetting by fitting a model's parameters to the distribution
 of an incoming task and all previous tasks simultaneously. Within Rehearsal approaches it is important to remember the trade-off between
 model performance and computational cost. In general, the more data from previous tasks is used to train the model, the better the accuracy is. 
 However, in order to train on more data, the data has to be stored and fed into the training process which is costly in terms of memory and This can either be done by replaying stored data from previous tasks or by
 retraining on generated data drawn from the distribution of previous tasks. Continual Learning Methods that rely on the former idea are
 categorized as \textbf{exemplar rehearsal} approaches while those that rely on the latter idea are categorized as \textbf{generative replay}
-approaches. \\
+approaches. \par
 Exemplar Rehearsal Techniques store data from previous tasks in a so-called \enquote{Replay Buffer} which data is sampled
 
 
@@ -231,37 +232,37 @@ point to the API. The response to the request is then the prediction of the mode
 on a pay-per-query principle. That means that each request has a fixed price for each query which is usually subtracted from his or her account balance on
 a monthly basis. Providing public access to a machine learning model is a win-win situation because the model developer is compensated for his or her efforts
 on gathering and labeling appropriate training data, choosing a proper model architecture, training the model and fine-tuning its hyperparameters while the user
-of the prediction API can benefit from the model's predictions without having to train the model himself or herself. \\
+of the prediction API can benefit from the model's predictions without having to train the model himself or herself. \par
 Since the developed model is the intellectual property of the model developer, it is important that only the model's predictions are exposed to the public and
 not the model (i.e. its architecture and the model weights)itself. However, in the last years numerous research papers have been published which demonstrate how
 several features of a machine learning model can be extracted, i.e. its functionality \cite{tramer2016stealing}, its architecture \cite{oh2019towards} and its
 training data \cite{shokri2017membership}. This newly created field of research is called \textbf{Model Stealing} or \textbf{Model Extraction}, and it is a subfield
 of \textbf{Adversarial Machine Learning} according to Oliynyk et al. \cite{oliynyk2022know}. Because Model Extraction attacks are so effective, further research works
 concerning model stealing defense mechanisms have been published. In the following we will use the taxonomy provided by Oliynyk et al. (see Figure 
-\ref{fig:ModelStealing:Taxonomy}) \cite{oliynyk2022know} as a basis for our categorization of Model Stealing attacks and defenses. \\
+\ref{fig:ModelStealing:Taxonomy}) \cite{oliynyk2022know} as a basis for our categorization of Model Stealing attacks and defenses.
 
 \subsection{Terminology}
 \label{sec:ModelStealing:Terminology}
 Since Model Stealing is a rather new field it comes with numerous terms that are not commonly used in other fields of machine learning and others that are used 
-synonymously. In order to avoid confusion, we will define and explain the terms we use in this section and. \\
+synonymously. In order to avoid confusion, we will define and explain the terms we use in this section and. \par
 \textbf{Model Stealing Attack}: The process of maliciously querying a machine learning model in order to extract some or all of the model's features, such as its
-architecture, its weights or its training data. Model Stealing Attacks are also known as Model Extraction Attacks or Model Inference Attacks among others. \\
+architecture, its weights or its training data. Model Stealing Attacks are also known as Model Extraction Attacks or Model Inference Attacks among others. \par
 \textbf{Target Model}: The model that is queried via the prediction API and whose features the attacker aims to extract. The target model has also been referred to 
-as Oracle, Victim Model or Secret Model. \\
+as Oracle, Victim Model or Secret Model. \par
 \textbf{Substitute Model}: The model that is used by the attacker to extract the target model's features. Synonyms for Substitute Model are Adversarial Classifier,
 Knockoff Model or Inferred Model. \cite{orekondy2019knockoff} have demonstrated that is favorable to choose a rather complex model architecture which is in line with 
-our findings.\\
+our findings.\par
 \textbf{Target Model Dataset}: The dataset that the target model has been trained on. The term Target Model Dataset has not been used in the literature before (to 
 the best of our knowledge), but we choose this term over the synonymous term Secret Dataset because we believe it is more expressive. During Model Stealing Attacks,
 the attacker does not have access to the target model's dataset, i.e. it is kept secret. For research purposes however, a test set of the Target Model Dataset is
-used to evaluate the performance of the Substitute Model. \\
+used to evaluate the performance of the Substitute Model. \par
 \textbf{Thief Dataset}: The dataset that is used by the attacker to train the Substitute Model. The Thief Dataset is also known as Fake dataset, Attacker Set or 
 Transfer Set. When constructing the Thief Dataset, the attacker can either use \textbf{Natural Non-Problem Domain} (NNPD) or \textbf{Synthetic Non-Problem Domain} (SNPD)
 data. NNPD data is data that is collected from the real world but does not (knowingly) overlap with the Target Model Dataset whereas SNPD data is artificially created,
 usually by drawing from a given distribution such as a multidimensional Uniform Distribution \cite{pal2020activethief}. Empirical observations show that using NNPD data
 yields significantly better results than using SNPD data. Even when using NNPD data, significant differences between different datasets have been observed 
 \cite{pal2020activethief}. In general, it is wise to choose a dataset that is as diverse as possible. Regardless of using SNPD or NNPD data, the adversary should keep the
-dimensions of the Target Model Dataset, i.e. image size and especially the number of channels for image datasets, in mind and adapt the Thief Dataset accordingly. \\
+dimensions of the Target Model Dataset, i.e. image size and especially the number of channels for image datasets, in mind and adapt the Thief Dataset accordingly. \par
 \textbf{Agreement}: The relative agreement between the predictions of the Substitute Model and the Target Model. The agreement is computed on a test set of the Target 
 Model dataset, meaning that it is not accessible by the attacker. The agreement is also known as Extraction accuracy, label prediction match or similarity. More formally,
 the agreement between Target Model $f$ and Substitute Model $\tilde{f}$ is defined as follows:
@@ -278,7 +279,7 @@ Model Stealing attacks can be performed in a variety of ways. The methodology wi
 aims to extract training hyperparameters, then he or she can use an equation-solving approach \cite{wang2018stealing} or train a meta-model to predict the hyperparameters
 \cite{oh2019towards}. The meta-model approach proposed by Oh et al. can also be used to extract the model architecture. This is the only approach that does not rely on either
 software or hardware access to the target model. Other approaches, such as the one proposed by Yan et al. \cite{yan2020cache}, make use of side-channel attacks to extract
-the architecture of the target model and therefore require software or hardware access to the target model. \\
+the architecture of the target model and therefore require software or hardware access to the target model. \par
 Apart from extracting training hyperparameters or model architecture, the attacker might also be interested in the target model's weights, also called learned parameters. This
 is especially the case if the model architecture and/or training hyperparameters are already known. These can be known because they are not kept secret but also by using the 
 aforementioned attacks to extract them. It is important to note here that different Model Stealing Attacks should not be seen as mutually exclusive but rather as a toolkit that,
@@ -290,7 +291,7 @@ test set or maximize the agreement between the predictions of the substitute mod
 rather a matter of what the optimization objective is. Regardless of whether the attacker aims to maximize the accuracy or agreement, the attacker has to train a substitute model
 and choose an appropriate thief dataset. Empirical observation have shown that choosing a rather complex model architecture for the substitute model yields better results if the
 model architecture is unknown whereas choosing a model architecture that is a similar to the target model's architecture as possible yields better results if the model architecture
-is known \cite{orekondy2019knockoff} \cite{pal2020activethief}. \\
+is known \cite{orekondy2019knockoff} \cite{pal2020activethief}. \par
 
 \begin{figure} [ht]
   \centering
@@ -314,7 +315,7 @@ dataset. Watermarking can be applied during training \cite{zhang2018protecting} 
 investigating the queries that a user made to the target model. Kesarwani et al. \cite{kesarwani2018model} proposed a method that estimates the relative amount of the data space that a user has
 covered with his queries. Based on this metric they can infer the status of a possible extraction attack. Another approach named PRADA \cite{juuti2019prada} analyses the distribution of the
 samples that a user has queried so far. They assume that the distance between queries of a benign user follows a normal distribution and any user whose query distances are not normally
-distributed is considered to be an attacker. \\
+distributed is considered to be an attacker. \par
 
 \begin{figure} [ht]
     \centering
@@ -329,17 +330,17 @@ Proactive Model Stealing Defenses aim to complicate or prevent Model Stealing At
 compared to breaking into a house for example. Model Stealing Attacks will always be successful to some degree, but their success mainly depends on the accuracy that the substitute model
 can achieve (or the achieved model agreement in case the attacker tries to optimize for that). So the quality of a Proactive Model Stealing Defense should be measured by how much it can 
 decrease the accuracy of the substitute model compared to a Model Stealing Attack with no defense. A key challenge in developing Proactive Model Stealing Defenses is that, on one hand,
-it should be complicated to extract the target model while on the other hand the user experience of benign users should not be affected. \\
+it should be complicated to extract the target model while on the other hand the user experience of benign users should not be affected. \par
 Early on, a few basic approaches against Model Stealing Attacks were proposed. These include training several models and randomly choosing the output of one of them 
 \cite{alabdulmohsin2014adding}. An even simpler albeit effective approach is to output only the predicted label instead of the vector of output probabilities \cite{tramer2016stealing}.
 A downside to this is that a benign user loses a lot of information about the output and the model is less interpretable. Another approach that is similar in complexity is to renounce
-using pre-trained models \cite{atli2020extraction} and instead train the target model from scratch. \\
+using pre-trained models \cite{atli2020extraction} and instead train the target model from scratch. \par
 In order to prevent Model Stealing Attacks, researchers have proposed to use data perturbation. One can either choose to perturb the data that is fed to the target model or its prediction.
 Input perturbation can for example be performed by adding noise to unimportant pixels determined via Gradient Class Activation Maps \cite{guiga2020neural}. To perform output perturbation,
 the developer of the target model can either use Maximizing Angular Deviation (MAD) \cite{orekondy2019prediction} or flip a few labels to obfuscate the model's decision boundary
-\cite{shi2017evasion}. \\
+\cite{shi2017evasion}. \par
 Furthermore, a few approaches have been proposed that bring differential privacy into the Model Stealing domain. Differential Privacy is a way to protect the privacy of a dataset so that 
 it is impossible for an adversary to determine if a particular individual is part of the dataset. One of these approaches was proposed by Zheng et al. \cite{zheng2019bdpl} who add a so-
-called \enquote{Boundary Differential Privacy Layer} to the target model. \\
+called \enquote{Boundary Differential Privacy Layer} to the target model. \par
 A final type of Proactive Model Stealing Defense is to modify the target model's architecture. Approaches falling into this category add redundant layers to the target model 
 \cite{chabanne2020protection}, propose novel model layers \cite{xu2018deepobfuscation} or increase model sensitivity \cite{szentannai2020preventing}.
