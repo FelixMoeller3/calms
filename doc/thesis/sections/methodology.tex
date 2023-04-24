@@ -63,11 +63,20 @@ once it is deployed. In the continual learning setting however, the model is ret
 % can help overcome these issues and describe the approach in detail
 \label{sec:Methodology:CombiningCLandAL}
 The problem with classic Active Learning is that it is very resource intensive. When training a model using pool-based Active Learning on a dataset of size $n$,
-with batch size $b$, the model will be trained $\frac{n}{b}$ times on the current labeled pool, equating to $\frac{n^2}{b} + n$ data points overall (we provide a
+with batch size $b$, the model will be trained $\frac{n}{b}$ times on the current labeled pool, equating to $\frac{n(n+b)}{2b}$ data points overall (we provide a
 short derivation of this number in \ref{sec:appendix:FirstSection}). The problem with the number of data points used for training is that it is dependent on the
-batch size $b$. While \cite{beck2021effective}When comparing this to the classic Continual Learning setting, where the model is trained
-once using $n$ data points, it is clear to see that Active Learning comes with a considerable overhead. The overhead of Active Learning is even more pronounced
-when considering the running time of the Active Learning Algorithms. For more details we refer to the TODO experimental sections.
+batch size $b$. The smaller the batch size, the larger the overall number of data points that the model is trained on. In the extreme case of $b=1$, the model
+is trained on $\frac{n(n+1)}{2}$ data points. While \cite{beck2021effective} note that the batch size has a negligible effect on the performance of the model,
+if any, a typical batch size is less than 10 \% of the full training set. Even in this more realistic case, the model is trained on $5.5n$ data points. When
+comparing this to the classic Continual Learning setting, where the model is trained once using $n$ data points, it is clear to see that Active Learning comes
+with a considerable overhead. The overhead of Active Learning is even more pronounced when considering the running time of the Active Learning Algorithms.
+For more details we refer to the TODO experimental sections. \\
+On the other hand, a major problem with classic Continual Learning is that task-ordering has a significant impact on the performance of the model \cite{bell2022effect}.
+Our approach aims to overcome both the issue of the overhead of Active Learning and the issue of task-ordering by combining both learning paradigms. We modify the Active
+Learning process by training only on the currently selected batch instead of the entire labeled pool. This way, the model is trained on $\sum_{i=1}^{\frac{n}{b}} b = n$ 
+data points, which fully eliminates the overhead of Active Learning from a data-centric perspective. Nevertheless, the query time of the Active Learning Algorithm remains
+as an overhead. From a Continual Learning perspective.
+
 \begin{algorithm}
     \caption{Pool-based Continual Active Learning} \label{alg:PoolBasedContinualActiveLearning}
     \begin{algorithmic}[1]
