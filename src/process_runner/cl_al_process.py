@@ -20,7 +20,7 @@ class ClAlProcess(BaseProcess):
                                          num_epochs,continual,optimizer_builder,optimizer_config,init_mode,False,cold_start,state_dir)
 
 
-    def continual_learning(self,start_cycle:int=0,labeled_set:List[int]=[],unlabeled_set:List[int]=[],score_list:List[float]=[],
+    def continual_learning(self,start_cycle:int=-1,labeled_set:List[int]=[],unlabeled_set:List[int]=[],score_list:List[float]=[],
                            cl_state:dict=None) -> tuple[List[float],List[List[float]]]:
         '''
             Runs a combined continual and active learning approach where instead of querying the target model the actual label is used.
@@ -33,8 +33,14 @@ class ClAlProcess(BaseProcess):
             self.cl_strat.set_state(cl_state)
         val_loader = DataLoader(self.val_set,self.batch_size,shuffle=True)
         loaders_dict = {'train': None, 'val': val_loader}
-        if start_cycle == 0:
+        if start_cycle < 0:
             labeled_set,unlabeled_set = self._before_first_cycle(loaders_dict,score_list)
+            start_cycle = 0
+            if self.state_dir is not None:
+                state_dict = {'start_cycle': start_cycle, 'labeled_set': labeled_set, 'unlabeled_set': unlabeled_set,
+                              'score_list': score_list, "cl_state": self.cl_strat.get_state()}
+                self._save_state(state_dict)
+
         
         for i in range(start_cycle,self.num_cycles):
             print(f'Running cycle {i+1}/{self.num_cycles}')

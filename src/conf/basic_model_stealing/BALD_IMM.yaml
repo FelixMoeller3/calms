@@ -2,7 +2,7 @@ SUBSTITUTE_MODEL:
   NAME: 'ActiveThiefConv3' # Possible values: Resnet18,Resnext50,TestConv
   DATASET: 'SmallImageNet1'
   CONTINUAL: -1
-  USE_LABEL: False
+  USE_LABEL: True
   AL_METHOD: 
     NAME: 'BALD' # Possible values: LC,BALD,Badge,CoreSet,Random
     DROPOUT_ITER: 25
@@ -30,11 +30,11 @@ STATE_DIR: ''
 RESULTS_FOLDER: './experiments/ModelStealing/'
 RESULTS_FILE: 'Results_calms.txt'
 TARGET_MODEL:
-  TARGET_MODEL_FOLDER: './data/models/cifar10/'
+  TARGET_MODEL_FOLDER: './data/models/mnist/'
   TARGET_MODEL_FILE: 'active_thief_conv3.pt'
   TRAIN_MODEL: False
   MODEL: 'ActiveThiefConv3'
-  DATASET: 'CIFAR-10'
+  DATASET: 'MNIST'
   EPOCHS : 150
   OPTIMIZER:
     NAME: 'SGD'

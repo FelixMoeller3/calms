@@ -1,12 +1,12 @@
 SUBSTITUTE_MODEL: 
-  NAME: 'TestConv' # Possible values: Resnet18,Resnext50,TestConv
+  NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
   DATASET: 'CIFAR-10'
-  CONTINUAL: 0
+  CONTINUAL: -1
   USE_LABEL: True
   AL_METHOD: 
     NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
-    INIT_BUDGET: 2000
-    BUDGET: 2000
+    INIT_BUDGET: 4000
+    BUDGET: 4000
     LOOKBACK: 1
     INIT_MODE: 'random'
     COLD_START: False
@@ -14,22 +14,22 @@ SUBSTITUTE_MODEL:
     NAME: 'Alasso' # Possible values : Alasso,EWC,MAS,IMM,Naive
     WEIGHT: 0.5
     WEIGHT_PRIME: 0.25
-    A: 1.0
-    A_PRIME: 0.5
+    A: 3.0
+    A_PRIME: 1.5
     OPTIMIZER:
       NAME: 'SGD'
-      LR: 0.05
+      LR: 0.1
       MOMENTUM: 0.9
       WDECAY: 0.0005
-      MILESTONES: [160,240]
+      MILESTONES: [80,120]
 BATCH_SIZE: 128 # batch size used for training
-CYCLES: 10 # number of cycles in the model stealing process
-EPOCHS: 20
+CYCLES: 12 # number of cycles in the model stealing process
+EPOCHS: 150
 RECOVER_STATE: False
 SAVE_STATE: False
 STATE_DIR: ''
 RESULTS_FOLDER: './experiments/CL_AL/'
-RESULTS_FILE: 'results_50epochs.txt'
+RESULTS_FILE: 'correct_results_150epochs.txt'
 TARGET_MODEL:
   TARGET_MODEL_FOLDER: './data/models/cifar10/'
   TARGET_MODEL_FILE: 'resnet.pt'
