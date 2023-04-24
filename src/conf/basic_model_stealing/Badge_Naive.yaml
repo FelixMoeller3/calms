@@ -21,9 +21,9 @@ SUBSTITUTE_MODEL:
 BATCH_SIZE: 128 # batch size used for training
 CYCLES: 20 # number of cycles in the model stealing process
 EPOCHS: 150
-RECOVER_STATE: False
-SAVE_STATE: False
-STATE_DIR: ''
+RECOVER_STATE: True
+SAVE_STATE: True
+STATE_DIR: './experiments/temp/badge_naive/'
 RESULTS_FOLDER: './experiments/ModelStealing/'
 RESULTS_FILE: 'Results_calms.txt'
 TARGET_MODEL:

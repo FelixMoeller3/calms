@@ -14,7 +14,7 @@ class Alasso(ContinualLearningStrategy):
     '''
 
     def __init__(self,model:nn.Module,optim: torch.optim.Optimizer, scheduler: lr_scheduler._LRScheduler,crit: nn.CrossEntropyLoss,
-    WEIGHT:float=1.0,WEIGHT_PRIME:float=1.0,A:float=1.0,A_PRIME:float=1.0,EPSILON:float=1e-4,USE_GPU:bool=False,clip_grad: float=0.05,
+    WEIGHT:float=1.0,WEIGHT_PRIME:float=1.0,A:float=1.0,A_PRIME:float=1.0,EPSILON:float=1e-4,USE_GPU:bool=False,clip_grad: float=2.0,
     state_dict:dict=None, **kwargs):
         '''
             :param model: The model that should be trained using continual learning.
@@ -70,8 +70,9 @@ class Alasso(ContinualLearningStrategy):
             for name,param in self.model.named_parameters():
                 self.grads2[name] = torch.zeros_like(param).cuda() if self.use_gpu else torch.zeros_like(param)
             return
-        for name, param in self.model.named_parameters():
-            self.grads2[name] = self.grads2[name] - self.unreg_grads[name] * self.deltas[name]
+        with torch.no_grad():
+            for name, param in self.model.named_parameters():
+                self.grads2[name] = self.grads2[name] - self.unreg_grads[name] * self.deltas[name]
 
 
     def _compute_omegas(self) -> None:
@@ -82,12 +83,13 @@ class Alasso(ContinualLearningStrategy):
             for name,param in self.model.named_parameters():
                 self.omegas[name] = torch.zeros_like(param).cuda() if self.use_gpu else torch.zeros_like(param)
             return
-        for name, param in self.model.named_parameters():
-            self.omegas[name] = torch.where(
-                param < self.weights[name],
-                torch.fill_(torch.zeros_like(self.omegas[name]),-1.0),
-                torch.ones_like(self.omegas[name])
-            ) * (self.grads2[name] - self.weight_prime * self.asymmetric_loss_func(name,param,self.a_prime))/((self.weights[name]-param)*(self.weights[name]-param) + self.epsilon)
+        with torch.no_grad():
+            for name, param in self.model.named_parameters():
+                self.omegas[name] = torch.where(
+                    param < self.weights[name],
+                    torch.fill_(torch.zeros_like(self.omegas[name]),-1.0),
+                    torch.ones_like(self.omegas[name])
+                ) * (self.grads2[name] - self.weight_prime * self.asymmetric_loss_func(name,param,self.a_prime))/((self.weights[name]-param)*(self.weights[name]-param) + self.epsilon)
 
     def asymmetric_loss_func(self,name:str,param:torch.Tensor,a:float) -> torch.Tensor:
         '''
@@ -150,26 +152,33 @@ class Alasso(ContinualLearningStrategy):
         correct_predictions = 0
         for data in tqdm(dataloader):
             self.optim.zero_grad()
-            self._compute_deltas(compute_diff=False)
+            if self.isActive:
+                self._compute_deltas(compute_diff=False)
             inputs, labels = data
             if self.use_gpu:
                 inputs, labels = inputs.cuda(), labels.cuda()
             outputs = self.model(inputs)
             unreg_loss = self.crit(outputs, labels)
             unreg_loss.backward()
-            self._compute_unreg_grads()
-            reg_loss = self._compute_regularization_loss()
-            #retain_graph = (not last_epoch) or i<num_batches-1
-            #start = time.time()
-            reg_loss.backward(retain_graph=True)
+            if self.isActive:
+                self._compute_unreg_grads()
+                reg_loss = self._compute_regularization_loss()
+                reg_loss.backward()
             if self.clip_grad > 0:
                 clip_grad.clip_grad_norm_(self.model.parameters(),self.clip_grad)
             self.optim.step()
-            self._compute_deltas()
-            self._compute_grads2()
+            if self.isActive:
+                self._compute_deltas()
+                self._compute_grads2()
             _, preds = torch.max(outputs.data, 1)
-            total_loss += reg_loss.item() + unreg_loss.item()
-            correct_predictions += torch.sum(preds == labels.data).item()
+            if labels.dim() > 1:
+                _, class_labels = torch.max(labels.data, 1)
+            else:
+                class_labels = labels
+            total_loss += unreg_loss.item()
+            if self.isActive:
+                total_loss += reg_loss.item()
+            correct_predictions += torch.sum(preds == class_labels.data).item()
         
         epoch_loss = total_loss / len(dataloader.dataset)
         epoch_acc = correct_predictions / len(dataloader.dataset)

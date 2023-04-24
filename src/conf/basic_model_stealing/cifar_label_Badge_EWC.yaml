@@ -1,0 +1,43 @@
+SUBSTITUTE_MODEL: 
+  NAME: 'ActiveThiefConv3' # Possible values: Resnet18,Resnext50,TestConv
+  DATASET: 'SmallImageNet1' # Possible values: MNIST,FashionMNIST
+  CONTINUAL: -1
+  USE_LABEL: True
+  AL_METHOD: 
+    NAME: 'Badge' # Possible values: LC,BALD,Badge,CoreSet,Random
+    INIT_BUDGET: 2000
+    BUDGET: 2000
+    LOOKBACK: 1
+    INIT_MODE: 'random'
+    COLD_START: False
+  CL_METHOD: 
+    NAME: 'EWC' # Possible values : Alasso,EWC,MAS,IMM,Naive
+    WEIGHT: 1.0
+    SCHEDULE: False
+    OPTIMIZER:
+      NAME: 'SGD'
+      LR: 0.1
+      MOMENTUM: 0.9
+      WDECAY: 0.0005
+      MILESTONES: [80,120]
+BATCH_SIZE: 128 # batch size used for training
+CYCLES: 20 # number of cycles in the model stealing process
+EPOCHS: 150
+RECOVER_STATE: True
+SAVE_STATE: True
+STATE_DIR: './experiments/temp/cifar_label_badge_ewc/'
+RESULTS_FOLDER: './experiments/ModelStealing/'
+RESULTS_FILE: 'Results_calms.txt'
+TARGET_MODEL:
+  TARGET_MODEL_FOLDER: './data/models/cifar10/'
+  TARGET_MODEL_FILE: 'active_thief_conv3.pt'
+  TRAIN_MODEL: False
+  MODEL: 'ActiveThiefConv3'
+  DATASET: 'CIFAR-10'
+  EPOCHS : 150
+  OPTIMIZER:
+    NAME: 'SGD'
+    LR: 0.001
+    MOMENTUM: 0.9
+    WDECAY: 0.0005
+    MILESTONES: [160,240]

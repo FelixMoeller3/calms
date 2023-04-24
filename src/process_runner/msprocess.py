@@ -32,7 +32,7 @@ class ModelStealingProcess(BaseProcess):
         self.substitute_model = self.cl_strat.model
         self.use_label = use_label
 
-    def steal_model(self,start_cycle:int=0,labeled_set:List[int]=[],unlabeled_set:List[int]=[],val_accuracies:List[float]=[],
+    def steal_model(self,start_cycle:int=-1,labeled_set:List[int]=[],unlabeled_set:List[int]=[],val_accuracies:List[float]=[],
                     agreements:List[float]=[],cl_state:dict=None) -> tuple[List[float],List[float]]:
         '''
             Implements the actual model stealing process where the target model is iteratively queried and then the substitute model is trained using
@@ -46,12 +46,17 @@ class ModelStealingProcess(BaseProcess):
             self.train_set = Softmax_label_set(self.train_set,self.num_classes)
         val_loader = DataLoader(self.val_set,self.batch_size,shuffle=True)
         loaders_dict = {'train': None, 'val': val_loader}
-        if start_cycle == 0:
+        if start_cycle < 0:
             labeled_set,unlabeled_set = self._before_first_cycle(loaders_dict,val_accuracies)
             agreements = []
             cur_agreement = self._compute_agreement(loaders_dict['val'])
             print("Current agreement is: {:.4f}".format(cur_agreement))
             agreements.append(cur_agreement)
+            start_cycle = 0
+            if self.state_dir is not None:
+                state_dict = {'start_cycle': start_cycle, 'labeled_set': labeled_set, 'unlabeled_set': unlabeled_set,
+                              'val_accuracies': val_accuracies, 'agreements': agreements, "cl_state": self.cl_strat.get_state()}
+                self._save_state(state_dict)
         
         for i in range(start_cycle,self.num_cycles):
             print(f'Running cycle {i+1}/{self.num_cycles}')
