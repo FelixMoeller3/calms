@@ -47,6 +47,8 @@ is trained on $\frac{n(n+b)}{2b}$ data points
 %   \caption{A figure}
 %   \label{fig:anotherfigure}
 % \end{figure}
+\section{Specifications}
+\label{sec:Appendix:Specifications}
 
 \begin{table}
     \begin{tabular}{c | c c c} 
@@ -64,8 +66,30 @@ is trained on $\frac{n(n+b)}{2b}$ data points
         Interconnect & IB HDR & IB HDR & IB HDR200  \\ 
         \hline
     \end{tabular}
-    \caption{Hardware configuration for the three nodes used on BWUniCluster.}
-    \label{fig:Testfig}
+    \caption{Hardware configuration for the three nodes used on BWUniCluster. This table only contains
+    the nodes we used in our experiments. For a more detailed list of all nodes as well as all further
+    information, see \cite{bwUniclusterHardware}}
+    \label{fig:HardwareSpec}
+\end{table}
+
+\begin{table}
+    \centering
+    \begin{tabular}{c | c l } 
+        \hline
+        Library Name & Version & Link \\ 
+        \hline 
+        numpy & 1.23.0 & \url{https://numpy.org/} \\
+        tqdm & 4.64.1 & \url{https://tqdm.github.io/}  \\
+        torchvision & 0.14.1 & \url{https://pytorch.org/vision/stable/index.html} \\ 
+        torch & 1.13.1 & \url{https://pytorch.org/} \\
+        PyYAML & 6.0 & \url{https://pyyaml.org/} \\
+        scipy & 1.10.1 & \url{https://scipy.org/} \\
+        scikit-learn & 1.2.1 & \url{https://scikit-learn.org/stable/index.html} \\
+        wget & 3.2 & \url{https://pypi.org/project/wget/} \\
+        \hline
+    \end{tabular}
+    \caption{Software Libraries used for the experiments}
+    \label{fig:Libraries}
 \end{table}
 
 \begin{table}
@@ -134,8 +158,3 @@ is trained on $\frac{n(n+b)}{2b}$ data points
     \caption{Hyperparameter configuration for Alasso.}
     \label{fig:AlassoParams}
 \end{table}
-
-\dots
-%% ---------------------
-%% | / Example content |
-%% ---------------------

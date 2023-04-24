@@ -14,27 +14,78 @@
 \label{ch:ExperimentSetup}
 
 The findings of this thesis rely heavily on thorough experimentation. To reproduce our findings, we list in detail the
-conditions under which we conducted the experiments. This includes training hyperparameters, datasets and Neural Network Architectures.
-Our experiments 
+conditions under which we conducted the experiments. This includes training hyperparameters, datasets, Neural Network Architectures
+and details of the code and libraries used. In general, our experiments can be divided into two categories: Experiments that explore
+the classic Continual Active Learning Setting as in \ref{sec:Methodology:CombiningCLandAL} and experiments that explore Continual 
+Active Learning for Model Stealing as in \ref{sec:Methodology:CombiningCLandALforMS}. We perform this differentiation because many 
+training hyperparameters, datasets and Neural Network Architectures depend on the whether classic Continual Learning or Continual 
+Active Learning for Model Stealing is investigated. First, we mention the general setup, including Hardware, Software, all datasets used
+and the training hyperparameters shared between the two categories of experiments. Next, we go into detail about the special setup for
+Continual Active Learning and Continual Active Learning for Model Stealing.
 
-the most important
-%% -------------------
-%% | Example content |
-%% -------------------
-\dots
+\section{General Experiment Setup}
+\label{sec:ExperimentSetup:FirstSection}
+%TODO: Some introductory words about the general setup
 
-\section{First Section}
-\label{sec:Analysis:FirstSection}
+\subsection{Hardware}
+\label{sec:ExperimentSetup:Hardware}
+All experiments are conducted on the High Performance Computing (HPC) cluster bwUniCluster 2.0 \cite{bwUnicluster}. bwUniCluster 2.0 is an HPC cluster
+funded by the Ministry of Science, Research and the Arts Baden-Württemberg and the Universities of the State of Baden-Württemberg. It currently consists
+of more than 840 compute nodes with each node falling one of the following categories: \enquote{Thin}, \enquote{HPC}, \enquote{IceLake}, \enquote{Fat},
+\enquote{GPUx4}, \enquote{GPUx8}, \enquote{GPUx4 A100}, \enquote{GPUx4 H100} and \enquote{Login}. In our experiments, we use the nodes GPUx4, GPUx8 and
+GPUx4 A100. Their hardware specifications can be found in Appendix \ref{sec:Appendix:Specifications}.
 
-\dots
+\subsection{Software and Libraries}
+\label{sec:ExperimentSetup:Software}
+All the code used in this thesis is written in version 3.9.4 of the programming language Python \cite{Rossum1995Python}. Furhermore, we use the deep
+learning Library PyTorch \cite{paszke2019pytorch} (version 1.13.1) to implement both Active and Continual Learning Algorithms. All further libraries
+and their respective versions can be found in Appendix \ref{sec:Appendix:Specifications}.
 
-\section{Second Section}
-\label{sec:Methodology:SecondSection}
+\subsection{Continual Learning Strategies}
+\label{sec:ExperimentSetup:CLStrategies}
+In our experiments, we use the Continual Learning Strategies EWC, MAS, IMM and Alasso. For details on these Continual Learning strategies we refer
+the reader to section \ref{sec:Related_work:Continual_Learning:Experiments}. As a baseline, we used the naive strategy of performing classic
+gradient descent without any regularization. In the following we will refer to this strategy as \enquote{Naive}. \par
+Following the paper introducing MAS \cite{aljundi2018memory}, we set the regularization parameter $\lambda$ to 1.0 for MAS. The choice of this parameter
+is crucial because it enables a sound evaluation. If we trivially chose to set $\lambda$ to 0, then there would be no difference between MAS and the naive
+strategy. On the other hand, fine-tuning neither possible (we use more than 25 combinations of Continual Learning strategies and Active Learning strategies 
+on 3 datasets) nor fair (to evaluate the quality and effect of all Continual Learning strategies they should be tested under the same conditions, which
+includes the same balance between old and new tasks). We therefore set $\lambda$ in EWC and IMM to 1.0 accordingly. The regularization parameter $c$ in
+Alasso, which is equivalent to $\lambda$ in EWC, MAS and IMM is set to 0.5 for all experiments. We tried setting $c$ to 1.0, however we noticed that this
+led to divergence during gradient descent despite employing heavy gradient clipping. Since employing stronger gradient clipping was not a viable solution
+because it impedes model convergence within reasonable time, we decided to relax the regularization parameter $c$ to 0.5. We assume that the convergence 
+problems Alasso faces are due to the fact that $\alpha$ in equation 3.15 makes the parameter space non-convex. \par
+As mentioned before, we employ gradient clipping to avoid gradient descent from diverging. Not only is gradient clipping a viable remedy against the exploding
+gradient problem, it has also been shown that it can accelerate the training process \cite{zhang2019gradient}. In our implementation we clip gradients by their
+$l2$-Norm. Across all Continual Learning procedures, including Naive, we clip the gradients to a maximum $l2$-Norm of 20.0 to accelerate the training process.
+When conducting experiments with MAS and Alasso we encountered exploding gradient problems, which we further investigated for MAS and Alasso separately. While we
+aimed to eliminate the exploding gradient problem, which is mitigated more by clipping smaller gradient, we did not want to restrict the model too much to hinder 
+model convergence. After carefully exploring with different values to clip at, we found setting the threshold for the $l2$-Norm to 2.0 to be effective, mitigating
+the exploding gradient problem while simultaneously enabling model convergence. \par
+Apart from the parameter weighting the regularization term, the Continual Learning strategies do not share any hyperparameters. EWC in fact does not have
+any further hyperparameters and neither does MAS.
 
-\dots
 
-\section{Third Section}
-\label{sec:Methodology:ThirdSection}
+\subsection{Active Learning Strategies}
+\label{sec:ExperimentSetup:ALStrategies}
+In our experiments, we use the Continual Learning Strategies Badge, LC, CoreSet and BALD. For details on these Active Learning strategies we refer
+the reader to section \ref{sec:Related_work:Active_Learning:Approaches}. 
+
+\subsection{Datasets}
+\label{sec:ExperimentSetup:Datasets}
+
+\subsection{Neural Network Architectures}
+\label{sec:ExperimentSetup:NNArchitectures}
+
+\subsection{Training Hyperparameters}
+\label{sec:ExperimentSetup:Hyperparameters}
+
+\section{Special Setup for Continual Active Learning}
+\label{sec:Methodology:CALsetup}
+
+
+\section{Special Setup for Continual Active Learning for Model Stealing}
+\label{sec:Methodology:CALMSsetup}
 
 \dots
 %% ---------------------
