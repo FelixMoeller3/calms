@@ -19,14 +19,14 @@ from data import TinyImageNet,SmallImagenet
 import pickle
 
 CONFIG = ["SUBSTITUTE_MODEL", "BATCH_SIZE", "CYCLES", "RESULTS_FILE", "RESULTS_FILE", "TARGET_MODEL", "EPOCHS","RECOVER_STATE","SAVE_STATE","STATE_DIR"]
-SUBSTITUTE_MODEL_CONFIG = ["NAME", "DATASET", "AL_METHOD", "CL_METHOD","USE_LABEL","CONTINUAL"]
+SUBSTITUTE_MODEL_CONFIG = ["NAME", "DATASET", "AL_METHOD", "CL_METHOD","USE_LABEL","CONTINUAL",'USE_AUGMENTATION']
 AL_CONFIG = ["NAME", "INIT_BUDGET", "BUDGET", "LOOKBACK"]
 AL_METHODS = ['LC','BALD','Badge','CoreSet', 'Random', 'VAAL']
 CL_CONFIG = ["NAME", "OPTIMIZER"]
 CL_METHODS = ["Alasso", "IMM", "Naive", "EWC", "MAS", "AGEM", "Replay", "DGR"]
 OPTIMIZERS =["SGD", "ADAM"]
 MODELS = ['Resnet18', 'Resnet34', 'Resnet50', 'Resnet101', 'Resnet152', 'TestConv','ActiveThiefConv2','ActiveThiefConv3','ActiveThiefConv4' , 'VGG16']
-TARGET_MODEL_CONFIG = ['MODEL','DATASET','EPOCHS','OPTIMIZER','TARGET_MODEL_FOLDER','TARGET_MODEL_FILE','TRAIN_MODEL']
+TARGET_MODEL_CONFIG = ['MODEL','DATASET','EPOCHS','OPTIMIZER','TARGET_MODEL_FOLDER','TARGET_MODEL_FILE','TRAIN_MODEL','USE_AUGMENTATION']
 DATASET_NAMES = ["MNIST","FashionMNIST", "CIFAR-10","TinyImageNet","SmallImageNet"]
 OPTIMIZER_CONFIG = ["NAME", "LR", "MOMENTUM", "WDECAY"]
 
@@ -172,7 +172,7 @@ def check_attribute_presence(config: dict, attributes: list[str],config_name: st
 
 def build_target_model(target_model_config: dict,batch_size:int,use_gpu:bool) -> tuple[nn.Module,int,int,float]:
     check_attribute_presence(target_model_config,TARGET_MODEL_CONFIG,"target model config")
-    train_set,input_dim,num_classes = load_dataset(target_model_config['DATASET'],True)
+    train_set,input_dim,num_classes = load_dataset(target_model_config['DATASET'],True,use_augmentation=target_model_config["USE_AUGMENTATION"])
     if not target_model_config["TRAIN_MODEL"]:
         print(f'Loading model located at {target_model_config["TARGET_MODEL_FOLDER"] + target_model_config["TARGET_MODEL_FILE"]}')
         target_model = torch.load(target_model_config["TARGET_MODEL_FOLDER"] + target_model_config["TARGET_MODEL_FILE"])
@@ -214,7 +214,7 @@ def build_model(name: str, input_dim:tuple[int], num_classes: int, use_gpu:bool)
         model.cuda()
     return model
 
-def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[Dataset,torch.Size,int]:
+def load_dataset(name: str,train:bool,num_channels:Optional[int]=None,use_augmentation:bool=False) -> tuple[Dataset,torch.Size,int]:
     '''
         Loads a dataset into memory and returns it along with the dimension of a single instance
         and the number of target classes the dataset has.
@@ -241,10 +241,13 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
                + channel_change_greyscale),download=True)
         num_classes = 10
     elif name == "CIFAR-10":
-        augmentation = [
-            transforms.RandomHorizontalFlip(),
-            transforms.RandomCrop(32, padding=4),
-        ]
+        if train and use_augmentation:
+            augmentation = [
+                transforms.RandomHorizontalFlip(),
+                transforms.RandomCrop(32, padding=4),
+            ]
+        else:
+            augmentation = []
         normalization = [
             transforms.ToTensor(),
             transforms.Normalize([0.4914, 0.4822, 0.4465], [0.2470, 0.2435, 0.2616])
@@ -254,10 +257,13 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
         dataset = datasets.CIFAR10("./data",train,transform=transforms.Compose(transform),download=True)
         num_classes = 10
     elif name == "CIFAR-100":
-        augmentation = [
-            transforms.RandomHorizontalFlip(),
-            transforms.RandomCrop(32, padding=4),
-        ]
+        if train and use_augmentation:
+            augmentation = [
+                transforms.RandomHorizontalFlip(),
+                transforms.RandomCrop(32, padding=4),
+            ]
+        else:
+            augmentation = []
         normalization = [
             transforms.ToTensor(),
             transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761))
@@ -267,10 +273,13 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
         dataset = datasets.CIFAR100("./data",train,transform=transforms.Compose(transform),download=True)
         num_classes = 100
     elif name == "TinyImageNet":
-        augmentation = [
-            transforms.RandomCrop(32,padding=4),
-            transforms.RandomHorizontalFlip(),
-        ]
+        if train and use_augmentation:
+            augmentation = [
+                transforms.RandomCrop(32,padding=4),
+                transforms.RandomHorizontalFlip(),
+            ]
+        else:
+            augmentation = []
         normalization = [
             transforms.ToTensor(),
             transforms.Resize(32),
@@ -282,10 +291,13 @@ def load_dataset(name: str,train:bool,num_channels:Optional[int]=None) -> tuple[
         dataset = TinyImageNet("./data",train,transform=transforms.Compose(transform),download=True)
         num_classes = 200
     elif name.startswith("SmallImageNet"):
-        augmentation = [
-            transforms.RandomCrop(32,padding=4),
-            transforms.RandomHorizontalFlip(),
-        ]
+        if train and use_augmentation:
+            augmentation = [
+                transforms.RandomCrop(32,padding=4),
+                transforms.RandomHorizontalFlip(),
+            ]
+        else:
+            augmentation = []
         normalization = [
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.4813, 0.4577, 0.4082], 
@@ -365,7 +377,7 @@ def run_val_epoch(model: nn.Module, val_loader: DataLoader, criterion: nn.CrossE
 
 def build_substitute_model(config: dict,batch_size:int,use_gpu:bool,num_classes:Optional[int]=None,val_set:Optional[str]=None,num_channels:Optional[str]=None) -> tuple[Strategy,ContinualLearningStrategy,Dataset,Dataset]:
     check_attribute_presence(config,SUBSTITUTE_MODEL_CONFIG,"substitute model config")
-    train_set,input_dim,num_classes_new = load_dataset(config["DATASET"],True,num_channels)
+    train_set,input_dim,num_classes_new = load_dataset(config["DATASET"],True,num_channels,config["USE_AUGMENTATION"])
     if num_classes is None:
         num_classes = num_classes_new
     substitute_model = build_model(config["NAME"],input_dim,num_classes,use_gpu)
