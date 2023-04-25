@@ -1,0 +1,59 @@
+Run completed at 2023-04-24 23:00:52 after 03h:14m:14s
+Config File:
+BATCH_SIZE: 128
+CYCLES: 20
+EPOCHS: 200
+RECOVER_STATE: false
+RESULTS_FILE: Results_calms_no_augmentation.txt
+RESULTS_FOLDER: ./experiments/ModelStealing/
+SAVE_STATE: false
+STATE_DIR: ''
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 1000
+    COLD_START: true
+    INIT_BUDGET: 1000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: LC
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 100
+      - 150
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  CONTINUAL: 100
+  DATASET: SmallImageNet1
+  NAME: ActiveThiefConv3
+  USE_LABEL: false
+TARGET_MODEL:
+  DATASET: MNIST
+  EPOCHS: 150
+  MODEL: ActiveThiefConv3
+  OPTIMIZER:
+    LR: 0.1
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: active_thief_conv3.pt
+  TARGET_MODEL_FOLDER: ./data/models/mnist/
+  TRAIN_MODEL: false
+Target model: ActiveThiefConv3, trained on MNIST
+Target model accuracy on validation set: unknown
+Substitute model: ActiveThiefConv3, trained on SmallImageNet1
+Continual Learning Strategy: Naive
+Active Learning Strategy: LC
+Accuracy results at the end of each cycle: [0.1379, 0.9219, 0.9208, 0.9434, 0.9567, 0.9684, 0.9695, 0.968, 0.9743, 0.9738, 0.9749, 0.9717, 0.9735, 0.9743, 0.9733, 0.9771, 0.976, 0.979, 0.9808, 0.9799, 0.9783]
+Model agreement at the end of each cycle: [0.139, 0.9245, 0.9223, 0.945, 0.9584, 0.9694, 0.9706, 0.9695, 0.9759, 0.9747, 0.9772, 0.9731, 0.9776, 0.9761, 0.9754, 0.9775, 0.9769, 0.9802, 0.982, 0.9803, 0.9794]
+----------------------------------------------------------------------

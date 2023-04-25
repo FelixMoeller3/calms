@@ -1,6 +1,6 @@
 SUBSTITUTE_MODEL: 
-  NAME: 'ActiveThiefConv3' # Possible values: Resnet18,Resnext50,TestConv
-  DATASET: 'SmallImageNet1'
+  NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
+  DATASET: 'CIFAR-10'
   CONTINUAL: -1
   USE_LABEL: True
   AL_METHOD: 
@@ -12,7 +12,7 @@ SUBSTITUTE_MODEL:
     COLD_START: False
   CL_METHOD: 
     NAME: 'EWC' # Possible values : Alasso,EWC,MAS,IMM,Naive
-    WEIGHT: 1.0
+    WEIGHT: 0.1
     OPTIMIZER:
       NAME: 'SGD'
       LR: 0.1
@@ -25,8 +25,8 @@ EPOCHS: 150
 RECOVER_STATE: False
 SAVE_STATE: False
 STATE_DIR: ''
-RESULTS_FOLDER: './experiments/ModelStealing/'
-RESULTS_FILE: 'Results_calms.txt'
+RESULTS_FOLDER: './experiments/CL_AL/'
+RESULTS_FILE: 'Results_no_aug.txt'
 TARGET_MODEL:
   TARGET_MODEL_FOLDER: './data/models/mnist/'
   TARGET_MODEL_FILE: 'active_thief_conv3.pt'

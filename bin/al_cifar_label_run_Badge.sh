@@ -1,9 +1,9 @@
 #!/bin/bash
 
-#SBATCH --job-name=LC_Alasso       # job name
+#SBATCH --job-name=Al_Cifar_label_Run_Badge       # job name
 #SBATCH --partition=gpu_4_a100                  # queue for the resource allocation.
-#SBATCH --time=400:00                     # wall-clock time limit  
-#SBATCH --mem=15000                        # memory per node
+#SBATCH --time=2400:00                     # wall-clock time limit  
+#SBATCH --mem=30000                        # memory per node
 #SBATCH --nodes=1                          # number of nodes to be used
 #SBATCH --cpus-per-task=2                 # number of CPUs required per MPI task
 #SBATCH --ntasks-per-node=1                # maximum count of tasks per node
@@ -14,7 +14,7 @@
 module purge                                       # Unload all currently loaded modules.
 module load devel/cuda/11.8
 source ../ba_env/bin/activate
-files=("./src/conf/basic_model_stealing/LC_Alasso.yaml")
+files=("./src/conf/basic_model_stealing/al_cifar_label_Badge_Naive.yaml")
 for file in "${files[@]}"
 do 
     echo "Running $file with mode MS"
