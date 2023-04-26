@@ -158,3 +158,45 @@ is trained on $\frac{n(n+b)}{2b}$ data points
     \caption{Hyperparameter configuration for Alasso.}
     \label{fig:AlassoParams}
 \end{table}
+
+% TODO: Finish this table.
+% Add preprocessing and size of train and test split.
+\begin{table}
+    \centering
+    \begin{tabularx}{\textwidth}{c | c c } 
+        \hline
+         FashionMNIST & CIFAR-10 & TinyImageNet \\ 
+        \hline 
+        $a$ & Balances between old and new tasks. A higher value indicates more focus
+        on preserving knowledge from the old task & 1.0  \\ 
+        $a'$ & Used to update parameter importances in Equation TODO & 0.5  \\
+        Gradient Clip & Maximum Value of the $l2$-Norm of the gradient. If the current norm is larger, the
+        gradient is clipped to that value & 2.0 \\ 
+        $c$ & Determines the overestimation of the loss on the unobserved side & 3.0 \\
+        $c'$ & Used to update parameter importances in Equation TODO & 1.5 \\
+        \hline
+    \end{tabularx}
+    \caption{Dataset Information}
+    \label{fig:DatasetInformtion}
+\end{table}
+
+% TODO: Finish this table.
+% Parameters, source, etc.
+\begin{table}
+    \centering
+    \begin{tabularx}{\textwidth}{c | c c } 
+        \hline
+         FashionMNIST & CIFAR-10 & TinyImageNet \\ 
+        \hline 
+        $a$ & Balances between old and new tasks. A higher value indicates more focus
+        on preserving knowledge from the old task & 1.0  \\ 
+        $a'$ & Used to update parameter importances in Equation TODO & 0.5  \\
+        Gradient Clip & Maximum Value of the $l2$-Norm of the gradient. If the current norm is larger, the
+        gradient is clipped to that value & 2.0 \\ 
+        $c$ & Determines the overestimation of the loss on the unobserved side & 3.0 \\
+        $c'$ & Used to update parameter importances in Equation TODO & 1.5 \\
+        \hline
+    \end{tabularx}
+    \caption{Neural Network information}
+    \label{fig:NNArchitectures}
+\end{table}

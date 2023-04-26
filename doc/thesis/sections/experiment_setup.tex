@@ -63,19 +63,37 @@ aimed to eliminate the exploding gradient problem, which is mitigated more by cl
 model convergence. After carefully exploring with different values to clip at, we found setting the threshold for the $l2$-Norm to 2.0 to be effective, mitigating
 the exploding gradient problem while simultaneously enabling model convergence. \par
 Apart from the parameter weighting the regularization term, the Continual Learning strategies do not share any hyperparameters. EWC in fact does not have
-any further hyperparameters and neither does MAS.
+any further hyperparameters and neither does MAS. On the other hand, for IMM we have the choice between mean-IMM and mode-IMM. Furthermore, we can choose
+to apply Weight-transfer, L2-transfer as well as Dropout-transfer, and we can choose values for the $\alpha$ Parameter. In our setup we use mean-IMM, Weight-
+Transfer and L2-transfer and set the $\alpha$ parameter to [0.45,0.55] (i.e. $\alpha_1 = 0.45, \alpha_2 = 0.55$), as suggested by the authors. For Alasso, we set
+the parameter $a$, which controls the overestimation on the unobserved side, to 3.0. Following the recommendation of the authors, we perform parameter decoupling
+for the $\Omega$ updates and therefore set $a'$ to 1.5 and $c'$ to 0.25. \par
+A detailed summary of the hyperparameters used can be found in Appendix \ref{sec:Appendix:Specifications}.
 
 
 \subsection{Active Learning Strategies}
 \label{sec:ExperimentSetup:ALStrategies}
 In our experiments, we use the Continual Learning Strategies Badge, LC, CoreSet and BALD. For details on these Active Learning strategies we refer
-the reader to section \ref{sec:Related_work:Active_Learning:Approaches}. 
+the reader to section \ref{sec:Related_work:Active_Learning:Approaches}. For Badge, we use the Euclidean distance in the $k$-means++ algorithm.
+For CoreSet we use the Euclidean distance between the activations of the penultimate layer of the neural network as a distance metric for $k$-Center
+algorithm. For BALD we use the Monte Carlo dropout with $T=25$ samples. We omit Monte Carlo dropout in cases where the model does not contain dropout
+layers as the prediction of such a model is deterministic. LC does not contain any hyperparameters, so we do not have to specify any.
 
 \subsection{Datasets}
 \label{sec:ExperimentSetup:Datasets}
+In our experiments, we use the datasets MNIST \cite{mnist_web}, Fashion-MNIST \cite{xiao2017fashion}, CIFAR-10 \cite{cifar},
+CIFAR-100 \cite{cifar}, Tiny-ImageNet \cite{le2015tiny} and a subset of the ILSVRC2012-14 dataset \cite{imagenet}. The subset of the ILSVRC2012-14 dataset that we
+use is the first of 10 training batches downloaded from \url{http://www.image-net.org/data/downsample/Imagenet32_32.zip}. From now on, we will refer to this subset
+of the ILSVRC2012-14 dataset as \enquote{SmallImagenet}. For all datasets, we use the standard train test split as proposed by Pytorch. We rescale all images to 32x32
+pixels because for the success of a model stealing attack the image shape of the thief dataset has to match the image shape accepted by the target model. We will cover
+this in more detail in section \ref{sec:Methodology:CALMSsetup}. Moreover, we normalize the train and test split of all datasets by using the mean and standard deviation
+of the training set. For all datasets apart from MNIST and FashionMNIST, we further apply Data Augmentation. We use random horizontal flips with a probability of 0.5
+followed by random cropping. A detailed list of the datasets used can be found in Appendix \ref{sec:Appendix:Specifications}. \par
 
 \subsection{Neural Network Architectures}
 \label{sec:ExperimentSetup:NNArchitectures}
+In our experiments, we use the neural network architectures Resnet18 \cite{he2016deep} and CNN Architectures from the ActiveThief paper \cite{pal2020activethief}.
+
 
 \subsection{Training Hyperparameters}
 \label{sec:ExperimentSetup:Hyperparameters}
