@@ -1,8 +1,9 @@
 SUBSTITUTE_MODEL: 
-  NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
-  DATASET: 'CIFAR-10'
+  NAME: 'ActiveThiefConv3' # Possible values: Resnet18,Resnext50,TestConv
+  DATASET: 'SmallImageNet'
   CONTINUAL: -1
   USE_LABEL: True
+  USE_AUGMENTATION: True
   AL_METHOD: 
     NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
     INIT_BUDGET: 2000
@@ -25,14 +26,15 @@ EPOCHS: 150
 RECOVER_STATE: False
 SAVE_STATE: False
 STATE_DIR: ''
-RESULTS_FOLDER: './experiments/CL_AL/'
-RESULTS_FILE: 'Results_no_aug.txt'
+RESULTS_FOLDER: './experiments/ModelStealing/'
+RESULTS_FILE: 'Results_calms.txt'
 TARGET_MODEL:
-  TARGET_MODEL_FOLDER: './data/models/mnist/'
+  TARGET_MODEL_FOLDER: './data/models/cifar100/'
   TARGET_MODEL_FILE: 'active_thief_conv3.pt'
   TRAIN_MODEL: False
+  USE_AUGMENTATION: True
   MODEL: 'ActiveThiefConv3'
-  DATASET: 'MNIST'
+  DATASET: 'CIFAR-100'
   EPOCHS : 150
   OPTIMIZER:
     NAME: 'SGD'

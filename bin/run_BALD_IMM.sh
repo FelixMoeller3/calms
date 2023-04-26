@@ -2,8 +2,8 @@
 
 #SBATCH --job-name=BALD_IMM       # job name
 #SBATCH --partition=gpu_4_a100             # queue for the resource allocation.
-#SBATCH --time=500:00                     # wall-clock time limit  
-#SBATCH --mem=15000                        # memory per node
+#SBATCH --time=800:00                     # wall-clock time limit  
+#SBATCH --mem=30000                        # memory per node
 #SBATCH --nodes=1                          # number of nodes to be used
 #SBATCH --cpus-per-task=2                 # number of CPUs required per MPI task
 #SBATCH --ntasks-per-node=1                # maximum count of tasks per node
@@ -21,8 +21,8 @@ configs=(
 )
 for conf in "${configs[@]}"
 do 
-    echo "Running $conf with mode MS"
-    python ./src/main.py -c $conf -m "MS"
+    echo "Running $conf with mode CL"
+    python ./src/main.py -c $conf -m "CL"
 done
 deactivate
 

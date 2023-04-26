@@ -6956,3 +6956,64 @@ Continual Learning Strategy: Alasso
 Active Learning Strategy: Badge
 Accuracy results at the end of each cycle: [0.7646, 0.8048, 0.7312, 0.7026, 0.6591, 0.6218, 0.5805, 0.5906, 0.6389, 0.6752, 0.5993, 0.691, 0.4596]
 ----------------------------------------------------------------------
+Run completed at 2023-04-26 06:46:45 after 14h:22m:08s
+Config File: BATCH_SIZE: 128
+CYCLES: 12
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: correct_results_150epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SAVE_STATE: false
+STATE_DIR: ''
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 4000
+    COLD_START: false
+    INIT_BUDGET: 4000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: VAAL
+    NO_CLASSES: 10
+    TRAIN_EPOCHS: 20
+    USE_GPU: true
+  CL_METHOD:
+    NAME: AGEM
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 80
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    PATTERNS_PER_EXPERIENCE: 2000
+    SAMPLE_SIZE: 2000
+    USE_GPU: true
+  CONTINUAL: -1
+  DATASET: CIFAR-10
+  NAME: Resnet18
+  USE_AUGMENTATION: true
+  USE_LABEL: true
+TARGET_MODEL:
+  DATASET: CIFAR-10
+  EPOCHS: 50
+  MODEL: Resnet18
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: resnet.pt
+  TARGET_MODEL_FOLDER: ./data/models/mnist/
+  TRAIN_MODEL: false
+  USE_AUGMENTATION: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: AGEM
+Active Learning Strategy: VAAL
+Accuracy results at the end of each cycle: [0.7716, 0.8197, 0.8316, 0.8322, 0.8421, 0.8483, 0.852, 0.8448, 0.8535, 0.8562, 0.8507, 0.8508, 0.8221]
+----------------------------------------------------------------------

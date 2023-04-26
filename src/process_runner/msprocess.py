@@ -44,6 +44,7 @@ class ModelStealingProcess(BaseProcess):
             self.cl_strat.set_state(cl_state)
         if not self.use_label:
             self.train_set = Softmax_label_set(self.train_set,self.num_classes)
+        self._add_targets(labeled_set)
         val_loader = DataLoader(self.val_set,self.batch_size,shuffle=True)
         loaders_dict = {'train': None, 'val': val_loader}
         if start_cycle < 0:

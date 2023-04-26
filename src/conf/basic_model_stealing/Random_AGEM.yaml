@@ -3,6 +3,7 @@ SUBSTITUTE_MODEL:
   DATASET: 'CIFAR-10'
   CONTINUAL: -1
   USE_LABEL: True
+  USE_AUGMENTATION: True
   AL_METHOD: 
     NAME: 'Random' # Possible values: LC,BALD,Badge,CoreSet,Random
     INIT_BUDGET: 2000
@@ -31,7 +32,8 @@ RESULTS_FILE: 'correct_results_150epochs.txt'
 TARGET_MODEL:
   TARGET_MODEL_FOLDER: './data/models/mnist/'
   TARGET_MODEL_FILE: 'resnet.pt'
-  TRAIN_MODEL: True
+  TRAIN_MODEL: False
+  USE_AUGMENTATION: True
   MODEL: 'Resnet18'
   DATASET: 'CIFAR-10'
   EPOCHS : 50

@@ -1,13 +1,14 @@
 SUBSTITUTE_MODEL: 
-  NAME: 'ActiveThiefConv3' # Possible values: Resnet18,Resnext50,TestConv
-  DATASET: 'SmallImageNet'
+  NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
+  DATASET: 'CIFAR-10'
   CONTINUAL: -1
   USE_LABEL: True
+  USE_AUGMENTATION: True
   AL_METHOD: 
     NAME: 'BALD' # Possible values: LC,BALD,Badge,CoreSet,Random
     DROPOUT_ITER: 25
-    INIT_BUDGET: 2000
-    BUDGET: 2000
+    INIT_BUDGET: 4000
+    BUDGET: 4000
     LOOKBACK: 1
     INIT_MODE: 'random'
     COLD_START: False
@@ -20,21 +21,22 @@ SUBSTITUTE_MODEL:
       LR: 0.1
       MOMENTUM: 0.9
       WDECAY: 0.0005
-      MILESTONES: [60,120]
+      MILESTONES: [80,120]
 BATCH_SIZE: 128 # batch size used for training
-CYCLES: 20 # number of cycles in the model stealing process
+CYCLES: 24 # number of cycles in the model stealing process
 EPOCHS: 150
 RECOVER_STATE: False
 SAVE_STATE: False
 STATE_DIR: ''
-RESULTS_FOLDER: './experiments/ModelStealing/'
-RESULTS_FILE: 'Results_calms.txt'
+RESULTS_FOLDER: './experiments/CL_AL/'
+RESULTS_FILE: 'correct_results_150epochs.txt'
 TARGET_MODEL:
-  TARGET_MODEL_FOLDER: './data/models/mnist/'
+  TARGET_MODEL_FOLDER: './data/models/cifar100/'
   TARGET_MODEL_FILE: 'active_thief_conv3.pt'
   TRAIN_MODEL: False
+  USE_AUGMENTATION: True
   MODEL: 'ActiveThiefConv3'
-  DATASET: 'MNIST'
+  DATASET: 'CIFAR-100'
   EPOCHS : 150
   OPTIMIZER:
     NAME: 'SGD'
