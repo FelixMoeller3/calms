@@ -3,6 +3,7 @@ SUBSTITUTE_MODEL:
   DATASET: 'CIFAR-10'
   CONTINUAL: -1
   USE_LABEL: True
+  USE_AUGMENTATION: True
   AL_METHOD: 
     NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
     INIT_BUDGET: 2000
@@ -31,6 +32,7 @@ TARGET_MODEL:
   TARGET_MODEL_FOLDER: './data/models/mnist/'
   TARGET_MODEL_FILE: 'resnet.pt'
   TRAIN_MODEL: True
+  USE_AUGMENTATION: True
   MODEL: 'ActiveThiefConv4'
   DATASET: 'MNIST'
   EPOCHS : 100

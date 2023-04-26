@@ -3,6 +3,7 @@ SUBSTITUTE_MODEL:
   DATASET: 'SmallImageNet1' # Possible values: MNIST,FashionMNIST
   CONTINUAL: -1
   USE_LABEL: True
+  USE_AUGMENTATION: True
   AL_METHOD: 
     NAME: 'Badge' # Possible values: LC,BALD,Badge,CoreSet,Random
     INIT_BUDGET: 2000

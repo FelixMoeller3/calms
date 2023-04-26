@@ -3,6 +3,7 @@ SUBSTITUTE_MODEL:
   DATASET: 'SmallImageNet1' # Possible values: MNIST,FashionMNIST
   CONTINUAL: 100
   USE_LABEL: False
+  USE_AUGMENTATION: True
   AL_METHOD: 
     NAME: 'Badge' # Possible values: LC,BALD,Badge,CoreSet,Random
     INIT_BUDGET: 1000
@@ -21,7 +22,7 @@ SUBSTITUTE_MODEL:
 BATCH_SIZE: 128 # batch size used for training
 CYCLES: 20 # number of cycles in the model stealing process
 EPOCHS: 200
-RECOVER_STATE: False
+RECOVER_STATE: True
 SAVE_STATE: True
 STATE_DIR: './experiments/temp/al_mnist_softmax_badge_naive/'
 RESULTS_FOLDER: './experiments/ModelStealing/'
@@ -30,6 +31,7 @@ TARGET_MODEL:
   TARGET_MODEL_FOLDER: './data/models/mnist/'
   TARGET_MODEL_FILE: 'active_thief_conv3.pt'
   TRAIN_MODEL: False
+  USE_AUGMENTATION: True
   MODEL: 'ActiveThiefConv3'
   DATASET: 'MNIST'
   EPOCHS : 150

@@ -3,6 +3,7 @@ SUBSTITUTE_MODEL:
   DATASET: 'CIFAR-10'
   CONTINUAL: 100
   USE_LABEL: True
+  USE_AUGMENTATION: True
   AL_METHOD: 
     NAME: 'VAAL' # Possible values: LC,BALD,Badge,CoreSet,Random
     TRAIN_EPOCHS: 20
@@ -30,7 +31,8 @@ RESULTS_FILE: 'correct_results_200epochs.txt'
 TARGET_MODEL:
   TARGET_MODEL_FOLDER: './data/models/mnist/'
   TARGET_MODEL_FILE: 'resnet.pt'
-  TRAIN_MODEL: True
+  TRAIN_MODEL: False
+  USE_AUGMENTATION: True
   MODEL: 'Resnet18'
   DATASET: 'CIFAR-10'
   EPOCHS : 50

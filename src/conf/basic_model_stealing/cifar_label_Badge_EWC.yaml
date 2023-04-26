@@ -3,6 +3,7 @@ SUBSTITUTE_MODEL:
   DATASET: 'SmallImageNet1' # Possible values: MNIST,FashionMNIST
   CONTINUAL: -1
   USE_LABEL: True
+  USE_AUGMENTATION: True
   AL_METHOD: 
     NAME: 'Badge' # Possible values: LC,BALD,Badge,CoreSet,Random
     INIT_BUDGET: 2000
@@ -32,6 +33,7 @@ TARGET_MODEL:
   TARGET_MODEL_FOLDER: './data/models/cifar10/'
   TARGET_MODEL_FILE: 'active_thief_conv3.pt'
   TRAIN_MODEL: False
+  USE_AUGMENTATION: True
   MODEL: 'ActiveThiefConv3'
   DATASET: 'CIFAR-10'
   EPOCHS : 150

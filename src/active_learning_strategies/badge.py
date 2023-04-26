@@ -38,7 +38,9 @@ class Badge(Strategy):
         embDim = self.model.get_embedding_dim()
         self.model.eval()
         nLab = self.NO_CLASSES
+        print("Allocating large zeros")
         embedding = np.zeros([len_ulb, embDim*nLab])
+        print("Allocated large zeros")
         ind = 0
         print('embedding shape {}'.format(embedding.shape))
         with torch.no_grad():
@@ -59,9 +61,9 @@ class Badge(Strategy):
                         #     print(c, idxs)
                         # print(idxs[j],ind)
                         if c == maxInds[j]:
-                            embedding[ind][embDim * c : embDim * (c+1)] = deepcopy(features_batch[j]) * (1 - batchProbs[j][c])
+                            embedding[ind][embDim * c : embDim * (c+1)] = features_batch[j] * (1 - batchProbs[j][c])
                         else:
-                            embedding[ind][embDim * c : embDim * (c+1)] = deepcopy(features_batch[j]) * (-1 * batchProbs[j][c])
+                            embedding[ind][embDim * c : embDim * (c+1)] = features_batch[j] * (-1 * batchProbs[j][c])
                     ind += 1
             # print(ind)
             return torch.Tensor(embedding)
