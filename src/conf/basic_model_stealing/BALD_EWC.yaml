@@ -22,7 +22,7 @@ SUBSTITUTE_MODEL:
       WDECAY: 0.0005
       MILESTONES: [80,120]
 BATCH_SIZE: 128 # batch size used for training
-CYCLES: 24 # number of cycles in the model stealing process
+CYCLES: 12 # number of cycles in the model stealing process
 EPOCHS: 150
 RECOVER_STATE: False
 SAVE_STATE: False
