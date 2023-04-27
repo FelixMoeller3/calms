@@ -49,7 +49,7 @@ class AGem(ContinualLearningStrategy):
     def _sample_from_memory(self) -> None:
         num_to_sample = min(len(self.buffer_data),self.sample_size)
         data = torch.empty([num_to_sample]+ list(self.buffer_data[0].shape))
-        if isinstance(self.buffer_targets[0],torch.TensorType):
+        if isinstance(self.buffer_targets[0],torch.Tensor):
             targets = torch.zeros([num_to_sample] + list(self.buffer_targets[0].shape))
         else:
             targets = torch.zeros(num_to_sample,dtype=torch.long)
@@ -102,7 +102,7 @@ class AGem(ContinualLearningStrategy):
         num_elems = min(len(train_set),self.patterns_per_experience)
         indexes = random.sample([i for i in range(len(train_set))],num_elems)
         data = torch.zeros([num_elems] + list(train_set[0][0].shape))
-        if isinstance(train_set[0][1],torch.TensorType):
+        if isinstance(train_set[0][1],torch.Tensor):
             targets = torch.zeros([num_elems] + list(train_set[0][1].shape))
         else:
             targets = torch.zeros(num_elems,dtype=torch.long)

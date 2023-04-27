@@ -7078,3 +7078,185 @@ Continual Learning Strategy: MAS
 Active Learning Strategy: BALD
 Accuracy results at the end of each cycle: [0.7718, 0.7352, 0.762, 0.7281, 0.7438, 0.7713, 0.7763, 0.7953, 0.7937, 0.807, 0.8083, 0.8214, 0.7873]
 ----------------------------------------------------------------------
+Run completed at 2023-04-27 01:16:58 after 01h:15m:35s
+Config File: BATCH_SIZE: 128
+CYCLES: 12
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: correct_results_150epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SAVE_STATE: false
+STATE_DIR: ''
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 4000
+    COLD_START: false
+    DROPOUT_ITER: 25
+    INIT_BUDGET: 4000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: BALD
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    ALPHAS:
+    - 0.45
+    - 0.55
+    NAME: IMM
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 80
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+    WEIGHT: 1.0
+  CONTINUAL: -1
+  DATASET: CIFAR-10
+  NAME: Resnet18
+  USE_AUGMENTATION: true
+  USE_LABEL: true
+TARGET_MODEL:
+  DATASET: CIFAR-100
+  EPOCHS: 150
+  MODEL: ActiveThiefConv3
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: active_thief_conv3.pt
+  TARGET_MODEL_FOLDER: ./data/models/cifar100/
+  TRAIN_MODEL: false
+  USE_AUGMENTATION: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: IMM
+Active Learning Strategy: BALD
+Accuracy results at the end of each cycle: [0.712, 0.6877, 0.6965, 0.7254, 0.7517, 0.7769, 0.8022, 0.8257, 0.8333, 0.8353, 0.8329, 0.8196, 0.7345]
+----------------------------------------------------------------------
+Run completed at 2023-04-27 01:31:19 after 01h:21m:45s
+Config File: BATCH_SIZE: 128
+CYCLES: 12
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: correct_results_150epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SAVE_STATE: false
+STATE_DIR: ''
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 4000
+    COLD_START: false
+    DROPOUT_ITER: 25
+    INIT_BUDGET: 4000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: BALD
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: EWC
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 80
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+    WEIGHT: 1.0
+  CONTINUAL: -1
+  DATASET: CIFAR-10
+  NAME: Resnet18
+  USE_AUGMENTATION: true
+  USE_LABEL: true
+TARGET_MODEL:
+  DATASET: CIFAR-100
+  EPOCHS: 150
+  MODEL: ActiveThiefConv3
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: active_thief_conv3.pt
+  TARGET_MODEL_FOLDER: ./data/models/cifar100/
+  TRAIN_MODEL: false
+  USE_AUGMENTATION: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: EWC
+Active Learning Strategy: BALD
+Accuracy results at the end of each cycle: [0.7015, 0.6848, 0.6838, 0.7116, 0.7499, 0.7674, 0.7865, 0.8149, 0.8228, 0.8218, 0.8079, 0.823, 0.7345]
+----------------------------------------------------------------------
+Run completed at 2023-04-27 01:41:14 after 01h:17m:41s
+Config File: BATCH_SIZE: 128
+CYCLES: 12
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: correct_results_150epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SAVE_STATE: false
+STATE_DIR: ''
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 4000
+    COLD_START: false
+    DROPOUT_ITER: 25
+    INIT_BUDGET: 4000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: BALD
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 80
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  CONTINUAL: -1
+  DATASET: CIFAR-10
+  NAME: Resnet18
+  USE_AUGMENTATION: true
+  USE_LABEL: true
+TARGET_MODEL:
+  DATASET: CIFAR-100
+  EPOCHS: 150
+  MODEL: ActiveThiefConv3
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: active_thief_conv3.pt
+  TARGET_MODEL_FOLDER: ./data/models/cifar100/
+  TRAIN_MODEL: false
+  USE_AUGMENTATION: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: Naive
+Active Learning Strategy: BALD
+Accuracy results at the end of each cycle: [0.7327, 0.7107, 0.7061, 0.7175, 0.7577, 0.7727, 0.7984, 0.8183, 0.8382, 0.8344, 0.8371, 0.8259, 0.7369]
+----------------------------------------------------------------------
