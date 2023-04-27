@@ -56,35 +56,46 @@ In this subsection we will first present
 \begin{figure} [ht]
     \centering
     \includegraphics[width=\linewidth]{images/results_CAL/Random_CAL_1000b.png}
-    \caption[Continual Active Learning Random 1000 batch size]{A}
+    \caption[Continual Active Learning Random 1000 batch size]{Comparison of Continual Learning strategies used with the Active Learning strategy random. In terms of runtime, all
+     strategies are significantly faster than the classic Active Learning approach. However, there is a notable gap in validation accuracy between Active Learning and all Continual
+     Active Learning strategies. IMM is the only Continual Learning strategy to outperform the Naive approach. EWC performs slightly worse than the Naive approach while MAS and Alasso
+     perform significantly worse.}
     \label{fig:Evaluation:Results:CAL:Random1000}
 \end{figure}
 
 \begin{figure} [ht]
     \centering
     \includegraphics[width=\linewidth]{images/results_CAL/LC_CAL_1000b.png}
-    \caption[Continual Active Learning Random 1000 batch size]{B}
+    \caption[Continual Active Learning Random 1000 batch size]{Comparison of Continual Learning strategies used with the Active Learning strategy LC. In terms of runtime, all
+    strategies are significantly faster than the classic Active Learning approach. However, there is a notable gap in validation accuracy between Active Learning and all Continual
+    Active Learning strategies. IMM and Naive perform almost identically. EWC performs slightly worse than IMM and Naive wheres MAS and Alasso perform significantly worse. Interestingly
+    though, MAS performs best in the end and is the only Continual Learning strategy not to experience a  drop in accuracy whithin the final 5000 samples.}
     \label{fig:Evaluation:Results:CAL:LC1000}
 \end{figure}
 
 \begin{figure} [ht]
     \centering
     \includegraphics[width=\linewidth]{images/results_CAL/Bald_CAL_1000b.png}
-    \caption[Continual Active Learning BALD 1000 batch size]{C}
+    \caption[Continual Active Learning BALD 1000 batch size]{TODO: Redo BALD Plot}
     \label{fig:Evaluation:Results:CAL:BALD1000}
 \end{figure}
 
 \begin{figure} [ht]
     \centering
     \includegraphics[width=\linewidth]{images/results_CAL/CoreSet_CAL_1000b.png}
-    \caption[Continual Active Learning CoreSet 1000 batch size]{D}
+    \caption[Continual Active Learning CoreSet 1000 batch size]{Comparison of Continual Learning strategies used with the Active Learning strategy CoreSet. In terms of runtime, all
+    strategies are significantly faster than the classic Active Learning approach. However, there is a notable gap in validation accuracy between Active Learning and all Continual
+    Active Learning strategies. IMM, EWC Naive perform almost similarly while MAS and Alasso fall behind.}
     \label{fig:Evaluation:Results:CAL:CoreSet1000}
 \end{figure}
 
 \begin{figure} [ht]
     \centering
     \includegraphics[width=\linewidth]{images/results_CAL/Badge_CAL_1000b.png}
-    \caption[Continual Active Learning Badge 1000 batch size]{E}
+    \caption[Continual Active Learning Badge 1000 batch size]{Comparison of Continual Learning strategies used with the Active Learning strategy Badge. In terms of runtime, all
+    strategies are significantly faster than the classic Active Learning approach. However, there is a notable gap in validation accuracy between Active Learning and all Continual
+    Active Learning strategies. EWC performs best for the first 30000 samples but falls behind in the end. IMM performs closer to Naive with an increasing amount of samples. MAS and
+    Alasso perform significantly worse than the other strategies.}
     \label{fig:Evaluation:Results:CAL:Badge1000}
 \end{figure}
 
@@ -94,35 +105,46 @@ In this subsection we will first present
 \begin{figure} [ht]
     \centering
     \includegraphics[width=\linewidth]{images/results_CAL/Random_CAL_2000b.png}
-    \caption[Continual Active Learning Random 2000 batch size]{A}
+    \caption[Continual Active Learning Random 2000 batch size]{Comparison of Continual Learning strategies used with the Active Learning strategy Random. In terms of runtime, all
+    strategies are significantly faster than the classic Active Learning approach. However, there is a notable gap in validation accuracy between Active Learning and all Continual
+    Active Learning strategies. EWC performs best overall, followed closely by the Naive approach. IMM, Alasso and MAS overall perform similarly, leaving a gap towards the first 
+    two strategies.}
     \label{fig:Evaluation:Results:CAL:Random2000}
 \end{figure}
 
 \begin{figure} [ht]
     \centering
     \includegraphics[width=\linewidth]{images/results_CAL/LC_CAL_2000b.png}
-    \caption[Continual Active Learning Random 2000 batch size]{B}
+    \caption[Continual Active Learning Random 2000 batch size]{Comparison of Continual Learning strategies used with the Active Learning strategy LC. In terms of runtime, all
+    strategies are significantly faster than the classic Active Learning approach. However, there is a notable gap in validation accuracy between Active Learning and all Continual
+    Active Learning strategies. EWC, IMM and Naive perform similarly, followed by Alasso and MAS. Apart from MAS, all strategies experience a large drop in accuracy after 30000 samples.}
     \label{fig:Evaluation:Results:CAL:LC2000}
 \end{figure}
 
 \begin{figure} [ht]
     \centering
     \includegraphics[width=\linewidth]{images/results_CAL/Bald_CAL_2000b.png}
-    \caption[Continual Active Learning BALD 2000 batch size]{C}
+    \caption[Continual Active Learning BALD 2000 batch size]{TODO: Redo BALD plot}
     \label{fig:Evaluation:Results:CAL:BALD2000}
 \end{figure}
 
 \begin{figure} [ht]
     \centering
     \includegraphics[width=\linewidth]{images/results_CAL/CoreSet_CAL_2000b.png}
-    \caption[Continual Active Learning CoreSet 2000 batch size]{D}
+    \caption[Continual Active Learning CoreSet 2000 batch size]{Comparison of Continual Learning strategies used with the Active Learning strategy CoreSet. In terms of runtime, all
+    strategies are significantly faster than the classic Active Learning approach. However, there is a notable gap in validation accuracy between Active Learning and all Continual
+    Active Learning strategies. The Naive approach performs outperforms all other strategies in the first half, but is itself outperformed by IMM and EWC in the second half. MAS performs
+    worse than the first three strategies but better than Alasso. The validation accuracy of Alasso becomes worse over time and is significantly worse than the other strategies.}
     \label{fig:Evaluation:Results:CAL:CoreSet2000}
 \end{figure}
 
 \begin{figure} [ht]
     \centering
     \includegraphics[width=\linewidth]{images/results_CAL/Badge_CAL_2000b.png}
-    \caption[Continual Active Learning Badge 2000 batch size]{E}
+    \caption[Continual Active Learning Badge 2000 batch size]{Comparison of Continual Learning strategies used with the Active Learning strategy Badge. In terms of runtime, all
+    strategies are 2.5-3 times faster than the classic Active Learning approach. However, there is a notable gap in validation accuracy between Active Learning and all Continual
+    Active Learning strategies. The performance of IMM and EWC is similar to the Naive approach. MAS performs slightly worse than the first three, but 
+    worse than the first three strategies but better than Alasso. The validation accuracy of Alasso becomes worse over time and is significantly worse than the other strategies.}
     \label{fig:Evaluation:Results:CAL:Badge2000}
 \end{figure}
 
@@ -133,35 +155,48 @@ In this subsection we will first present
 \begin{figure} [ht]
     \centering
     \includegraphics[width=\linewidth]{images/results_CAL/Random_CAL_4000b.png}
-    \caption[Continual Active Learning Random 4000 batch size]{A}
+    \caption[Continual Active Learning Random 4000 batch size]{Comparison of Continual Learning strategies used with the Active Learning strategy random. In terms of runtime, all
+    strategies are 5-9 times faster than the classic Active Learning approach. There is a gap in validation accuracy between Active Learning and all Continual
+    Active Learning strategies, however this is lower than the gap for smaller batch sizes. EWC and the Naive approach perform similarly across the whole experiment. MAS and IMM
+    also perform similarly overall, however MAS performs better in the first half wheres IMM performs better in the second half. Alasso is the best strategy in the beginning but 
+    becomes worse as the number of labeled data increases.}
     \label{fig:Evaluation:Results:CAL:Random4000}
 \end{figure}
 
 \begin{figure} [ht]
     \centering
     \includegraphics[width=\linewidth]{images/results_CAL/LC_CAL_4000b.png}
-    \caption[Continual Active Learning Random 4000 batch size]{B}
+    \caption[Continual Active Learning Random 4000 batch size]{Comparison of Continual Learning strategies used with the Active Learning strategy LC. In terms of runtime, all
+    strategies are 5-9 times faster than the classic Active Learning approach. There is a gap in validation accuracy between Active Learning and all Continual
+    Active Learning strategies, however this is lower than the gap for smaller batch sizes. IMM and EWC perform best, followed by the Naive approach and MAS. Alasso falls behind
+    significantly.}
     \label{fig:Evaluation:Results:CAL:LC4000}
 \end{figure}
 
 \begin{figure} [ht]
     \centering
     \includegraphics[width=\linewidth]{images/results_CAL/Bald_CAL_4000b.png}
-    \caption[Continual Active Learning BALD 4000 batch size]{C}
+    \caption[Continual Active Learning BALD 4000 batch size]{TODO: Redo BALD plot}
     \label{fig:Evaluation:Results:CAL:BALD4000}
 \end{figure}
 
 \begin{figure} [ht]
     \centering
     \includegraphics[width=\linewidth]{images/results_CAL/CoreSet_CAL_4000b.png}
-    \caption[Continual Active Learning CoreSet 4000 batch size]{D}
+    \caption[Continual Active Learning CoreSet 4000 batch size]{Comparison of Continual Learning strategies used with the Active Learning strategy CoreSet. In terms of runtime, all
+    strategies are 4-5 times faster than the classic Active Learning approach. There is a gap in validation accuracy between Active Learning and all Continual
+    Active Learning strategies, however this is lower than the gap for smaller batch sizes. The Naive approach performs best, followed by IMM, EWC and MAS in this order. The performance
+    of Alasso deteriorates over time and falls significantly behind the performance of the remaining approaches.}
     \label{fig:Evaluation:Results:CAL:CoreSet4000}
 \end{figure}
 
 \begin{figure} [ht]
     \centering
     \includegraphics[width=\linewidth]{images/results_CAL/Badge_CAL_4000b.png}
-    \caption[Continual Active Learning Badge 4000 batch size]{E}
+    \caption[Continual Active Learning Badge 4000 batch size]{Comparison of Continual Learning strategies used with the Active Learning strategy Badge. In terms of runtime, all
+    strategies are approximately 2 times faster than the classic Active Learning approach. There is a gap in validation accuracy between Active Learning and all Continual
+    Active Learning strategies, however this is lower than the gap for smaller batch sizes. The Naive approach performs best, closely followed by EWC. IMM comes third decreasing the
+    performance gap to the third two approaches with increasing number of labeled data. MAS follows IMM and Alasso falls behind significantly.}
     \label{fig:Evaluation:Results:CAL:Badge4000}
 \end{figure}
 
@@ -169,21 +204,64 @@ In this subsection we will first present
 \begin{figure} [ht]
     \centering
     \includegraphics[width=\linewidth]{images/results_CAL/replay_CAL.png}
-    \caption[Continual Active Learning Badge 4000 batch size]{E}
+    \caption[Continual Active Learning Badge 4000 batch size]{TODO: Redo plot}
     \label{fig:Evaluation:Results:CAL:Replay}
 \end{figure}
 
-\begin{figure} [ht]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=\linewidth]{images/results_CAL/Delayed_start_CAL.png}
-    \caption[Continual Active Learning Badge 4000 batch size]{E}
+    \caption[Continual Active Learning Badge 4000 batch size]{Comparison of validation accuracy for a delayed start of Continual Learning. We vary the start of Continual Learning from 
+    cycle 0 (random initialization) to cycle 6, hoping that the model retains the accuracy obtained by training using Active Learning. However, the accuracy drops immediately after switching
+    from Active Learning to Continual Active Learning and continues to decrease after 25000 points. While the validation accuracy drops when using both MAS and EWC, MAS does retain the accuracy
+    better than EWC.}
     \label{fig:Evaluation:Results:CAL:DelayedStart}
 \end{figure}
 
 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\linewidth]{images/results_CAL/Factility_location_init.png}
+    \caption[Initialization using Facility Location]{We try to initialize the labeled pool using Facility Location. Facility location slightly outperforms traditional random initialization, however,
+    it achieves a slightly lower validation accuracy in the beginning.}
+    \label{fig:Evaluation:Results:CAL:FLinit}
+\end{figure}
+
 \subsection{Results for Continual Active Learning for Model Stealing}
 \label{sec:Evaluation:Results:CALMS}
 
+\begin{table}
+    \centering
+    \begin{tabularx}{\textwidth}{l | c c c} 
+        \hline
+        \diaghead{\theadfont Diag ColumnHead 2}%
+        {Target \\ Model}{Substitute \\ Model} &  ActiveThiefConv2 & ActiveThiefConv3 & ActiveThiefConv4 \\ 
+        \hline 
+        ActiveThiefConv2 & A & B & C \\
+        ActiveThiefConv3 & A & B & C \\
+        ActiveThiefConv4 & A & B & C \\
+        \hline
+    \end{tabularx}
+    \caption{Success of Model Stealing Attacks for Different NN Architectures on CIFAR-10}
+    \label{fig:ModelStealingNNArchitecturesCIFAR}
+\end{table}
+
+
+\begin{table}
+    \centering
+    \begin{tabularx}{\textwidth}{l | c c c} 
+        \hline
+        \diaghead{\theadfont Diag ColumnHead 2}%
+        {Target \\ Model}{Substitute \\ Model} &  ActiveThiefConv2 & ActiveThiefConv3 & ActiveThiefConv4 \\ 
+        \hline 
+        ActiveThiefConv2 & A & B & C \\
+        ActiveThiefConv3 & A & B & C \\
+        ActiveThiefConv4 & A & B & C \\
+        \hline
+    \end{tabularx}
+    \caption{Success of Model Stealing Attacks for Different NN Architectures on MNIST}
+    \label{fig:ModelStealingNNArchitecturesMNIST}
+\end{table}
 
 \section{Discussion}
 \label{sec:Evaluation:ThirdSection}
