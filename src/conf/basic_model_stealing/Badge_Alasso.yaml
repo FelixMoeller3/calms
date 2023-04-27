@@ -1,6 +1,6 @@
 SUBSTITUTE_MODEL: 
-  NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
-  DATASET: 'CIFAR-10' # Possible values: MNIST,FashionMNIST
+  NAME: 'ActiveThiefConv3' # Possible values: Resnet18,Resnext50,TestConv
+  DATASET: 'SmallImageNet' # Possible values: MNIST,FashionMNIST
   CONTINUAL: -1
   USE_LABEL: False
   USE_AUGMENTATION: True

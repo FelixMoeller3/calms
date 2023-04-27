@@ -40,6 +40,8 @@ class ModelStealingProcess(BaseProcess):
         '''
         # set all labels to -1 to ensure no labels are given before
         #train_set.targets[train_set.targets > -1] = -1
+        print("Agreement is: ", agreements)
+        print("Validation acc is: ", val_accuracies)
         if cl_state is not None:
             self.cl_strat.set_state(cl_state)
         if not self.use_label:
