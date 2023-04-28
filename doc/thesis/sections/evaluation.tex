@@ -51,15 +51,27 @@ respective subsections we will first describe the experiments schedule for each 
 
 \subsection{Results for Continual Active Learning}
 \label{sec:Evaluation:Results:CAL}
-In this subsection we will first present
+In this subsection we will first present the results of running all combinations of the Active Learning strategies BALD,Badge,CoreSet,LC and Random with the Continual Learning strategies
+Naive, EWC, MAS, Alasso and IMM. Afterwards, we will analyze the behavior of a hybrid approach between Active Learning and Continual Active Learning, where we first run a few cycles with
+pure Active Learning before switching to Continual Active Learning. We further analyze the performance of different strategies to initialize the labeled pool. Next, we experiment with VAAL
+and AGEM.
 
-\begin{figure} [ht]
+\subsubsection{AL and Cl combinations}
+\label{sec:Evaluation:Results:CAL:ALCL}
+To evaluate the combination of the Active Learning strategies BALD,Badge,Coreset,LC and Random with the Continual Learning strategies Naive, EWC, MAS, Alasso and IMM, we run each combination
+using a batch size of 1000,2000 and 4000. We use the CIFAR-10 dataset and the Neural Network Architecture Resnet18 for these experiments. We present the validation accuracy with increasing
+size of the labeled pool as well as the overall runtime of each experiment. \par
+In figure \ref{fig:Evaluation:Results:CAL:Random1000} we present the results of running the Active Learning strategy Random with the Continual Learning strategies Naive, EWC, MAS, Alasso and IMM
+as well as the baseline of running pure Active Learning. We use a batch size of 1000 for these experiments. In terms of runtime, all strategies are significantly faster than the classic Active
+ Learning approach. However, there is a notable gap in validation accuracy between Active Learning and all Continual
+Active Learning strategies. IMM is the only Continual Learning strategy to outperform the Naive approach. EWC performs slightly worse than the Naive approach while MAS and Alasso
+perform significantly worse.
+
+\begin{figure}[ht]
     \centering
     \includegraphics[width=\linewidth]{images/results_CAL/Random_CAL_1000b.png}
-    \caption[Continual Active Learning Random 1000 batch size]{Comparison of Continual Learning strategies used with the Active Learning strategy random. In terms of runtime, all
-     strategies are significantly faster than the classic Active Learning approach. However, there is a notable gap in validation accuracy between Active Learning and all Continual
-     Active Learning strategies. IMM is the only Continual Learning strategy to outperform the Naive approach. EWC performs slightly worse than the Naive approach while MAS and Alasso
-     perform significantly worse.}
+    \caption[Continual Active Learning Random 1000 batch size]{Comparison of Continual Learning strategies used with the Active Learning strategy random. We use a batch size of 1000 for the experiments.
+    }
     \label{fig:Evaluation:Results:CAL:Random1000}
 \end{figure}
 
