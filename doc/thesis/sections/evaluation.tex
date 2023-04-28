@@ -282,7 +282,10 @@ In terms of runtime, all
 \label{sec:Evaluation:Results:CAL:Hybrid}
 After running the experiments in section \ref{sec:Evaluation:Results:CAL:ALCL}, we notice that all of them demonstrate a significant discrepancy in validation accuracy between Active Learning and Continual Active Learning. To further investigate this gap,
 we investigate a hybrid approach where we run Active learning for the first $i$ iterations before switching to Continual Active Learning. With these experiments we hope to decrease the gap in validation accuracy to Active Learning. We vary $i$ between 0 and 6,
-and perform two sets of experiments, one using the Continual Learning strategy MAS and the other using EWC. In both experiments, we use the Active Learning strategy Badge.
+and perform two sets of experiments, one using the Continual Learning strategy MAS and the other using EWC. In both experiments, we use the Active Learning strategy Badge. The results of the two sets of experiments can be found in figure 
+\ref{fig:Evaluation:Results:CAL:DelayedStart}. For MAS and EWC, the validation accuracy drops immediately after switching from Active Learning to Continual Active Learning. However, the MAS strategy retains the validation accuracy better than EWC. 
+Be
+
 
 We vary the start of Continual Learning from 
     cycle 0 (random initialization) to cycle 6, hoping that the model retains the accuracy obtained by training using Active Learning. However, the accuracy drops immediately after switching
