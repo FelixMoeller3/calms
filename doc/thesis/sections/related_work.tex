@@ -116,6 +116,41 @@ towards model architecture, training hyperparameters and dataset in a variety of
 % Structure: First some general introduction then present
 % the different approaches used in the experiments (LC, CoreSet, BALD, Badge)
 
+\subsubsection{VAAL}
+Variational Adversarial Active Learning (VAAL) is a representation-based Active Learning strategy proposed by Sinha et al. \cite{sinha2019variational}. VAAL uses a $\beta$-Variational Autoencoder
+(VAE) \cite{higgins2017beta} and a discriminator to select the most informative samples to query. Thereby, the encoder learns a low-dimensional space for the distribution of both the labeled and the 
+unlabeled data which is reconstructed by the decoder. The discriminator is trained to distinguish between the labeled and the unlabeled data and given the encoder's latent representation of a data point
+as an input. A visual summary of the approach is depicted in Figure \ref{fig:VAAL}. \par
+More formally, the encoder learns the distribution of $X_U$ and $X_L$ where $X_U$ is the unlabeled pool and $(X_L,Y_L)$ is the labeled pool. The encoder aims to minimize the Kullback-Leibler (KL) divergence
+\cite{goldberger2004hierarchical} between the reconstructed distribution $q_\Phi (z_L | x_L)$ and the real distribution $p(z)$ of the labeled data, which we assume to be a unit Gaussian. Simultaneously, the 
+encoder aims to minizime the KL divergence between $q_\Phi (z_U | x_U)$ and $p(z)$. This results in the following objective function for the VAE:
+\begin{equation}
+    L^{trd}_{VAE} E[\log p_\theta (x_L | z_L)] - \beta D_{KL} (q_\Phi (z_L | x_L) || p(z)) + E[\log p_\theta (x_U | z_U)] - \beta D_{KL} (q_\Phi (z_U | x_U) || p(z))
+\end{equation}
+where $p_\theta$ and $q_\Phi$ are the decoder and the encoder. The discriminator $D$ is trained to distinguish between the latent space representation of labeled and unlabeled data. To complicate the 
+classification of the discriminator, the VAE is trained to make samples from the labeled and the unlabeled data indistinguishable. The adversarial objective function for the discriminator is given by:
+\begin{equation}
+    L{adv}_{VAE} = - E[\log(D(q_\theta (z_L | x_L)))] - E[\log(D(q_\theta(z_U | x_U)))].
+\end{equation}
+Both equations above result in the following final loss function for the VAE:
+\begin{equation}
+    L_{VAE} = \lambda_1 L^{trd}_{VAE} + \lambda_2 L^{adv}_{VAE}
+\end{equation}
+where $\lambda_1$ and $\lambda_2$ are hyperparameters, trading off between adversarial training and optimal reconstruction. \par
+The discriminator loss is given by:
+\begin{equation}
+    L_D = - E[\log(D(q_\theta (z_L | x_L)))] - E[\log (1- D(q_\theta (z_U | x_U)))].
+\end{equation}
+To query a batch of samples of size $b$ to label, the  VAE and discriminator are first trained on the entire pool of labeled and unlabeled data for a pre-specified number of epochs $e$. The samples chosen by VAAL
+are the ones where the discriminator is most confident about their belonging to the unlabeled pool or, in other words, least confident about their belonging to the labeled pool.
+\begin{figure} [ht]
+    \centering
+    \includegraphics[width=.9\linewidth]{images/Vaal_idea.png}
+    \caption[Visualization of VAAL]{Illustration of the VAAL idea taken from the paper \cite{sinha2019variational}. The authors of ALASSO state that, SI underestimates the 
+    unobserved side of the loss function and hence a better approximation of the loss function is achieved by overestimating it.}
+    \label{fig:VAAL}
+\end{figure}
+
 % Use parisi et al. as reference for the general introduction
 % Synaptic Intelligence paper also gives good introduction into approaches and structures them
 % into three categories
@@ -157,6 +192,8 @@ the new task even if the prediction itself may be inaccurate. The approach of Ra
 distillation loss is computed based on autoencoder reconstructions of old tasks.
 \subsection{Continual Learning Approaches used in the Experiments}
 \label{sec:Related_work:Continual_Learning:Experiments}
+% TODO: write some more text here
+
 \subsubsection{EWC}
 Elastic Weight Consolidation (EWC) \cite{kirkpatrick2017overcoming} is structural regularization approach proposed by Kirkpatrick et al.
 EWC was the first approach that aims to overcome catastrophic forgetting by regularizing model parameters. This is done by adding a regularization
@@ -265,7 +302,7 @@ precisely, they suggest using $c'$ and $a'$ instead of $c$ and $a$ in equation 3
     unobserved side of the loss function and hence a better approximation of the loss function is achieved by overestimating it.}
     \label{fig:Alasso}
 \end{figure}
-%TODO: Include image of Alasso idea in here
+%TODO: Make image smaller
 
 \subsubsection{IMM}
 Incremental Moment Matching (IMM) is a structural regularization approach to prevent catastrophic forgetting, proposed by Lee et al. \cite{lee2017overcoming}.
@@ -336,17 +373,23 @@ being orthogonal to it.
 Averaged Gradient Episodic Memory (A-GEM) is an exemplar rehearsal approach to Continual Learning, proposed by Chaudhry et al. \cite{chaudhry2018efficient}.
 A-GEM is based on Gradient Episodic Memory (GEM) \cite{lopez2017gradient}, aiming to make it more efficient than GEM while maintaining similar or even better
 performance. We advise the reader to read the original paper for a more detailed explanation of GEM. \par
-Like GEM, A-GEM uses a so-called episodic Memory $M_k$ for each Task $T_k$. A-GEM aims to avoid catastrophic forgetting by ensuring that the loss for previous
-tasks does not increase while simultaneously aiming to minimize the loss on the current task. Formally, A-GEM minimizes proposes a solution to the following 
+Like GEM, A-GEM uses a so-called episodic Memory $M$ for all previous tasks $M_k (k<N)$. A-GEM aims to avoid catastrophic forgetting by ensuring that the average loss for
+the previous tasks does not increase while simultaneously aiming to minimize the loss on the current task. Formally, A-GEM minimizes proposes a solution to the following 
 objective 
 \begin{equation}
-    \text{minimize}_\theta l(f_\theta,T_N) \text{s.t.} l(f_\theta,T_n) \leq l(f_\theta^{N-1},T_n) \forall n < N
+    \text{minimize}_\theta l(f_\theta,T_N) \text{s.t.} l(f_\theta,T) \leq l(f_\theta^{N-1},T) \text{where} T = \bigcup_{i<N} T_i
 \end{equation}
-where $f_\theta^{N-1}$ is the model trained for the previous task.
-
+where $f_\theta^{N-1}$ is the model trained for the previous task. The optimization problem for this objective is given as
 \begin{equation}
-    \text{minimize}_\tilde{g} \frac{1}{2} {\lVert g - \tilde{g} \rVert}^2_2 \text{s.t.} \langle \tilde{g},g_k \rangle \geq 0 \forall k < N
+    \text{minimize}_{\tilde{g}} \frac{1}{2} {\lVert g - \tilde{g} \rVert}^2_2 \text{s.t.} \tilde{g}^T g_{ref} \geq 0 \forall k < N
 \end{equation}
+where $g_{ref}$ is a gradient computed by randomly sampling from the episodic memory of all past tasks. The optimization problem has the solution 
+\begin{equation}
+    \tilde{g} = g - \frac{g^T g_{ref}}{g^T_{ref} g_{ref}} g_{ref}
+\end{equation}
+which is the gradient update used by A-GEM. \par
+When running AGEM, we need to decide on two hyperparameters: The first one is $S$, the number of samples from the episodic memory $M$ to compute $g_{ref}$. The second
+one is $P$ the number of patterns (or data points), that are stored to the episodic memory after each task.
 
 
 \section{Model Stealing}
