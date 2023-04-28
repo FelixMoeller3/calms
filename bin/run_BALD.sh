@@ -17,8 +17,8 @@ source ../ba_env/bin/activate
 files=("./src/conf/basic_model_stealing/BALD_Naive.yaml")
 for file in "${files[@]}"
 do 
-    echo "Running $file with mode CL"
-    srun python ./src/main.py -c $file -m "CL"
+    echo "Running $file with mode MS"
+    srun python ./src/main.py -c $file -m "MS"
 done
 deactivate
 
