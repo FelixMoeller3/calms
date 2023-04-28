@@ -3014,3 +3014,125 @@ Continual Learning Strategy: Naive
 Active Learning Strategy: Badge
 Accuracy results at the end of each cycle: [0.4361, 0.4635, 0.4912, 0.5517, 0.5238, 0.5454, 0.6188, 0.5987, 0.5956, 0.6323, 0.6178, 0.6281, 0.6993, 0.6361, 0.6154, 0.6365, 0.6417, 0.6974, 0.6514, 0.7006, 0.646, 0.7105, 0.6208, 0.7039, 0.7223, 0.6662, 0.6608, 0.6736, 0.6733, 0.7189, 0.6799, 0.7074, 0.5997, 0.692, 0.6551, 0.6471, 0.6905, 0.6247, 0.7021, 0.6178, 0.6997, 0.6173, 0.6514, 0.5883, 0.6372, 0.5734, 0.6438, 0.6394, 0.5735, 0.5625]
 ----------------------------------------------------------------------
+Run completed at 2023-04-28 20:58:34 after 08h:21m:05s
+Config File: BATCH_SIZE: 128
+CYCLES: 49
+EPOCHS: 80
+RECOVER_STATE: false
+RESULTS_FILE: correct_results_80epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SAVE_STATE: false
+STATE_DIR: ./experiments/temp/badge_imm/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 1000
+    COLD_START: false
+    INIT_BUDGET: 1000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: Badge
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    ALPHAS:
+    - 0.45
+    - 0.55
+    NAME: IMM
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 80
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+    WEIGHT: 1.0
+  CONTINUAL: -1
+  DATASET: CIFAR-10
+  NAME: Resnet18
+  USE_AUGMENTATION: true
+  USE_LABEL: true
+TARGET_MODEL:
+  DATASET: CIFAR-10
+  EPOCHS: 150
+  MODEL: ActiveThiefConv3
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: active_thief_conv3.pt
+  TARGET_MODEL_FOLDER: ./data/models/cifar10/
+  TRAIN_MODEL: false
+  USE_AUGMENTATION: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: IMM
+Active Learning Strategy: Badge
+Accuracy results at the end of each cycle: [0.4438, 0.4993, 0.5235, 0.5575, 0.5163, 0.5366, 0.6151, 0.629, 0.6127, 0.6012, 0.568, 0.6109, 0.6041, 0.5721, 0.6442, 0.6378, 0.6718, 0.6869, 0.6557, 0.7021, 0.6264, 0.6472, 0.6472, 0.6974, 0.6575, 0.6566, 0.6775, 0.6533, 0.6291, 0.6844, 0.7124, 0.6365, 0.6591, 0.6726, 0.6199, 0.7226, 0.6184, 0.6956, 0.6682, 0.6546, 0.7379, 0.6663, 0.6395, 0.6584, 0.6223, 0.5487, 0.4651, 0.4567, 0.4844, 0.5625]
+----------------------------------------------------------------------
+Run completed at 2023-04-28 20:59:29 after 08h:25m:16s
+Config File: BATCH_SIZE: 128
+CYCLES: 49
+EPOCHS: 80
+RECOVER_STATE: false
+RESULTS_FILE: correct_results_80epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SAVE_STATE: false
+STATE_DIR: ./experiments/temp/badge_mas/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 1000
+    COLD_START: false
+    INIT_BUDGET: 1000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: Badge
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: MAS
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 80
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    SCHEDULE: false
+    USE_GPU: true
+    WEIGHT: 1.0
+  CONTINUAL: -1
+  DATASET: CIFAR-10
+  NAME: Resnet18
+  USE_AUGMENTATION: true
+  USE_LABEL: true
+TARGET_MODEL:
+  DATASET: CIFAR-10
+  EPOCHS: 150
+  MODEL: ActiveThiefConv3
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: active_thief_conv3.pt
+  TARGET_MODEL_FOLDER: ./data/models/cifar10/
+  TRAIN_MODEL: false
+  USE_AUGMENTATION: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: MAS
+Active Learning Strategy: Badge
+Accuracy results at the end of each cycle: [0.4773, 0.5465, 0.5589, 0.579, 0.5486, 0.566, 0.613, 0.613, 0.5921, 0.5935, 0.6194, 0.5658, 0.6368, 0.6074, 0.5825, 0.639, 0.6415, 0.5507, 0.6234, 0.56, 0.5272, 0.6466, 0.6215, 0.6398, 0.6265, 0.6396, 0.6, 0.5807, 0.686, 0.6505, 0.63, 0.6418, 0.6017, 0.6267, 0.6789, 0.6729, 0.6761, 0.7053, 0.6395, 0.6612, 0.678, 0.7077, 0.6983, 0.7057, 0.7153, 0.7134, 0.7053, 0.6922, 0.6909, 0.616]
+----------------------------------------------------------------------

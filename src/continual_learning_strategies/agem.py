@@ -49,7 +49,7 @@ class AGem(ContinualLearningStrategy):
     def _sample_from_memory(self) -> None:
         num_to_sample = min(len(self.buffer_data),self.sample_size)
         data = torch.empty([num_to_sample]+ list(self.buffer_data[0].shape))
-        if isinstance(self.buffer_targets[0],torch.Tensor):
+        if isinstance(self.buffer_targets[0],torch.Tensor) and len(self.buffer_targets[0].shape) > 0:
             targets = torch.zeros([num_to_sample] + list(self.buffer_targets[0].shape))
         else:
             targets = torch.zeros(num_to_sample,dtype=torch.long)
