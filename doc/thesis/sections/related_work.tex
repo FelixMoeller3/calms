@@ -147,7 +147,7 @@ Notable examples of structural approaches include Elastic Weight Consolidation (
 Synapses (MAS) \cite{aljundi2018memory}, Incremental Moment Matching (IMM) \cite{lee2017overcoming} as well as Asymmetric Loss
 Approximation by Single-Side Overestimation (ALASSO) \cite{park2019continual} which is an extension of Synaptic Intelligence (SI)
 \cite{zenke2017continual}. All the structural regularization approaches will be covered in more detail in the section on
-\hyperref[sec:Related_work:Continual_Learning:Experiments]{the continual learning approaches used in the experiments}. \\
+\hyperref[sec:Related_work:Continual_Learning:Experiments]{the continual learning approaches used in the experiments}. \par
 Functional regularization approaches are inspired by knowledge distillation \cite{hinton2015distilling}. They add a distillation
 loss to the objective function which is computed based on the prediction of a data sample stored for future use. These data samples
 are called soft targets. Li et al. \cite{li2017learning} compute the distillation loss by using the output of the newly arrived task
@@ -221,7 +221,7 @@ the authors claim. The main observation made by the Park et al. about SI is that
 because it assumes that the loss function is symmetric. Park et al. first show that this assumption is not always true through empirical observation and then
 present a new approach to approximate the loss function on the unobserved side more precisely. The fundamental observation and idea of ALASSO can be seen in
 Figure \ref{fig:Alasso}. Since ALASSO extends the SI framework, we strongly recommend the reader to familiarize themselves with SI before trying to understand
-ALASSO. In the following we will assume that the reader is familiar with SI and only explain the extension that ALASSO brings to SI. \\
+ALASSO. In the following we will assume that the reader is familiar with SI and only explain the extension that ALASSO brings to SI. \par
 Since ALASSO is a structural regularization method like MAS and EWC, it alters the loss function as follows
 % Total loss equation
 \begin{equation}
@@ -292,7 +292,7 @@ The mean and covariance update for mode-IMM is given by
     \Sigma^*_{1:N} = (\sum_{i=N-k}^N \alpha_i  \Sigma_i^{-1})^{-1}
 \end{gather}
 To approximate the covariance matrix, mode-IMM uses the inverse of the Fisher Information Matrix like EWC. Furthermore, the authors assume that
-the model parameters are pairwise independent, making the covariance matrix diagonal and therefore saving a lot of computation. \\ 
+the model parameters are pairwise independent, making the covariance matrix diagonal and therefore saving a lot of computation. \par
 Apart from moment matching methods, IMM also includes approaches to transfer model parameters from previous tasks. The first approach is called
 \textbf{Weight Transfer}. When using continual learning with Weight Transfer the model parameters of the previous task are used as initialization for the
 current task. This approach is very similar to the term Warm Start commonly used in Active Learning. \textbf{L2-transfer} is the next transfer technique
@@ -332,6 +332,22 @@ being orthogonal to it.
 % Structure: First some general introduction then present
 % the different approaches used in the experiments (EWC, MAS, ALASSO, IMM, potentially Replay?)
 
+\subsubsection{AGEM}
+Averaged Gradient Episodic Memory (A-GEM) is an exemplar rehearsal approach to Continual Learning, proposed by Chaudhry et al. \cite{chaudhry2018efficient}.
+A-GEM is based on Gradient Episodic Memory (GEM) \cite{lopez2017gradient}, aiming to make it more efficient than GEM while maintaining similar or even better
+performance. We advise the reader to read the original paper for a more detailed explanation of GEM. \par
+Like GEM, A-GEM uses a so-called episodic Memory $M_k$ for each Task $T_k$. A-GEM aims to avoid catastrophic forgetting by ensuring that the loss for previous
+tasks does not increase while simultaneously aiming to minimize the loss on the current task. Formally, A-GEM minimizes proposes a solution to the following 
+objective 
+\begin{equation}
+    \text{minimize}_\theta l(f_\theta,T_N) \text{s.t.} l(f_\theta,T_n) \leq l(f_\theta^{N-1},T_n) \forall n < N
+\end{equation}
+where $f_\theta^{N-1}$ is the model trained for the previous task.
+
+\begin{equation}
+    \text{minimize}_\tilde{g} \frac{1}{2} {\lVert g - \tilde{g} \rVert}^2_2 \text{s.t.} \langle \tilde{g},g_k \rangle \geq 0 \forall k < N
+\end{equation}
+
 
 \section{Model Stealing}
 \label{sec:Related_work:Model_Stealing}
@@ -362,7 +378,7 @@ of data to this day is a time-intensive task. By using Active Learning, which wo
 Second, Active Learning aims to query the most informative samples, yielding the most performant model with as little data as possible. Third, by using samples selected
 by Active Learning to query the target model, the model stealing attack can successfully be disguised as a benign query process. Pal et al. demonstrate this by showing 
 that ActiveThief successfully evades PRADA \cite{juuti2019prada}, a state-of-the-art model stealing defense which detects attacks by analyzing the distribution of distances
-between queries. \\
+between queries. \par
 The authors of ActiveThief evaluate their framework using the Active Learning strategies Random, Uncertainty \cite{lewis1994sequential}, CoreSet \cite{sener2017active},
 DeepFool-based Active Learning (DFAL) \cite{ducoffe2018adversarial} and a custom combination of DFAL and CoreSet. They use a custom CNN architecture for both target and
 substitute model and show that ActiveThief is able to successfully steal the target model for multiple benchmark datasets such as MNIST and CIFAR-10. A visualization of
