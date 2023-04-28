@@ -9,3 +9,4 @@ Citations im Glossary zu haben wird schwierig (von der Compilation-Reihenfolge).
 Tabellen für Hyperparameter kapitel erstellen
 Deep Generative Replay einfügen? Weglassen
 VAAL grafik von selbst neu machen
+Einige Grafiken neu erstellen 

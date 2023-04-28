@@ -145,6 +145,20 @@ process is then repeated until the unlabeled pool is empty. A visual example of 
     \label{fig:CalmsWorkflow}
 \end{figure}
 
+\section{Replay strategy}
+\label{sec:Methodology:ReplayStrategy}
+In this section we propose a Continual Learning Strategy called Replay. Applying replay to overcome catastrophic forgetting is not an entirely new idea. In fact, it
+has been proposed since the 1990s \cite{robins1995catastrophic}. The approach we propose modifies the classic replay by compressing the replay buffer. To understand the modification
+we must first understand the classic replay strategy. \par
+Replay is a Continual Learning strategy that stores a subset (or all) data points from each task in a so-called replay buffer. When training on a new task $T_N$, the model is trained 
+on all data from the current task plus a sample from the replay buffer. After training on task $T_N$, the replay buffer is then updated with the data points from the current task. \par
+A significant drawback of the classic Replay strategy is that the replay buffer can grow very large over time. This is especially true when the replay buffer stores all data points from
+each task. It is much more desirable to have a Continual Learning strategy with a fixed memory footprint, because this reflects the realistic application of Continual Learning where memory 
+is limited. \par
+The proposed modification of the Replay strategy is to compress the replay buffer after each task. Assume we have a replay buffer of size $n$. After training on task $T_N$, the replay buffer
+is combined with the data points from the current task to form a new set of data points $P$. We then select $n$ data points from $P$ to form the new replay buffer. The selection of the $n$ data
+is done by performing one iteration of the Active Learning strategy CoreSet \cite{sener2018active} with $P$ as the unlabeled pool and $n$ as the batch size. The $n$ data points selected by Core-
+Set then represent the new replay buffer. When training on task $T_{N+1}$, the model is trained on all data from the current task plus the full replay buffer.
 
 %% ---------------------
 %% | / Example content |

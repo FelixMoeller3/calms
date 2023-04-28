@@ -45,6 +45,7 @@ and their respective versions can be found in Appendix \ref{sec:Appendix:Specifi
 
 \subsection{Continual Learning Strategies}
 \label{sec:ExperimentSetup:CLStrategies}
+% TODO: Add agem and our custom replay strategy. Add fisher computation for EWC and that we use 5% of the training set to do that
 In our experiments, we use the Continual Learning Strategies EWC, MAS, IMM and Alasso. For details on these Continual Learning strategies we refer
 the reader to section \ref{sec:Related_work:Continual_Learning:Experiments}. As a baseline, we used the naive strategy of performing classic
 gradient descent without any regularization. In the following we will refer to this strategy as \enquote{Naive}. \par
@@ -75,6 +76,7 @@ A detailed summary of the hyperparameters used can be found in Appendix \ref{sec
 
 \subsection{Active Learning Strategies}
 \label{sec:ExperimentSetup:ALStrategies}
+% Add VAAL in here
 In our experiments, we use the Continual Learning Strategies Badge, LC, CoreSet and BALD. For details on these Active Learning strategies we refer
 the reader to section \ref{sec:Related_work:Active_Learning:Approaches}. For Badge, we use the Euclidean distance in the $k$-means++ algorithm.
 For CoreSet we use the Euclidean distance between the activations of the penultimate layer of the neural network as a distance metric for $k$-Center
