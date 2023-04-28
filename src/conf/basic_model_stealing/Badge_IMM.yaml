@@ -1,8 +1,8 @@
 SUBSTITUTE_MODEL: 
-  NAME: 'ActiveThiefConv3' # Possible values: Resnet18,Resnext50,TestConv
-  DATASET: 'SmallImageNet1' # Possible values: MNIST,FashionMNIST
+  NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
+  DATASET: 'CIFAR-10' # Possible values: MNIST,FashionMNIST
   CONTINUAL: -1
-  USE_LABEL: False
+  USE_LABEL: True
   USE_AUGMENTATION: True
   AL_METHOD: 
     NAME: 'Badge' # Possible values: LC,BALD,Badge,CoreSet,Random
@@ -22,13 +22,13 @@ SUBSTITUTE_MODEL:
       WDECAY: 0.0005
       MILESTONES: [80,120]
 BATCH_SIZE: 128 # batch size used for training
-CYCLES: 20 # number of cycles in the model stealing process
+CYCLES: 24 # number of cycles in the model stealing process
 EPOCHS: 150
-RECOVER_STATE: True
-SAVE_STATE: True
+RECOVER_STATE: False
+SAVE_STATE: False
 STATE_DIR: './experiments/temp/badge_imm/'
-RESULTS_FOLDER: './experiments/ModelStealing/'
-RESULTS_FILE: 'Results_calms.txt'
+RESULTS_FOLDER: './experiments/CL_AL/'
+RESULTS_FILE: 'correct_results_150epochs.txt'
 TARGET_MODEL:
   TARGET_MODEL_FOLDER: './data/models/cifar10/'
   TARGET_MODEL_FILE: 'active_thief_conv3.pt'

@@ -1,16 +1,17 @@
 SUBSTITUTE_MODEL: 
-  NAME: 'Resnet18' # Possible values: Resnet18,Resnext50,TestConv
-  DATASET: 'CIFAR-10' # Possible values: MNIST,FashionMNIST
-  CONTINUAL: -1
+  NAME: 'ActiveThiefConv3' # Possible values: Resnet18,Resnext50,TestConv
+  DATASET: 'SmallImageNet'
+  CONTINUAL: 100
   USE_LABEL: True
   USE_AUGMENTATION: True
   AL_METHOD: 
-    NAME: 'Badge' # Possible values: LC,BALD,Badge,CoreSet,Random
-    INIT_BUDGET: 2000
-    BUDGET: 2000
+    NAME: 'BALD' # Possible values: LC,BALD,Badge,CoreSet,Random
+    DROPOUT_ITER: 25
+    INIT_BUDGET: 1000
+    BUDGET: 1000
     LOOKBACK: 1
     INIT_MODE: 'random'
-    COLD_START: True
+    COLD_START: False
   CL_METHOD: 
     NAME: 'Naive' # Possible values : Alasso,EWC,MAS,IMM,Naive
     OPTIMIZER:
@@ -18,22 +19,22 @@ SUBSTITUTE_MODEL:
       LR: 0.1
       MOMENTUM: 0.9
       WDECAY: 0.0005
-      MILESTONES: [80,120]
+      MILESTONES: [100,150]
 BATCH_SIZE: 128 # batch size used for training
-CYCLES: 24 # number of cycles in the model stealing process
-EPOCHS: 150
+CYCLES: 20  # number of cycles in the model stealing process
+EPOCHS: 200
 RECOVER_STATE: False
 SAVE_STATE: False
-STATE_DIR: './experiments/temp/al_badge_naive/'
-RESULTS_FOLDER: './experiments/CL_AL/'
-RESULTS_FILE: 'correct_results_150epochs.txt'
+STATE_DIR: ''
+RESULTS_FOLDER: './experiments/ModelStealing/'
+RESULTS_FILE: 'Results_calms.txt'
 TARGET_MODEL:
-  TARGET_MODEL_FOLDER: './data/models/cifar10/'
+  TARGET_MODEL_FOLDER: './data/models/cifar100/'
   TARGET_MODEL_FILE: 'active_thief_conv3.pt'
   TRAIN_MODEL: False
   USE_AUGMENTATION: True
   MODEL: 'ActiveThiefConv3'
-  DATASET: 'CIFAR-10'
+  DATASET: 'CIFAR-100'
   EPOCHS : 150
   OPTIMIZER:
     NAME: 'SGD'

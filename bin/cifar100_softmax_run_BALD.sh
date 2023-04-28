@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#SBATCH --job-name=Badge_MAS       # job name
-#SBATCH --partition=gpu_4_a100             # queue for the resource allocation.
-#SBATCH --time=2400:00                     # wall-clock time limit  
+#SBATCH --job-name=Cifar100_softmax_Run_BALD       # job name
+#SBATCH --partition=gpu_4_a100                  # queue for the resource allocation.
+#SBATCH --time=1200:00                     # wall-clock time limit  
 #SBATCH --mem=30000                        # memory per node
 #SBATCH --nodes=1                          # number of nodes to be used
 #SBATCH --cpus-per-task=2                 # number of CPUs required per MPI task
@@ -13,17 +13,14 @@
 
 module purge                                       # Unload all currently loaded modules.
 module load devel/cuda/11.8
-source ../ba_env/bin/activate   
-configs=(
-	"./src/conf/basic_model_stealing/Badge_MAS.yaml"
-        #"./src/conf/basic_model_stealing/CoreSet_Naive.yaml"
-        #"./src/conf/basic_model_stealing/Badge_Naive.yaml"
-)
-python ./src/test_import.py
-for conf in "${configs[@]}"
+source ../ba_env/bin/activate
+files=("./src/conf/basic_model_stealing/cifar100_softmax_BALD_Naive.yaml")
+for file in "${files[@]}"
 do 
-    echo "Running $conf with mode CL"
-    python ./src/main.py -c $conf -m "CL"
+    echo "Running $file with mode MS"
+    srun python ./src/main.py -c $file -m "MS"
 done
 deactivate
+
+
 

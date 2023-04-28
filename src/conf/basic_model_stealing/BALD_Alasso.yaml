@@ -33,12 +33,12 @@ STATE_DIR: ''
 RESULTS_FOLDER: './experiments/ModelStealing/'
 RESULTS_FILE: 'Results_calms.txt'
 TARGET_MODEL:
-  TARGET_MODEL_FOLDER: './data/models/cifar10/'
+  TARGET_MODEL_FOLDER: './data/models/mnist/'
   TARGET_MODEL_FILE: 'active_thief_conv3.pt'
   TRAIN_MODEL: False
   USE_AUGMENTATION: True
   MODEL: 'ActiveThiefConv3'
-  DATASET: 'CIFAR-10'
+  DATASET: 'MNIST'
   EPOCHS : 150
   OPTIMIZER:
     NAME: 'SGD'

@@ -2,8 +2,8 @@
 
 #SBATCH --job-name=VAAL_AGEM      # job name
 #SBATCH --partition=gpu_4                  # queue for the resource allocation.
-#SBATCH --time=1600:00                     # wall-clock time limit  
-#SBATCH --mem=15000                        # memory per node
+#SBATCH --time=2000:00                     # wall-clock time limit  
+#SBATCH --mem=40000                        # memory per node
 #SBATCH --nodes=1                          # number of nodes to be used
 #SBATCH --cpus-per-task=2                 # number of CPUs required per MPI task
 #SBATCH --ntasks-per-node=1                # maximum count of tasks per node

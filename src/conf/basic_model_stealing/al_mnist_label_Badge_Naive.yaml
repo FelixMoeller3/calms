@@ -22,7 +22,7 @@ SUBSTITUTE_MODEL:
 BATCH_SIZE: 128 # batch size used for training
 CYCLES: 20 # number of cycles in the model stealing process
 EPOCHS: 200
-RECOVER_STATE: False
+RECOVER_STATE: True
 SAVE_STATE: True
 STATE_DIR: './experiments/temp/al_mnist_label_badge_naive/'
 RESULTS_FOLDER: './experiments/ModelStealing/'
