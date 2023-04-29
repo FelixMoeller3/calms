@@ -50,7 +50,7 @@ is trained on $\frac{n(n+b)}{2b}$ data points
 \section{Specifications}
 \label{sec:Appendix:Specifications}
 
-\begin{table}
+\begin{table}[h!]
     \begin{tabular}{c | c c c} 
         \hline
          & GPU x4 & GPU x8 & GPU x4 A100 \\ 
@@ -72,7 +72,7 @@ is trained on $\frac{n(n+b)}{2b}$ data points
     \label{fig:HardwareSpec}
 \end{table}
 
-\begin{table}
+\begin{table}[h!]
     \centering
     \begin{tabular}{c | c l } 
         \hline
@@ -92,7 +92,7 @@ is trained on $\frac{n(n+b)}{2b}$ data points
     \label{fig:Libraries}
 \end{table}
 
-\begin{table}
+\begin{table}[h!]
     \begin{tabular}{c | c c } 
         \hline
         Hyperparameter & Description & Value \\ 
@@ -109,7 +109,7 @@ is trained on $\frac{n(n+b)}{2b}$ data points
     \label{fig:EWCparams}
 \end{table}
 
-\begin{table}
+\begin{table}[h!]
     \begin{tabular}{c | c c } 
         \hline
         Hyperparameter & Description & Value \\ 
@@ -124,7 +124,7 @@ is trained on $\frac{n(n+b)}{2b}$ data points
     \label{fig:MASparams}
 \end{table}
 
-\begin{table}
+\begin{table}[h!]
     \begin{tabular}{c | c c } 
         \hline
         Hyperparameter & Description & Value \\ 
@@ -140,7 +140,7 @@ is trained on $\frac{n(n+b)}{2b}$ data points
     \label{fig:IMMparams}
 \end{table}
 
-\begin{table}
+\begin{table}[h!]
     \centering
     \begin{tabularx}{\textwidth}{X | X X } 
         \hline
@@ -161,7 +161,7 @@ is trained on $\frac{n(n+b)}{2b}$ data points
 
 % TODO: Finish this table.
 % Add preprocessing and size of train and test split.
-\begin{table}
+\begin{table}[h!]
     \centering
     \begin{tabularx}{\textwidth}{c | c c } 
         \hline
@@ -182,7 +182,7 @@ is trained on $\frac{n(n+b)}{2b}$ data points
 
 % TODO: Finish this table.
 % Parameters, source, etc.
-\begin{table}
+\begin{table}[h!]
     \centering
     \begin{tabularx}{\textwidth}{c | c c } 
         \hline
@@ -201,17 +201,225 @@ is trained on $\frac{n(n+b)}{2b}$ data points
     \label{fig:NNArchitectures}
 \end{table}
 
+\section{Experimental Results}
+\label{sec:Appendix:Results}
 
-\begin{figure}[ht]
+\begin{figure}[h]
     \centering
     \includegraphics[width=\linewidth]{images/results_CALMS/cifar10_model_comp.png}
     \caption[Accuracy Progression for Model Stealing on CIFAR-10 using different ActiveThief models]{TODO: Nice text here}
     \label{fig:CIFAR10modelComp}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[h]
     \centering
     \includegraphics[width=\linewidth]{images/results_CALMS/mnist_model_comp.png}
     \caption[Accuracy Progression for Model Stealing on MNIST using different ActiveThief models]{TODO: Nice text here}
     \label{fig:MNISTmodelComp}
+\end{figure}
+
+
+%Tables for Cifar100
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/cifar100_label_random.png}
+    \caption[Accuracy Comparison for Model Stealing on CIFAR100 using the top1-label and the Active Learning strategy Random]{TODO: Nice text here}
+    \label{fig:CALMSCIFAR100LabelRandom}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/cifar100_label_lc.png}
+    \caption[Accuracy Comparison for Model Stealing on CIFAR100 using the top1-label and the Active Learning strategy LC]{TODO: Nice text here}
+    \label{fig:CALMSCIFAR100LabelLC}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/cifar100_label_bald.png}
+    \caption[Accuracy Comparison for Model Stealing on CIFAR100 using the top1-label and the Active Learning strategy BALD]{TODO: Nice text here}
+    \label{fig:CALMSCIFAR100LabelBALD}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/cifar100_label_coreset.png}
+    \caption[Accuracy Comparison for Model Stealing on CIFAR100 using the top1-label and the Active Learning strategy CoreSet]{TODO: Nice text here}
+    \label{fig:CALMSCIFAR100LabelCoreSet}
+\end{figure}
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/cifar100_softmax_random.png}
+    \caption[Accuracy Comparison for Model Stealing on CIFAR100 using the softmax output and the Active Learning strategy Random]{TODO: Nice text here}
+    \label{fig:CALMSCIFAR100SoftmaxRandom}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/cifar100_softmax_lc.png}
+    \caption[Accuracy Comparison for Model Stealing on CIFAR100 using the softmax output and the Active Learning strategy LC]{TODO: Nice text here}
+    \label{fig:CALMSCIFAR100SoftmaxLC}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/cifar100_softmax_bald.png}
+    \caption[Accuracy Comparison for Model Stealing on CIFAR100 using the softmax output and the Active Learning strategy BALD]{TODO: Nice text here}
+    \label{fig:CALMSCIFAR100SoftmaxBALD}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/cifar100_softmax_coreset.png}
+    \caption[Accuracy Comparison for Model Stealing on CIFAR100 using the softmax output and the Active Learning strategy CoreSet]{TODO: Nice text here}
+    \label{fig:CALMSCIFAR100SoftmaxCoreSet}
+\end{figure}
+
+%Tables for Cifar10
+%Label
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/cifar_label_random.png}
+    \caption[Accuracy Comparison for Model Stealing on CIFAR10 using the top1-label and the Active Learning strategy Random]{TODO: Nice text here}
+    \label{fig:CALMSCIFAR10LabelRandom}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/cifar100_label_lc.png}
+    \caption[Accuracy Comparison for Model Stealing on CIFAR10 using the top1-label and the Active Learning strategy LC]{TODO: Nice text here}
+    \label{fig:CALMSCIFAR10LabelLC}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/cifar100_label_bald.png}
+    \caption[Accuracy Comparison for Model Stealing on CIFAR10 using the top1-label and the Active Learning strategy BALD]{TODO: Nice text here}
+    \label{fig:CALMSCIFAR10LabelBALD}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/cifar100_label_coreset.png}
+    \caption[Accuracy Comparison for Model Stealing on CIFAR10 using the top1-label and the Active Learning strategy CoreSet]{TODO: Nice text here}
+    \label{fig:CALMSCIFAR10LabelCoreSet}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/cifar_label_badge.png}
+    \caption[Accuracy Comparison for Model Stealing on CIFAR10 using the top1-label and the Active Learning strategy Badge]{TODO: Nice text here}
+    \label{fig:CALMSCIFAR10LabelBadge}
+\end{figure}
+
+%Softmax
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/cifar100_softmax_random.png}
+    \caption[Accuracy Comparison for Model Stealing on CIFAR10 using the softmax output and the Active Learning strategy Random]{TODO: Nice text here}
+    \label{fig:CALMSCIFAR10SoftmaxRandom}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/cifar100_softmax_lc.png}
+    \caption[Accuracy Comparison for Model Stealing on CIFAR10 using the softmax output and the Active Learning strategy LC]{TODO: Nice text here}
+    \label{fig:CALMSCIFAR10SoftmaxLC}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/cifar100_softmax_bald.png}
+    \caption[Accuracy Comparison for Model Stealing on CIFAR10 using the softmax output and the Active Learning strategy BALD]{TODO: Nice text here}
+    \label{fig:CALMSCIFAR10SoftmaxBALD}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/cifar100_softmax_coreset.png}
+    \caption[Accuracy Comparison for Model Stealing on CIFAR10 using the softmax output and the Active Learning strategy CoreSet]{TODO: Nice text here}
+    \label{fig:CALMSCIFAR10SoftmaxCoreSet}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/cifar_softmax_badge.png}
+    \caption[Accuracy Comparison for Model Stealing on CIFAR10 using the softmax output and the Active Learning strategy Badge]{TODO: Nice text here}
+    \label{fig:CALMSCIFAR10SoftmaxBadge}
+\end{figure}
+
+
+%Tables for MNIST
+%Label
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/mnist_label_random.png}
+    \caption[Accuracy Comparison for Model Stealing on MNIST using the top1-label and the Active Learning strategy Random]{TODO: Nice text here}
+    \label{fig:CALMSMNISTLabelRandom}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/mnist_label_lc.png}
+    \caption[Accuracy Comparison for Model Stealing on MNIST using the top1-label and the Active Learning strategy LC]{TODO: Nice text here}
+    \label{fig:CALMSMNISTLabelLC}
+\end{figure}
+
+% \begin{figure}[h]
+%     \centering
+%     \includegraphics[width=\linewidth]{images/results_CALMS/mnist_label_bald.png}
+%     \caption[Accuracy Comparison for Model Stealing on MNIST using the top1-label and the Active Learning strategy BALD]{TODO: Nice text here}
+%     \label{fig:CALMSMNISTLabelBALD}
+% \end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/mnist_label_coreset.png}
+    \caption[Accuracy Comparison for Model Stealing on MNIST using the top1-label and the Active Learning strategy CoreSet]{TODO: Nice text here}
+    \label{fig:CALMSMNISTLabelCoreSet}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/mnist_label_badge.png}
+    \caption[Accuracy Comparison for Model Stealing on MNIST using the top1-label and the Active Learning strategy Badge]{TODO: Nice text here}
+    \label{fig:CALMSMNISTLabelBadge}
+\end{figure}
+
+%Softmax
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/mnist_softmax_random.png}
+    \caption[Accuracy Comparison for Model Stealing on MNIST using the softmax output and the Active Learning strategy Random]{TODO: Nice text here}
+    \label{fig:CALMSMNISTSoftmaxRandom}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/mnist_softmax_lc.png}
+    \caption[Accuracy Comparison for Model Stealing on MNIST using the softmax output and the Active Learning strategy LC]{TODO: Nice text here}
+    \label{fig:CALMSMNISTSoftmaxLC}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/mnist_softmax_bald.png}
+    \caption[Accuracy Comparison for Model Stealing on MNIST using the softmax output and the Active Learning strategy BALD]{TODO: Nice text here}
+    \label{fig:CALMSMNISTSoftmaxBALD}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/mnist_softmax_coreset.png}
+    \caption[Accuracy Comparison for Model Stealing on MNIST using the softmax output and the Active Learning strategy CoreSet]{TODO: Nice text here}
+    \label{fig:CALMSMNISTSoftmaxCoreSet}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/cifar_softmax_badge.png}
+    \caption[Accuracy Comparison for Model Stealing on MNIST using the softmax output and the Active Learning strategy Badge]{TODO: Nice text here}
+    \label{fig:CALMSMNISTSoftmaxBadge}
 \end{figure}
