@@ -361,9 +361,23 @@ approach when using the Active Learning strategy LC, it outperforms the Naive ap
 \subsection{Model Stealing Results}
 \label{sec:Evaluation:Results:MS}
 After extensively studying Continual Active Learning, we shift the focus of our experiments to Model Stealing. Since we build our work on the ActiveThief framework, we first evaluate the performance of the ActiveThief framework, including the influence of Model Architecture and
-Thief Dataset. 
+Thief Dataset as well as the difference between stealing a target model returning the predicted labeled and stealing a target model returning the softmax outputs of the final model layer. After experimenting with the ActiveThief framework, we evaluate the performance of our pro
+-posed Continual Active Learning strategy for Model Stealing attacks. We perform the experiments on the MNIST, CIFAR-10 and CIFAR-100 datasets and end with a decisive insight on the effect of data augmentation for Model Stealing attacks. \par
 
-\begin{table}
+
+\subsubsection{Evaluation of ActiveThief}
+\label{sec:Evaluation:Results:MS:ActiveThief}
+Because we build our Continual Active Learning approach upon the ActiveThief framework, we believe that it is important to rigorously evaluate it before we apply Continual Active Learning to it. In the ActiveThief paper \cite{pal2020activethief}, Pal et al. evaluate Active Learning
+for Model Stealing for Computer Vision and Natural Language Processing tasks. Since this thesis focuses on Computer Vision tasks, we only investigate the part of the ActiveThief framework that deals with Computer Vision tasks. For the ActiveThief framework, Pal et al. introduce a
+proprietary thief dataset, which we dubbed SmallImagenet, and three different target model architectures which we call ActiveThiefConv2, ActiveThiefConv3 and ActiveThiefConv4. In the following we will evaluate the influence of the thief dataset and the target model architecture on
+the success of the Model Stealing attack. \par
+We start off by computing the validation accuracies of the ActiveThiefConv Model family which both the ActiveThief framework and ours uses as target and substitute models. While these figures have not been given by the authors of ActiveThief in their paper, we believe that they are
+important to understand the performance of the ActiveThief framework and of our Continual Active Learning approach. Each model of the ActiveThiefConv family is trained on MNIST and CIFAR-10. Additionally, we train ActiveThiefConv3 on CIFAR-100, because we will conduct experiments
+with CIFAR-100 in section \ref{sec:Evaluation:Results:MS:CAL}. We omit the results for ActiveThiefConv2 and ActiveThiefConv4 on CIFAR-100 because they are not relevant to this thesis. The results can be found in table \ref{fig:TargetModelAccuracies}. The results show that the
+most complex model ActiveThiefConv4 achieves the highest validation accuracy on both MNIST and CIFAR-10. While the validation accuracy for MNIST is very high for all models, there is a difference in validation accuracy of almost 20 percentage points between ActiveThiefConv2 and
+ActiveThiefConv4 on CIFAR-10. This shows that the complexity of the target model architecture has a significant influence on the validation accuracy. \par
+
+\begin{table}[h]
     \centering
     \begin{tabular}{c| c c c} 
         \hline
@@ -374,12 +388,18 @@ Thief Dataset.
         CIFAR-100 & - & 42.90\% & - \\
         \hline
     \end{tabular}
-    \caption{Target model accuracies}
+    \caption{Validation accuracies of our target model architectures on MNIST,CIFAR-10 and CIFA-100. We omit the results for ActiveThiefConv2 and ActiveThiefConv4 on CIFAR-100 because they are not used in the experiments.}
     \label{fig:TargetModelAccuracies}
 \end{table}
 
+Next, we evaluate the influence of the target model architecture and substitute model architecture on the success of the Model Stealing attack. We use the ActiveThiefConv Model family as target and substitute models and perform one model stealing attack for each combination of
+target and substitute model. We use the Active Learning strategy CoreSet with a batch size of 1000 and a total budget of 20000 to perform the attacks. The results can be seen in table \ref{fig:ModelStealingNNArchitecturesCIFAR}. The numbers reported in the table represent the 
+agreement between the target and substitute model on the validation set of the CIFAR-10 dataset at the end of each experiment. Overall, we observe that the agreement between the target and substitute model is highest when we use a target model of low complexity (i.e. ActiveThiefCon2)
+and a substitute model of moderate to high complexity (i.e. ActiveThiefConv3 and ActiveThiefConv4). This is in line with the results of the ActiveThief paper \cite{pal2020activethief}, however we report the accuracy after a budget of 20000, whereas Pal et al. presumably report the
+accuracy after training on the full thief dataset. To study the behavior of model stealing attacks using different model architectures further, we conduct the same experiment using MNIST as the target model dataset. The results of this experiment can be found in table 
+\ref{fig:ModelStealingNNArchitecturesMNIST}. The results of this experiment are similar to the results of the experiment on CIFAR-10, however it is evident that the discrepancies between the target and substitute model combinations are larger. \par
 
-\begin{table}
+\begin{table}[h]
     \centering
     \begin{tabular}{c | c c c} 
         \hline
@@ -390,12 +410,12 @@ Thief Dataset.
         ActiveThiefConv4 & 60.5 & 71.75 & 71.56 \\
         \hline
     \end{tabular}
-    \caption{Success of Model Stealing Attacks for Different NN Architectures on CIFAR-10}
+    \caption{Model agreement different target and substitute models within the ActiveThiefConv Model family on CIFAR-10. We use the Active Learning strategy CoreSet with a batch size of 1000 to perform the attacks.}
     \label{fig:ModelStealingNNArchitecturesCIFAR}
 \end{table}
 
 
-\begin{table}
+\begin{table}[h]
     \centering
     \begin{tabular}{c | c c c} 
         \hline
@@ -406,13 +426,32 @@ Thief Dataset.
         ActiveThiefConv4 & 75.38 & 82.56 & 89.40 \\
         \hline
     \end{tabular}
-    \caption{Success of Model Stealing Attacks for Different NN Architectures on MNIST}
+    \caption{Model agreement different target and substitute models within the ActiveThiefConv Model family on MNIST. We use the Active Learning strategy CoreSet with a batch size of 1000 to perform the attacks.}
     \label{fig:ModelStealingNNArchitecturesMNIST}
 \end{table}
 
+%TODO: Plot mit einmal Cifar-10 und einmal MNIST für Softmax und Labels für ein oder zwei AL strategien
+After evaluating the influence of the target and substitute model architecture on the success of the model stealing attack, we now evaluate how the thief dataset effects Model Stealing Attacks. Our motivation for this experiment is that Pal et al. 
+mention having tested CIFAR-10 as a thief dataset with without success. We perform a model stealing attack using ActiveThiefConv3 as the target and substitute model and CoreSet with batch size 2000 as our Active Learning strategy. The total query budget
+is 20000. We used MNIST as the target model dataset and change between SmallImagenet and TinyImageNet as our thief datasets. The results of this experiment can be seen in figure \ref{fig:Evaluation:Results:MS:EffectDataset}. While the model agreement 
+increases throughout the experiment when using SmallImagenet, the model agreement for TinyImagenet plateaus after just 3 iterations at 20\%. \par
+
+%TODO: Hier noch CIFAR-10 ausprobieren?
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/results_CALMS/effect_dataset.png}
+    \caption[Effect of Thief Dataset choice on the success of Model Stealing Attacks]{Comparison of Model Agreement when performing a model stealing attack using the datasets Tiny Imagenet and SmallImagenet. We perform Active Learning using the 
+    straegy CoreSet with a batch size of 2000 for the experiments.}
+    \label{fig:Evaluation:Results:CAL:EffectDataset}
+\end{figure}
 
 
-\begin{table}
+\subsubsection{Model Stealing Attacks using Continual Active Learning}
+\label{sec:Evaluation:Results:MS:CAL}
+
+In this section, we evaluate the success of Model Stealing Attacks using Continual Active Learning. More specifically, we run Model Stealing Attacks with Continual Active Learning on the datasets MNIST, CIFAR-10 and CIFAR-100, using the Active Learning strategies
+
+\begin{table}[h]
     \centering
     \begin{tabular}{c | c c c c c} 
         \hline
@@ -430,7 +469,7 @@ Thief Dataset.
     \label{fig:ModelStealingCIFAR10Softmax}
 \end{table}
 
-\begin{table}
+\begin{table}[h]
     \centering
     \begin{tabular}{c | c c c c c} 
         \hline
@@ -449,7 +488,7 @@ Thief Dataset.
 \end{table}
 
 
-\begin{table}
+\begin{table}[h]
     \centering
     \begin{tabular}{c | c c c c c} 
         \hline
@@ -467,7 +506,7 @@ Thief Dataset.
     \label{fig:ModelStealingMNISTSoftmax}
 \end{table}
 
-\begin{table}
+\begin{table}[h]
     \centering
     \begin{tabular}{c | c c c c c} 
         \hline
@@ -485,7 +524,7 @@ Thief Dataset.
     \label{fig:ModelStealingMNISTLabel}
 \end{table}
 
-\begin{table}
+\begin{table}[h]
     \centering
     \begin{tabular}{c | c c c c} 
         \hline
@@ -503,14 +542,14 @@ Thief Dataset.
     \label{fig:ModelStealingCIFAR100Softmax}
 \end{table}
 
-\begin{table}
+\begin{table}[h]
     \centering
     \begin{tabular}{c | c c c c } 
         \hline
         \diagbox[width=11em]{Active \\ Learning Strategy}{Continual Learning \\ Strategy} & Random & LC & BALD & CoreSet \\ 
         \hline 
         Baseline & 21.26 & - & 21.0 & 20.96\\
-        Naive & 7.93 & 7.63 & 4.98 & 1.53\\
+        Naive & 7.93 & 7.63 & 4.98 & 4.82\\
         EWC & 8.79 & 6.55 & 2.07 & 7.77 \\
         IMM & 8.59 & 8.44 & 7.18 & 8.05 \\
         MAS & 5.37 & 5.44 & 5.3 & 4.52 \\
@@ -522,11 +561,34 @@ Thief Dataset.
 \end{table}
 
 
+\begin{table}[h]
+    \centering
+    \begin{tabular}{c | c c c } 
+        \hline
+        \diagbox[width=11em]{Prediction \\ Output}{Dataset} & MNIST & CIFAR-10 & CIFAR-100 \\ 
+        \hline 
+        Label & A & B & C\\
+        Softmax & D & E & F\\
+        \hline
+    \end{tabular}
+    \caption{Success of Model Stealing Attacks using VAAL and AGEM}
+    \label{fig:ModelStealingVAAL_AGEM}
+\end{table}
+
+%TODO redo left plot with new data
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{images/results_CALMS/effect_data_augmentation.png}
+    \caption[Effect of Data Augmentation on the success of Model Stealing Attacks]{Comparison of Model Agreement when using different data augmentation techniques. For Active Learning we use a batch size of 1000 and for Continual Active Learning
+    we use a batch size of 2000. Left: Experiments with the target model dataset CIFAR-10. Right: Experiments with the target model dataset MNIST.}
+    \label{fig:Evaluation:Results:CAL:EffectAugmentation}
+\end{figure}
+
+
 \section{Discussion}
 \label{sec:Evaluation:ThirdSection}
 % Was war das Ziel? Was wurde (nicht) erreicht?
 
-\dots
 %% ---------------------
 %% | / Example content |
 %% ---------------------

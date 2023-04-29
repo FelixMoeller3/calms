@@ -22,7 +22,7 @@
 \section{Proof of Data points trained using Active Learning}
 \label{sec:appendix:FirstSection}
 \begin{theorem}
-Let $X$ be a set of data points of size $n$, $b < n, b \mod n = 0$ be the batch size. Then a machine learning model trained
+Let $X$ be a set of data points of size $n$, $b < n, n \mod b = 0$ be the batch size. Then a machine learning model trained
 using pool-based Active Learning is trained $\frac{n}{b}$ times on the current labeled pool of data points. Overall, the model
 is trained on $\frac{n(n+b)}{2b}$ data points
 \end{theorem}
