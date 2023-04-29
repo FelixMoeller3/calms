@@ -283,14 +283,8 @@ In terms of runtime, all
 After running the experiments in section \ref{sec:Evaluation:Results:CAL:ALCL}, we notice that all of them demonstrate a significant discrepancy in validation accuracy between Active Learning and Continual Active Learning. To further investigate this gap,
 we investigate a hybrid approach where we run Active learning for the first $i$ iterations before switching to Continual Active Learning. With these experiments we hope to decrease the gap in validation accuracy to Active Learning. We vary $i$ between 0 and 6,
 and perform two sets of experiments, one using the Continual Learning strategy MAS and the other using EWC. In both experiments, we use the Active Learning strategy Badge. The results of the two sets of experiments can be found in figure 
-\ref{fig:Evaluation:Results:CAL:DelayedStart}. For MAS and EWC, the validation accuracy drops immediately after switching from Active Learning to Continual Active Learning. However, the MAS strategy retains the validation accuracy better than EWC. 
-Be
-
-
-We vary the start of Continual Learning from 
-    cycle 0 (random initialization) to cycle 6, hoping that the model retains the accuracy obtained by training using Active Learning. However, the accuracy drops immediately after switching
-    from Active Learning to Continual Active Learning and continues to decrease after 25000 points. While the validation accuracy drops when using both MAS and EWC, MAS does retain the accuracy
-    better than EWC.
+\ref{fig:Evaluation:Results:CAL:DelayedStart}. For MAS and EWC, the validation accuracy drops immediately after switching from Active Learning to Continual Active Learning. However, in the long run the MAS strategy retains the validation accuracy better than EWC.
+We also notice that while the validation accuracy does drop after switching to Continual Active Learning, it is higher at a fixed cycle than when switching to Continual Active Learning in an earlier cycle. \par
 
 \begin{figure}[h]
     \centering
@@ -299,17 +293,27 @@ We vary the start of Continual Learning from
     \label{fig:Evaluation:Results:CAL:DelayedStart}
 \end{figure}
 
-
-
+\subsubsection{Varying the initialization of the labeled pool}
+\label{sec:Evaluation:Results:CAL:Initialization}
+Motivated by the findings from the previous section, we wonder if the initialization of the labeled pool has an impact on the validation accuracy of the Continual Learning strategies. Beck et al.\cite{beck2021effective} show that using a facility location selection 
+\cite{iyer2021submodular} yields better validation accuracy when training on the initial labeled pool. We therefore test the effect of an initialization using the facility location selection compared to our random initialization. As our Active Learning strategy,
+we use Badge with a batch size of 4000 and MAS as our Continual Learning strategy. The results of the experiment can be found in figure \ref{fig:Evaluation:Results:CAL:FLinit}. While the facility location approach performs better than random initialization, the difference is
+marginal. Interestingly, the validation accuracy of the facility location approach is lower than the random initialization in the first iteration. The most significant drawback of the facility location initialization is its resource-intensity. Initialization with facility
+location takes about 24 hours to complete and requires more than 100GB of memory using the implementation proposed by Beck et al. \cite{beck2021effective}. \par
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=\linewidth]{images/results_CAL/Factility_location_init.png}
-    \caption[Initialization using Facility Location]{We try to initialize the labeled pool using Facility Location. Facility location slightly outperforms traditional random initialization, however,
-    it achieves a slightly lower validation accuracy in the beginning.}
+    \caption[Initialization using Facility Location]{Comparison of validation accuracy for facility location initialization and random initialization. We use a batch size of 4000 for the experiments.}
     \label{fig:Evaluation:Results:CAL:FLinit}
 \end{figure}
 
+
+\subsubsection{Custom Replay approach}
+\label{sec:Evaluation:Results:CAL:Replay}
+In section \ref{sec:Methodology:ReplayStrategy} we propose a custom replay strategy for Continual Active Learning. The use of our replay strategy is motivated by the main finding of section \ref{sec:Evaluation:Results:CAL:ALCL}: the validation accuracy increases with an
+increased batch size. In this set of experiments, we use the Active Learning strategy CoreSet and vary the batch size and the size of the replay buffer. Moreover, we investigate the effect of CoreSet selection in the replay buffer compared to random selection. We present our
+results in figure \ref{fig:Evaluation:Results:CAL:Replay}. When variying the batch size and buffer size,  we notice 
 
 \begin{figure}[h]
     \centering
