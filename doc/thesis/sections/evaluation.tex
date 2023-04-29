@@ -118,11 +118,10 @@ strates a marginally increasing validation accuracy, the validation accuracy cur
     \label{fig:Evaluation:Results:CAL:CoreSet1000}
 \end{figure}
 
-% In terms of runtime, all
-%     strategies are significantly faster than the classic Active Learning approach. However, there is a notable gap in validation accuracy between Active Learning and all Continual
-%     Active Learning strategies. EWC performs best for the first 30000 samples but falls behind in the end. IMM performs closer to Naive with an increasing amount of samples. MAS and
-%     Alasso perform significantly worse than the other strategies.
-Badge: TO-DO when new plot is there
+In our final experiment with batch size 1000, we use the Active Learning strategy Badge. The results are shown in figure \ref{fig:Evaluation:Results:CAL:Badge1000}. All Continual Learning strategies
+outperform the baseline in terms of runtime by a large margin. Between the Continual Learning strategies, there are only marginal differences in execution time. The validation accuracy of all Continual
+Learning strategies is irregular and all of them leave a significant gap to the baseline. There is no Continual Learning strategy which demonstrates a significantly higher or lower validation accuracy
+than the others. However, MAS and Alasso fall behind the other Continual Learning strategies at around 25000 samples but manage to catch up in the end. \par
 
 \begin{figure}[h]
     \centering
@@ -176,7 +175,6 @@ at first, but suffers from a heavy decrease in validation accuracy at around 150
     \label{fig:Evaluation:Results:CAL:BALD2000}
 \end{figure}
 
-%TODO
 Next, we run the experiment with CoreSet and a batch size of 2000. We present our results in figure \ref{fig:Evaluation:Results:CAL:CoreSet2000}. The gap in execution time between the baseline and the
 Continual Learning strategies has again decreased. IMM is the fastest Continual Learning strategy, closely followed by EWC. EWC is followed by Naive and MAS, who have similar execution times. Alasso is
 the slowest approach, albeit being about 6.5 times as fast as the baseline. Regarding validation accuracy, all Continual Learning strategies are significantly outperformed by the baseline. Naive performs best
@@ -192,11 +190,11 @@ with its validation accuracy decreasing over the course of the experiment. \par
     \label{fig:Evaluation:Results:CAL:CoreSet2000}
 \end{figure}
 
-%TODO
-In terms of runtime, all
-    strategies are 2.5-3 times faster than the classic Active Learning approach. However, there is a notable gap in validation accuracy between Active Learning and all Continual
-    Active Learning strategies. The performance of IMM and EWC is similar to the Naive approach. MAS performs slightly worse than the first three, but 
-    worse than the first three strategies but better than Alasso. The validation accuracy of Alasso becomes worse over time and is significantly worse than the other strategies.
+Finally, we run the same experiment with the Active Learning strategy Badge. Our results can be found in figure \ref{fig:Evaluation:Results:CAL:Badge2000}. The margin in execution time between the baseline
+and the Continual Learning strategies has decreased which is mainly due to the large decrease in runtime of the baseline, compared to the experiment with 1000 batch size. Nevertheless, the Continual
+Learning strategies are about 3.5 times as fast as the baseline. Within the Continual Learning strategies there is only a minor runtime difference, with IMM being the fastest and Alasso the slowest. In terms of 
+validation accuracy, the gap between the baseline as the Continual Learning strategies has decreased. More notably though, the validation accuracy curves of all Continual Learning strategies more consistent than
+in the previous experiment with 1000 batch size. IMM, EWC and Naive perform similar, followed by MAS. Alasso is the worst performing strategy, falling behind the others after bout 10000 samples. \par
 
 \begin{figure}[h]
     \centering
@@ -247,7 +245,6 @@ the best Continual Learning strategy, but its validation accuracy decreases stea
     \label{fig:Evaluation:Results:CAL:BALD4000}
 \end{figure}
 
-%TODO
 
 We now run the experiment with the identical setup with the Active Learning strategy CoreSet. Our results are presented in figure \ref{fig:Evaluation:Results:CAL:CoreSet4000}. The gap in execution time between the baseline and the Continual Learning 
 strategies has further decreased. IMM is the fastest Continual Learning strategy, being about 6 times as fast as the baseline. On the other hand, Alasso is the slowest Continual Learning strategy, boasting around one fourth of the execution time of the
@@ -264,11 +261,12 @@ after 8000 samples. \par
     \label{fig:Evaluation:Results:CAL:CoreSet4000}
 \end{figure}
 
-%TODO
-In terms of runtime, all
-    strategies are approximately 2 times faster than the classic Active Learning approach. There is a gap in validation accuracy between Active Learning and all Continual
-    Active Learning strategies, however this is lower than the gap for smaller batch sizes. The Naive approach performs best, closely followed by EWC. IMM comes third decreasing the
-    performance gap to the third two approaches with increasing number of labeled data. MAS follows IMM and Alasso falls behind significantly.
+Our final experiment with a batch size of 4000 is run with the Active Learning strategy Badge. The results of the experiment can be found in figure \ref{fig:Evaluation:Results:CAL:Badge4000}. Out of all experiments in this series, this one shows the
+smallest gap in execution time between the baseline and the Continual Learning strategies. However, the baseline is still about 800 Minutes or 13 hours slower than all Continual Learning strategies. Just as in the experiment with 2000 batch size, the
+execution time of the Contiual Learning strategies is comparable, with Alasso being the slowest and IMM being the fastest. Compared to the experiment with batch size 2000, the validation accuracy curve of all Continual Learning strategies has become smoother 
+and the gap between the baseline and the Continual Learning strategies has decreased. The only exception to this is Alasso, which has a negative slope in its validation accuracy curve in the first half of the experiment, followed by a slight increase in 
+validation accuracy and a huge drop in the end. IMM, EWC and Naive perform similar for the first 45000 samples, where IMM falls behind the other two strategies. The validation accuracy of MAS is almost consistent throughout the experiment, with a slight
+increase in the first half and a slight decrease in the second half. \par
 
 \begin{figure}[h]
     \centering
@@ -299,7 +297,7 @@ Motivated by the findings from the previous section, we wonder if the initializa
 \cite{iyer2021submodular} yields better validation accuracy when training on the initial labeled pool. We therefore test the effect of an initialization using the facility location selection compared to our random initialization. As our Active Learning strategy,
 we use Badge with a batch size of 4000 and MAS as our Continual Learning strategy. The results of the experiment can be found in figure \ref{fig:Evaluation:Results:CAL:FLinit}. While the facility location approach performs better than random initialization, the difference is
 marginal. Interestingly, the validation accuracy of the facility location approach is lower than the random initialization in the first iteration. The most significant drawback of the facility location initialization is its resource-intensity. Initialization with facility
-location takes about 24 hours to complete and requires more than 100GB of memory using the implementation proposed by Beck et al. \cite{beck2021effective}. \par
+location takes about 24 hours to complete and requires more than 100GB of memory for CIFAR-10 using the implementation proposed by Beck et al. \cite{beck2021effective}. \par
 
 \begin{figure}[h]
     \centering
@@ -313,17 +311,57 @@ location takes about 24 hours to complete and requires more than 100GB of memory
 \label{sec:Evaluation:Results:CAL:Replay}
 In section \ref{sec:Methodology:ReplayStrategy} we propose a custom replay strategy for Continual Active Learning. The use of our replay strategy is motivated by the main finding of section \ref{sec:Evaluation:Results:CAL:ALCL}: the validation accuracy increases with an
 increased batch size. In this set of experiments, we use the Active Learning strategy CoreSet and vary the batch size and the size of the replay buffer. Moreover, we investigate the effect of CoreSet selection in the replay buffer compared to random selection. We present our
-results in figure \ref{fig:Evaluation:Results:CAL:Replay}. When variying the batch size and buffer size,  we notice 
+results in figure \ref{fig:Evaluation:Results:CAL:Replay}. When varying the batch size and buffer size, we notice that increasing the buffer size and the batch size yields a higher validation accuracy. However, our replay strategy does not outperform the Naive approach when using
+the same amount of training data (i.e. batch size + replay buffer size for the replay strategy and batch size for the Naive approach). To evaluate the importance of CoreSet selection in the buffer compression process, we compare the validation accuracy of our replay strategy
+when using CoreSet selection and random selection. We notice that the validation accuracy remains largely the same for both buffer compression methods, apart from the last 15000 samples, where CoreSet selection outperforms random selection. \par
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=\linewidth]{images/results_CAL/replay_CAL.png}
-    \caption[Continual Active Learning Custom Replay strategy]{TODO: Redo plot}
+    \caption[Continual Active Learning Custom Replay strategy]{Left: Comparison of validation accuracy of our Replay strategy with different hyperparameters. Right: Comparison of validation accuracy of our Replay strategy when using different buffer compression approaches.
+    In both runs, we use a batch size of 4000 and a replay buffer size of 4000.}
     \label{fig:Evaluation:Results:CAL:Replay}
 \end{figure}
 
-\subsection{Results for Continual Active Learning for Model Stealing}
-\label{sec:Evaluation:Results:CALMS}
+\subsubsection{VAAL and AGEM}
+\label{sec:Evaluation:Results:CAL:VAAL_AGEM}
+Unsatisfied with the results from previous experiments, we decide to implement further Continual and Active Learning strategies. We perform an extensive literature search, investigating the suitability of representation-based Active Learning strategies and Continual Learning
+strategies from the Exemplar Rehearsal category in the summary paper by Mundt et al. \cite{mundt2020wholistic}. The Active Learning strategy which we implement is VAAL \cite{sinha2019variational} and the Continual Learning strategy is AGEM \cite{chaudhry2019continual}. We decide
+to implement VAAL because it is the only representation-based Active Learning strategy which consistently performs better than random sampling. The reason why we choose to implement AGEM as our Continual Learning strategy is that is one of the few Exemplar Rehearsal strategies
+applicable to (Semi-) supervised Learning (many other strategies focus on Reinforcement Learning) while being computationally efficient and demonstrating strong performance in the experiments by Chaudhry et al. \cite{chaudhry2019continual} at the same time. \par
+First, we analyze the performance of VAAL as an Active Learning strategy. We run VAAL with a batch size of 4000 and compare it to Random and CoreSet. We choose Random because it is the baseline for Active Learning strategies and CoreSet because it is among the best performing Active
+we used before. The results can be found in the left plot in figure \ref{fig:Evaluation:Results:CAL:VAAL}. While VAAL outperforms random sampling by a large margin, it is itself outperformed by about the same margin by Coreset. To ensure that the results are not due to a
+suboptimal hyperparameter choice, we run VAAL training VAE and Discriminator for 20 epochs in one run and 100 epochs in another. Because we are interested in the performance of VAAL in our Continual Active Learning setting, we use Continual Active Learning with a batch size of 4000
+and the Continual Learning strategy Naive. We present the results of the experiment in the right plot of figure \ref{fig:Evaluation:Results:CAL:VAAL}. Surprisingly, the validation accuracy is marginally impacted by the training time of Generator and VAE. If anything, the validation
+accuracy is higher when training for 20 epochs. \par
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{images/results_CAL/VAAL_plots.png}
+    \caption[Continual Active Learning Custom Replay strategy]{Left: Comparison of validation accuracy of VAAL to the Active Learning strategies Random and CoreSet. We use a batch size of 4000 for the experiments. Right: Comparison of validation accuracy when varying the training 
+    epochs for VAE and Discriminator. We use Continual Active Learning with the Naive approach as our Continual Learning strategy and a batch size of 4000.}
+    \label{fig:Evaluation:Results:CAL:VAAL}
+\end{figure}
+
+Next, we experiment with AGEM. AGEM has two hyperparameters: $S$, which is the number of samples randomly drawn from the memory to compute the reference gradients and $P$ which is the number of data points stored to the memory from each task. We run AGEM with the Active Learning
+strategy LC and a batch size of 2000. To assess the performance of AGEM, we compare its validation accuracy to the Naive approach. We vary $S$ and $P$ and present our results in the right plot of figure \ref{fig:Evaluation:Results:CAL:AGEM}. The validation accuracy increases with
+an increased $S$ and $P$ until about 12000 samples, after which the validation accuracy drops for all values of $S$ and $P$. AGEM outperforms the Naive approach for the first 15000 samples, but is outperformed by Naive for the remainder of the experiment. \par
+After investigating the influence of AGEM's hyperparameters, we compare the combination of VAAL and AGEM to VAAL and Naive, using a batch size of 4000. The results are shown in the left plot of figure \ref{fig:Evaluation:Results:CAL:AGEM}. Although AGEM performs worse than the Naive
+approach when using the Active Learning strategy LC, it outperforms the Naive approach when using VAAL as the Active Learning strategy. \par
+
+%TODO: Redo right plots
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{images/results_CAL/AGEM_plots.png}
+    \caption[Continual Active Learning Custom Replay strategy]{Left: Comparison of validation accuracy of AGEM to the Naive approach when using VAAL as the Active Learning strategy We use a batch size of 4000 for the experiments. Right: Comparison of validation accuracy of AGEM
+     to the Naive approach when using different values of $S$ and $P$. We use the Active Learning strategy LC and a batch size of 2000 for the experiments.}
+    \label{fig:Evaluation:Results:CAL:AGEM}
+\end{figure}
+
+\subsection{Model Stealing Results}
+\label{sec:Evaluation:Results:MS}
+After extensively studying Continual Active Learning, we shift the focus of our experiments to Model Stealing. Since we build our work on the ActiveThief framework, we first evaluate the performance of the ActiveThief framework, including the influence of Model Architecture and
+Thief Dataset. 
 
 \begin{table}
     \centering
@@ -343,13 +381,13 @@ results in figure \ref{fig:Evaluation:Results:CAL:Replay}. When variying the bat
 
 \begin{table}
     \centering
-    \begin{tabular}{l | c c c} 
+    \begin{tabular}{c | c c c} 
         \hline
-        \diagbox[width=10em]{Diag\\ Column Head 1}{Diag Column \\ Head 2} &  ActiveThiefConv2 & ActiveThiefConv3 & ActiveThiefConv4 \\ 
+        \diagbox[width=12em]{Substitute Model}{Target Model} &  ActiveThiefConv2 & ActiveThiefConv3 & ActiveThiefConv4 \\ 
         \hline 
-        ActiveThiefConv2 & A & B & C \\
-        ActiveThiefConv3 & A & B & C \\
-        ActiveThiefConv4 & A & B & C \\
+        ActiveThiefConv2 & 57.46 & 54.88 & 48.16 \\
+        ActiveThiefConv3 & 61.02 & 71.99 & 71.61 \\
+        ActiveThiefConv4 & 60.5 & 71.75 & 71.56 \\
         \hline
     \end{tabular}
     \caption{Success of Model Stealing Attacks for Different NN Architectures on CIFAR-10}
@@ -359,18 +397,19 @@ results in figure \ref{fig:Evaluation:Results:CAL:Replay}. When variying the bat
 
 \begin{table}
     \centering
-    \begin{tabular}{l | c c c} 
+    \begin{tabular}{c | c c c} 
         \hline
-        \diagbox[width=10em]{Diag\\ Column Head 1}{Diag Column \\ Head 2} &  ActiveThiefConv2 & ActiveThiefConv3 & ActiveThiefConv4 \\ 
+        \diagbox[width=12em]{Substitute Model}{Target Model} &  ActiveThiefConv2 & ActiveThiefConv3 & ActiveThiefConv4 \\ 
         \hline 
-        ActiveThiefConv2 & A & B & C \\
-        ActiveThiefConv3 & A & B & C \\
-        ActiveThiefConv4 & A & B & C \\
+        ActiveThiefConv2 & 48.65 & 63.16 & 55.95 \\
+        ActiveThiefConv3 & 67.71 & 90.65 & 71.16 \\
+        ActiveThiefConv4 & 75.38 & 82.56 & 89.40 \\
         \hline
     \end{tabular}
     \caption{Success of Model Stealing Attacks for Different NN Architectures on MNIST}
     \label{fig:ModelStealingNNArchitecturesMNIST}
 \end{table}
+
 
 
 \begin{table}
@@ -448,9 +487,9 @@ results in figure \ref{fig:Evaluation:Results:CAL:Replay}. When variying the bat
 
 \begin{table}
     \centering
-    \begin{tabular}{c | c c c c c} 
+    \begin{tabular}{c | c c c c} 
         \hline
-        \diagbox[width=11em]{Active \\ Learning Strategy}{Continual Learning \\ Strategy} & Random & LC & BALD & CoreSet & Badge \\ 
+        \diagbox[width=11em]{Active \\ Learning Strategy}{Continual Learning \\ Strategy} & Random & LC & BALD & CoreSet \\ 
         \hline 
         Baseline & 26.65 & 26.37 & 28.08 & 27.53\\
         Naive & 18.46 & 18.48 & 16.8 & 17.69 \\
@@ -472,8 +511,8 @@ results in figure \ref{fig:Evaluation:Results:CAL:Replay}. When variying the bat
         \hline 
         Baseline & 21.26 & - & 21.0 & 20.96\\
         Naive & 7.93 & 7.63 & 4.98 & 1.53\\
-        EWC & 8.79 & 6.55 & 1.99 & 7.77 \\
-        IMM & 8.59 & 8.44 & 1.47 & 8.05 \\
+        EWC & 8.79 & 6.55 & 2.07 & 7.77 \\
+        IMM & 8.59 & 8.44 & 7.18 & 8.05 \\
         MAS & 5.37 & 5.44 & 5.3 & 4.52 \\
         Alasso & 5.28 & 6.11 & 5.72 & 5.51 \\
         \hline
