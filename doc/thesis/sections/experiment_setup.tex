@@ -88,9 +88,9 @@ ation of the Active Learning algorithm, as the batch size.
 \subsection{Datasets}
 \label{sec:ExperimentSetup:Datasets}
 In our experiments, we use the datasets MNIST \cite{mnist_web}, Fashion-MNIST \cite{xiao2017fashion}, CIFAR-10 \cite{cifar},
-CIFAR-100 \cite{cifar}, Tiny-ImageNet \cite{le2015tiny} and a subset of the ILSVRC2012-14 dataset \cite{imagenet}. The subset of the ILSVRC2012-14 dataset that we
+CIFAR-100 \cite{cifar}, Tiny ImageNet \cite{le2015tiny} and a subset of the ILSVRC2012-14 dataset \cite{imagenet}. The subset of the ILSVRC2012-14 dataset that we
 use is the first of 10 training batches downloaded from \url{http://www.image-net.org/data/downsample/Imagenet32_32.zip}. From now on, we will refer to this subset
-of the ILSVRC2012-14 dataset as \enquote{SmallImagenet}. For all datasets, we use the standard train test split as proposed by Pytorch. We rescale all images to 32x32
+of the ILSVRC2012-14 dataset as \enquote{Small ImageNet}. For all datasets, we use the standard train test split as proposed by Pytorch. We rescale all images to 32x32
 pixels because for the success of a model stealing attack the image shape of the thief dataset has to match the image shape accepted by the target model. We will cover
 this in more detail in section \ref{sec:Methodology:CALMSsetup}. Moreover, we normalize the train and test split of all datasets by using the mean and standard deviation
 of the training set. For all datasets apart from MNIST and FashionMNIST, we further apply Data Augmentation. We use random horizontal flips with a probability of 0.5

@@ -19,8 +19,71 @@ our experiments on Model Stealing as well as findings from applying Continual Ac
 
 \section{Continual Active Learning}
 \label{sec:Discussion:ContinualActiveLearning}
-The goal of this section is to discuss the findings from
+The goal of this section is to discuss the findings from section \ref{sec:Evaluation:Results:CAL}. When developing the Continual Active Learning approach proposed in this thesis, our initial aim was to improve both the overall performance, measured
+by validation accuracy, of the model and the training time in comparison to Active Learning. By studying the results we observe that we were not able to outperform Active Learning in any of the experiments. On the contrary, Active Learning, even naive
+Active Learning using random sampling, significantly outperforms Continual Active Learning in terms of validation accuracy. However, we managed to achieve the second goal of improving the training time. Before we analyze the reasons for the poor performance 
+of Continual Active Learning in terms of validation accuracy, we will first discuss the performance in terms of execution time.
 
+\subsection{Execution time}
+\label{sec:Discussion:ExecutionTime}
+
+In terms of training time, we observe that Continual Active Learning outperforms Active Learning in all experiments. The main reason for the superior performance of Continual Active Learning runtime-wise is that the model is trained on significantly less data
+in the training process. In section \ref{sec:Methodology:CombiningCLandAL} we mentioned that a model trained with a total budget of $n$ and a batch size of $b$ is trained on $\frac{n(n+b)}{2b}$ data points. When we use this equation with the parameters given in
+our experiments, namely $n=50000$ and $b \in \{ 1000, 2000, 4000\}$, we see that the total number of points trained increases almost proportionally with a decreasing batch size. This phenomenon is shown in table \ref{fig:NumberOfTrainingPoints}, where we computed
+the total number of training points for the batch sizes used in the experiments. In our case, we train on almost four times as many data points when using a batch size of 1000 compared to a batch size of 4000. Since the total number of training points is constant
+for Continual Active Learning with varying batch sizes, we do not observe the same phenomenon. \par
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{| c | c |} 
+        \hline
+        $b$ & Total number of training points \\
+        \hline 
+        1000 & 1275000 \\
+        2000 & 650000 \\
+        4000 & 362000 \\
+        \hline
+    \end{tabular}
+    \caption[Total number of data points trained on in the Continual Active Learning experiments]{Total number of training points for varying batch sizes on the CIFAR-10 dataset, which has a train set of consisting of 50000 elements.}
+    \label{fig:NumberOfTrainingPoints}
+\end{table}
+
+The total number of training points perfectly explains the execution time of the Active Learning strategies Random and LC. In the experiments, the execution time of Random is at approximately 2500 Minutes for batch size 1000, 1300 for batch size 2000 and 700 for
+batch size 4000 with LC showing comparable results. On the other hand the Continual Active Learning strategies using Random and LC show similar runtime for batch size 2000 and 4000 but the execution time for batch size 1000 is merely half the execution time when
+using the previous batch sizes. This discrepancy in execution time can be explained by the number of epochs trained in each iteration of Active Learning. For batch size 1000, we train for 80 epochs per iteration while we train for 150 epochs per iteration for
+batch size 2000 and 4000. \par
+While we have analyzed how the runtime of LC and Random can be explained we still need to analyze the runtime of Badge, CoreSet and BALD. LC and Random have a very low query time, which is negligible with a dataset of the size of CIFAR-10 and a model like ResNet18.
+In this specific setting BALD exhibits a runtime which is almost identical to LC and Random. This is because ResNet18 does not contain any dropout layers. Since our implementation of BALD dynamically detects whether the model contains dropout layers and only performs
+Monte Carlo dropout if it does, we only run one dropout iteration in this setting. In theory, we could run multiple iterations of Monte Carlo dropout, however this increases query time, and runtime for that matter, without improving the performance of BALD. Using only
+one dropout iteration in our setting is sufficient since the predictions of a Neural Network without activated dropout layers are deterministic. In general however, the query time of BALD depends on the number of dropout iterations, which is a hyperparameter, the size
+of the unlabeled pool and the prediction speed of the model. \par
+CoreSet and Badge are Active Learning strategies which incorporate diversity into their sampling. With CoreSet being entirely diversity-based and Badge being both diversity-based and uncertainty-based, these strategies compute a cover of the data points in the pool using
+a k-center greedy algorithm and $k$-Means++ respectively. Both strategies use distance computation in their sampling which becomes more expensive computationally with an increasing number of data points and a larger feature space. This explains the higher query time of
+CoreSet and Badge compared to LC, BALD and Random. Furthermore, it is worth noting that BALD and LC are rank-based, meaning that they always compute their respective importance measure for the complete unlabeled pool and then return the $b$ most informative data points
+according to their importance measure. Therefore, a query with batch size $b_1$ while always be a subset of a query with batch size $b_2$ if $b_1 < b_2$. CoreSet and Badge on the other hand are not rank-based, meaning that they compute a cover of a feature space. The
+optimal cover depends on the batch size. It is therefore theoretically possible that a query with batch size $b_1$ and a query with batch size $b_2$ have no data points in common, if $b_1 \neq b_2$. For CoreSet, and even more so for Badge, the query time becomes a
+bottleneck in our experiments. While the total query time in our experiment is not dependent on the batch size, because we always query the complete train set over the course of the experiment, it is still a considerable portion of the total runtime. The main reason why
+Continual Active Learning using Badge or CoreSet do not outperform the respective baseline by a factor as large as the one of Continual Active Learning straegies using BALD, LC or Random is that with increasing batch size the training time becomes a smaller fraction of
+the execution time while the query time remains constant. \par
+Next, we investigate the contribution of the Continual Learning strategies in terms of runtime. Overall, we observe that the overhead introduced by the Continual Learning strategies is negligible compared to the overhead introduced by the Active Learning strategies. The
+biggest increase in runtime is caused by Alasso, which increases the execution time by 30 to 60 Minutes in our experiments. The reason for the increase in runtime is most likely the backpropagation step. Alasso needs two backward passes through the model to compute the
+complete gradients: One is used to compute the $\omega$s
+% Further explanations in terms of runtime: BALD and LC are rank based, i.e. their query time does not depend on the batch size. CoreSet and Badge are batch size dependent since they compute a cover of the data points and more data points means more points in the cover.
+% For continual learning strategies mention that one overhead is the computation time during gradient computation which is needed for backpropagation and for some strategies the importance weights need to be computed.
+
+
+
+% In terms of accuracy: mention that CAL does not work as expected because the CL strategies were not designed for the scenario which we are using them in, i.e. training on the same dataset. Mention that batch size plays a major role as can be seen from the experiments.
+\subsection{Validation Accuracy}
+\label{sec:Discussion:ValidationAccuracy}
+After analyzing the results in terms of execution time, we will now focus on the validation accuracy. As mentioned before, the Continual Active Learning strategies are significantly outperformed by the Active Learning strategies in terms of validation accuracy. We believe
+that this is mainly due to
 
 \section{Model Stealing}
 \label{sec:Discussion:ModelStealing}
+
+% \ref{sec:Evaluation:Results:MS:CAL} for the link to the experiments we will discuss here
+%  For model stealing. Mention first of all that this is a setting where there is an abundance of hyperparameters and therefore: 1) it is hard to find the optimal hyperparameters and 2) it is hard to compare different approaches since they might not be using the same hyperparameters
+% and approaches with different hyperparameters might yield completely different experiments. Then mention that we were not able to reproduce the findings of activethief when using different substitute and target model architectures for MNIST. Mention that this is most probably because
+% we used data augmentation for the stealing process which we showed not to be helpful in the end. Regarding the experiments with MNIST, CIFAR-10 and CIFAR-100 talk about the single Active Learning and Continual Learning strategies (i.e. say that for CIFAR-100, CoreSet does not work well
+% as expected).

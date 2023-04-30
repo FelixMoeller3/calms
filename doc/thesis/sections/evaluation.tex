@@ -40,8 +40,9 @@ and the accuracy improvement.
 As presented in section \ref{sec:ModelStealing:Attacks}, Model Stealing Attacks can be performed for a variety of reasons. As we build our framework on ActiveThief, we also
 adopt the metrics used in the original paper. The ActiveThief framework aims purely at stealing the functionality of the model, i.e. approximation the model's relationship
 between input and output best, and so does ours. Therefore, we will use the same evaluation metric, which in our case is the agreement between substitute and target model,
-computed on the validation split of the target model dataset. The baseline which we compare our results against is the ActiveThief framework. We will therefore measure the 
-success of using Continual Active Learning for Model Stealing by comparing the model agreement of our approach to the model agreement of the ActiveThief framework.
+computed on the validation split of the target model dataset. For an explanation of the Model Agreement metric, we refer the reader to section \ref{sec:ModelStealing:Terminology}.
+The baseline which we compare our results against is the ActiveThief framework. We will therefore measure the success of using Continual Active Learning for Model Stealing by comparing
+the model agreement of our approach to the model agreement of the ActiveThief framework.
 
 \section{Results}
 \label{sec:Evaluation:Results}
@@ -287,7 +288,7 @@ We also notice that while the validation accuracy does drop after switching to C
 \begin{figure}[h]
     \centering
     \includegraphics[width=\linewidth]{images/results_CAL/Delayed_start_CAL.png}
-    \caption[Continual Active Learning Hybrid approach]{Comparison of validation accuracy for a delayed start of Continual Learning. }
+    \caption[Continual Active Learning Hybrid approach]{Comparison of validation accuracy for a delayed start of Continual Learning. Left: Accuracy progression for Badge and EWC. Right: Accuracy progression for Badge and MAS.}
     \label{fig:Evaluation:Results:CAL:DelayedStart}
 \end{figure}
 
@@ -301,8 +302,8 @@ location takes about 24 hours to complete and requires more than 100GB of memory
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\linewidth]{images/results_CAL/Factility_location_init.png}
-    \caption[Initialization using Facility Location]{Comparison of validation accuracy for facility location initialization and random initialization. We use a batch size of 4000 for the experiments.}
+    \includegraphics[width=\linewidth]{images/results_CAL/Facility_location_init.png}
+    \caption[Initialization using Facility Location]{Comparison of validation accuracy for facility location initialization and random initialization. We use a batch size of 4000 and the combination of Badge and MAS for the experiments.}
     \label{fig:Evaluation:Results:CAL:FLinit}
 \end{figure}
 
@@ -430,18 +431,17 @@ accuracy after training on the full thief dataset. To study the behavior of mode
     \label{fig:ModelStealingNNArchitecturesMNIST}
 \end{table}
 
-%TODO: Plot mit einmal Cifar-10 und einmal MNIST für Softmax und Labels für ein oder zwei AL strategien
 After evaluating the influence of the target and substitute model architecture on the success of the model stealing attack, we now evaluate how the thief dataset effects Model Stealing Attacks. Our motivation for this experiment is that Pal et al. 
 mention having tested CIFAR-10 as a thief dataset with without success. We perform a model stealing attack using ActiveThiefConv3 as the target and substitute model and CoreSet with batch size 2000 as our Active Learning strategy. The total query budget
-is 20000. We used MNIST as the target model dataset and change between SmallImagenet and TinyImageNet as our thief datasets. The results of this experiment can be seen in figure \ref{fig:Evaluation:Results:CAL:EffectDataset}. While the model agreement 
-increases throughout the experiment when using SmallImagenet, the model agreement for TinyImagenet plateaus after just 3 iterations at 20\%. \par
+is 20000. We used MNIST as the target model dataset and change between Small ImageNet, Tiny ImageNet and CIFAR-10 as our thief datasets. The results of this experiment can be seen in figure \ref{fig:Evaluation:Results:CAL:EffectDataset}. While the model agreement 
+increases throughout the experiment when using Small ImageNet, the model agreement for Tiny ImageNet plateaus after just 3 iterations at 20\%. Model Stealing with CIFAR-10 yields the best results, however. At the end of the experiment, the setup with CIFAR-10 as 
+the thief dataset achieves a Model Agreement which is 5 percentage points higher than the setup with Small Imagenet as the thief dataset. \par
 
-%TODO: Hier noch CIFAR-10 ausprobieren?
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.8\linewidth]{images/results_CALMS/effect_dataset.png}
-    \caption[Effect of Thief Dataset choice on the success of Model Stealing Attacks]{Comparison of Model Agreement when performing a model stealing attack using the datasets Tiny Imagenet and SmallImagenet. We perform Active Learning using the 
-    straegy CoreSet with a batch size of 2000 for the experiments.}
+    \caption[Effect of Thief Dataset choice on the success of Model Stealing Attacks]{Comparison of Model Agreement when performing a model stealing attack using the datasets Tiny Imagenet, Small ImageNet and CIFAR-10. We perform Active Learning using the 
+    straegy CoreSet with a batch size of 2000 for the experiments. The target model dataset used is MNIST.s}
     \label{fig:Evaluation:Results:CAL:EffectDataset}
 \end{figure}
 
