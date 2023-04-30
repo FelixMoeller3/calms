@@ -451,11 +451,16 @@ increases throughout the experiment when using SmallImagenet, the model agreemen
 
 In this section, we evaluate the success of Model Stealing Attacks using Continual Active Learning. More specifically, we run Model Stealing Attacks with Continual Active Learning on the datasets MNIST, CIFAR-10 and CIFAR-100, using the Active Learning strategies
 Random, LC, BALD, Badge and CoreSet and the Continual Learning strategies Naive, EWC, IMM, MAS and Alasso. Furthermore, we differentiate between receiving the softmax output of the target model and solely receiving the top1-label. We use the ActiveThiefConv3 model
-as the target and substitute model and perform one model stealing attack for each combination of Active Learning, Continual Learning strategy and target model output. As a baseline we use the Model Extraction using Active Learning with the strategies mentioned before.
-For each Active Learning strategy, we highlight the best performing Continual Learning strategy in bold. To evaluate the performance of the Active Learning strategies, we average the results of all Continual Learning strategies for a fixed Active Learning strategy.
-Again, the best performing Active Learning strategy is highlighted in bold\par
+as the target and substitute model and perform one model stealing attack for each combination of Active Learning, Continual Learning strategy and target model output. For the baseline runs, we use a batch size of 1000 with a total query budget of 20000. The query budget
+is kept for the Continual Active Learning runs, but we increase the batch size to 2000. The numbers reported in the table represent the model agreement at the end of each experiment, i.e. after using up the query budget of 20000. Readers interested in the progression of the
+model agreement across the experiments can find the respective plots in appendix \ref{sec:Appendix:Results}. As a baseline we use the Model Extraction using Active Learning with the strategies mentioned before. To evaluate both the Active Learning strategies and the Continual
+Learning strategies, we compute the average over the model agreement of all Continual Learning strategies combined with a fixed Active Learning strategy and the average of all Active Learning strategies combined with a fixed Continual Learning strategy. These numbers are given
+at the end of each column and row, respectively. The Active Learning strategy and the Continual Learning strategy with the highest average model agreement are highlighted in bold. \par
 In the first set of experiments, we perform Model Stealing Attacks using Continual Active Learning with MNIST as our target model and train the substitute model on the softmax output of the target model. The results of this experiment can be found in table
-\ref{fig:ModelStealingMNISTSoftmax}.
+\ref{fig:ModelStealingMNISTSoftmax}. In terms of model agreement, all Continual Active Learning attacks perform significantly worse than the baseline. The best performing attack is the combination of the Active Learning strategy BALD with the Continual Learning strategy
+MAS with a model agreement of 67.84\% after a query budget of 20000. The best performing Active Learning strategy is BALD with an average model agreement of 52.52\% across all Continual Learning strategies whereas the best Continual Learning strategy is MAS with an average
+model agreement of 57.73\%. While the Continual Learning strategies struggled to outperform the Naive approach in the classic Continual Active Learning setting, most of them outperform the Naive approach in the Model Stealing setting. The only exception to this is Alasso which
+falls behind the other approaches significantly. \par 
 
 \begin{table}[h]
     \centering
@@ -463,7 +468,7 @@ In the first set of experiments, we perform Model Stealing Attacks using Continu
         \hline
         \diagbox[width=11em]{Active \\ Learning Strategy}{Continual Learning \\ Strategy} & Random & LC & BALD & CoreSet & Badge & $\varnothing$\\ 
         \hline 
-        Baseline & 85.6 & 85.65 & 83.67 & 90.65 & 81.62 & 85.44\\
+        Baseline & 87.91 & 82.39 & 83.64 & 91.22 & 79.68 & 84.97\\
         \hline
         Naive & 47.74 & 43.02 & 59.61 & 58.36 & 48.89 & 51.52\\
         EWC &  59.26 & 53.67 & 59.18 & 56.13 & 50.28 & 55.7\\
@@ -479,13 +484,18 @@ In the first set of experiments, we perform Model Stealing Attacks using Continu
     \label{fig:ModelStealingMNISTSoftmax}
 \end{table}
 
+Next, we change the output of the target model to solely return the top1-label and perform the same set of experiments. Table \ref{fig:ModelStealingMNISTLabel} shows the results of these experiments. While the model agreement compared to training with softmax output of the
+target model has dropped significantly for the baseline strategies, we do not observed a similar phenomenon for the Continual Active Learning strategies. Nevertheless, we observe a large maring between the Model Agreement of the Active Learning strategies and the Model Agreement
+of the Continual Active Learning strategies. However, the combination of BALD and Naive comes close to its baseline, demonstrating a Model Agreement of 69.18\% which is about 7 percentage points lower than the respective baseline. Overall, the Naive approach performs best with an
+average Model Agreement of 51.29\% across all Active Learning strategies. Contrary to the previous setup, no Continual Learning strategy outperforms the Naive approach, with MAS coming closest. The best Active Learning strategy is BALD with an average Model Agreement of 55.73\%. \par 
+
 \begin{table}[h]
     \centering
     \begin{tabular}{c | c c c c c | c} 
         \hline
         \diagbox[width=11em]{Active \\ Learning Strategy}{Continual Learning \\ Strategy} & Random & LC & BALD & CoreSet & Badge & $\varnothing$ \\ 
         \hline 
-        Baseline & 60.34 & 72.77 & 70.2 & 77.58 & 72.15 & 70.61\\
+        Baseline & 67.56 & 80.36 & 76.29 & 81.62 & 76.43 & 76.45\\
         \hline
         Naive & 43.44 & 58.84 & 69.18 & 44.88 & 40.12 & \textbf{51.29}\\
         EWC &  46.76 & 47.3 & 52.36 & 36.84 & 44.73 & 45.6\\
@@ -501,13 +511,18 @@ In the first set of experiments, we perform Model Stealing Attacks using Continu
     \label{fig:ModelStealingMNISTLabel}
 \end{table}
 
+We move on to the next dataset which is CIFAR-10. First, we perform Model Stealing attacks using the softmax output of the target model. Our results can be found in Table \ref{fig:ModelStealingCIFAR10Softmax}. Similar to our findings from the MNIST dataset, the Continual Active Learning
+are outperformed by the Active Learning strategies, however the gap between is mostly consistent across combinations of Active and Continual Learning strategies at around 10 percentage points. Alasso is once again an exception to this, performing significantly worse than the other
+Continual Learning strategies. The best Continual Active Learning strategy is EWC with an average Model Agreement of 60.14\%. At the same time, EWC is the only Continual Learning strategy to outperform the Naive approach, albeit the margin between the two is only 0.48 percentage points.
+Overall, CoreSet is the most performant Active Learning strategy with an average model agreement of 54.12\% across all Continual Learning strategies. \par
+
 \begin{table}[h]
     \centering
     \begin{tabular}{c | c c c c c | c} 
         \hline
         \diagbox[width=11em]{Active \\ Learning Strategy}{Continual Learning \\ Strategy} & Random & LC & BALD & CoreSet & Badge & $\varnothing$\\ 
         \hline 
-        Baseline & 70.98 & 69.4 & 72.65 & 71.61 & 71.39 & 71.21\\
+        Baseline & 71.58 & 70.04 & 71.96 & 71.45 & 71.44 & 71.29\\
         \hline
         Naive & 60.8 & 56.62 & 61.84 & 61.61 & 57.42 & 59.66 \\
         EWC & 58.67 & 56.8 & 61.57 & 61.79 & 61.88 & \textbf{60.14}\\
@@ -523,13 +538,19 @@ In the first set of experiments, we perform Model Stealing Attacks using Continu
     \label{fig:ModelStealingCIFAR10Softmax}
 \end{table}
 
+In our next experiment setup, we use the predicted label of the target model to train the substitute model, again with CIFAR-10 as the target model dataset. We present the results of this set of experiments in Table \ref{fig:ModelStealingCIFAR10Label}. Overall,
+the Model Agreement is lower than when training with the softmax output of the target model, which is in line with the experiments conducted on the MNIST dataset. The gap between the baseline and the Continual Learning strategies has remained the same however,
+resting at around 10 percentage points. EWC is again the best performing Continual Learning strategy, outperforming the Naive approach by a large margin this time around. IMM follows closely, also beating the Naive approach. The main reason for the large gap
+between the Naive approach and EWC as well as IMM is the poor performance of BALD and Naive. Surprised by the poor performance of this combination, we run it again and find that the results are consistent. MAS and Alasso, on the other hand, do not manage to
+outperform the Naive approach. In terms of Active Learning strategies, CoreSet performs best with an average Model Agreement of 43.57\% across all Continual Learning strategies. \par
+
 \begin{table}[h]
     \centering
     \begin{tabular}{c | c c c c c | c} 
         \hline
         \diagbox[width=11em]{Active \\ Learning Strategy}{Continual Learning \\ Strategy} & Random & LC & BALD & CoreSet & Badge & $\varnothing$\\ 
         \hline 
-        Baseline & 55.12 & 10.25 & 61.12 & 61.68 & 58.32 & 49.3\\
+        Baseline & 60.23 & 49.73 & 61.28 & 63.78 & 62.26 & 59.46\\
         \hline
         Naive & 49.84 & 30.03 & 10.18 & 48.44 & 45.25 & 36.75\\
         EWC & 50.37 & 47.12 & 50.22 & 47.94 & 49.11 & \textbf{48.95} \\
@@ -545,20 +566,26 @@ In the first set of experiments, we perform Model Stealing Attacks using Continu
     \label{fig:ModelStealingCIFAR10Label}
 \end{table}
 
+The final target model dataset which we test for our setup is CIFAR-100. Like in the previous experiments, we first test all combination of Continual and Active Learning strategies trained on the softmax output of the target model
+and compare them to the baseline of Active Learning. An exception to this are all experiments involving the Active Learning strategy Badge. We found the estimated runtime of Badge using ActiveThiefConv as our substitute model and SmallImagenet as our thief dataset
+to be in excess of 40 days on our hardware, which is why we were unable to deliver results for this combination. The results for the remaining combinations from this set of experiments can be found in table \ref{fig:ModelStealingCIFAR100Softmax}.
+Across the board, Model Agreement is significantly lower than in our previous experiments. The gap between the baseline and the Continual Learning strategies has decreased in absolute terms but increased in relative terms. Like in our previous experiments, EWC outperforms
+the remaining Continual Learning strategies, and it is one of two Continual Learning strategies which manage to outperform the Naive approach. The other strategy is IMM, which puts on a performance in between EWC and the Naive approach. MAS follows behind the Naive approach
+and Alasso is left behind once again. The best Active Learning strategy is CoreSet, which outperforms BALD by 0.57 percentage points. \par
 
 \begin{table}[h]
     \centering
     \begin{tabular}{c | c c c c | c} 
         \hline
-        \diagbox[width=11em]{Active \\ Learning Strategy}{Continual Learning \\ Strategy} & Random & LC & BALD & CoreSet \\ 
+        \diagbox[width=11em]{Active \\ Learning Strategy}{Continual Learning \\ Strategy} & Random & LC & BALD & CoreSet & $\varnothing$\\ 
         \hline 
-        Baseline & 26.65 & 26.37 & 28.08 & 27.53  \\
+        Baseline & 25.43 & 26.92 & 28.01 & 27.48 & 26.96 \\
         \hline
-        Naive & 18.46 & \textbf{18.48} & 16.8 & 17.69 \\
-        EWC & \textbf{19.45} & 17.46 & \textbf{20.67} & \textbf{19.98}\\
-        IMM & 18.16 & 17.9 & 20.39 & 18.75\\
-        MAS & 15.75 & 14.85 & 14.72 & 15.45 \\
-        Alasso & 5.2 & 4.95 & 6.7 & 10.24 \\
+        Naive & 18.46 & 18.48 & 16.8 & 17.69 & 17.86\\
+        EWC & 19.45 & 17.46 & 20.67 & 19.98 & \textbf{19.39}\\
+        IMM & 18.16 & 17.9 & 20.39 & 18.75 & 18.8\\
+        MAS & 15.75 & 14.85 & 14.72 & 15.45 & 15.19\\
+        Alasso & 5.2 & 4.95 & 6.7 & 10.24 & 6.77\\
         \hline
         $\varnothing$ & 15.4 & 14.73 & 15.85 & \textbf{16.42}\\
         \hline
@@ -568,18 +595,26 @@ In the first set of experiments, we perform Model Stealing Attacks using Continu
     \label{fig:ModelStealingCIFAR100Softmax}
 \end{table}
 
+Finally, we compute the Model Agreement across multiple combinations of Continual Learning and Active Learning strategies using the predicted label of the target model and CIFAR-100 as our target model dataset. As in the previous set of experiments, we omit the results of
+the Active Learning strategy Badge. Compared to training on the softmax output of the target model, the model agreement has disproportionally decreased for the Continual Learning strategies. While the baseline strategies boast a Model Agreement of 20.42\% on average, the
+best Continual Learning strategy, which is IMM, manages to achieve a Model Agreement of 8.07\% on average. IMM significantly outperforms both the Naive approach and EWC, which demonstrate almost identical performance. We were surprised by the poor performance of EWC and BALD,
+which is why we conducted this experiment one more time, however we achieved similar results. The remaining Continual Learning strategies, MAS and Alasso, perform worse than the Naive approach. Remarkably, Alasso outperforms MAS, making this the only set of experiments in which
+Alasso is not the worst performing Continual Learning strategy. Another surprise is the performance of the Random Active Learning strategy, which outperforms the remaining Active Learning strategies. CoreSet, which demonstrated strong performance in previous experiments, falls behind
+Random and LC, outperforming only BALD by about one percentage point. \par
+
 \begin{table}[h]
     \centering
-    \begin{tabular}{c | c c c c } 
+    \begin{tabular}{c | c c c c | c} 
         \hline
-        \diagbox[width=11em]{Active \\ Learning Strategy}{Continual Learning \\ Strategy} & Random & LC & BALD & CoreSet \\ 
+        \diagbox[width=11em]{Active \\ Learning Strategy}{Continual Learning \\ Strategy} & Random & LC & BALD & CoreSet & $\varnothing$\\ 
         \hline 
-        Baseline & 21.26 & 19.89 & 21.0 & 20.96\\
-        Naive & 7.93 & 7.63 & 4.98 & 4.82\\
-        EWC & \textbf{8.79} & 6.55 & 2.07 & 7.77 \\
-        IMM & 8.59 & \textbf{8.44} & 7.18 & \textbf{8.05} \\
-        MAS & 5.37 & 5.44 & 5.3 & 4.52 \\
-        Alasso & 5.28 & 6.11 & \textbf{5.72} & 5.51 \\
+        Baseline & 21.65 & 19.5 & 19.64 & 20.9 & 20.42\\
+        \hline
+        Naive & 7.93 & 7.63 & 4.98 & 4.82 & 6.34\\
+        EWC & 8.79 & 6.55 & 2.07 & 7.77 & 6.3\\
+        IMM & 8.59 & 8.44 & 7.18 & 8.05 & \textbf{8.07}\\
+        MAS & 5.37 & 5.44 & 5.3 & 4.52 & 5.16\\
+        Alasso & 5.28 & 6.11 & 5.72 & 5.51 & 5.66\\
         \hline
         $\varnothing$ & \textbf{7.19} & 6.83 & 5.05 & 6.13 \\
         \hline
@@ -589,7 +624,11 @@ In the first set of experiments, we perform Model Stealing Attacks using Continu
     \label{fig:ModelStealingCIFAR100Label}
 \end{table}
 
-
+After having conducted our experiments with the Continual Learning strategies Naive, EWC, MAS, IMM and Alasso as well as the Active Learning strategies Random, BALD, LC, CoreSet and Badge, we test the combination of the Active Learning strategy VAAL with the Continual Learning
+strategy AGEM. We motivate this experiment by the performance of VAAL and AGEM in the classic Continual Learning setup, given in Figure \ref{sec:Evaluation:Results:CAL:VAAL_AGEM}. The experiments are performed in the same manner as the previous experiments in this section. To evaluate
+the performance of VAAL and AGEM, we compare the results to the best performing Active Learning strategy, CoreSet, and the combination of the best performing Continual Learning strategy and the most performant Active Learning strategy, which are EWC and CoreSet, respectively. 
+The results of the comparison are given in Table \ref{fig:ModelStealingVAAL_AGEM}. We present the progression in Model Agreement with VAAL and AGEM in Appendix \ref{sec:Appendix:Results}. While VAAL and AGEM cannot keep up with the performance of the baseline, just as all Continual
+Active Learning approaches, it performs on par with CoreSet and EWC, outperforming them in 3 out of 6 experiments while being outperformed in the remaining 3 experiments. \par
 \begin{table}[h]
     \centering
     \begin{tabular}{c c c c c c c} 
@@ -598,14 +637,22 @@ In the first set of experiments, we perform Model Stealing Attacks using Continu
         \cline{2-7} Attack strategy & Softmax & Label & Softmax & Label & Softmax & Label \\
         \hline 
         VAAL AGEM & 52.54 & 53.8 & 61.48 & 50.5 & 18.29 & 8.77\\
+        CoreSet EWC & 56.13 & 36.84 & 61.79 & 47.94 & 19.98 & 7.77 \\
         Coreset Baseline & 90.65 & 77.58 & 71.61 & 61.68 & 27.52 & 20.96\\
         \hline
     \end{tabular}
-    \caption{Comparison of Model Agreement (in \%) for Continual Active Learning using VAAL and AGEM and the Coreset Baseline}
+    \caption{Comparison of Model Agreement (in \%) for Continual Active Learning using VAAL and AGEM, CoreSet and EWC as well as the Coreset Baseline}
     \label{fig:ModelStealingVAAL_AGEM}
 \end{table}
 
-%TODO redo left plot with new data
+We close the evaluation section with a surprising finding regarding the effect of data augmentation on the success of Model Stealing Attacks. While we managed to reproduce the findings of Pal et al. for CIFAR-10, we failed to do so for MNIST. Since multiple training hyperparameters
+of the experiments presented in ActiveThief were not disclosed by the authors, we experiment with different combinations of hyperparameters, including varying the optimizer, the learning rate, the number of training epochs, the batch size and switching between cold start and warm start
+for Active Learning. Sadly, we were still not able to reproduce the results of ActiveThief on MNIST. After conducting the experiments presented above, we decided to investigate another hyperparameter: training with or without data augmentation. For this set of experiments, we leave all
+hyperparameters equal to the previous experiments, apart from the data augmentation. It is important to note here that we do or do not use data augmentation on the thief dataset, not on the target model dataset. Training the target model is always done using data augmentation. We perform
+the same model stealing attacks as before, using MNIST and CIFAR-10 as target model dataset and present the results in figure \ref{fig:Evaluation:Results:CAL:EffectAugmentation}. When performing Model Stealing Attacks without data augmentation on CIFAR-10, we notice that Model Agreement,
+both for Active Learning and Continual Active Learning, is significantly lower than when using data augmentation. In this scenario, Continual Active Learning with data augmentation performs on par with Active Learning without data augmentation. However, when using MNIST as target model
+dataset, the results are reversed. Here, Model Agreement is significantly lower when using data augmentation. More importantly Continual Active Learning without data augmentation shows performance comparable to Active Learning with data augmentation. \par
+
 \begin{figure}[h]
     \centering
     \includegraphics[width=\linewidth]{images/results_CALMS/effect_data_augmentation.png}
@@ -613,12 +660,3 @@ In the first set of experiments, we perform Model Stealing Attacks using Continu
     we use a batch size of 2000. Left: Experiments with the target model dataset CIFAR-10. Right: Experiments with the target model dataset MNIST.}
     \label{fig:Evaluation:Results:CAL:EffectAugmentation}
 \end{figure}
-
-
-\section{Discussion}
-\label{sec:Evaluation:ThirdSection}
-% Was war das Ziel? Was wurde (nicht) erreicht?
-
-%% ---------------------
-%% | / Example content |
-%% ---------------------
