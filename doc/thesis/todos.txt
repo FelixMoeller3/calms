@@ -11,3 +11,4 @@ Deep Generative Replay einfügen? Weglassen
 VAAL grafik von selbst neu machen
 Einige Grafiken neu erstellen 
 Bei allen quellen schauen den Archive Pre-print durch das Conference paper ersetzen
+Bei CALMS die baseline anpassen auf budget 20k statt 21k
