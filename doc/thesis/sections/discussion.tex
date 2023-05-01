@@ -164,13 +164,21 @@ challenging to learn the function of the target model, especially when training 
 For the CIFAR-10 dataset, we noticed that the margin between Continual Active Learning and Active Learning was considerably lower compared to MNIST. Again, we believe that using data augmentation is the main reason for this. Figure \ref{fig:Evaluation:Results:CAL:EffectAugmentation}
 shows that using data augmentation when extracting a target model trained on CIFAR-10 increases Model Agreement. The results from the experiments using softmax output and the predicted label suggest that with data augmentation, the feature space of CIFAR-10 is demanding to learn to a
 full extend (hence to low Model Agreement of the baseline compared to MNIST), but simpler to learn partially. This benefits the performance of Continual Active Learning in this setting. \par
-Finally, we observe
-
-
-
-Furthermore, we observe that BALD demonstrates significantly improved performance
-compared to the classic Continual Active Learning setup. The reason for this is that the substitute model in this experiment, which is ActiveThiefConv3, contains multiple dropout layers, enabling a more accurate estimation of $\mathbb{E}_{\theta \sim p(\theta \mid L)} [H[y \mid x, \theta]]$
-using Monte Carlo dropout.
+Finally, we analyze the results of our experiments using CIFAR-100 as target model dataset. In absolute terms the gap between the performance of Continual Active Learning and Active Learning is the smallest for this dataset. This is expected however because CIFAR-100 is a challenging
+dataset, where even the Active Learning Attacks achieve below 30\% Model Agreement. In relative terms however, the performance is similar to the performance of Continual Active Learning on MNIST. For the experiment with softmax output of the target model, the average agreement of the
+best Continual Learning strategy is about 72\% of the baseline and when training on the target model, the average agreement is a mere 40\% of the baseline. We believe that the reason for the poor performance is that the validation accuracy of the target model is already very low at 42.9\%.
+Accurately learning the function of the target model is especially difficult in this setting when training using the label, because the model has not fully learned to classify the target model dataset itself. The low validation accuracy of the target model in combination which caused by
+the complexity of the CIFAR-100 dataset makes training on a significantly large dataset crucial in order to achieve high Model Agreement. This is again where the fact that Continual Active Learning only uses data points from the current batch to train on is a disadvantage compared to
+Active Learning. \par
+Generally, we observed that BALD demonstrates significantly improved performance compared to the classic Continual Active Learning setup. The reason for this is that the substitute model in this experiment, which is ActiveThiefConv3, contains multiple dropout layers, enabling a more
+accurate estimation of $\mathbb{E}_{\theta \sim p(\theta \mid L)} [H[y \mid x, \theta]]$ using Monte Carlo dropout. Although BALD shows improved performance in the Model Stealing experiments, it is outperformed by CoreSet. Since CoreSet is a diversity-based sampling strategy, this is
+in line with the findings of \cite{ash2019deep}, who state that diversity sampling is more effective in the first Active Learning iterations. For our experiments we use a total budget of 20000 samples, which is less than 16\% of the total thief dataset (128116 samples), meaning that we
+operate at the beginning of the Active Learning cycle for the full experiment. Surpisingly, Badge underperforms compared to the classic Continual Active Learning setup. This is most likely due to the fact that the gradient embedding of ActiveThiefConv3 is twice the size of the
+gradient embedding of ResNet18 and the thief dataset is more than twice the size of CIFAR-10 (50000 samples vs 128116 samples). Having a large embedding means that distance computation is harder due to the Curse of Dimensionality \cite{koppen2000curse}. In addition to the poor performance
+of Badge, we need to mention its runtime. Due to the factors mentioned previously, the embedding space is significantly larger which causes an increase in runtime. On our hardware, the Model Stealing Attacks for CIFAR-10 and MNIST which used Badge had a query time of about 4 days, which is
+significantly more than all the other Active Learning strategies other Active Learning strategies. \par
+Initially, we planned to compute the same set of experiments using ImageNet as our target model dataset. In the end, we decided against running the experiments because our thief dataset is a subset of ImageNet which is an unrealistic setting in the real world. Furthermore, the validation
+accuracy of the target model would most likely be even lower than for CIFAR-100, making it even more challenging to evaluate the different Continual Active Learning strategies because their performance would not differ significantly.
 
 % Am ende ein paar Sätze zu jeder CL und AL Strategie
 %  For model stealing. Mention first of all that this is a setting where there is an abundance of hyperparameters and therefore: 1) it is hard to find the optimal hyperparameters and 2) it is hard to compare different approaches since they might not be using the same hyperparameters

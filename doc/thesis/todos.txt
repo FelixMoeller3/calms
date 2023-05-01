@@ -8,7 +8,6 @@ Das hier (oder vllt etwas anderes?) verwenden, um die NN Architekturen zu zeichn
 Citations im Glossary zu haben wird schwierig (von der Compilation-Reihenfolge). Hier steht wie es geht: https://tex.stackexchange.com/questions/111410/compile-sequence-citing-in-the-glossary
 Tabellen für Hyperparameter kapitel erstellen
 Deep Generative Replay einfügen? Weglassen
-VAAL grafik von selbst neu machen
 Einige Grafiken neu erstellen 
 Bei allen quellen schauen den Archive Pre-print durch das Conference paper ersetzen
 Bei CALMS die baseline anpassen auf budget 20k statt 21k
