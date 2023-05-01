@@ -145,11 +145,32 @@ We make three decisive observations for Model Stealing which we will present in 
 Figure \ref{fig:Evaluation:Results:CAL:EffectDataset}, we see that the Model Agreement at the end of the attack is approximately 85\% for CIFAR-10, 80\% for Small ImageNet and merely 20\% for Tiny ImageNet. While previous works such Knockoff Nets state that \enquote{any large diverse set
 of images makes for a good transfer set}, we come to a different conclusion. Tiny ImageNet consists of 100000 images which should be enough to steal a model trained on a simple dataset like MNIST is. The strong performance of CIFAR-10 in this experiment contradicts the claims from
 Orekondy et al. even more because CIFAR-10 is arguably less diverse than Tiny ImageNet but significantly outperforms it in this setting. \par
-
+The second observation we make is that the success of a model stealing does depend on the architecture of both target and substitute model. In our experiments, ActiveThiefConv3 and ActiveThiefConv4 perform significantly better than ActiveThiefConv2 when being used as a target model
+and on the other hand, model stealing attacks extracting ActiveThiefConv2 achieve higher Model Agreement than those extracting ActiveThiefConv3 or ActiveThiefConv4. This is in line with the findings of Orekondy et al. while it contradicts the findings of Pal et al. We do note however,
+that Pal et al. most likely compared Model Agreement between Neural Network architectures when training on the full thief datasets where we compared Model Agreement after using Active Learning for Model Extraction with a total budget of 20000. We believe that our findings are more
+representative because they do not assume training on a full dataset. \par
+Finally, we observed that data augmentation can significantly effect the success of Model Stealing attacks. Unfortunately however, there is no general rule whether data augmentation is beneficial or not. In our experiments with MNIST as target model dataset, we observed that
+renouncing data augmentation significantly increased Model Agreement whereas the opposite was the case for CIFAR-10 as target model dataset. We believe that learning to classify MNIST is a much easier task than learning to classify CIFAR-10 and therefore, using data augmentation
+when extracting a model trained on MNIST only obscures the function learned by the target model. Since most real world datasets are more similar to CIFAR-10 than to MNIST, we believe that performing data augmentation on the thief dataset generally is beneficent for Model Stealing
+in the real world. The effect of data augmentation proves another point however: Model Stealing is a domain where a single hyperparameter can have a significant effect on the outcome of an experiment.
 
 \subsection{Continual Active Learning for Model Stealing}
 \label{sec:Discussion:ModelStealing:CALMS}
+Next, we will turn to the results of the experiments where we applied Continual Active Learning to perform Model Stealing Attacks. We will discuss the results on the three different target model datasets separately and then mention any findings that apply to all three datasets. \par
+Regarding our experiment for the MNIST dataset, we notice that the gap in performance of Continual Active Learning to Active Learning is even larger than in the classic Continual Active Learning setting, both when training using the softmax output of the target model and when using 
+only the predicted class label. We assume that the main reason for the poor performance of Continual Active Learning in this setting is the fact that we used data augmentation for the thief dataset. In Figure \ref{fig:Evaluation:Results:CAL:EffectAugmentation} we presented the results
+of our experiments performing Model Stealing with and without data augmentation on the thief dataset. We see that for the MNIST dataset, renouncing data augmentation significantly increases Model Agreement. When using data augmentation with MNIST as target model dataset, it is more
+challenging to learn the function of the target model, especially when training solely on 2000 data points at a time. \par
+For the CIFAR-10 dataset, we noticed that the margin between Continual Active Learning and Active Learning was considerably lower compared to MNIST. Again, we believe that using data augmentation is the main reason for this. Figure \ref{fig:Evaluation:Results:CAL:EffectAugmentation}
+shows that using data augmentation when extracting a target model trained on CIFAR-10 increases Model Agreement. The results from the experiments using softmax output and the predicted label suggest that with data augmentation, the feature space of CIFAR-10 is demanding to learn to a
+full extend (hence to low Model Agreement of the baseline compared to MNIST), but simpler to learn partially. This benefits the performance of Continual Active Learning in this setting. \par
+Finally, we observe
 
+
+
+Furthermore, we observe that BALD demonstrates significantly improved performance
+compared to the classic Continual Active Learning setup. The reason for this is that the substitute model in this experiment, which is ActiveThiefConv3, contains multiple dropout layers, enabling a more accurate estimation of $\mathbb{E}_{\theta \sim p(\theta \mid L)} [H[y \mid x, \theta]]$
+using Monte Carlo dropout.
 
 % Am ende ein paar Sätze zu jeder CL und AL Strategie
 %  For model stealing. Mention first of all that this is a setting where there is an abundance of hyperparameters and therefore: 1) it is hard to find the optimal hyperparameters and 2) it is hard to compare different approaches since they might not be using the same hyperparameters
