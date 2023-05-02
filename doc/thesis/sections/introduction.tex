@@ -13,91 +13,19 @@
 \chapter{Introduction}
 \label{ch:Introduction}
 
-%% -------------------
-%% | Example content |
-%% -------------------
-
-% This is the SDQ thesis template.
-% For more information on the formatting of theses at SDQ, please refer to
-% \url{https://sdq.kastel.kit.edu/wiki/Ausarbeitungshinweise} or to your advisor.
-
-% \section{Spacing and indentation}
-% To separate parts of text in \LaTeX, please use two line breaks.
-% They will then be set with correct indentation.
-% Do \emph{not} use:
-% \begin{itemize}
-%   \itemsep0em
-%   \item \texttt{\textbackslash\textbackslash}
-%   \item \texttt{\textbackslash parskip}
-%   \item \texttt{\textbackslash vskip}
-% \end{itemize} 
-% or other commands to manually insert spaces, since they break the layout of this template.
-
-% \section{Example: Citation}
-% \label{sec:Introduction:Citation}
-% This template is based on \texttt{biblatex} and \texttt{biber}, which is preferred over the
-% outdated Bib\TeX{} software.
-% Please adjust your build environment if necessary (see
-% \url{https://sdq.kastel.kit.edu/wiki/BibTeX-Literaturlisten#biblatex.2Fbiber})
-
-% A citation: \cite{becker2008a} 
-
-% \section{Example: Figures}
-% \label{sec:Introduction:Figures}
-% \begin{figure}
-% \centering
-% \includegraphics[width=4cm]{logos/sdqlogo}
-% \caption{SDQ logo}
-% \label{fig:sdqlogo}
-% \end{figure}
-
-% A reference: The SDQ logo is displayed in \autoref{fig:sdqlogo}. 
-% (Use \code{\textbackslash autoref\{\}} for easy referencing.) 
-
-% \section{Example: Tables}
-% The \texttt{booktabs} package offers nicely typeset tables, as in \autoref{tab:atable}.
-
-% \label{sec:Introduction:Tables}
-% \begin{table}
-% \centering
-% \begin{tabular}{r l}
-% \toprule
-% abc & def\\
-% ghi & jkl\\
-% \midrule
-% 123 & 456\\
-% 789 & 0AB\\
-% \bottomrule
-% \end{tabular}
-% \caption{A table}
-% \label{tab:atable}
-% \end{table}
-
-% \section{Example: Formula}
-% One of the nice things about the Linux Libertine font is that it comes with
-% a math mode package.
-% \begin{displaymath}
-% f(x)=\Omega(g(x))\ (x\rightarrow\infty)\;\Leftrightarrow\;
-% \limsup_{x \to \infty} \left|\frac{f(x)}{g(x)}\right|> 0
-% \end{displaymath}
-
-%% --------------------
-%% | /Example content |
-%% --------------------
-
 Research in Machine Learning and especially Deep Learning has produced an abundance of highly influential work in recent years, like
-Convolutional Neural Networks (CNNs) \cite{lecun1998gradient}, Transformers \cite{vaswani2017attention} and Generative Adversarial
-Networks (GANs). These Machine Learning Models are becoming ever more accurate, achieving or even surpassing human-level performance
-on tasks like visual perception or natural language understanding. Because of their high potential for innovation, Machine Learning
-Models are increasingly being used in real-world applications. To profit from this, a multitude of technology enterprises offer numerous
-services to ease the training, development and deployment of Machine Learning applications. These services can be grouped together under
-the term Machine Learning as a Service (MLaaS). \par
-While MLaaS is crucial to make Machine Learning more accessable, it also poses a security threat. In the past years, numerous research works
-have been published which demonstrate how easily Machine Learning Models can be extracted from MLaaS services \cite{tramer2016stealing}
+Convolutional Neural Networks (\gls{cnn}s) \cite{lecun1998gradient}, Transformers \cite{vaswani2017attention} and Generative Adversarial
+Networks (\gls{gan}s) \cite{goodfellow2020generative}. These Machine Learning Models are becoming ever more accurate, achieving or even
+surpassing human-level performance on tasks like visual perception or natural language understanding. Because of their high potential for
+innovation, Machine Learning Models are increasingly being used in real-world applications. To profit from this, a multitude of technology
+enterprises offer numerous services to ease the training, development and deployment of Machine Learning applications. These services can
+be grouped together under the term Machine Learning as a Service (\gls{mlaas}). \par
+While \gls{mlaas} is crucial to make Machine Learning more accessible, it also poses a security threat. In the past years, numerous research works
+have been published which demonstrate how easily Machine Learning Models can be extracted from \gls{mlaas} services \cite{tramer2016stealing}
 \cite{reith2019efficiently} \cite{papernot2017practical}. The standard procedure to steal a such a machine learning model is to train a local
-clone (also called substitute model) of the model which is hosted on the MLaaS service (also called target model). The substitute model is trained
+clone (also called substitute model) of the model which is hosted on the \gls{mlaas} service (also called target model). The substitute model is trained
 using a dataset that the attacker collects which is also called thief dataset. Labels for the thief dataset are then obtained by querying the target
-model on the thief dataset. The process of extracting Machine Learning models from MLaaS services is referred to as Model Stealing. \par
+model on the thief dataset. The process of extracting Machine Learning models from \gls{mlaas} services is referred to as Model Stealing. \par
 Because of the dramatic consequences of Model Stealing Attacks, researchers have also investigated how to defend against them. Two recent approaches
 to defend Model Stealing Attacks are Prediction Poisoning \cite{orekondy2019prediction} and PRADA \cite{juuti2019prada}. Despite the effort to
 defend model stealing attacks, research works have been published which evade these defense strategies. One notable example of this is the model

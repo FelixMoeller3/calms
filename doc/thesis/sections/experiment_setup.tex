@@ -112,7 +112,7 @@ In the following, we will refer to this \gls{cnn} architecture as \enquote{Activ
 \subsection{Training Hyperparameters}
 \label{sec:ExperimentSetup:Hyperparameters}
 % TODO: Überlegen, ob es noch mehr Hyperparameter gibt, die wir erwähnen sollten
-We use PyTorch's Stochastic Gradient Descent (\gls{SGD}) optimizer with a learning rate of 0.1 across all experiments. Furthermore, we schedule the learning rate by a factor of 0.1, but the number of
+We use PyTorch's Stochastic Gradient Descent (\gls{sgd}) optimizer with a learning rate of 0.1 across all experiments. Furthermore, we schedule the learning rate by a factor of 0.1, but the number of
 epochs after which we schedule the learning rate differs between experiments. It is important to note that we re-instantiate the \gls{sgd} optimizer after each Active Learning
 iteration. We will go more into detail on this in the description of the respective experiments. Apart from scheduling the learning rate, we use momentum \cite{cutkosky2020momentum}
 of 0.9 and $l2$-regularization of 0.0005. For all experiments we use a batch size of 128 and shuffle the entire training set before each epoch.
