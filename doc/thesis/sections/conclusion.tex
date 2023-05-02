@@ -18,27 +18,28 @@
 % because batch size is not large enough. Mention small difference between different active
 % learning approaches for CIFAR-10 at least, which are inline with the findings from Yilins
 % paper.
-% Don't use data augmentation for model stealing!!!
 In this thesis we proposed a novel approach called Continual Active Learning, which combines Active Learning and Continual Learning. 
-We implement multiple Active Learning and Continual Learning strategies, namely BALD, LC, Badge and CoreSet as well as EWC, IMM, Alasso and MAS,
-and combine them to create a Continual Active Learning strategies. Next, we evaluate them on the dataset CIFAR-10 and the Neural Network Architecture
-ResNet18. Our results indicate that Continual Active Learning strategies have significantly lower runtime than Active Learning strategies, but fail
-to achieve their accuracy. We decide to implement the Active Learning strategy VAAL along with the Continual Learning strategy A-GEM to see if they
-can outperform the other Continual Active Learning strategies but receive similar results. Our analysis of the results suggests that the main reason
-why Continual Active Learning achieves sub-par validation accuracy is that the number of training points used in each Active Learning iteration is too
+We implement multiple Active Learning and Continual Learning strategies, namely \gls{bald}, \gls{lc}, \gls{badge} and CoreSet as well
+as \gls{ewc}, \gls{imm}, \gls{alasso} and \gls{mas}, and combine them to create a Continual Active Learning strategies. Next, we 
+evaluate them on the dataset CIFAR-10 and the Neural Network Architecture ResNet18. Our results indicate that Continual Active Learning
+strategies have significantly lower runtime than Active Learning strategies, but fail to achieve their accuracy. We decide to implement
+the Active Learning strategy \gls{vaal} along with the Continual Learning strategy \gls{a-gem} to see if they can outperform the other
+Continual Active Learning strategies but receive similar results. Our analysis of the results suggests that the main reason why Continual
+Active Learning achieves sub-par validation accuracy is that the number of training points used in each Active Learning iteration is too
 small. Further analysis of the results from our experiments with a custom Replay strategy support this theory. \par
-Before applying Continual Active Learning to the Model Stealing domain, we rigorously analyze the setting of the ActiveThief paper \cite{pal2020activethief}.
-While we agree with most findings of the paper, we find that the architecture of the target and the substitute model has a greater influence of the Model Agree-
-ment achieved than the Authors of ActiveThief suggest. Furthermore, we find that the choice of the thief dataset has a significant influence on Model Agreement
-and so does (not) using data augmentation on the thief dataset. \par
-Finally, we perform Model Stealing Attacks with Continual Active Learning, using MNIST, CIFAR-10 and CIFAR-100 as target model datasets. The results from these
-experiments closely resemble those from the classic Continual Active Learning setting, i.e. we find that Continual Active Learning achieves lower Model Agreement
-than Model Extraction using Active Learning. \par
-In general, we find that our approach is (resource-) \textit{efficient} but not \textit{effective} because it is significantly outperformed by the baseline,
-both in the classic Continual Active Learning setting and in the Model Stealing setting, in terms of accuracy and agreement, respectively. However, it is important
-to note that the validity of our results is limited. First, the list of Continual and Active Learning strategies we evaluated is not exhaustive, although we made
-every effort to include the most popular strategies. Second we only evaluated our approach on a single Neural Network Architecture and a single dataset in the 
-classic Continual Active Learning setting and one Neural Network plus three datasets in the Model Stealing setting.
+Before applying Continual Active Learning to the Model Stealing domain, we rigorously analyze the setting of the ActiveThief paper
+\cite{pal2020activethief}. While we agree with most findings of the paper, we find that the architecture of the target and the substitute
+model has a greater influence of the Model Agreement achieved than the Authors of ActiveThief suggest. Furthermore, we find that the
+choice of the thief dataset has a significant influence on Model Agreement and so does (not) using data augmentation on the thief dataset. \par
+Finally, we perform Model Stealing Attacks with Continual Active Learning, using MNIST, CIFAR-10 and CIFAR-100 as target model datasets.
+The results from these experiments closely resemble those from the classic Continual Active Learning setting, i.e. we find that Continual
+Active Learning achieves lower Model Agreement than Model Extraction using Active Learning. \par
+In general, we find that our approach is (resource-) \textit{efficient} but not \textit{effective} because it is significantly outperformed
+by the baseline, both in the classic Continual Active Learning setting and in the Model Stealing setting, in terms of accuracy and agreement,
+respectively. However, it is important to note that the validity of our results is limited. First, the list of Continual and Active Learning
+strategies we evaluated is not exhaustive, although we made every effort to include the most popular strategies. Second we only evaluated our
+approach on a single Neural Network Architecture and a single dataset in the classic Continual Active Learning setting and one Neural Network
+plus three datasets in the Model Stealing setting.
 \section{Future Work}
 \label{sec:Conclusion:FutureWork}
 % Future work could be to use the same approach in other types of continual learning settings,
@@ -48,14 +49,15 @@ classic Continual Active Learning setting and one Neural Network plus three data
 % Another way is to combine the Active Learning and Continual Learning approaches, i.e. to combine the gradients used
 % in AGEM for the selection by gradients using Badge
 % Look if CAL is relevant to any security problem like e.g. malware analysis
-The approach we proposed in this thesis is not limited to the settings we evaluated them in. While the most straight-forward extension would be to evaluate the approach
-on new datasets and Neural Network Architectures in the settings we used them in, we believe that, from a research perspective, it would be more interesting to apply 
-Continual Active Learning to unrelated settings. In our methodology, we had an Active-Learning-centric view on Continual Active Learning, i.e. our major goal was to
-improve the accuracy of Active Learning while reducing its runtime. Future work might be interested in approaching Continual Active Learning from a Continual Learning
-perspective, for example by using Active Learning to perform task ordering in a task-incremental setting. Another idea could be to leverage the information of Active
-Learning for Continual Learning and vice-versa. In our current framework Active Learning and Continual Learning work independently, and we see potential for improve-
-ment by introducing interdependence between the two. \par
-Broadly speaking, our approach can be used in any setting where the data distribution of the task changes and labeling data is expensive. In the computer security domain,
-our approach could be used for malware analysis. Previous works have demonstrated the effectiveness of using Machine Learning for Malware Analysis \cite{nath2014static}
-\cite{ijaz2019static}. Malware analysis is a task that is well suited for our approach because the features that classify malware change over time and determining if a
-given piece of software contains malware is time-consuming. 
+The approach we proposed in this thesis is not limited to the settings we evaluated them in. While the most straight-forward extension would
+be to evaluate the approach on new datasets and Neural Network Architectures in the settings we used them in, we believe that, from a research
+perspective, it would be more interesting to apply Continual Active Learning to unrelated settings. In our methodology, we had an Active-Learning
+-centric view on Continual Active Learning, i.e. our major goal was to improve the accuracy of Active Learning while reducing its runtime. Future
+work might be interested in approaching Continual Active Learning from a Continual Learning perspective, for example by using Active Learning to
+perform task ordering in a task-incremental setting. Another idea could be to leverage the information of Active Learning for Continual Learning
+and vice-versa. In our current framework Active Learning and Continual Learning work independently, and we see potential for improvement by 
+introducing interdependence between the two. \par
+Broadly speaking, our approach can be used in any setting where the data distribution of the task changes and labeling data is expensive.
+In the computer security domain, our approach could be used for malware analysis. Previous works have demonstrated the effectiveness of using
+Machine Learning for Malware Analysis \cite{nath2014static} \cite{ijaz2019static}. Malware analysis is a task that is well suited for our approach
+because the features that classify malware change over time and determining if a given piece of software contains malware is time-consuming. 

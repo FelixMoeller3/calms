@@ -122,15 +122,15 @@ points to label. The authors demonstrate Badge's agnosticism towards model archi
 % Structure: First some general introduction then present
 % the different approaches used in the experiments (LC, CoreSet, BALD, Badge)
 
-\subsubsection{VAAL}
-Variational Adversarial Active Learning (VAAL) is a representation-based Active Learning strategy proposed by Sinha et al. \cite{sinha2019variational}. 
-VAAL uses a $\beta$-Variational Autoencoder (\gls{vae}) \cite{higgins2017beta} and a discriminator to select the most informative samples to query. Thereby,
-the encoder learns a low-dimensional space for the distribution of both the labeled and the unlabeled data which is reconstructed by the decoder. The
-discriminator is trained to distinguish between the labeled and the unlabeled data and given the encoder's latent representation of a data point as an
+\subsubsection{Variational Adversarial Active Learning}
+Variational Adversarial Active Learning (\gls{vaal}) is a representation-based Active Learning strategy proposed by Sinha et al. \cite{sinha2019variational}. 
+\gls{vaal} uses a $\beta$-Variational Autoencoder (\gls{vae}) \cite{higgins2017beta} and a discriminator to select the most informative samples to query.
+Thereby, the encoder learns a low-dimensional space for the distribution of both the labeled and the unlabeled data which is reconstructed by the decoder. 
+The discriminator is trained to distinguish between the labeled and the unlabeled data and given the encoder's latent representation of a data point as an
 input. A visual summary of the approach is depicted in Figure \ref{fig:VAAL}. \par
 More formally, the encoder learns the distribution of $X_U$ and $X_L$ where $X_U$ is the unlabeled pool and $(X_L,Y_L)$ is the labeled pool. The encoder
-aims to minimize the Kullback-Leibler (KL) divergence \cite{goldberger2004hierarchical} between the reconstructed distribution $q_\Phi (z_L | x_L)$ and
-the real distribution $p(z)$ of the labeled data, which we assume to be a unit Gaussian. Simultaneously, the encoder aims to minimize the KL divergence
+aims to minimize the Kullback-Leibler (\gls{kl}) divergence \cite{goldberger2004hierarchical} between the reconstructed distribution $q_\Phi (z_L | x_L)$ and
+the real distribution $p(z)$ of the labeled data, which we assume to be a unit Gaussian. Simultaneously, the encoder aims to minimize the \gls{kl} divergence
 between $q_\Phi (z_U | x_U)$ and $p(z)$. This results in the following objective function for the \gls{vae}:
 \begin{equation}
     L^{trd}_{VAE} E[\log p_\theta (x_L | z_L)] - \beta D_{KL} (q_\Phi (z_L | x_L) || p(z)) + E[\log p_\theta (x_U | z_U)] - \beta D_{KL} (q_\Phi (z_U | x_U) || p(z))
@@ -150,14 +150,13 @@ The discriminator loss is given by:
 \begin{equation}
     L_D = - E[\log(D(q_\theta (z_L | x_L)))] - E[\log (1- D(q_\theta (z_U | x_U)))].
 \end{equation}
-To query a batch of samples of size $b$ to label, the  VAE and discriminator are first trained on the entire pool of labeled and unlabeled data for a
-pre-specified number of epochs $e$. The samples chosen by VAAL are the ones where the discriminator is most confident about their belonging to the unlabeled
+To query a batch of samples of size $b$ to label, the \gls{vae} and discriminator are first trained on the entire pool of labeled and unlabeled data for a
+pre-specified number of epochs $e$. The samples chosen by \gls{vaal} are the ones where the discriminator is most confident about their belonging to the unlabeled
 pool or, in other words, least confident about their belonging to the labeled pool.
 \begin{figure} [ht]
     \centering
     \includegraphics[width=.9\linewidth]{images/Vaal_idea.png}
-    \caption[Visualization of VAAL]{Illustration of the VAAL idea taken from the paper \cite{sinha2019variational}. The authors of ALASSO state that, SI
-    underestimates the unobserved side of the loss function and hence a better approximation of the loss function is achieved by overestimating it.}
+    \caption[Visualization of VAAL]{Illustration of the \gls{vaal} idea taken from the paper \cite{sinha2019variational}.}
     \label{fig:VAAL}
 \end{figure}
 
@@ -228,9 +227,9 @@ where
 \begin{equation}
     \mathbb{I}_{D_{1:N-1}} = \mathbb{E} [- \frac{\partial^2 \theta (\log (p(\theta \mid D_{1:N-1})))}{\partial^2 \theta} \mid_{\theta^*_{D_{1:N-1}}}]
 \end{equation} 
-which is the Fisher Information Matrix (FIM) as shown by \cite{aich2021elastic}. $F_i$, the $i$-th diagonal of the FIM is used as an importance measure
-for the $i$-th parameter because a large value of $F_i$ indicates a small variance in the posterior distribution of the parameter, meaning that it is
-important for previous tasks. To conclude, the loss function for a Task $N$ is altered to
+which is the Fisher Information Matrix (\gls{fim}) as shown by \cite{aich2021elastic}. $F_i$, the $i$-th diagonal of the \gls{fim} is used as an
+importance measure for the $i$-th parameter because a large value of $F_i$ indicates a small variance in the posterior distribution of the parameter,
+meaning that it is important for previous tasks. To conclude, the loss function for a Task $N$ is altered to
 \begin{equation}
     L(\theta) = L_B(\theta) + \sum_i \frac{\lambda}{2} F_i \cdot (\theta_i - \theta^*_{N-1,i})^2,
 \end{equation}
@@ -261,13 +260,13 @@ then altered for the standard setting as follows
     L(\theta) = L_N(\theta) + \lambda \sum_i \omega_i \cdot (\theta_i - \theta^*_{N-1,i})^2
 \end{equation}
 where $\lambda$ again is the hyperparameter used to trade-off between learning new tasks and retaining the knowledge of previous tasks.
-\subsubsection{ALASSO}
-Asymmetric Loss Approximation by Single-Side Overestimation (ALASSO) is a structural regularization method proposed by Park et al. \cite{park2019continual}.
-ALASSO is an extension of Synaptic Intelligence (\gls{si}) proposed by Zenke et al. \cite{zenke2017continual} which \enquote{mitigates the limitations of SI},
+\subsubsection{Asymmetric Loss Approximation by Single-Side Overestimation}
+Asymmetric Loss Approximation by Single-Side Overestimation (\gls{alasso}) is a structural regularization method proposed by Park et al. \cite{park2019continual}.
+\gls{alasso} is an extension of Synaptic Intelligence (\gls{si}) proposed by Zenke et al. \cite{zenke2017continual} which \enquote{mitigates the limitations of SI},
 as the authors claim. The main observation made by the Park et al. about \gls{si} is that it underestimates the true loss on the unobserved side of the loss
 function because it assumes that the loss function is symmetric. Park et al. first show that this assumption is not always true through empirical observation
-and then present a new approach to approximate the loss function on the unobserved side more precisely. The fundamental observation and idea of ALASSO can be
-seen in Figure \ref{fig:Alasso}. Since \gls{alasso} extends the \gls{si} framework, we strongly recommend the reader to familiarize themselves with SI before
+and then present a new approach to approximate the loss function on the unobserved side more precisely. The fundamental observation and idea of \gls{alasso} can be
+seen in Figure \ref{fig:Alasso}. Since \gls{alasso} extends the \gls{si} framework, we strongly recommend the reader to familiarize themselves with \gls{si} before
 trying to understand \gls{alasso}. In the following we will assume that the reader is familiar with \gls{si} and only explain the extension that \gls{alasso}
 brings to \gls{si}. \par
 Since \gls{alasso} is a structural regularization method like \gls{mas} and \gls{ewc}, it alters the loss function as follows
@@ -321,7 +320,7 @@ Incremental Moment Matching (\gls{imm}) is a structural regularization approach 
 combined with each other. The main idea of \gls{imm} is to match the first and second moments of the posterior distribution $p(\theta \mid D_{1:N})$ of the model 
 parameters given all tasks up to the current one. As in \gls{ewc}, the posterior distribution cannot be computed, it is approximated via a Gaussian distribution which
 we call $q_{1:N}$. The first approach to matching these moments is called \textbf{Mean-based Incremental Moment Matching}, also known as mean-\gls{imm}. The weight
-update of mean-\gls{imm} is the analytical solution of the problem to minimize the weighted sum of Kullback-Leibler (\gls{kl}) divergences between each $q_i$ and $q_{1:N}$
+update of mean-\gls{imm} is the analytical solution of the problem to minimize the weighted sum of \gls{kl} divergences between each $q_i$ and $q_{1:N}$
 \cite{goldberger2004hierarchical}, i.e. the solution to
 \begin{equation}
     \argmin_{\mu^*_{1:N},\Sigma^*_{1:N}} \sum_{i=N-k}^N \alpha_i \cdot KL(q_i \mid \mid q_{1:N})
@@ -380,13 +379,13 @@ being orthogonal to it.
 % Structure: First some general introduction then present
 % the different approaches used in the experiments (EWC, MAS, ALASSO, IMM, potentially Replay?)
 
-\subsubsection{A-GEM}
-Averaged Gradient Episodic Memory (A-GEM) is an exemplar rehearsal approach to Continual Learning, proposed by Chaudhry et al. \cite{chaudhry2018efficient}.
-A-GEM is based on Gradient Episodic Memory (GEM) \cite{lopez2017gradient}, aiming to make it more efficient than GEM while maintaining similar or even better
-performance. We advise the reader to read the original paper for a more detailed explanation of GEM. \par
-Like GEM, A-GEM uses a so-called episodic Memory $M$ for all previous tasks $M_k (k<N)$. A-GEM aims to avoid catastrophic forgetting by ensuring that the average loss for
-the previous tasks does not increase while simultaneously aiming to minimize the loss on the current task. Formally, A-GEM minimizes proposes a solution to the following 
-objective 
+\subsubsection{Averaged Gradient Episodic Memory}
+Averaged Gradient Episodic Memory (\gls{a-gem}) is an exemplar rehearsal approach to Continual Learning, proposed by Chaudhry et al. \cite{chaudhry2018efficient}.
+\gls{a-gem} is based on Gradient Episodic Memory (\gls{gem}) \cite{lopez2017gradient}, aiming to make it more efficient than \gls{gem} while maintaining similar or
+even better performance. We advise the reader to read the original paper for a more detailed explanation of \gls{gem}. \par
+Like \gls{gem}, \gls{a-gem} uses a so-called episodic Memory $M$ for all previous tasks $M_k (k<N)$. \gls{a-gem} aims to avoid catastrophic forgetting by ensuring
+that the average loss for the previous tasks does not increase while simultaneously aiming to minimize the loss on the current task. Formally, \gls{a-gem} minimizes
+proposes a solution to the following objective 
 \begin{equation}
     \text{minimize}_\theta l(f_\theta,T_N) \text{s.t.} l(f_\theta,T) \leq l(f_\theta^{N-1},T) \text{where} T = \bigcup_{i<N} T_i
 \end{equation}
@@ -398,8 +397,8 @@ where $g_{ref}$ is a gradient computed by randomly sampling from the episodic me
 \begin{equation}
     \tilde{g} = g - \frac{g^T g_{ref}}{g^T_{ref} g_{ref}} g_{ref}
 \end{equation}
-which is the gradient update used by A-GEM. \par
-When running AGEM, we need to decide on two hyperparameters: The first one is $S$, the number of samples from the episodic memory $M$ to compute $g_{ref}$. The second
+which is the gradient update used by \gls{a-gem}. \par
+When running \gls{a-gem}, we need to decide on two hyperparameters: The first one is $S$, the number of samples from the episodic memory $M$ to compute $g_{ref}$. The second
 one is $P$ the number of patterns (or data points), that are stored to the episodic memory after each task.
 
 
@@ -409,10 +408,11 @@ one is $P$ the number of patterns (or data points), that are stored to the episo
 
 \subsection{Knockoff Nets}
 \label{sec:Related_work:Model_Stealing:Knockoff_Nets}
+% Ggf hier Abkürzungen kennzeichnen
 Knockoff Nets was published by Orekondy et al. \cite{orekondy2019knockoff}, and it was the first approach which focused only on stealing the functionality
 of the model instead of inferring hyperparameters, model architecture etc. Orekondy et al. used a variety of substitute models, thief datasets and query
 selection strategies to empirically evaluate how these factors influence the model stealing process. More precisely, they test the substitute models
-Alexnet \cite{krizhevsky2017imagenet}, Resnet, VGG and Densenet \cite{huang2017densely} using Caltech-256,CUBS-200-2011, Indoor-Scenes, Diabetic-Retinopathy,
+Alexnet \cite{krizhevsky2017imagenet}, ResNet, VGG and DenseNet \cite{huang2017densely} using Caltech-256,CUBS-200-2011, Indoor-Scenes, Diabetic-Retinopathy,
 ILSVRC and OpenImages as thief datasets as well as a random query selection strategy and a reinforcement learning approach. Orekondy et al. make the following
 key findings: 
 \begin{itemize}
@@ -434,15 +434,15 @@ by Active Learning to query the target model, the model stealing attack can succ
 that ActiveThief successfully evades PRADA \cite{juuti2019prada}, a state-of-the-art model stealing defense which detects attacks by analyzing the distribution of distances
 between queries. \par
 The authors of ActiveThief evaluate their framework using the Active Learning strategies Random, Uncertainty \cite{lewis1994sequential}, CoreSet \cite{sener2017active},
-DeepFool-based Active Learning (DFAL) \cite{ducoffe2018adversarial} and a custom combination of DFAL and CoreSet. They use a custom CNN architecture for both target and
-substitute model and show that ActiveThief is able to successfully steal the target model for multiple benchmark datasets such as MNIST and CIFAR-10. A visualization of
-the model stealing workflow proposed by Pal et al. is shown in Figure \ref{fig:ActiveThief}.
+DeepFool-based Active Learning (\gls{dfal}) \cite{ducoffe2018adversarial} and a custom combination of \gls{dfal} and CoreSet. They use a custom \gls{cnn} architecture
+for both target and substitute model and show that ActiveThief is able to successfully steal the target model for multiple benchmark datasets such as MNIST and CIFAR-10.
+A visualization of the model stealing workflow proposed by Pal et al. is shown in Figure \ref{fig:ActiveThief}.
 
 \begin{figure} [ht]
     \centering
     \includegraphics[width=.9\linewidth]{images/ActiveThief_Idea.png}
     \caption[Visualization of ActiveThief]{Illustration of the model stealing workflow proposed by \cite{pal2020activethief}. Inspired by
-    \cite{chandrasekaran2020exploring}, Pal et al. use active learning to select the next samples to query the target model.}
+    \cite{chandrasekaran2020exploring}, Pal et al. use Active Learning to select the next samples to query the target model.}
     \label{fig:ActiveThief}
 \end{figure}
 

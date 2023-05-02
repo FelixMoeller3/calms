@@ -31,16 +31,17 @@ a detailed description of our approach.
 \label{sec:Methodology:CLSetting}
 %Mention that CL Setting consists of multiple tasks, task can and usually are independent
 % Outline classic Continual Learning Workflow with a figure
-In the typical continual learning setting, the model is trained on a sequence of tasks. Each task $T_i = {x_k,y_k | k \in \{1,\ldots,n\}}$ is a set of instances 
-with their respective label. Together, the tasks form a dataset $D = \bigcup\limits_{i=1}^{N} T_i$. It is important to note that
-the distribution of two distinct tasks $P(T_i)$  and $P(T_j) (i \neq j)$ are not necessarily the same. Most often in fact, the tasks are independent of each
-other, which is why neural networks struggle to perform well on multiple tasks at once. This also means that the size of two distinct datasets can be
-different, i.e. $|T_i| \neq |T_j|$ and so can the number of classes $|{y_k | \exists x_k: x_k,y_k \in T_i}| \neq |{y_l | \exists x_l: x_l,y_l \in T_j}|$.
-When training a model on a sequence of tasks, the model is first fed with the data of the first task $T_1$ and then trained on it. After the model has been trained
-on the first task, it can either be trained on the next task or deployed to classify samples stemming from the distribution of the first task. Next, the model is
-trained on the second task. After being trained on the second task, the model should now be able to classify samples from the distribution of the first task as well
-as the second task. This process is repeated until the model has been trained on all tasks. After being trained on all tasks, the model should be able to classify
-%samples following the distribution of all the tasks it was trained on. This workflow is illustrated in Figure \ref{fig:CLWorkflow}. \\
+In the typical continual learning setting, the model is trained on a sequence of tasks. Each task $T_i = {x_k,y_k | k \in \{1,\ldots,n\}}$ is a set
+of instances with their respective label. Together, the tasks form a dataset $D = \bigcup\limits_{i=1}^{N} T_i$. It is important to note that
+the distribution of two distinct tasks $P(T_i)$  and $P(T_j) (i \neq j)$ are not necessarily the same. Most often in fact, the tasks are independent
+of each other, which is why neural networks struggle to perform well on multiple tasks at once. This also means that the size of two distinct datasets
+can be different, i.e. $|T_i| \neq |T_j|$ and so can the number of classes $|{y_k | \exists x_k: x_k,y_k \in T_i}| \neq |{y_l | \exists x_l: x_l,y_l
+\in T_j}|$. When training a model on a sequence of tasks, the model is first fed with the data of the first task $T_1$ and then trained on it. 
+After the model has been trained on the first task, it can either be trained on the next task or deployed to classify samples stemming from the
+distribution of the first task. Next, the model is trained on the second task. After being trained on the second task, the model should now be able to
+classify samples from the distribution of the first task as well as the second task. This process is repeated until the model has been trained on all
+tasks. After being trained on all tasks, the model should be able to classify samples following the distribution of all the tasks it was trained on.
+This workflow is illustrated in Figure \ref{fig:CLWorkflow}. \par
 The main difference between the continual learning setting and classic machine learning is that in the classic machine learning setting, the model is never retrained
 once it is deployed. In the continual learning setting however, the model is retrained whenever a new task arrives.
 

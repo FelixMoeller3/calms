@@ -32,7 +32,7 @@ explicitly stated otherwise.
 
 \subsection{Hardware}
 \label{sec:ExperimentSetup:Hardware}
-All experiments are conducted on the High Performance Computing (HPC) cluster bwUniCluster 2.0 \cite{bwUnicluster}. bwUniCluster 2.0 is an HPC cluster
+All experiments are conducted on the High Performance Computing (\gls{hpc}) cluster bwUniCluster 2.0 \cite{bwUnicluster}. bwUniCluster 2.0 is an \gls{hpc} cluster
 funded by the Ministry of Science, Research and the Arts Baden-Württemberg and the Universities of the State of Baden-Württemberg. It currently consists
 of more than 840 compute nodes with each node falling one of the following categories: \enquote{Thin}, \enquote{HPC}, \enquote{IceLake}, \enquote{Fat},
 \enquote{GPUx4}, \enquote{GPUx8}, \enquote{GPUx4 A100}, \enquote{GPUx4 H100} and \enquote{Login}. In our experiments, we use the nodes GPUx4, GPUx8 and
@@ -47,32 +47,32 @@ and their respective versions can be found in Appendix \ref{sec:Appendix:Specifi
 
 \subsection{Continual Learning Strategies}
 \label{sec:ExperimentSetup:CLStrategies}
-In our experiments, we use the Continual Learning Strategies EWC, MAS, IMM, Alasso, A-GEM and our custom Replay strategy proposed in \ref{sec:Methodology:ReplayStrategy}.
-For details on these Continual Learning strategies we refer the reader to section \ref{sec:Related_work:Continual_Learning:Experiments}. As a baseline,
-we used the naive strategy of performing classic gradient descent without any regularization. In the following we will refer to this strategy as
-\enquote{Naive}. \par
-Following the paper introducing MAS \cite{aljundi2018memory}, we set the regularization parameter $\lambda$ to 1.0 for MAS. The choice of this parameter
-is crucial because it enables a sound evaluation. If we trivially chose to set $\lambda$ to 0, then there would be no difference between MAS and the naive
-strategy. On the other hand, fine-tuning neither possible (we use more than 25 combinations of Continual Learning strategies and Active Learning strategies 
-on 3 datasets) nor fair (to evaluate the quality and effect of all Continual Learning strategies they should be tested under the same conditions, which
-includes the same balance between old and new tasks). We therefore set $\lambda$ in EWC and IMM to 1.0 accordingly. The regularization parameter $c$ in
-Alasso, which is equivalent to $\lambda$ in EWC, MAS and IMM is set to 0.5 for all experiments. We tried setting $c$ to 1.0, however we noticed that this
-led to divergence during gradient descent despite employing heavy gradient clipping. Since employing stronger gradient clipping was not a viable solution
-because it impedes model convergence, we decided to relax the regularization parameter $c$ to 0.5. \par
+In our experiments, we use the Continual Learning Strategies \gls{ewc}, \gls{mas}, \gls{imm}, \gls{alasso}, \gls{a-gem} and our custom Replay strategy
+proposed in \ref{sec:Methodology:ReplayStrategy}. For details on these Continual Learning strategies we refer the reader to section 
+\ref{sec:Related_work:Continual_Learning:Experiments}. As a baseline, we used the naive strategy of performing classic gradient descent without any
+regularization. In the following we will refer to this strategy as \enquote{Naive}. \par
+Following the paper introducing \cite{mas} \cite{aljundi2018memory}, we set the regularization parameter $\lambda$ to 1.0 for \gls{mas}. The choice of
+this parameter is crucial because it enables a sound evaluation. If we trivially chose to set $\lambda$ to 0, then there would be no difference between
+\gls{mas} and the naive strategy. On the other hand, fine-tuning neither possible (we use more than 25 combinations of Continual Learning strategies and
+Active Learning strategies on 3 datasets) nor fair (to evaluate the quality and effect of all Continual Learning strategies they should be tested under
+the same conditions, which includes the same balance between old and new tasks). We therefore set $\lambda$ in \gls{ewc} and \gls{imm} to 1.0 accordingly.
+The regularization parameter $c$ in \gls{alasso}, which is equivalent to $\lambda$ in \gls{ewc}, \gls{mas} and \gls{imm} is set to 0.5 for all experiments.
+We tried setting $c$ to 1.0, however we noticed that this led to divergence during gradient descent despite employing heavy gradient clipping. Since employing
+stronger gradient clipping was not a viable solution because it impedes model convergence, we decided to relax the regularization parameter $c$ to 0.5. \par
 As mentioned before, we employ gradient clipping to avoid gradient descent from diverging. Not only is gradient clipping a viable remedy against the exploding
 gradient problem, it has also been shown that it can accelerate the training process \cite{zhang2019gradient}. In our implementation we clip gradients by their
 $l2$-Norm. Across all Continual Learning procedures, including Naive, we clip the gradients to a maximum $l2$-Norm of 20.0 to accelerate the training process.
-When conducting experiments with MAS and Alasso we encountered exploding gradient problems, which we further investigated for MAS and Alasso separately. While we
-aimed to eliminate the exploding gradient problem, which is mitigated more by clipping smaller gradient, we did not want to restrict the model too much to hinder 
-model convergence. After carefully exploring with different values to clip at, we found setting the threshold for the $l2$-Norm to 2.0 to be effective, mitigating
-the exploding gradient problem while simultaneously enabling model convergence. \par
-Apart from the parameter weighting the regularization term, the Continual Learning strategies do not share any hyperparameters. EWC in fact does not have
-any further hyperparameters and neither does MAS. On the other hand, for IMM we have the choice between mean-IMM and mode-IMM. Furthermore, we can choose
-to apply Weight-transfer, L2-transfer as well as Dropout-transfer, and we can choose values for the $\alpha$ Parameter. In our setup we use mean-IMM, Weight-
-Transfer and L2-transfer and set the $\alpha$ parameter to [0.45,0.55] (i.e. $\alpha_1 = 0.45, \alpha_2 = 0.55$), as suggested by the authors. Both EWC and IMM,
-use Fisher-Information to determine parameter importance. To compute the Fisher Information matrix, we use 5\% of the training set of the current task.
-Regarding Alasso, we set the parameter $a$, which controls the overestimation on the unobserved side, to 3.0. Following the recommendation of the authors,
-we perform parameter decoupling for the $\Omega$ updates and therefore set $a'$ to 1.5 and $c'$ to 0.25. For A-GEM, we set $S$, which is the number of samples
+When conducting experiments with \gls{mas} and \gls{alasso} we encountered exploding gradient problems, which we further investigated for \gls{mas} and \gls{alasso}
+separately. While we aimed to eliminate the exploding gradient problem, which is mitigated more by clipping smaller gradient, we did not want to restrict the
+model too much to hinder model convergence. After carefully exploring with different values to clip at, we found setting the threshold for the $l2$-Norm to 2.0
+to be effective, mitigating the exploding gradient problem while simultaneously enabling model convergence. \par
+Apart from the parameter weighting the regularization term, the Continual Learning strategies do not share any hyperparameters. \gls{ewc} in fact does not have
+any further hyperparameters and neither does \gls{mas}. On the other hand, for \gls{imm} we have the choice between mean-\gls{imm} and mode-\gls{imm}. Furthermore,
+we can choose to apply Weight-transfer, L2-transfer as well as Dropout-transfer, and we can choose values for the $\alpha$ Parameter. In our setup we use mean-\gls{imm},
+Weight-Transfer and L2-transfer and set the $\alpha$ parameter to [0.45,0.55] (i.e. $\alpha_1 = 0.45, \alpha_2 = 0.55$), as suggested by the authors. Both gls{ewc} and
+\gls{imm}, use Fisher-Information to determine parameter importance. To compute the Fisher Information matrix, we use 5\% of the training set of the current task.
+Regarding \gls{alasso}, we set the parameter $a$, which controls the overestimation on the unobserved side, to 3.0. Following the recommendation of the authors,
+we perform parameter decoupling for the $\Omega$ updates and therefore set $a'$ to 1.5 and $c'$ to 0.25. For \gls{a-gem}, we set $S$, which is the number of samples
 drawn from the episodic memory to compute the reference gradients, to 2000. The second hyperparameter, $P$, which controls the number of patterns from a task that
 are saved to the memory, is also set to 2000. \par
 A detailed summary of the hyperparameters used can be found in Appendix \ref{sec:Appendix:Specifications}.
@@ -80,22 +80,22 @@ A detailed summary of the hyperparameters used can be found in Appendix \ref{sec
 
 \subsection{Active Learning Strategies}
 \label{sec:ExperimentSetup:ALStrategies}
-In our experiments, we use the Continual Learning Strategies Badge, LC, CoreSet, BALD and VAAL. For details on these Active Learning strategies we refer
-the reader to section \ref{sec:Related_work:Active_Learning:Approaches}. For Badge, we use the Euclidean distance in the $k$-means++ algorithm.
-For CoreSet we use the Euclidean distance between the activations of the penultimate layer of the neural network as a distance metric for $k$-Center
-algorithm. For BALD we use the Monte Carlo dropout with $T=25$ samples. We omit Monte Carlo dropout in cases where the model does not contain dropout
-layers as the prediction of such a model is deterministic. LC does not contain any hyperparameters, so we do not have to specify any. For VAAL, we train
-\gls{vae} and Discriminator for 20 epochs per iteration. The Neural Network architecture and training hyperparameters are taken directly from the GitHub Repository which
-was published by the authors along with the paper \cite{vaalRepo}. \par
-Across all Active Learning strategies we use the same initial budget, i.e. the number of points we sample from the training set before the first iter-
-ation of the Active Learning algorithm, as the batch size.
+In our experiments, we use the Continual Learning Strategies \gls{badge}, \gls{lc}, CoreSet, \gls{bald} and \gls{vaal}. For details on these Active Learning
+strategies we refer the reader to section \ref{sec:Related_work:Active_Learning:Approaches}. For \gls{badge}, we use the Euclidean distance in the $k$-means++
+algorithm. For CoreSet we use the Euclidean distance between the activations of the penultimate layer of the neural network as a distance metric for $k$-Center
+algorithm. For \gls{bald} we use the Monte Carlo dropout with $T=25$ samples. We omit Monte Carlo dropout in cases where the model does not contain dropout
+layers as the prediction of such a model is deterministic. LC does not contain any hyperparameters, so we do not have to specify any. For \gls{vaal}, we train
+\gls{vae} and Discriminator for 20 epochs per iteration. The Neural Network architecture and training hyperparameters are taken directly from the GitHub Repository
+which was published by the authors along with the paper \cite{vaalRepo}. \par
+Across all Active Learning strategies we use the same initial budget, i.e. the number of points we sample from the training set before the first iteration of the
+Active Learning algorithm, as the batch size.
 
 \subsection{Datasets}
 \label{sec:ExperimentSetup:Datasets}
 In our experiments, we use the datasets MNIST \cite{mnist_web}, Fashion-MNIST \cite{xiao2017fashion}, CIFAR-10 \cite{cifar},
 CIFAR-100 \cite{cifar}, Tiny ImageNet \cite{le2015tiny} and a subset of the ILSVRC2012-14 dataset \cite{imagenet}. The subset of the ILSVRC2012-14 dataset that we
 use is the first of 10 training batches downloaded from \url{http://www.image-net.org/data/downsample/Imagenet32_32.zip}. From now on, we will refer to this subset
-of the ILSVRC2012-14 dataset as \enquote{Small ImageNet}. For all datasets, we use the standard train test split as proposed by Pytorch. We rescale all images to 32x32
+of the ILSVRC2012-14 dataset as \enquote{Small ImageNet}. For all datasets, we use the standard train test split as proposed by PyTorch. We rescale all images to 32x32
 pixels because for the success of a model stealing attack the image shape of the thief dataset has to match the image shape accepted by the target model. We will cover
 this in more detail in section \ref{sec:Methodology:CALMSsetup}. Moreover, we normalize the train and test split of all datasets by using the mean and standard deviation
 of the training set. For all datasets apart from MNIST and FashionMNIST, we further apply Data Augmentation. We use random horizontal flips with a probability of 0.5
@@ -103,8 +103,8 @@ followed by random cropping. A detailed list of the datasets used can be found i
 
 \subsection{Neural Network Architectures}
 \label{sec:ExperimentSetup:NNArchitectures}
-In our experiments, we use the neural network architectures Resnet18 \cite{he2016deep} and CNN Architectures from the ActiveThief paper \cite{pal2020activethief}.
-In the following, we will refer to this CNN architecture as \enquote{ActiveThiefConv}. Since there are multiple variations of the architecture, more specifically ones with
+In our experiments, we use the neural network architectures ResNet18 \cite{he2016deep} and CNN Architectures from the ActiveThief paper \cite{pal2020activethief}.
+In the following, we will refer to this \gls{cnn} architecture as \enquote{ActiveThiefConv}. Since there are multiple variations of the architecture, more specifically ones with
 2,3 or 4 convolutional blocks we will refer to those as ActiveThiefConv2, ActiveThiefConv3 and ActiveThiefConv4 respectively.
 %TODO hier Archtitekturen einfügen und beschreiben
 
@@ -112,8 +112,8 @@ In the following, we will refer to this CNN architecture as \enquote{ActiveThief
 \subsection{Training Hyperparameters}
 \label{sec:ExperimentSetup:Hyperparameters}
 % TODO: Überlegen, ob es noch mehr Hyperparameter gibt, die wir erwähnen sollten
-We use PyTorch's SGD optimizer with a learning rate of 0.1 across all experiments. Furthermore, we schedule the learning rate by a factor of 0.1, but the number of
-epochs after which we schedule the learning rate differs between experiments. It is important to note that we re-instantiate the SGD optimizer after each Active Learning
+We use PyTorch's Stochastic Gradient Descent (\gls{SGD}) optimizer with a learning rate of 0.1 across all experiments. Furthermore, we schedule the learning rate by a factor of 0.1, but the number of
+epochs after which we schedule the learning rate differs between experiments. It is important to note that we re-instantiate the \gls{sgd} optimizer after each Active Learning
 iteration. We will go more into detail on this in the description of the respective experiments. Apart from scheduling the learning rate, we use momentum \cite{cutkosky2020momentum}
 of 0.9 and $l2$-regularization of 0.0005. For all experiments we use a batch size of 128 and shuffle the entire training set before each epoch.
 
