@@ -14,7 +14,7 @@
 \label{ch:Background}
 
 In this chapter we will give an overview of the background knowledge that is needed to understand the following chapters. The topic
-of this thesis is at the intersection of the fields of Active Learning, Continual Learning and Model Stealing and therefore we will
+of this thesis is at the intersection of the fields of Active Learning, Continual Learning and Model Stealing, and therefore we will
 give an introduction to each of these fields. 
 
 \section{Active Learning}
@@ -44,7 +44,7 @@ In general, Active Learning methods can be divided into three categories:
 The taxonomy mentioned above is composed in a data-centric way. While researchers generally agree on the taxonomy mentioned above,
 it is important to note that the effectiveness of an active learning strategy also depends on the type of Machine Learning Model that is used
 (e.g. (Convolutional) Neural Networks, Support Vector Machines, etc.) and the type of data that is used (e.g. images or text).
-For example, the pool-based Active Learning strategy CoreSet \cite{sener2017active} was specifically designed for CNNs.
+For example, the pool-based Active Learning strategy CoreSet \cite{sener2017active} was specifically designed for \glspl{cnn}.
 
 \subsection{Query Synthesis Active Learning}
 \label{sec:QuerySynthesisActiveLearning}
@@ -64,7 +64,7 @@ struggled to assign any class to them in the survey of \cite{baum1992query}.
 \label{sec:PoolBasedActiveLearning}
 Pool-based Active Learning is the most widely studied and used type of Active Learning. The idea behind pool-based Active Learning approaches
 is to iteratively select the most informative data points from the current unlabeled pool, query the oracle for their labels and add them to the
-labeled pool. Next, the ML model is trained on the current labeled pool. This process is repeated until the query budget is exhausted. A more detailed
+labeled pool. Next, the \gls{ml} model is trained on the current labeled pool. This process is repeated until the query budget is exhausted. A more detailed
 explanation can be found in \ref{alg:PoolBasedActiveLearning}. More formally, the pool-based Active Learning problem can be defined as:
 \begin{equation}
     \min_{s^1 \subseteq U: |s^1| \leq b} E_{x,y \sim P_{(X,Y)}}[l(x,y;L \cup b)]
@@ -104,8 +104,8 @@ In the latter case the learner would label the data point if it is located in a 
 
 \section{Continual Learning}
 \label{sec:ContinualLearning}
-Continual Learning is a subfield of Machine Learning that aims to solve the problem of catastrophic forgetting. To elaborate further on this problem,
-it is important to remember that most machine learning services are deployed in an environment where constant changes occur. To adapt to this, it is
+Continual Learning is a subfield of Machine Learning that aims to solve the problem of Catastrophic Forgetting. To elaborate further on this problem,
+it is important to remember that most Machine Learning services are deployed in an environment where constant changes occur. To adapt to this, it is
 necessary for Machine Learning Models to learn continually, i.e. to learn new tasks without forgetting the knowledge they have acquired in the past.
 This is a common case for humans. For example, if a child has once learned to walk, it does not forget how to walk when it learns to ride a bike.
 In contrast to human behavior, the performance of Machine Learning Models on old tasks rapidly decreases when they are trained on new tasks. This phenomenon
@@ -131,7 +131,7 @@ is the way in which new tasks arrive. In the following, we will introduce the th
 %TODO: Add a figure that shows the difference between the three scenarios. For Task-Incremental learning mention tuple with task id.
 In the Task-Incremental setting, a model is informed about which task it will be trained on or which task the data whose label it is supposed to predict belongs to.
 The task-information is supplied via a task identifier which is usually an integer. Because the model does not have to infer the task which it is supposed to predict
-or learn, it is possible to have task-specific components in the model. For neural networks, this means that there is one output layer per task and for each task the
+or learn, it is possible to have task-specific components in the model. For Neural Networks, this means that there is one output layer per task and for each task the
 respective output layer is used while all other layers are shared between all tasks. These classifiers are also known as \enquote{multi-head} classifiers \cite{van2018generative}.
 An example would be the following: The first task is to classify images of cats and dogs. The second task is to classify cows and sheep. The model would have one output layer 
 used to classify cats and dogs and a second output layer to classify cows and sheep. When training for the first task, only the first output layer is used. When the second task
@@ -146,7 +146,7 @@ tasks that the model can be trained on) and $Y = \mathbb{Z}_{k}$ is the label sp
 \label{sec:DomainIncrementalContinualLearning}
 In the Domain-Incremental setting, task identities are not given during evaluation. Since the underlying task does not change, this is also not necessary. While the structure of the task
 stays the same it is rather the distribution of the data that changes. An example of Domain-Incremental Continual Learning would be the classification of digits between 0 and 9 (such as
-those in the MNIST dataset) where the digits for one subtask are green and blue for the other. The mapping that is learned is 
+those in the MNIST \cite{mnist_web} dataset) where the digits for one subtask are green and blue for the other. The mapping that is learned is 
 \begin{equation}
     f: X \rightarrow Y
 \end{equation}
@@ -182,17 +182,17 @@ tasks will decrease, i.e. a high regularization term indicates that the model wi
 weights and a low regularization term indicates that the model has not lost much knowledge of the old tasks. The way the
 regularization term is computed can further be divided into two groups. There are \textbf{structural} approaches which regularize
 based on weight changes to the model and there are \textbf{functional} approaches which regularize based on the output of the model.
-Notable examples of structural approaches include Elastic Weight Consolidation (EWC) \cite{kirkpatrick2017overcoming},Memory Aware
-Synapses (MAS) \cite{aljundi2018memory}, Incremental Moment Matching (IMM) \cite{lee2017overcoming} as well as Asymmetric Loss
-Approximation by Single-Side Overestimation (ALASSO) \cite{park2019continual} which is an extension of Synaptic Intelligence (SI)
+Notable examples of structural approaches include Elastic Weight Consolidation (\gls{ewc}) \cite{kirkpatrick2017overcoming},Memory Aware
+Synapses (\gls{mas}) \cite{aljundi2018memory}, Incremental Moment Matching (\gls{imm}) \cite{lee2017overcoming} as well as Asymmetric Loss
+Approximation by Single-Side Overestimation (\gls{alasso}) \cite{park2019continual} which is an extension of Synaptic Intelligence (\gls{si})
 \cite{zenke2017continual}. All the structural regularization approaches will be covered in more detail in the section on
-\hyperref[sec:Related_work:Continual_Learning:Experiments]{the continual learning approaches used in the experiments}. \par
+\hyperref[sec:Related_work:Continual_Learning:Experiments]{the Continual Learning approaches used in the experiments}. \par
 Functional regularization approaches are inspired by knowledge distillation \cite{hinton2015distilling}. They add a distillation
 loss to the objective function which is computed based on the prediction of a data sample stored for future use. These data samples
 are called soft targets. Li et al. \cite{li2017learning} compute the distillation loss by using the output of the newly arrived task
 given by the model trained on the old tasks. The distillation loss they introduce aims to retain the prediction of the old model on
 the new task even if the prediction itself may be inaccurate. The approach of Rannen et al. \cite{rannen2017encoder}, called Encoder
-Based Lifelong Learning (EBLL) is based on the approach of Li et al., however in EBLL the distillation loss is computed based on
+Based Lifelong Learning (\gls{ebll}) is based on the approach of Li et al., however in \gls{ebll} the distillation loss is computed based on
 autoencoder reconstructions of old tasks.
 
 \subsubsection{Rehearsal Approaches}
@@ -201,7 +201,8 @@ autoencoder reconstructions of old tasks.
 Rehearsal approaches to Continual Learning aim to prevent catastrophic forgetting by fitting a model's parameters to the distribution
 of an incoming task and all previous tasks simultaneously. Within Rehearsal approaches it is important to remember the trade-off between
 model performance and computational cost. In general, the more data from previous tasks is used to train the model, the better the accuracy is. 
-However, in order to train on more data, the data has to be stored and fed into the training process which is costly in terms of memory and This can either be done by replaying stored data from previous tasks or by
+However, in order to train on more data, the data has to be stored and fed into the training process which is costly in terms of memory.
+This can either be done by replaying stored data from previous tasks or by
 retraining on generated data drawn from the distribution of previous tasks. Continual Learning Methods that rely on the former idea are
 categorized as \textbf{exemplar rehearsal} approaches while those that rely on the latter idea are categorized as \textbf{generative replay}
 approaches. \par
@@ -226,13 +227,13 @@ Exemplar Rehearsal Techniques store data from previous tasks in a so-called \enq
 % Based on Olinyk et al., our approach falls into the consistency category of section 6.1
 % Model Stealing defenses are either used for attack detection or attack prevention.
 % TODO: Add connection to Knowledge distillation as mentioned in Related Work section of ActiveThief paper.
-With the advent of Machine Learning as a Service (MLaaS), an increasing amount of machine learning models are being exposed to the public via 
-prediction APIs. The idea of these prediction APIs is that a user can request a prediction from a model by sending a request containing an unlabeled data
-point to the API. The response to the request is then the prediction of the model for the data point. Prediction APIs are monetized by charging the user
+With the advent of Machine Learning as a Service (\gls{mlaas}), an increasing amount of machine learning models are being exposed to the public via 
+prediction \glspl{api}. The idea of these prediction APIs is that a user can request a prediction from a model by sending a request containing an unlabeled data
+point to the \gls{api}. The response to the request is then the prediction of the model for the data point. Prediction \glspl{api} are monetized by charging the user
 on a pay-per-query principle. That means that each request has a fixed price for each query which is usually subtracted from his or her account balance on
 a monthly basis. Providing public access to a machine learning model is a win-win situation because the model developer is compensated for his or her efforts
 on gathering and labeling appropriate training data, choosing a proper model architecture, training the model and fine-tuning its hyperparameters while the user
-of the prediction API can benefit from the model's predictions without having to train the model himself or herself. \par
+of the prediction \gls{api} can benefit from the model's predictions without having to train the model himself or herself. \par
 Since the developed model is the intellectual property of the model developer, it is important that only the model's predictions are exposed to the public and
 not the model (i.e. its architecture and the model weights)itself. However, in the last years numerous research papers have been published which demonstrate how
 several features of a machine learning model can be extracted, i.e. its functionality \cite{tramer2016stealing}, its architecture \cite{oh2019towards} and its
@@ -247,7 +248,7 @@ Since Model Stealing is a rather new field it comes with numerous terms that are
 synonymously. In order to avoid confusion, we will define and explain the terms we use in this section and. \par
 \textbf{Model Stealing Attack}: The process of maliciously querying a machine learning model in order to extract some or all of the model's features, such as its
 architecture, its weights or its training data. Model Stealing Attacks are also known as Model Extraction Attacks or Model Inference Attacks among others. \par
-\textbf{Target Model}: The model that is queried via the prediction API and whose features the attacker aims to extract. The target model has also been referred to 
+\textbf{Target Model}: The model that is queried via the prediction \gls{api} and whose features the attacker aims to extract. The target model has also been referred to 
 as Oracle, Victim Model or Secret Model. \par
 \textbf{Substitute Model}: The model that is used by the attacker to extract the target model's features. Synonyms for Substitute Model are Adversarial Classifier,
 Knockoff Model or Inferred Model. \cite{orekondy2019knockoff} have demonstrated that is favorable to choose a rather complex model architecture which is in line with 
@@ -257,11 +258,11 @@ the best of our knowledge), but we choose this term over the synonymous term Sec
 the attacker does not have access to the target model's dataset, i.e. it is kept secret. For research purposes however, a test set of the Target Model Dataset is
 used to evaluate the performance of the Substitute Model. \par
 \textbf{Thief Dataset}: The dataset that is used by the attacker to train the Substitute Model. The Thief Dataset is also known as Fake dataset, Attacker Set or 
-Transfer Set. When constructing the Thief Dataset, the attacker can either use \textbf{Natural Non-Problem Domain} (NNPD) or \textbf{Synthetic Non-Problem Domain} (SNPD)
-data. NNPD data is data that is collected from the real world but does not (knowingly) overlap with the Target Model Dataset whereas SNPD data is artificially created,
-usually by drawing from a given distribution such as a multidimensional Uniform Distribution \cite{pal2020activethief}. Empirical observations show that using NNPD data
-yields significantly better results than using SNPD data. Even when using NNPD data, significant differences between different datasets have been observed 
-\cite{pal2020activethief}. In general, it is wise to choose a dataset that is as diverse as possible. Regardless of using SNPD or NNPD data, the adversary should keep the
+Transfer Set. When constructing the Thief Dataset, the attacker can either use \textbf{Natural Non-Problem Domain} (\gls{nnpd}) or \textbf{Synthetic Non-Problem Domain} (\gls{snpd})
+data. \gls{nnpd} data is data that is collected from the real world but does not (knowingly) overlap with the Target Model Dataset whereas \gls{snpd} data is artificially created,
+usually by drawing from a given distribution such as a multidimensional Uniform Distribution \cite{pal2020activethief}. Empirical observations show that using \gls{nnpd} data
+yields significantly better results than using \gls{snpd} data. Even when using \gls{nnpd} data, significant differences between different datasets have been observed 
+\cite{pal2020activethief}. In general, it is wise to choose a dataset that is as diverse as possible. Regardless of using \gls{snpd} or \gls{nnpd} data, the adversary should keep the
 dimensions of the Target Model Dataset, i.e. image size and especially the number of channels for image datasets, in mind and adapt the Thief Dataset accordingly. \par
 \textbf{Agreement}: The relative agreement between the predictions of the Substitute Model and the Target Model. The agreement is computed on a test set of the Target 
 Model dataset, meaning that it is not accessible by the attacker. The agreement is also known as Extraction accuracy, label prediction match or similarity. More formally,
@@ -337,9 +338,9 @@ A downside to this is that a benign user loses a lot of information about the ou
 using pre-trained models \cite{atli2020extraction} and instead train the target model from scratch. \par
 In order to prevent Model Stealing Attacks, researchers have proposed to use data perturbation. One can either choose to perturb the data that is fed to the target model or its prediction.
 Input perturbation can for example be performed by adding noise to unimportant pixels determined via Gradient Class Activation Maps \cite{guiga2020neural}. To perform output perturbation,
-the developer of the target model can either use Maximizing Angular Deviation (MAD) \cite{orekondy2019prediction} or flip a few labels to obfuscate the model's decision boundary
+the developer of the target model can either use Maximizing Angular Deviation (\gls{mad}) \cite{orekondy2019prediction} or flip a few labels to obfuscate the model's decision boundary
 \cite{shi2017evasion}. \par
-Furthermore, a few approaches have been proposed that bring differential privacy into the Model Stealing domain. Differential Privacy is a way to protect the privacy of a dataset so that 
+Furthermore, a few approaches have been proposed that bring Differential Privacy into the Model Stealing domain. Differential Privacy is a way to protect the privacy of a dataset so that 
 it is impossible for an adversary to determine if a particular individual is part of the dataset. One of these approaches was proposed by Zheng et al. \cite{zheng2019bdpl} who add a so-
 called \enquote{Boundary Differential Privacy Layer} to the target model. \par
 A final type of Proactive Model Stealing Defense is to modify the target model's architecture. Approaches falling into this category add redundant layers to the target model 

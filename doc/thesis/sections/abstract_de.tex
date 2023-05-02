@@ -14,16 +14,16 @@
 Der Fortschritt von Maschinellem Lernen und insbesondere von Deep Learning hat den Weg für bemerkenswerte Durchbrüche im Bereich der Bilderkennung geebnet \cite{he2016deep}
 \cite{goodfellow2020generative} \cite{lecun1989backpropagation}. Trotz seiner offensichtlichen Vorteile ist Deep Learning ressourcenintensiv, da die Architektur moderne Modelle 
 immer komplexer wird und diese Modelle auf großen Mengen annotierter Daten trainiert werden. Große Internetfirmen wie Google, Amazon und Microsoft haben jedoch Zugang zu einer 
-Menge an Rechenleistung, die sie monetarisieren, indem sie Machine Learning as a Service (MLaaS) anbieten. MLaaS-Plattformen ermöglichen es Kunden, ihre Modelle in der Cloud
-zu trainieren und über Vorhersage-APIs öffentlich zugänglich zu machen. Während MLaaS Machine Learning zugänglicher macht, birgt es auch ein Sicherheitsrisiko. Vorangegangene
-Forschungsarbeiten haben gezeigt, dass es möglich is, eine Vielzahl an eigenschaften (z.B. Trainingsdaten \cite{shokri2017membership} und Architektur \cite{oh2019towards}) des
-Zielmodells, d.h. des Modells hinter der Vorhersage-API \cite{tramer2016stealing} \cite{papernot2017practical}, zu inferieren. Wir konzentrieren uns jedoch ausschließlich auf
-das Stehlen der \textit{Funktionalität} des Zielmodells, d.h. seine Fähigkeit, die richtige Klasse eines gegebenen Eingabebildes vorherzusagen. Da das Stehlen von maschinellen
-Lernmodellen ein derart dringliches Problem darstellt, haben Forscher angefangen, nach Methoden zur Verteidigung gegen Model Stealing Angriffe zu suchen \cite{orekondy2019prediction}
-\cite{juuti2019prada}. Überraschenderweise hat die jüngste Forschung jedoch gezeigt, dass nicht alle vorgeschlagenen Verteidigungsstrategien wirksam sind. ActiveThief \cite{pal2020activethief},
-ein Modell-Extraktions-Framework, das von Pal et al. veröffentlicht wurde, übertraf ins seiner Effektivität alle vorherigen Ansätze zum Stehlen von tiefen Neuronalen Netzen. Sie verwenden
-Active Learning um zu bestimmen, welche Datenpunkte vom Zielmodell klassifiziert werden sollen und umgehen mit ihrer Methode die Verteidigungsstrategie Protecting Against DNN model stealing
-Attacks (PRADA) \cite{juuti2019prada}. \par
+Menge an Rechenleistung, die sie monetarisieren, indem sie Machine Learning as a Service (\gls{mlaas}) anbieten. \gls{mlaas}-Plattformen ermöglichen es Kunden, ihre Modelle in der Cloud
+zu trainieren und über Vorhersage-\glspl{api} öffentlich zugänglich zu machen. Während \gls{mlaas} Machine Learning zugänglicher macht, birgt es
+auch ein Sicherheitsrisiko. Vorangegangene Forschungsarbeiten haben gezeigt, dass es möglich is, eine Vielzahl an eigenschaften (z.B. Trainingsdaten \cite{shokri2017membership}
+und Architektur \cite{oh2019towards}) des Zielmodells, d.h. des Modells hinter der Vorhersage-\gls{api} \cite{tramer2016stealing} \cite{papernot2017practical}, zu inferieren. Wir
+konzentrieren uns jedoch ausschließlich auf das Stehlen der \textit{Funktionalität} des Zielmodells, d.h. seine Fähigkeit, die richtige Klasse eines gegebenen Eingabebildes vorherzusagen.
+Da das Stehlen von maschinellen Lernmodellen ein derart dringliches Problem darstellt, haben Forscher angefangen, nach Methoden zur Verteidigung gegen Model Stealing Angriffe zu suchen
+\cite{orekondy2019prediction} \cite{juuti2019prada}. Überraschenderweise hat die jüngste Forschung jedoch gezeigt, dass nicht alle vorgeschlagenen Verteidigungsstrategien wirksam sind.
+ActiveThief \cite{pal2020activethief}, ein Modell-Extraktions-Framework, das von Pal et al. veröffentlicht wurde, übertraf ins seiner Effektivität alle vorherigen Ansätze zum Stehlen
+von tiefen Neuronalen Netzen. Sie verwenden Active Learning um zu bestimmen, welche Datenpunkte vom Zielmodell klassifiziert werden sollen und umgehen mit ihrer Methode die
+Verteidigungsstrategie \gls{prada} \cite{juuti2019prada}. \par
 Der Beitrag dieser Arbeit ist zweifacher Art. Zuerst kombinieren wir Continual Learning und Active Learning um zu sehen, ob wir den Kompromiss zwischen Modellgenauigkeit und Effizienz im 
 Active Learning Prozess verbessern können. Zweitens integrieren wir die Kombination aus Continual und Active Learning in das ActiveThief Framework und untersuchen, ob unsere Erkenntnisse aus
 dem klassischen Active Learning Prozess auf die Model Stealing Domäne übertragbar sind.

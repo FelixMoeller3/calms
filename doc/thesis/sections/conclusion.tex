@@ -20,7 +20,7 @@
 % paper.
 In this thesis we proposed a novel approach called Continual Active Learning, which combines Active Learning and Continual Learning. 
 We implement multiple Active Learning and Continual Learning strategies, namely \gls{bald}, \gls{lc}, \gls{badge} and CoreSet as well
-as \gls{ewc}, \gls{imm}, \gls{alasso} and \gls{mas}, and combine them to create a Continual Active Learning strategies. Next, we 
+as \gls{ewc}, \gls{imm}, \gls{alasso} and \gls{mas}, and combine them to create Continual Active Learning strategies. Next, we 
 evaluate them on the dataset CIFAR-10 and the Neural Network Architecture ResNet18. Our results indicate that Continual Active Learning
 strategies have significantly lower runtime than Active Learning strategies, but fail to achieve their accuracy. We decide to implement
 the Active Learning strategy \gls{vaal} along with the Continual Learning strategy \gls{a-gem} to see if they can outperform the other
@@ -29,9 +29,9 @@ Active Learning achieves sub-par validation accuracy is that the number of train
 small. Further analysis of the results from our experiments with a custom Replay strategy support this theory. \par
 Before applying Continual Active Learning to the Model Stealing domain, we rigorously analyze the setting of the ActiveThief paper
 \cite{pal2020activethief}. While we agree with most findings of the paper, we find that the architecture of the target and the substitute
-model has a greater influence of the Model Agreement achieved than the Authors of ActiveThief suggest. Furthermore, we find that the
+model has a greater influence of the Model Agreement achieved than the authors of ActiveThief suggest. Furthermore, we find that the
 choice of the thief dataset has a significant influence on Model Agreement and so does (not) using data augmentation on the thief dataset. \par
-Finally, we perform Model Stealing Attacks with Continual Active Learning, using MNIST, CIFAR-10 and CIFAR-100 as target model datasets.
+Finally, we perform Model Stealing Attacks with Continual Active Learning, using MNIST, CIFAR-10 and CIFAR-100 as Target Model Datasets.
 The results from these experiments closely resemble those from the classic Continual Active Learning setting, i.e. we find that Continual
 Active Learning achieves lower Model Agreement than Model Extraction using Active Learning. \par
 In general, we find that our approach is (resource-) \textit{efficient} but not \textit{effective} because it is significantly outperformed
@@ -58,6 +58,6 @@ perform task ordering in a task-incremental setting. Another idea could be to le
 and vice-versa. In our current framework Active Learning and Continual Learning work independently, and we see potential for improvement by 
 introducing interdependence between the two. \par
 Broadly speaking, our approach can be used in any setting where the data distribution of the task changes and labeling data is expensive.
-In the computer security domain, our approach could be used for malware analysis. Previous works have demonstrated the effectiveness of using
-Machine Learning for Malware Analysis \cite{nath2014static} \cite{ijaz2019static}. Malware analysis is a task that is well suited for our approach
+In the computer security domain, our approach could be used for Malware Analysis. Previous works have demonstrated the effectiveness of using
+Machine Learning for Malware Analysis \cite{nath2014static} \cite{ijaz2019static}. Malware Analysis is a task that is well suited for our approach
 because the features that classify malware change over time and determining if a given piece of software contains malware is time-consuming. 
