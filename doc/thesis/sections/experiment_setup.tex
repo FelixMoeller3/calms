@@ -20,14 +20,15 @@ conditions under which we conducted the experiments. This includes training hype
 and details of the code and libraries used. In general, our experiments can be divided into two categories: Experiments that explore
 the classic Continual Active Learning Setting as in \ref{sec:Methodology:CombiningCLandAL} and experiments that explore Continual 
 Active Learning for Model Stealing as in \ref{sec:Methodology:CombiningCLandALforMS}. We perform this differentiation because many 
-training hyperparameters, datasets and Neural Network Architectures depend on the whether classic Continual Learning or Continual 
+training hyperparameters, datasets and Neural Network Architectures depend on the whether classic Continual Active Learning or Continual 
 Active Learning for Model Stealing is investigated. First, we mention the general setup, including Hardware, Software, all datasets used
 and the training hyperparameters shared between the two categories of experiments. Next, we go into detail about the special setup for
 Continual Active Learning and Continual Active Learning for Model Stealing.
 
 \section{General Experiment Setup}
 \label{sec:ExperimentSetup:FirstSection}
-%TODO: Some introductory words about the general setup
+In this section, we describe the general experiment setup. The parameters described in this section are shared across all experiments, unless
+explicitly stated otherwise.
 
 \subsection{Hardware}
 \label{sec:ExperimentSetup:Hardware}
@@ -35,20 +36,21 @@ All experiments are conducted on the High Performance Computing (HPC) cluster bw
 funded by the Ministry of Science, Research and the Arts Baden-Württemberg and the Universities of the State of Baden-Württemberg. It currently consists
 of more than 840 compute nodes with each node falling one of the following categories: \enquote{Thin}, \enquote{HPC}, \enquote{IceLake}, \enquote{Fat},
 \enquote{GPUx4}, \enquote{GPUx8}, \enquote{GPUx4 A100}, \enquote{GPUx4 H100} and \enquote{Login}. In our experiments, we use the nodes GPUx4, GPUx8 and
-GPUx4 A100. Their hardware specifications can be found in Appendix \ref{sec:Appendix:Specifications}.
+GPUx4 A100. Their hardware specifications can be found in Appendix \ref{sec:Appendix:Specifications}. Experiments where runtimes are measured are
+conducted on the GPUx8 nodes.
 
 \subsection{Software and Libraries}
 \label{sec:ExperimentSetup:Software}
-All the code used in this thesis is written in version 3.9.4 of the programming language Python \cite{Rossum1995Python}. Furhermore, we use the deep
-learning Library PyTorch \cite{paszke2019pytorch} (version 1.13.1) to implement both Active and Continual Learning Algorithms. All further libraries
+All the code used in this thesis is written in version 3.9.4 of the programming language Python \cite{Rossum1995Python}. Furthermore, we use the Deep
+Learning Library PyTorch \cite{paszke2019pytorch} (version 1.13.1) to implement both Active and Continual Learning Algorithms. All further libraries
 and their respective versions can be found in Appendix \ref{sec:Appendix:Specifications}.
 
 \subsection{Continual Learning Strategies}
 \label{sec:ExperimentSetup:CLStrategies}
-% TODO: Add agem and our custom replay strategy. Add fisher computation for EWC and that we use 5% of the training set to do that
-In our experiments, we use the Continual Learning Strategies EWC, MAS, IMM and Alasso. For details on these Continual Learning strategies we refer
-the reader to section \ref{sec:Related_work:Continual_Learning:Experiments}. As a baseline, we used the naive strategy of performing classic
-gradient descent without any regularization. In the following we will refer to this strategy as \enquote{Naive}. \par
+In our experiments, we use the Continual Learning Strategies EWC, MAS, IMM, Alasso, A-GEM and our custom Replay strategy proposed in \ref{sec:Methodology:ReplayStrategy}.
+For details on these Continual Learning strategies we refer the reader to section \ref{sec:Related_work:Continual_Learning:Experiments}. As a baseline,
+we used the naive strategy of performing classic gradient descent without any regularization. In the following we will refer to this strategy as
+\enquote{Naive}. \par
 Following the paper introducing MAS \cite{aljundi2018memory}, we set the regularization parameter $\lambda$ to 1.0 for MAS. The choice of this parameter
 is crucial because it enables a sound evaluation. If we trivially chose to set $\lambda$ to 0, then there would be no difference between MAS and the naive
 strategy. On the other hand, fine-tuning neither possible (we use more than 25 combinations of Continual Learning strategies and Active Learning strategies 
@@ -56,8 +58,7 @@ on 3 datasets) nor fair (to evaluate the quality and effect of all Continual Lea
 includes the same balance between old and new tasks). We therefore set $\lambda$ in EWC and IMM to 1.0 accordingly. The regularization parameter $c$ in
 Alasso, which is equivalent to $\lambda$ in EWC, MAS and IMM is set to 0.5 for all experiments. We tried setting $c$ to 1.0, however we noticed that this
 led to divergence during gradient descent despite employing heavy gradient clipping. Since employing stronger gradient clipping was not a viable solution
-because it impedes model convergence within reasonable time, we decided to relax the regularization parameter $c$ to 0.5. We assume that the convergence 
-problems Alasso faces are due to the fact that $\alpha$ in equation 3.15 makes the parameter space non-convex. \par
+because it impedes model convergence, we decided to relax the regularization parameter $c$ to 0.5. \par
 As mentioned before, we employ gradient clipping to avoid gradient descent from diverging. Not only is gradient clipping a viable remedy against the exploding
 gradient problem, it has also been shown that it can accelerate the training process \cite{zhang2019gradient}. In our implementation we clip gradients by their
 $l2$-Norm. Across all Continual Learning procedures, including Naive, we clip the gradients to a maximum $l2$-Norm of 20.0 to accelerate the training process.
@@ -68,20 +69,24 @@ the exploding gradient problem while simultaneously enabling model convergence. 
 Apart from the parameter weighting the regularization term, the Continual Learning strategies do not share any hyperparameters. EWC in fact does not have
 any further hyperparameters and neither does MAS. On the other hand, for IMM we have the choice between mean-IMM and mode-IMM. Furthermore, we can choose
 to apply Weight-transfer, L2-transfer as well as Dropout-transfer, and we can choose values for the $\alpha$ Parameter. In our setup we use mean-IMM, Weight-
-Transfer and L2-transfer and set the $\alpha$ parameter to [0.45,0.55] (i.e. $\alpha_1 = 0.45, \alpha_2 = 0.55$), as suggested by the authors. For Alasso, we set
-the parameter $a$, which controls the overestimation on the unobserved side, to 3.0. Following the recommendation of the authors, we perform parameter decoupling
-for the $\Omega$ updates and therefore set $a'$ to 1.5 and $c'$ to 0.25. \par
+Transfer and L2-transfer and set the $\alpha$ parameter to [0.45,0.55] (i.e. $\alpha_1 = 0.45, \alpha_2 = 0.55$), as suggested by the authors. Both EWC and IMM,
+use Fisher-Information to determine parameter importance. To compute the Fisher Information matrix, we use 5\% of the training set of the current task.
+Regarding Alasso, we set the parameter $a$, which controls the overestimation on the unobserved side, to 3.0. Following the recommendation of the authors,
+we perform parameter decoupling for the $\Omega$ updates and therefore set $a'$ to 1.5 and $c'$ to 0.25. For A-GEM, we set $S$, which is the number of samples
+drawn from the episodic memory to compute the reference gradients, to 2000. The second hyperparameter, $P$, which controls the number of patterns from a task that
+are saved to the memory, is also set to 2000. \par
 A detailed summary of the hyperparameters used can be found in Appendix \ref{sec:Appendix:Specifications}.
 
 
 \subsection{Active Learning Strategies}
 \label{sec:ExperimentSetup:ALStrategies}
-% Add VAAL in here
-In our experiments, we use the Continual Learning Strategies Badge, LC, CoreSet and BALD. For details on these Active Learning strategies we refer
+In our experiments, we use the Continual Learning Strategies Badge, LC, CoreSet, BALD and VAAL. For details on these Active Learning strategies we refer
 the reader to section \ref{sec:Related_work:Active_Learning:Approaches}. For Badge, we use the Euclidean distance in the $k$-means++ algorithm.
 For CoreSet we use the Euclidean distance between the activations of the penultimate layer of the neural network as a distance metric for $k$-Center
 algorithm. For BALD we use the Monte Carlo dropout with $T=25$ samples. We omit Monte Carlo dropout in cases where the model does not contain dropout
-layers as the prediction of such a model is deterministic. LC does not contain any hyperparameters, so we do not have to specify any. \par
+layers as the prediction of such a model is deterministic. LC does not contain any hyperparameters, so we do not have to specify any. For VAAL, we train
+\gls{vae} and Discriminator for 20 epochs per iteration. The Neural Network architecture and training hyperparameters are taken directly from the GitHub Repository which
+was published by the authors along with the paper \cite{vaalRepo}. \par
 Across all Active Learning strategies we use the same initial budget, i.e. the number of points we sample from the training set before the first iter-
 ation of the Active Learning algorithm, as the batch size.
 
@@ -112,13 +117,10 @@ epochs after which we schedule the learning rate differs between experiments. It
 iteration. We will go more into detail on this in the description of the respective experiments. Apart from scheduling the learning rate, we use momentum \cite{cutkosky2020momentum}
 of 0.9 and $l2$-regularization of 0.0005. For all experiments we use a batch size of 128 and shuffle the entire training set before each epoch.
 
-\subsection{Randomness}
-\label{sec:ExperimentSetup:Randomness}
-%TODO: hier über Random number generation sprechen, erwähnen, dass kein fixed seed gewählt wird, und welche NN Initialisierung gewählt wird
 
 \section{Special Setup for Continual Active Learning}
 \label{sec:Methodology:CALsetup}
-We experiment with Continual Active Learning using Resnet18 as our Neural Network Architecture and CIFAR-10 as our dataset. We perform experiments with a Batch Size of 1000,
+We experiment with Continual Active Learning using ResNet18 as our Neural Network Architecture and CIFAR-10 as our dataset. We perform experiments with a Batch Size of 1000,
 2000 and 4000 respectively. Regardless of the batch size, we perform Active Learning until the unlabeled pool is exhausted. This means that we perform Active Learning for
 49, 24 and 12 iterations respectively. For batch sizes 1000 and 2000 each query consists of 2000 points, while the last query for batch size 4000 consists of 2000 points.
 For batch size 2000 and 4000 we train for 150 epochs per iteration, decaying the learning rate by a factor of 10 after 80 and 120 epochs respectively. For batch size 1000 we
@@ -129,7 +131,7 @@ decay the learning rate by 10 after 100 and 150 epochs respectively.
 \section{Special Setup for Continual Active Learning for Model Stealing}
 \label{sec:Methodology:CALMSsetup}
 When transferring Continual Active Learning to the Model Stealing domain, we change our setup compared to Continual Active Learning previously. Instead of using Resnet18 as our
-model architecture, we use the CNN architecture from the ActiveThief paper \cite{pal2020activethief}, mainly because we want to compare our Continual Active Learning approach to
+model architecture, we use the \gls{cnn} architecture from the ActiveThief paper \cite{pal2020activethief}, mainly because we want to compare our Continual Active Learning approach to
 the framework proposed by the authors of ActiveThief. For most of our experiments, we use ActiveThiefConv3 apart from those experiments which investigate the effect of the model 
 architecture on Model Stealing Attacks. We train the target models on the datasets CIFAR-10, CIFAR-100 and MNIST. We train the target models on CIFAR-10 and CIFAR-100 for
 150 epochs using momentum of 0.9 and $l2$-regularization of 0.0005 without learning rate decay. When training the target models on MNIST, we change the number of epochs to 50.
@@ -141,4 +143,3 @@ and a total budget of 20000 points. The models are trained using cold start for 
 For Continual Active Learning for Model Stealing, we use a batch size of 2000 and a total budget of 40000. We decided to increase the batch size for Continual Active Learning compared
 to pure Active Learning because we noticed a clear correlation between batch size and model performance when training using Continual Active Learning. We train the substitute model for
 150 epochs per iteration and decay the learning rate by a factor of 10 after 80 and 120 epochs with momentum of and $l2$-regularization of 0.0005.
-% TODO: Mention setup of training target models and the one for stealing

@@ -59,8 +59,8 @@
 
 %% Use biber instead of BibTeX, see README
 %\usepackage[nonumberlist,toc]{glossaries} 
-\usepackage{glossaries} 
-\input{sections/glossary.tex}
+\usepackage[nonumberlist,nopostdot]{glossaries} 
+\include{glossary}
 \usepackage{dsfont}
 \usepackage{hyperref}
 \usepackage{tabularx}
@@ -135,10 +135,10 @@
 
 \mainmatter
 
+\glsresetall
 \input{sections/introduction.tex}
 \input{sections/background.tex}
 \input{sections/related_work.tex}
-%\input{sections/content.tex}
 \input{sections/methodology.tex}
 \input{sections/experiment_setup.tex}
 \input{sections/evaluation.tex}

@@ -86,17 +86,18 @@
 %% --------------------
 
 Research in Machine Learning and especially Deep Learning has produced an abundance of highly influential work in recent years, like
-Convolutional Neural Networks (CNNs), Transformers and Generative Adversarial Networks (GANs). These Machine Learning Models are
-becoming ever more accurate, achieving or even surpassing human-level performance on tasks like visual perception or natural language
-understanding. Because of their high potential for innovation, Machine Learning Models are increasingly being used in real-world 
-applications. To profit from this, a multitude of technology enterprises offer numerous services to ease the training, development and
-deployment of Machine Learning applications. These services can be grouped together under the term Machine Learning as a Service (MLaaS). \\
+Convolutional Neural Networks (CNNs) \cite{lecun1998gradient}, Transformers \cite{vaswani2017attention} and Generative Adversarial
+Networks (GANs). These Machine Learning Models are becoming ever more accurate, achieving or even surpassing human-level performance
+on tasks like visual perception or natural language understanding. Because of their high potential for innovation, Machine Learning
+Models are increasingly being used in real-world applications. To profit from this, a multitude of technology enterprises offer numerous
+services to ease the training, development and deployment of Machine Learning applications. These services can be grouped together under
+the term Machine Learning as a Service (MLaaS). \par
 While MLaaS is crucial to make Machine Learning more accessable, it also poses a security threat. In the past years, numerous research works
 have been published which demonstrate how easily Machine Learning Models can be extracted from MLaaS services \cite{tramer2016stealing}
 \cite{reith2019efficiently} \cite{papernot2017practical}. The standard procedure to steal a such a machine learning model is to train a local
 clone (also called substitute model) of the model which is hosted on the MLaaS service (also called target model). The substitute model is trained
 using a dataset that the attacker collects which is also called thief dataset. Labels for the thief dataset are then obtained by querying the target
-model on the thief dataset. The process of extracting Machine Learning models from MLaaS services is referred to as Model Stealing. \\
+model on the thief dataset. The process of extracting Machine Learning models from MLaaS services is referred to as Model Stealing. \par
 Because of the dramatic consequences of Model Stealing Attacks, researchers have also investigated how to defend against them. Two recent approaches
 to defend Model Stealing Attacks are Prediction Poisoning \cite{orekondy2019prediction} and PRADA \cite{juuti2019prada}. Despite the effort to
 defend model stealing attacks, research works have been published which evade these defense strategies. One notable example of this is the model
