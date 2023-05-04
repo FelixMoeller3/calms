@@ -132,7 +132,7 @@ is the way in which new tasks arrive. In the following, we will introduce the th
 In the Task-Incremental setting, a model is informed about which task it will be trained on or which task the data whose label it is supposed to predict belongs to.
 The task-information is supplied via a task identifier which is usually an integer. Because the model does not have to infer the task which it is supposed to predict
 or learn, it is possible to have task-specific components in the model. For Neural Networks, this means that there is one output layer per task and for each task the
-respective output layer is used while all other layers are shared between all tasks. These classifiers are also known as \enquote{multi-head} classifiers \cite{van2018generative}.
+respective output layer is used while all other layers are shared between all tasks. These classifiers are also known as \enquote{multi-head} classifiers \cite{vandeven2019generative}.
 An example would be the following: The first task is to classify images of cats and dogs. The second task is to classify cows and sheep. The model would have one output layer 
 used to classify cats and dogs and a second output layer to classify cows and sheep. When training for the first task, only the first output layer is used. When the second task
 arrives the model is retrained with the second output layer.  The mapping that is learned is 

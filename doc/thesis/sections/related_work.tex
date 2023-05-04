@@ -33,7 +33,7 @@ original papers for any further details. \par
 \subsection{Least Confidence}
 \label{sec:Related_work:Active_Learning:Least_Confidence}
 Least Confidence (\gls{lc}) is one of the earlier and simpler approaches to Active Learning. \gls{lc} is an uncertainty-based Active Learning
-approach proposed by Lewis et al. \cite{lewis1994sequential} in 1994. The idea behind \gls{lc} is that the next points to label should be the 
+approach proposed by Lewis et al. \cite{lewis1995sequential} in 1994. The idea behind \gls{lc} is that the next points to label should be the 
 ones with the lowest prediction probability. More formally, the data queried will be the following:
 \begin{equation}
     \argmin_{x \in \mathcal{U}} \max_{y \in \mathcal{Y}} p(y|x)
@@ -402,7 +402,7 @@ Second, Active Learning aims to query the most informative samples, yielding the
 by Active Learning to query the target model, the model stealing attack can successfully be disguised as a benign query process. Pal et al. demonstrate this by showing 
 that ActiveThief successfully evades PRADA \cite{juuti2019prada}, a state-of-the-art model stealing defense which detects attacks by analyzing the distribution of distances
 between queries. \par
-The authors of ActiveThief evaluate their framework using the Active Learning strategies Random, Uncertainty \cite{lewis1994sequential}, CoreSet \cite{sener2017active},
+The authors of ActiveThief evaluate their framework using the Active Learning strategies Random, Uncertainty \cite{lewis1995sequential}, CoreSet \cite{sener2017active},
 DeepFool-based Active Learning (\gls{dfal}) \cite{ducoffe2018adversarial} and a custom combination of \gls{dfal} and CoreSet. They use a custom \gls{cnn} architecture
 for both target and substitute model and show that ActiveThief is able to successfully steal the target model for multiple benchmark datasets such as MNIST and CIFAR-10.
 A visualization of the model stealing workflow proposed by Pal et al. is shown in Figure \ref{fig:ActiveThief}.
