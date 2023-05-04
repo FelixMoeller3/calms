@@ -180,24 +180,20 @@ Regularization-based approaches to Continual Learning aim to prevent the forgett
 term to the model's loss function. The regularization term is used as a proxy for how much the performance of the model on previous
 tasks will decrease, i.e. a high regularization term indicates that the model will perform poorly on the old tasks with the current
 weights and a low regularization term indicates that the model has not lost much knowledge of the old tasks. The way the
-regularization term is computed can further be divided into two groups. There are \textbf{structural} approaches which regularize
-based on weight changes to the model and there are \textbf{functional} approaches which regularize based on the output of the model.
-Notable examples of structural approaches include Elastic Weight Consolidation (\gls{ewc}) \cite{kirkpatrick2017overcoming},Memory Aware
-Synapses (\gls{mas}) \cite{aljundi2018memory}, Incremental Moment Matching (\gls{imm}) \cite{lee2017overcoming} as well as Asymmetric Loss
-Approximation by Single-Side Overestimation (\gls{alasso}) \cite{park2019continual} which is an extension of Synaptic Intelligence (\gls{si})
-\cite{zenke2017continual}. All the structural regularization approaches will be covered in more detail in the section on
-\hyperref[sec:Related_work:Continual_Learning:Experiments]{the Continual Learning approaches used in the experiments}. \par
+regularization term is computed can further be divided into two groups. \par
+There are \textbf{structural} approaches which regularize based on weight changes to the model and there are \textbf{functional}
+approaches which regularize based on the output of the model. Structural approaches determine an importance weight for each
+model parameter. Popular approaches either use Fisher Information \cite{kirkpatrick2017overcoming} \cite{lee2017overcoming} or
+gradient information \cite{aljundi2018memory} \cite{zenke2017continual}.\par
 Functional regularization approaches are inspired by knowledge distillation \cite{hinton2015distilling}. They add a distillation
 loss to the objective function which is computed based on the prediction of a data sample stored for future use. These data samples
 are called soft targets. Li et al. \cite{li2017learning} compute the distillation loss by using the output of the newly arrived task
 given by the model trained on the old tasks. The distillation loss they introduce aims to retain the prediction of the old model on
-the new task even if the prediction itself may be inaccurate. The approach of Rannen et al. \cite{rannen2017encoder}, called Encoder
-Based Lifelong Learning (\gls{ebll}) is based on the approach of Li et al., however in \gls{ebll} the distillation loss is computed based on
-autoencoder reconstructions of old tasks.
+the new task even if the prediction itself may be inaccurate. Another approach uses autoencoder reconstructions of old tasks to
+compute the distillation loss \cite{rannen2017encoder}.
 
 \subsubsection{Rehearsal Approaches}
 \label{sec:RehearsalApproaches}
-%TODO: Finish this section
 Rehearsal approaches to Continual Learning aim to prevent catastrophic forgetting by fitting a model's parameters to the distribution
 of an incoming task and all previous tasks simultaneously. Within Rehearsal approaches it is important to remember the trade-off between
 model performance and computational cost. In general, the more data from previous tasks is used to train the model, the better the accuracy is. 
@@ -206,27 +202,28 @@ This can either be done by replaying stored data from previous tasks or by
 retraining on generated data drawn from the distribution of previous tasks. Continual Learning Methods that rely on the former idea are
 categorized as \textbf{exemplar rehearsal} approaches while those that rely on the latter idea are categorized as \textbf{generative replay}
 approaches. \par
-Exemplar Rehearsal Techniques store data from previous tasks in a so-called \enquote{Replay Buffer} which data is sampled
-
-
+Exemplar Rehearsal techniques store data from previous tasks in a so-called \enquote{Replay Buffer}. When training on a new task $T_N$, samples
+from the replay buffer are drawn and fed to the model while training on $T_N$. Approaches falling in this category vary in the way that the replay
+buffer is constructed, and the way samples are replayed during training of a new task. \par
+Generative Replay approaches make use of generative models to generate artificial samples from previous tasks. These samples are then replayed to
+the model when training on a new task $T_N$. Compared to Exemplar Rehearsal approaches, Generative Replay approaches do not require a replay buffer
+but the generative model itself needs to be stored. 
 
 \subsubsection{Architectural Approaches}
 \label{sec:ArchitecturalApproaches}
+Architectural approaches aim to tackle Continual Learning by changing the underlying model architecture. Within this category, there are two  
+subcategories. Approaches falling into the first category are called \textbf{Fixed Capacity} methods while the second category is called
+\textbf{Dynamic Growth}. \par
+Fixed Capacity methods do not change the number of model parameters but rather which parameters are used for each task. They assume that parts of
+the model architecture are redundant and therefore can be reused for different tasks. When training on a new task $T_N$, those parameters that are
+important for the task (how importance is defined depends on the specific approach) are used to form a path through the model that is only used for
+$T_N$. All other parameters are frozen, i.e. their weight and bias are set to 0. \par
+Dynamic Growth approaches on the other hand allow adding new layers or single neurons to the model when training on a new task. The difference between
+approaches falling into this category is their decision on when to add new layers or neurons. A popular criterion for deciding when to add new model
+parameters is when the loss function plateaus \cite{ash1989dynamic}.
 
 \section{Model Stealing}
 \label{sec:ModelStealing}
-% TODO: Add figure with model stealing process
-% Model Stealing notes: 
-% Taxonomy provided by Jagielski et al. based on attacker's goal 
-% Four types of attacks presented by He et al.: model extraction, model inversion, model poisoning and adversarial attack.
-% Model extraction is a subfield of adversarial machine learning.
-% Look at section 4.3 of Oliynyk et al. paper for taxonomy of adversarial ml.
-% Mention some notation as in Olinyk et al. paper in section 5.1.
-% Metrics to measure attack in 5.4 of Olinyk et al. paper.
-% Have a look at Fig3 of Olinyk et al. paper and use it to tell which attacks we use (e.g. NNPD, Computer Vision, etc.)
-% Based on Olinyk et al., our approach falls into the consistency category of section 6.1
-% Model Stealing defenses are either used for attack detection or attack prevention.
-% TODO: Add connection to Knowledge distillation as mentioned in Related Work section of ActiveThief paper.
 With the advent of Machine Learning as a Service (\gls{mlaas}), an increasing amount of machine learning models are being exposed to the public via 
 prediction \glspl{api}. The idea of these prediction APIs is that a user can request a prediction from a model by sending a request containing an unlabeled data
 point to the \gls{api}. The response to the request is then the prediction of the model for the data point. Prediction \glspl{api} are monetized by charging the user

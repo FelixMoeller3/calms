@@ -16,13 +16,13 @@
 %% -------------------
 %% | Example content |
 %% -------------------
-Since our continual learning approach is, to the best of our knowledge, the first approach to combine pool-based active learning with continual
+Since our Continual Learning approach is, to the best of our knowledge, the first approach to combine pool-based active learning with continual
 learning, we explain our approach in detail in this chapter as well as the motivation for it. We then transfer our approach to the domain of model
 stealing. Because we build upon the framework of ActiveThief, we describe how our approach compares to the original approach in detail.
 
 \section{Continual Active Learning}
 \label{sec:Methodology:ContinualActiveLearning}
-A major contribution of this thesis is that we combine the two learning paradigms of continual learning and active learning. To motivate the idea of
+A major contribution of this thesis is that we combine the two learning paradigms of Continual Learning and active learning. To motivate the idea of
 combining Continual Learning and Active Learning, we will first outline the classic Continual Learning Setting and the classic Active Learning Setting.
 Next we explain common issues with these two learning paradigms and how we aim to overcome these by combining both paradigms. Finally, we will give
 a detailed description of our approach. 
@@ -31,7 +31,7 @@ a detailed description of our approach.
 \label{sec:Methodology:CLSetting}
 %Mention that CL Setting consists of multiple tasks, task can and usually are independent
 % Outline classic Continual Learning Workflow with a figure
-In the typical continual learning setting, the model is trained on a sequence of tasks. Each task $T_i = {x_k,y_k | k \in \{1,\ldots,n\}}$ is a set
+In the typical Continual Learning setting, the model is trained on a sequence of tasks. Each task $T_i = {x_k,y_k | k \in \{1,\ldots,n\}}$ is a set
 of instances with their respective label. Together, the tasks form a dataset $D = \bigcup\limits_{i=1}^{N} T_i$. It is important to note that
 the distribution of two distinct tasks $P(T_i)$  and $P(T_j) (i \neq j)$ are not necessarily the same. Most often in fact, the tasks are independent
 of each other, which is why neural networks struggle to perform well on multiple tasks at once. This also means that the size of two distinct datasets
@@ -42,8 +42,8 @@ distribution of the first task. Next, the model is trained on the second task. A
 classify samples from the distribution of the first task as well as the second task. This process is repeated until the model has been trained on all
 tasks. After being trained on all tasks, the model should be able to classify samples following the distribution of all the tasks it was trained on.
 This workflow is illustrated in Figure \ref{fig:CLWorkflow}. \par
-The main difference between the continual learning setting and classic machine learning is that in the classic machine learning setting, the model is never retrained
-once it is deployed. In the continual learning setting however, the model is retrained whenever a new task arrives.
+The main difference between the Continual Learning setting and classic Machine Learning is that in the classic Machine Learning setting, the model is never retrained
+once it is deployed. In the Continual Learning setting however, the model is retrained whenever a new task arrives.
 
 \begin{figure}[ht]
     \centering
@@ -54,14 +54,23 @@ once it is deployed. In the continual learning setting however, the model is ret
     \label{fig:CLWorkflow}
   \end{figure}
 
-\subsection{The classic Active Learning Setting}
+\subsection{The pool-based Active Learning Setting}
 \label{sec:Methodology:ALSetting}
 %TODO: Write this section
 %Mention classic pool-based Active Learning setting, what batches are, contrast the continual
 % learning setting, saying that the "tasks" are not independent
+In the pool-based Active Learning setting, the model is trained sequentially on the current labeled pool. The labeled pool is empty at first and is usually initialized
+by randomly selecting samples from the unlabeled pool to label, On the contrary, the unlabeled pool contains the full dataset at first and is emptied in the process.
+After the labeled pool has been initialized, the model is trained on it. Now, until the total budget is exhausted, $b$ samples from the labeled pool are selected which
+are determined to be the most informative by the current Active Learning strategy. These samples are then labeled by the oracle and added to the labeled pool. Next, the
+model is trained on the current labeled pool and the process repeats. A more detailed description can be found in section \ref{sec:PoolBasedActiveLearning}. \par
+Active Learning contrasts Continual Learning in the sense that all data stems from the same task. Another difference between pool-based Active Learning and Continual
+Learning is that a model trained by Active Learning is trained on all previously selected batches. Consequently, the model is trained on some data multiple times which
+might cause parts of the training to be redundant.
+% TODO: Add figure of Active Learning Workflow
 
 \subsection{Combining Continual and Active Learning}
-% Mention the issues with the classic CL and AL setting, describe how synergising the two approaches
+% Mention the issues with the classic CL and AL setting, describe how synergizing the two approaches
 % can help overcome these issues and describe the approach in detail
 \label{sec:Methodology:CombiningCLandAL}
 The problem with classic Active Learning is that it is very resource intensive. When training a model using pool-based Active Learning on a dataset of size $n$,
@@ -72,12 +81,12 @@ is trained on $\frac{n(n+1)}{2}$ data points. While \cite{beck2021effective} not
 if any, a typical batch size is less than 10 \% of the full training set. Even in this more realistic case, the model is trained on $5.5n$ data points. When
 comparing this to the classic Continual Learning setting, where the model is trained once using $n$ data points, it is clear to see that Active Learning comes
 with a considerable overhead. The overhead of Active Learning is even more pronounced when considering the running time of the Active Learning Algorithms.
-For more details we refer to the TODO experimental sections. \par
-On the other hand, a major problem with classic Continual Learning is that task-ordering has a significant impact on the performance of the model \cite{bell2022effect}.
+For more details, we refer to Chapter \ref{ch:Evaluation} and \ref{ch:Discussion}. \par
+On the other hand, a major problem with classic Continual Learning is that task ordering has a significant impact on the performance of the model \cite{bell2022effect}.
 The problem of task-ordering has been studied before, and it has been shown that training samples in decreasing order of difficulty results in faster learning and 
 improved generalization error \cite{hacohen2019power}. This motivates us to use Active Learning as a tool to perform task-ordering. We should note here that We
 assume free choice of the next task. This assumption is not always realistic, especially when tasks arrive sequentially, but studying the effect of task-ordering
-benefits the study of these scenarios, too. Furthermore, insights in the field of task-ordering help towards a more rigorous evaluation of continual learning in 
+benefits the study of these scenarios, too. Furthermore, insights in the field of task-ordering help towards a more rigorous evaluation of Continual Learning in 
 research because they allow to assess the influence of task-ordering on experiment results when using classic benchmark datasets. \par
 Our approach aims to overcome both the issue of the overhead of Active Learning and the issue of task-ordering by combining both learning paradigms. We modify the Active
 Learning process by training only on the currently selected batch instead of the entire labeled pool. This way, the model is trained on $\sum_{i=1}^{\frac{n}{b}} b = n$ 
@@ -119,7 +128,7 @@ in the model stealing domain allows us to figure out, if the Continual Active Le
 the standard setup where the oracle returns truthful labels. To motivate transferring our approach to the Active Learning domain, it is crucial to highlight the
 differences between the setup mentioned in \ref{sec:Methodology:CombiningCLandAL} and Continual Active Learning for Model Stealing. \par
 The first difference is that the labels returned by the oracle in the model stealing domain have a limited semantic meaning. This is because the oracle is another
-machine learning model in the model stealing domain. So even if the data point whose label is queried stems from the same distribution as the target model dataset,
+Machine Learning model in the model stealing domain. So even if the data point whose label is queried stems from the same distribution as the target model dataset,
 the label returned by the oracle is not necessarily correct since Machine Learning Models are not capable of generalizing perfectly. Since the target model dataset
 is unknown to the attacker, he or she cannot knowingly construct a thief dataset that overlaps with the target model dataset. Therefore, the data points that the
 attacker queries the target model with will most likely be from a different distribution than the target model dataset and the labels returned by the target model
