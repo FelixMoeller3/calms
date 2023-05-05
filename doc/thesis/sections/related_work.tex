@@ -12,14 +12,14 @@
 
 \chapter{Related Work}
 \label{ch:Related_work}
-Related work for this thesis can be grouped into three different categories: The first category is \hyperref[sec:Related_work:Active_Learning]
+We group related work for this thesis into three different categories: The first category is \hyperref[sec:Related_work:Active_Learning]
 {Active Learning}. Active Learning is a special form of machine learning where an oracle is present which can label arbitrary data points.
-A Machine Learning model trained using Active Learning iteratively queries the oracle with unlabeled data points, trains a new model and
-determines which data should be queried next. The second category is \hyperref[sec:Related_work:Continual_Learning]{Continual Learning}.
-Continual learning is a machine learning technique which aims to make a given machine learning model learn new tasks without forgetting
+A Machine Learning model trained using Active Learning iteratively queries the oracle with unlabeled data points, trains a new model, and
+determines which data to query next. The second category is \hyperref[sec:Related_work:Continual_Learning]{Continual Learning}.
+Continual Learning is a Machine Learning technique that aims to make a given machine learning model learn new tasks without forgetting
 the knowledge of previous tasks. The third category is \hyperref[sec:Related_work:Model_Stealing]{Model Stealing}. Model Stealing is the process
 of strategically querying a third-party machine learning model (also referred to as target model) to train a local model (also referred to as
-substitute model) which is supposed to approximate the target model as good as possible. These three categories have been covered in chapter
+substitute model) which is supposed to approximate the target model as good as possible. These three categories are covered in chapter
 \ref{ch:Background} in more detail. In this chapter, we will focus on the specific approaches from these three research directions which
 are either used in the experiments of this thesis or are related to the approaches used in the experiments.
 
@@ -89,15 +89,15 @@ Carlo Dropout \cite{gal2016dropout} can be applied.
 
 \subsection{Batch Active Learning by Diverse Gradient Embeddings}
 \label{sec:Related_work:Active_Learning:BADGE}
-Batch Active Learning by Diverse Gradient Embeddings (\gls{badge}) \cite{ash2019deep} is a Batch Active Learning strategy which combines both model uncertainty
-and batch-diversity to select the next batch of data points to label. The authors were inspired to develop \gls{badge} by the observation that diversity-based
+Batch Active Learning by Diverse Gradient Embeddings (\gls{badge}) \cite{ash2019deep} is a Batch Active Learning strategy that combines both model uncertainty
+and batch diversity to select the next batch of data points to label. The authors were inspired to develop \gls{badge} by the observation that diversity-based
 Active Learning strategies perform well in the first few iterations diversity-based approaches perform well while in the later stages of Active Learning
 uncertainty-based approaches perform well. \gls{badge} therefore incorporates both uncertainty and diversity in its selection strategy. \gls{badge} uses the
 gradient with respect to the output layer as a measure of model uncertainty, similar to the ideas of \cite{zhang2017active} and \cite{settles2007multiple}.
-Since \gls{badge} works on unlabeled data points, the gradient cannot be computed exactly because the label is unknown. Therefore, Badge uses the hypothetical
+Since \gls{badge} works on unlabeled data points, the gradient cannot be computed exactly because the label is unknown. Therefore, \gls{badge} uses the hypothetical
 label $\hat{y}(x)$ as a proxy for the true label and computes the gradient of the cross-entropy loss on the hypothetical label as an approximation of the
-real gradient. To incorporate diversity, Badge uses $k$-means++ clustering \cite{arthur2007k} for the gradient embeddings to sample the next batch of data
-points to label. The authors demonstrate Badge's agnosticism towards model architecture, training hyperparameters and dataset in a variety of experiments. 
+real gradient. To incorporate diversity, \gls{badge} uses $k$-means++ initialization \cite{arthur2007k} for the gradient embeddings to sample the next batch of data
+points to label. The authors demonstrate \gls{badge}'s agnosticism towards model architecture, training hyperparameters, and datasets in a variety of experiments. 
 \begin{algorithm}
     \caption{BADGE} \label{alg:Badge}
     \begin{algorithmic}[1]
@@ -124,10 +124,10 @@ points to label. The authors demonstrate Badge's agnosticism towards model archi
 \label{sec:Related_work:Active_Learning:VAAL}
 Variational Adversarial Active Learning (\gls{vaal}) is a representation-based Active Learning strategy proposed by Sinha et al. \cite{sinha2019variational}. 
 \gls{vaal} uses a $\beta$-Variational Autoencoder (\gls{vae}) \cite{higgins2017beta} and a discriminator to select the most informative samples to query.
-Thereby, the encoder learns a low-dimensional space for the distribution of both the labeled and the unlabeled data which is reconstructed by the decoder. 
+Thereby, the encoder learns a low-dimensional space for the distribution of the labeled and the unlabeled data reconstructed by the decoder. 
 The discriminator is trained to distinguish between the labeled and the unlabeled data and given the encoder's latent representation of a data point as an
 input. A visual summary of the approach is depicted in Figure \ref{fig:VAAL}. \par
-More formally, the encoder learns the distribution of $X_U$ and $X_L$ where $X_U$ is the unlabeled pool and $(X_L,Y_L)$ is the labeled pool. The encoder
+More formally, the encoder learns the distribution of $X_U$ and $X_L$ where $X_U$ is the unlabeled pool and $(X_L, Y_L)$ is the labeled pool. The encoder
 aims to minimize the Kullback-Leibler (\gls{kl}) divergence \cite{goldberger2004hierarchical} between the reconstructed distribution $q_\Phi (z_L | x_L)$ and
 the real distribution $p(z)$ of the labeled data, which we assume to be a unit Gaussian. Simultaneously, the encoder aims to minimize the \gls{kl} divergence
 between $q_\Phi (z_U | x_U)$ and $p(z)$. This results in the following objective function for the \gls{vae}:
@@ -162,17 +162,17 @@ pool or, in other words, least confident about their belonging to the labeled po
 
 \section{Continual Learning}
 \label{sec:Related_work:Continual_Learning}
-In this section, we will present the Continual Learning algorithms from the literature that we will use in our experiments. These are Elastic Weight
+In this section, we will present the Continual Learning algorithms from the literature used in our experiments. These are Elastic Weight
 Consolidation (\gls{ewc}) \cite{kirkpatrick2017overcoming}, Memory Aware Synapses (\gls{mas}), Asymmetric Loss Approximation by Single-Side Overestimation
 (\gls{alasso}), Incremental Moment Matching (\gls{imm}) and Averaged Gradient Episodic Memory (\gls{a-gem}) \cite{lopez2017gradient}. While we aim to give
 a detailed explanation of these approaches, we refer the reader to the original papers for any further details. \par
 
 \subsection{Elastic Weight Consolidation}
 \label{sec:Related_work:Continual_Learning:EWC}
-Elastic Weight Consolidation (\gls{ewc}) \cite{kirkpatrick2017overcoming} is structural regularization approach proposed by Kirkpatrick et al.
-\gls{ewc} was the first approach that aims to overcome catastrophic forgetting by regularizing model parameters. This is done by adding a regularization
-term to the loss function which resembles L2-regularization. The goal of introducing the regularization loss is to constrain parameters which
-are important for task $N-1$ to stay close to their previous values when training on task $N$. To come up with an importance measure for the parameters,
+Elastic Weight Consolidation (\gls{ewc}) \cite{kirkpatrick2017overcoming} is a structural regularization approach proposed by Kirkpatrick et al.
+\gls{ewc} was the first approach aiming to overcome catastrophic forgetting by regularizing model parameters. This is done by adding a regularization
+term to the loss function which resembles L2-regularization. The goal of introducing the regularization loss is to constrain important parameters for
+task $N-1$ to stay close to their previous values when training on task $N$. To come up with an importance measure for the parameters,
 Kirkpatrick et al. view  Neural Network training from a probabilistic perspective, modeling the weight distribution using the Bayes Rule:
 \begin{equation}
     p(\theta \mid D) = \frac{p(D \mid \theta) \cdot p(\theta)}{p(D)}
@@ -204,7 +204,7 @@ learning new tasks as good as possible and retaining knowledge of previous tasks
 
 \subsection{Memory Aware Synapses}
 \label{sec:Related_work:Continual_Learning:MAS}
-Memory Aware Synapses (\gls{mas}), like \gls{ewc}, is a structural regularization method which was proposed by Aljundi et al. \cite{aljundi2018memory}. 
+Memory Aware Synapses (\gls{mas}), like \gls{ewc}, is a structural regularization method proposed by Aljundi et al. \cite{aljundi2018memory}. 
 In line with \gls{ewc}, \gls{mas} aims to prevent catastrophic forgetting by regularizing model parameters. The main difference between \gls{ewc} and
 \gls{mas} is the way the importance of a parameter is measured. While \gls{ewc} relies on Fisher Information to compute parameter importances, \gls{mas} uses
 gradient magnitude to estimate the importance of a parameter for previous tasks. To derive the importance measure, the authors first observe that the
@@ -231,11 +231,11 @@ where $\lambda$ again is the hyperparameter used to trade-off between learning n
 \label{sec:Related_work:Continual_Learning:ALASSO}
 Asymmetric Loss Approximation by Single-Side Overestimation (\gls{alasso}) is a structural regularization method proposed by Park et al. \cite{park2019continual}.
 \gls{alasso} is an extension of Synaptic Intelligence (\gls{si}) proposed by Zenke et al. \cite{zenke2017continual} which \enquote{mitigates the limitations of SI},
-as the authors claim. The main observation made by the Park et al. about \gls{si} is that it underestimates the true loss on the unobserved side of the loss
+as the authors claim. The main observation made by Park et al. about \gls{si} is that it underestimates the true loss on the unobserved side of the loss
 function because it assumes that the loss function is symmetric. Park et al. first show that this assumption is not always true through empirical observation
 and then present a new approach to approximate the loss function on the unobserved side more precisely. The fundamental observation and idea of \gls{alasso} can be
 seen in Figure \ref{fig:Alasso}. Since \gls{alasso} extends the \gls{si} framework, we strongly recommend the reader to familiarize themselves with \gls{si} before
-trying to understand \gls{alasso}. In the following we will assume that the reader is familiar with \gls{si} and only explain the extension that \gls{alasso}
+trying to understand \gls{alasso}. In the following, we will assume that the reader is familiar with \gls{si} and only explain the extension that \gls{alasso}
 brings to \gls{si}. \par
 Since \gls{alasso} is a structural regularization method like \gls{mas} and \gls{ewc}, it alters the loss function as follows
 % Total loss equation
@@ -255,7 +255,7 @@ The surrogate loss $L^N_s(\theta_k,a)$ is then defined as follows
     L_s^n(\theta_k,a) = \begin{cases} \hat{\Omega}^N_k (\theta_k - \hat{\theta}_k)^2 & \text{if} \alpha(\theta_k) > 0 \\
     (a \hat{\Omega}^N_k + \epsilon)(\theta_k - \hat{\theta}_k)^2 & \text{if} \alpha(\theta_k) \leq 0 \end{cases}.
 \end{equation}
-The Variable $a (>1)$ is again a hyperparameter which is used to control the amount of overestimation if the parameter is on the unobserved side of the loss function.
+The Variable $a (>1)$ is again a hyperparameter used to control the amount of overestimation if the parameter is on the unobserved side of the loss function.
 The constant $\epsilon$ is used to make sure that the loss on the unobserved side is always overestimated, i.e. $(a \hat{\Omega}^N_k + \epsilon) > \hat{\Omega}^N_k$.
 The second contribution of \gls{alasso} is its derivation of the optimal coefficient $\hat{\Omega}^N_k$ for the approximation of the loss function on the \textit{observed}
 side. According to Park et al., $\hat{\Omega}^N_k$ is determined by the following equation
@@ -282,9 +282,9 @@ precisely, they suggest using $c'$ and $a'$ instead of $c$ and $a$ in equation 3
 
 \subsection{Incremental Moment Matching}
 \label{sec:Related_work:Continual_Learning:IMM}
-Incremental Moment Matching (\gls{imm}) is a structural regularization approach to prevent catastrophic forgetting, proposed by Lee et al. \cite{lee2017overcoming}.
-\gls{imm} deviates from approaches like \gls{mas} and \gls{ewc} in that it should not be seen as a single method but rather a framework of multiple methods, many of which can be
-combined with each other. The main idea of \gls{imm} is to match the first and second moments of the posterior distribution $p(\theta \mid D_{1:N})$ of the model 
+Incremental Moment Matching (\gls{imm}) is a structural regularization approach to preventing catastrophic forgetting, proposed by Lee et al. \cite{lee2017overcoming}.
+\gls{imm} deviates from approaches like \gls{mas} and \gls{ewc} in that it should not be viewed as a single method but rather a framework of multiple methods, many of which can be
+combined. The main idea of \gls{imm} is to match the first and second moments of the posterior distribution $p(\theta \mid D_{1:N})$ of the model 
 parameters given all tasks up to the current one. As in \gls{ewc}, the posterior distribution cannot be computed, it is approximated via a Gaussian distribution which
 we call $q_{1:N}$. The first approach to matching these moments is called \textbf{Mean-based Incremental Moment Matching}, also known as mean-\gls{imm}. The weight
 update of mean-\gls{imm} is the analytical solution of the problem to minimize the weighted sum of \gls{kl} divergences between each $q_i$ and $q_{1:N}$
@@ -308,10 +308,10 @@ The mean and covariance update for mode-\gls{imm} is given by
 To approximate the covariance matrix, mode-\gls{imm} uses the inverse of the Fisher Information Matrix like \gls{ewc}. Furthermore, the authors assume that
 the model parameters are pairwise independent, making the covariance matrix diagonal and therefore saving a lot of computation. \par
 Apart from moment matching methods, \gls{imm} also includes approaches to transfer model parameters from previous tasks. The first approach is called
-\textbf{Weight Transfer}. When using continual learning with Weight Transfer the model parameters of the previous task are used as initialization for the
-current task. This approach is very similar to the term Warm Start commonly used in Active Learning. \textbf{L2-transfer} is the next transfer technique
-which is a special form of L2-regularization. L2-transfer can be seen as a special form of \gls{ewc} where all the $F_i$s are set to 1. With L2 transfer the loss
-function is altered to 
+\textbf{Weight Transfer}. When using continual learning with Weight Transfer, the parameters of the previous task are used as initialization for the
+current task. This approach is very similar to the term Warm Start commonly used in Active Learning. \textbf{L2-transfer}, which is a special form of 
+L2-regularization, is the next transfer technique. L2-transfer can be seen as a special form of \gls{ewc} where all the $F_i$s are set to 1. 
+With L2 transfer, the loss function is altered to 
 \begin{equation}
     \log p(y_N \mid X_N, \mu_N) - \lambda \cdot {\lVert \mu_N - \mu_{N-1} \rVert}^2_2
 \end{equation}
@@ -370,15 +370,15 @@ one is $P$ the number of patterns (or data points), that are stored to the episo
 
 \section{Model Stealing}
 \label{sec:Related_work:Model_Stealing}
-In this section, we will present related work from the Model Stealing domain. This consists of two papers, Knockoff Nets \cite{orekondy2019knockoff} and
-ActiveThief \cite{pal2020activethief}. First, we will present Knockoff Nets and the insights on Model Stealing it provided and then we will present ActiveThief,
+In this section, we will present related work from the Model Stealing domain. Related work consists of two papers, Knockoff Nets \cite{orekondy2019knockoff} and
+ActiveThief \cite{pal2020activethief}. First, we will present Knockoff Nets and the insights on Model Stealing it provided, and then we will present ActiveThief,
 the framework which we will build our Model Stealing attacks upon.
 
 \subsection{Knockoff Nets}
 \label{sec:Related_work:Model_Stealing:Knockoff_Nets}
 % Ggf hier Abkürzungen kennzeichnen
-Knockoff Nets was published by Orekondy et al. \cite{orekondy2019knockoff}, and it was the first approach which focused only on stealing the functionality
-of the model instead of inferring hyperparameters, model architecture etc. Orekondy et al. used a variety of substitute models, thief datasets and query
+Knockoff Nets was published by Orekondy et al. \cite{orekondy2019knockoff}, and it was the first approach that focused only on stealing the functionality
+of the model instead of inferring hyperparameters, model architecture, etc. Orekondy et al. used a variety of substitute models, thief datasets, and query
 selection strategies to empirically evaluate how these factors influence the model stealing process. More precisely, they test the substitute models
 Alexnet \cite{krizhevsky2017imagenet}, ResNet, VGG and DenseNet \cite{huang2017densely} using Caltech-256,CUBS-200-2011, Indoor-Scenes, Diabetic-Retinopathy,
 ILSVRC and OpenImages as thief datasets as well as a random query selection strategy and a reinforcement learning approach. Orekondy et al. make the following
@@ -395,15 +395,15 @@ key findings:
 \label{sec:Related_work:Model_Stealing:ActiveThief}
 ActiveThief is a novel model stealing approach proposed by Pal et al. \cite{pal2020activethief}. Inspired by prior theoretical \cite{chandrasekaran2020exploring}
 and practical work \cite{shi2018active}, they use Active Learning to choose which samples to query the target model. Using Active Learning in the model stealing
-domain comes with three major benefits: First, it makes it easier for the attacker to create a thief dataset. Data is abundant nowadays while labeling large amounts
-of data to this day is a time-intensive task. By using Active Learning, which works on unlabeled data, the process of creating a thief dataset is sped up immensely.
+domain provides three major benefits: First, it makes it easier for the attacker to create a thief dataset. Data is abundant nowadays whereas labeling large amounts
+of data remains a time-intensive task. By using Active Learning, which works on unlabeled data, creating a thief dataset is sped up immensely.
 Second, Active Learning aims to query the most informative samples, yielding the most performant model with as little data as possible. Third, by using samples selected
 by Active Learning to query the target model, the model stealing attack can successfully be disguised as a benign query process. Pal et al. demonstrate this by showing 
 that ActiveThief successfully evades PRADA \cite{juuti2019prada}, a state-of-the-art model stealing defense which detects attacks by analyzing the distribution of distances
 between queries. \par
 The authors of ActiveThief evaluate their framework using the Active Learning strategies Random, Uncertainty \cite{lewis1995sequential}, CoreSet \cite{sener2017active},
 DeepFool-based Active Learning (\gls{dfal}) \cite{ducoffe2018adversarial} and a custom combination of \gls{dfal} and CoreSet. They use a custom \gls{cnn} architecture
-for both target and substitute model and show that ActiveThief is able to successfully steal the target model for multiple benchmark datasets such as MNIST and CIFAR-10.
+for both the target and substitute model and show that ActiveThief can successfully steal the target model for multiple benchmark datasets such as MNIST and CIFAR-10.
 A visualization of the model stealing workflow proposed by Pal et al. is shown in Figure \ref{fig:ActiveThief}.
 
 \begin{figure} [ht]
