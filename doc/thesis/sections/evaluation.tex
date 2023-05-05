@@ -340,7 +340,7 @@ accuracy is higher when training for 20 epochs. \par
     \centering
     \includegraphics[width=\linewidth]{images/results_CAL/VAAL_plots.png}
     \caption[Continual Active Learning Custom Replay strategy]{Left: Comparison of validation accuracy of \gls{vaal} to the Active Learning strategies Random and CoreSet. We use a batch size of 4000 for the experiments. Right: Comparison of validation accuracy when varying the training 
-    epochs for VAE and Discriminator. We use Continual Active Learning with the Naive approach as our Continual Learning strategy and a batch size of 4000.}
+    epochs for \gls{vae} and Discriminator. We use Continual Active Learning with the Naive approach as our Continual Learning strategy and a batch size of 4000.}
     \label{fig:Evaluation:Results:CAL:VAAL}
 \end{figure}
 
@@ -350,7 +350,6 @@ an increased $S$ and $P$ until about 12000 samples, after which the validation a
 After investigating the influence of \gls{a-gem}'s hyperparameters, we compare the combination of \gls{vaal} and \gls{a-gem} to \gls{vaal} and Naive, using a batch size of 4000. The results are shown in the left plot of figure \ref{fig:Evaluation:Results:CAL:AGEM}. Although \gls{a-gem} performs worse than the Naive
 approach when using the Active Learning strategy \gls{lc}, it outperforms the Naive approach when using \gls{vaal} as the Active Learning strategy. \par
 
-%TODO: Redo right plots
 \begin{figure}[h]
     \centering
     \includegraphics[width=\linewidth]{images/results_CAL/AGEM_plots.png}

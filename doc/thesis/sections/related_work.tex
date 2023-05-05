@@ -265,7 +265,7 @@ side. According to Park et al., $\hat{\Omega}^N_k$ is determined by the followin
 \end{equation}
 where $\omega^N_k$ and $\omega^{1:N-1}_k$ are given by
 % Small Omega equation
-\begin{gather}
+\begin{gather} \label{eq:ALASSO_Small_Omega}
     \omega^N_k = L^N(\hat{\theta}^{N-1}_k) - L^N(\hat{\theta}^N_k) \\
     \omega^{1:N-1}_k = -cL^{N-1}_s(\hat{\theta}^N_k,a)
 \end{gather}
@@ -274,12 +274,11 @@ precisely, they suggest using $c'$ and $a'$ instead of $c$ and $a$ in equation 3
 
 \begin{figure} [ht]
     \centering
-    \includegraphics[width=.9\linewidth]{images/Alasso_Idea.png}
+    \includegraphics[width=.7\linewidth]{images/Alasso_Idea.png}
     \caption[Visualization of ALASSO]{Illustration of the \gls{alasso} idea taken from the paper \cite{park2019continual}. The authors of \gls{alasso} state that, \gls{si}
     underestimates the unobserved side of the loss function and hence a better approximation of the loss function is achieved by overestimating it.}
     \label{fig:Alasso}
 \end{figure}
-%TODO: Make image smaller
 
 \subsection{Incremental Moment Matching}
 \label{sec:Related_work:Continual_Learning:IMM}
