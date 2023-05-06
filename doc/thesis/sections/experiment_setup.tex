@@ -142,3 +142,32 @@ and a total budget of 20000 points. The models are trained using cold start for 
 For Continual Active Learning for Model Stealing, we use a batch size of 2000 and a total budget of 40000. We decided to increase the batch size for Continual Active Learning compared
 to pure Active Learning because we noticed a clear correlation between batch size and model performance when training using Continual Active Learning. We train the substitute model for
 150 epochs per iteration and decay the learning rate by a factor of 10 after 80 and 120 epochs with momentum of and $l2$-regularization of 0.0005.
+
+\section{Evaluation Metrics}
+\label{sec:Methodology:Metrics}
+%TODO: Write some text here
+% Describe that we used agreement for model stealing (and on which dataset) and 
+% validation accuracy for the model stealing experiments. and hyperparameters
+
+\subsection{Metrics for Continual Active Learning}
+\label{sec:Methodology:Metrics:CAL}
+When choosing a metric to evaluate Continual Active Learning, we need to remember the motivation of the approach. We proposed the Continual Active Learning approach
+mainly to reduce the mainly to mitigate the overhead of pure Active Learning compared to the classic training loop. Therefore, it is desirable to incorporate a metric
+which measures this goal. In our case, this is the overall execution time. However, execution time is not the only metric we want to use to evaluate the approach. Since 
+the second goal of the Continual Learning approach is to improve model performance, we will also evaluate the experiments based on this. What a makes a machine learning 
+model performant has been discussed vividly in the literature. In our case, we will use the validation accuracy as a metric to evaluate the performance of the model. It is
+important to consider \textit{both} runtime and validation accuracy when evaluating the experiments. A model with low runtime and low validation accuracy is not desirable,
+but neither is a model with high runtime and high validation accuracy. Since we are trying to improve Active Learning by introducing Continual Learning into the pool-based 
+Active Learning process, we aim to outperform the classic pool-based Active Learning approach. More precisely, we want to reduce the runtime and increase the validation
+accuracy. The success of our Continual Active Learning approach will be evaluated against the classic pool-based Active Learning approach based on the runtime improvement
+and the accuracy improvement. 
+
+
+\subsection{Metrics for Continual Active Learning for Model Stealing}
+\label{sec:Methodlogy:Metrics:CALMS}
+As presented in section \ref{sec:ModelStealing:Attacks}, Model Stealing Attacks can be performed for a variety of reasons. As we build our framework on ActiveThief, we also
+adopt the metrics used in the original paper. The ActiveThief framework aims purely at stealing the functionality of the model, i.e. approximation the model's relationship
+between input and output best, and so does ours. Therefore, we will use the same evaluation metric, which in our case is the agreement between substitute and target model,
+computed on the validation split of the target model dataset. For an explanation of the Model Agreement metric, we refer the reader to section \ref{sec:ModelStealing:Terminology}.
+The baseline which we compare our results against is the ActiveThief framework. We will therefore measure the success of using Continual Active Learning for Model Stealing by comparing
+the model agreement of our approach to the model agreement of the ActiveThief framework.

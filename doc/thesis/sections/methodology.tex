@@ -27,16 +27,16 @@ combining Continual Learning and Active Learning, we will first outline the clas
 Next, we explain common issues with these two learning paradigms and how we aim to overcome these by combining both paradigms. Finally, we will give
 a detailed description of our approach. 
 
-\subsection{The classic Continual Learning Setting}
+\subsection{Classic Continual Learning Setting}
 \label{sec:Methodology:CLSetting}
 %Mention that CL Setting consists of multiple tasks, task can and usually are independent
 % Outline classic Continual Learning Workflow with a figure
-In the typical Continual Learning setting, the model is trained on a sequence of tasks. Each task $T_i = {x_k,y_k | k \in \{1,\ldots,n\}}$ is a set
+In the typical Continual Learning setting, the model is trained on a sequence of tasks. Each task $T_i = \{x_k,y_k | k \in \{1,\ldots,n\}\}$ is a set
 of instances with their respective label. Together, the tasks form a dataset $D = \bigcup\limits_{i=1}^{N} T_i$. It is important to note that
 the distribution of two distinct tasks $P(T_i)$  and $P(T_j) (i \neq j)$ are not necessarily the same. Most often, in fact, the tasks are independent
 of each other, which is why neural networks struggle to perform well on multiple tasks at once. This also means that the size of two distinct datasets
-can be different, i.e. $|T_i| \neq |T_j|$ and so can the number of classes $|{y_k | \exists x_k: x_k,y_k \in T_i}| \neq |{y_l | \exists x_l: x_l,y_l
-\in T_j}|$. When training a model on a sequence of tasks, the model is first fed with the data of the first task $T_1$ and then trained on it. 
+can be different, i.e. $|T_i| \neq |T_j|$ and so can the number of classes $|\{y_k | \exists x_k: x_k,y_k \in T_i \}| \neq |\{y_l | \exists x_l: x_l,y_l
+\in T_j\}|$. When training a model on a sequence of tasks, the model is first fed with the data of the first task $T_1$ and then trained on it. 
 After the model was trained on the first task, it can either be trained on the next task or deployed to classify samples stemming from the
 distribution of the first task. Next, the model is trained on the second task. After being trained on the second task, the model should now be able to
 classify samples from the distribution of the first and second task. This process is repeated until the model has been trained on all
@@ -54,7 +54,7 @@ is never retrained once it is deployed. In the Continual Learning setting, howev
     \label{fig:CLWorkflow}
   \end{figure}
 
-\subsection{The pool-based Active Learning Setting}
+\subsection{Pool-based Active Learning Setting}
 \label{sec:Methodology:ALSetting}
 %Mention classic pool-based Active Learning setting, what batches are, contrast the continual
 % learning setting, saying that the "tasks" are not independent
@@ -94,27 +94,40 @@ an overhead. From a Continual Learning perspective, we join all tasks to a singl
 of the Active Learning process, we select a batch $B$ of data points from the unlabeled pool using the given Active Learning Strategy. Next, the oracle labels this batch
 if the initial dataset was unlabeled. If the initial dataset is labeled, we omit to query the oracle because the label is already known and simply add the labels
 to the respective data points. We then treat the current batch $B$ as a new task and train our model using only the data points of $B$ with the Continual Learning strategy of
-choice. This process is repeated until the unlabeled pool is empty. The full algorithm is described in Algorithm \ref{alg:PoolBasedContinualActiveLearning} where we high-
-light the difference between classic pool-based Active Learning and our new Continual Active Learning approach in red. \par
+choice. This process is repeated until the unlabeled pool is empty. The full algorithm is described in Algorithm \ref{alg:PoolBasedContinualActiveLearning} where we highlight
+the difference between classic pool-based Active Learning and our new Continual Active Learning approach in bold. \par
 %TODO: Mention here that we aim to increase the efficiency of the training process, i.e. we save time because we train on less
 % data points
 
 \begin{algorithm}
     \caption{Pool-based Continual Active Learning} \label{alg:PoolBasedContinualActiveLearning}
     \begin{algorithmic}[1]
-        \Require Unlabeled data $U$,Labeled data $L = \emptyset$:, Oracle $O$, Model $M$, budget $B$
+        \Require Unlabeled data $U$, Labeled data $L = \emptyset$, Oracle $O$, Model $M$, budget $B$
         \State Select $k$ data points from $U$ at random, obtain labels by querying $O$ and set $L=\{x_1,\ldots,x_1\}$
         and $U = U \setminus \{x_1,\ldots,x_1\}$ \Comment{Initialization}
         \State Train $M$ on initial labeled set $L$
         \While{label budget $B$ not exhausted}
             \State Select $l$ data points from $U$ predicted to be the most informative by the Active Learning strategy
             \State Obtain labels $y_i,\ldots,y_l$ by querying $O$ for $x_i,\ldots,x_l$
-            \State {\color{red} Train $M$ on current labeled batch $\{(x_iy_i),\ldots,(x_l,y_l)\}$}
+            \State \textbf{Train $M$ on current labeled batch $\{\mathbf{(x_i,y_i),\ldots,(x_l,y_l)}\}$}
             \State Set $L= L \cup \{x_i,\ldots,x_l\}$ and $U = U \setminus \{x_i,\ldots,x_l\}$
-            \State Train $M$ on labeled set $L$
         \EndWhile
     \end{algorithmic}
 \end{algorithm}
+
+\subsection{Replay strategy}
+\label{sec:Methodology:ReplayStrategy}
+In this subsection, we detail a Continual Learning Strategy called Replay. Applying replay to overcome catastrophic forgetting is not an entirely new idea. In fact, it
+has been proposed since the 1990s \cite{robins1995catastrophic}. The approach we propose modifies the classic replay by compressing the replay buffer. To understand the modification
+we must first understand the classic replay strategy. \par
+Replay is a Continual Learning strategy that stores a subset (or all) data points from each task in a so-called replay buffer. When training on a new task $T_N$, the model is trained 
+on all data from the current task plus a sample from the replay buffer. After training on task $T_N$, the replay buffer is updated with the data points from the current task. \par
+A significant drawback of the classic Replay strategy is that the replay buffer can grow to extreme sizes over time. This is especially true when the replay buffer stores all data points from
+each task. It is more desirable to have a Continual Learning strategy with a fixed memory footprint because this reflects the realistic application of Continual Learning where memory 
+is limited. \par
+The proposed modification of the Replay strategy is to compress the replay buffer after each task. Assume we have a replay buffer of size $n$. After training on task $T_N$, the replay buffer
+is combined with the data points from the current task to form a new set of data points $P$. We then select $n$ data points from $P$ to form the new replay buffer. The selection of the $n$ data
+is done by performing one iteration of the Active Learning strategy CoreSet \cite{sener2017active} with $P$ as the unlabeled pool and $n$ as the batch size. The $n$ data points selected by CoreSet then represent the new replay buffer. When training on task $T_{N+1}$, the model is trained on all data from the current task plus the full replay buffer.
 
 \section{Continual Active Learning for Model Stealing}
 \label{sec:Methodolody:CALMS}
@@ -147,7 +160,7 @@ process is repeated until the unlabeled pool is empty. A visual example of the C
 \ref{fig:CalmsWorkflow}. \par
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=.9\linewidth]{images/Calms_workflow.png}
+    \includegraphics[width=.7\linewidth]{images/Calms_workflow.png}
     \caption[Continual Active Learning for Model Stealing Workflow]{Example of the Continual Active Learning for Model Stealing Workflow. In this example, the thief
     dataset consists of birds while the target model was trained to classify planes. In each iteration, a batch of informative samples is selected by the Active Learning
     strategy first. Next, the target model is queried for the labels of the selected samples. Since our thief dataset is composed of NNPD data, the associated labels have
@@ -155,20 +168,7 @@ process is repeated until the unlabeled pool is empty. A visual example of the C
     \label{fig:CalmsWorkflow}
 \end{figure}
 
-\section{Replay strategy}
-\label{sec:Methodology:ReplayStrategy}
-In this section, we propose a Continual Learning Strategy called Replay. Applying replay to overcome catastrophic forgetting is not an entirely new idea. In fact, it
-has been proposed since the 1990s \cite{robins1995catastrophic}. The approach we propose modifies the classic replay by compressing the replay buffer. To understand the modification
-we must first understand the classic replay strategy. \par
-Replay is a Continual Learning strategy that stores a subset (or all) data points from each task in a so-called replay buffer. When training on a new task $T_N$, the model is trained 
-on all data from the current task plus a sample from the replay buffer. After training on task $T_N$, the replay buffer is updated with the data points from the current task. \par
-A significant drawback of the classic Replay strategy is that the replay buffer can grow to extreme sizes over time. This is especially true when the replay buffer stores all data points from
-each task. It is more desirable to have a Continual Learning strategy with a fixed memory footprint because this reflects the realistic application of Continual Learning where memory 
-is limited. \par
-The proposed modification of the Replay strategy is to compress the replay buffer after each task. Assume we have a replay buffer of size $n$. After training on task $T_N$, the replay buffer
-is combined with the data points from the current task to form a new set of data points $P$. We then select $n$ data points from $P$ to form the new replay buffer. The selection of the $n$ data
-is done by performing one iteration of the Active Learning strategy CoreSet \cite{sener2018active} with $P$ as the unlabeled pool and $n$ as the batch size. The $n$ data points selected by Core-
-Set then represent the new replay buffer. When training on task $T_{N+1}$, the model is trained on all data from the current task plus the full replay buffer.
+
 
 %% ---------------------
 %% | / Example content |
