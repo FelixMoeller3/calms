@@ -13,7 +13,7 @@
 \chapter{Related Work}
 \label{ch:Related_work}
 We group related work for this thesis into three different categories: The first category is \hyperref[sec:Related_work:Active_Learning]
-{Active Learning}. Active Learning is a special form of machine learning where an oracle is present which can label arbitrary data points.
+{Active Learning}. Active Learning is a specific form of machine learning utilizing an oracle to label arbitrary data points.
 A Machine Learning model trained using Active Learning iteratively queries the oracle with unlabeled data points, trains a new model, and
 determines which data to query next. The second category is \hyperref[sec:Related_work:Continual_Learning]{Continual Learning}.
 Continual Learning is a Machine Learning technique that aims to make a given machine learning model learn new tasks without forgetting
@@ -25,7 +25,7 @@ are either used in the experiments of this thesis or are related to the approach
 
 \section{Active Learning}
 \label{sec:Related_work:Active_Learning}
-In this section, we will present the Active Learning strategies from the literature that we will use in our experiments. These are Least Confidence
+In this section, we will present the Active Learning strategies we will use in our experiments. These are Least Confidence
 (\gls{lc}), CoreSet, Bayesian Active Learning by Disagreement (\gls{bald}), Batch Active Learning by Diverse Gradient Embeddings (\gls{badge}) and 
 Variational Adversarial Active Learning (\gls{vaal}). While we aim to give a detailed explanation of these approaches, we refer the reader to the
 original papers for any further details. \par

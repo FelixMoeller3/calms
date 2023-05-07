@@ -13,42 +13,44 @@
 \chapter{Introduction}
 \label{ch:Introduction}
 
-Research in Machine Learning and especially Deep Learning has produced an abundance of highly influential work in recent years, like
-\glspl{cnn} \cite{lecun1998gradient}, Transformers \cite{vaswani2017attention} and \glspl{gan} \cite{goodfellow2020generative}. These
-Machine Learning Models are becoming ever more accurate, achieving or even surpassing human-level performance on tasks like visual
+Research in deep learning has produced an abundance of highly influential work in recent years, like
+\glspl{cnn} \cite{lecun1998gradient}, transformers \cite{vaswani2017attention} and \glspl{gan} \cite{goodfellow2020generative}.
+\gls{ml} models are becoming ever more accurate, achieving or even surpassing human-level performance on tasks like visual
 perception or natural language understanding. Because of their high potential for
-innovation, Machine Learning Models are increasingly being used in real-world applications. To profit from this, a multitude of technology
-enterprises offer numerous services to ease the training, development and deployment of Machine Learning applications. These services can
+innovation, \gls{ml} models are increasingly being used in real-world applications. To profit from this, a multitude of technology
+enterprises offer services to ease the training, development and deployment of \gls{ml} applications. These services can
 be grouped together under the term \gls{mlaas}. \par
-While \gls{mlaas} is crucial to make Machine Learning more accessible, it also poses a security threat. In the past years, numerous research works
-have been published which demonstrate how easily Machine Learning Models can be extracted from \gls{mlaas} services \cite{tramer2016stealing}
-\cite{reith2019efficiently} \cite{papernot2017practical}. The standard procedure to steal a such a Machine Learning model is to train a local
+While \gls{mlaas} is crucial to make \gls{ml} more accessible, it also poses a security threat. In the past years, numerous research papers
+have been published which demonstrate how easily machine learning models can be extracted from \gls{mlaas} services \parencite{tramer2016stealing,
+reith2019efficiently,papernot2017practical}. The standard procedure to steal a such a machine learning model is to train a local
 clone (also called substitute model) of the model which is hosted on the \gls{mlaas} service (also called target model). The substitute model is trained
-using a dataset that the attacker collects which is also called thief dataset. Labels for the thief dataset are then obtained by querying the target
-model on the thief dataset. The process of extracting Machine Learning models from \gls{mlaas} services is referred to as Model Stealing. \par
-Because of the dramatic consequences of Model Stealing Attacks, researchers have also investigated how to defend against them. Two recent approaches
-to defend Model Stealing Attacks are Prediction Poisoning \cite{orekondy2019prediction} and \gls{prada} \cite{juuti2019prada}. Despite the effort to
-defend model stealing attacks, research works have been published which evade these defense strategies. One notable example of this is the model
-extraction framework ActiveThief \cite{pal2020activethief} which successfully evades the \gls{prada} defense strategy. ActiveThief makes use of Active
-Learning to determine which samples of the thief dataset it should query the target model on. Active Learning is an intensively studied research
-field which aims to minimize the labeling effort in the training process of Machine Learning models. The problem of Active Learning is however that it
-needs a lot of computing resources. In this work, we extend on the ActiveThief framework by using \textit{Continual} Active Learning in the model
+using a dataset collected by the attacker. This dataset is also called thief dataset. Labels for the thief dataset are obtained by querying the target
+model on the thief dataset. The process of extracting \gls{ml} models from \gls{mlaas} services is referred to as model stealing. \par
+Because of the dramatic consequences of model stealing attacks, researchers have investigated how to defend against them. Two recent model stealing
+defenses are prediction poisoning \cite{orekondy2019prediction} and \gls{prada} \cite{juuti2019prada}. Despite the effort to
+defend model stealing attacks, researchers have proposed attack which evade these defense strategies. One notable example of this is the model
+extraction framework ActiveThief \cite{pal2020activethief} which successfully evades the defense strategy  \gls{prada}. ActiveThief makes use of active
+learning to determine which samples of the thief dataset it should query the target model on. Active learning is an intensively studied research
+field which aims to minimize the labeling effort in the training process of machine learning models. The problem of \gls{al} is however that it
+needs a lot of computing resources. In this work, we extend on the ActiveThief framework by using continual active learning in the model
 extraction process.\par
-Continual Learning is a research field which aims to make Machine Learning Models more robust against the introduction of new data. The major problem
+\gls{cl} is a research field which aims to make \gls{ml} models more robust against the introduction of new data. The major problem
 of the classic training procedure is that a model trained on a new task rapidly loses the ability to perform any previous tasks it was trained on.
-Research in Continual Learning aims to develop methods which allow Machine Learning Models to learn new tasks without forgetting the knowledge of old 
+Research in continual learning aims to develop methods which allow machine learning models to learn new tasks without forgetting the knowledge of old 
 tasks. \par
-\textbf{Contributions} \hspace{0.2cm} The objective of this thesis is to combine existing approaches of the Continual Learning domain
- with approaches in the Active Learning domain. More specifically, we are focusing on regularization-based Continual Learning methods
-whereas we use both uncertainty-based and diversity-based Active Learning methods. The Continual Learning methods we use are \gls{ewc} \cite{kirkpatrick2017overcoming},
+\textbf{Delimitation} \hspace{0.2cm} All work in this thesis is done in the context of image classification. Furthermore, all experiments are conducted
+with \glspl{cnn}. Therefore, our findings are only applicable to deep learning within the computer vision domain and may not generalize to other settings. \par
+\textbf{Contributions} \hspace{0.2cm} The objective of this thesis is to combine existing approaches from continual learning
+with approaches in the active learning domain. More specifically, we are focusing on regularization-based \gls{cl} methods
+whereas we use both uncertainty-based and diversity-based \gls{al} methods. The \gls{cl} methods we use are \gls{ewc} \cite{kirkpatrick2017overcoming},
 \gls{mas} \cite{aljundi2018memory}, \gls{imm} \cite{lee2017overcoming} and \gls{alasso} \cite{park2019continual}.
-Concerning Active Learning, we compare random sampling, \gls{lc} \cite{lewis1995sequential} sampling, \gls{badge} \cite{ash2019deep}, \gls{bald} \cite{houlsby2011bayesian} and
+Concerning \gls{al}, we compare random sampling, \gls{lc} \cite{lewis1995sequential} sampling, \gls{badge} \cite{ash2019deep}, \gls{bald} \cite{houlsby2011bayesian} and
 CoreSet \cite{sener2017active}.
-We analyze how the Continual Learning methods can speed up the Active Learning process, which combinations of Continual and Active Learning methods
-are most effective and how the trade-off between accuracy and speed up is. While the focus of this thesis is on regularization-based Continual
-earning methods, we briefly explore the effectiveness of exemplar rehearsal Continual Learning using the \gls{a-gem} approach \cite{chaudhry2018efficient}
-combined with representation-based Active Learning in form of \gls{vaal} \cite{sinha2019variational}. \par
-After exploring the effectiveness of the different combinations of Continual and Active Learning methods, we apply these combinations in the Model Stealing
-domain. More specifically, we build upon the model extraction framework ActiveThief \cite{pal2020activethief} and investigate the performance of Continual
-Active Learning methods in the Model Stealing domain.
+We analyze how the \gls{cl} methods can speed up the active learning process, which combinations of \gls{cl} and \gls{al} methods
+are most effective as well as the trade-off between accuracy and speed up. While the focus of this thesis is on regularization-based continual
+earning methods, we briefly explore the effectiveness of exemplar rehearsal continual earning using the \gls{a-gem} approach \cite{chaudhry2018efficient}
+combined with representation-based \gls{al} in form of \gls{vaal} \cite{sinha2019variational}. Furthermore, we evaluate the performance of a custom replay strategy.\par
+After exploring the effectiveness of the different combinations of continual and active learning methods, we apply these combinations in the model stealing
+domain. More specifically, we build upon the model extraction framework ActiveThief \cite{pal2020activethief} and investigate the performance of continual
+active learning methods in the model stealing domain.
 %TODO: Write something for delimitation here

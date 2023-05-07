@@ -13,67 +13,70 @@
 \chapter{Background}
 \label{ch:Background}
 
-In this chapter, we will give an overview of the background knowledge needed to understand the following chapters. The topic
-of this thesis is at the intersection of the fields of Active Learning, Continual Learning, and Model Stealing, and therefore we will
-give an introduction to each of these fields.
+We provide an overview of the background knowledge necessary to understand the following chapters in this chapter. We start with
+active learning, describing common active learning settings. Next, we cover continual learning, including conventional continual learning
+scenarios and a taxonomy of continual learning methods. Finally, we describe model stealing attacks, introduce the most relevant terminology,
+and outline model stealing defenses.
+
 
 \section{Active Learning}
 \label{sec:ActiveLearning}
 
-Active Learning is a subfield of Machine Learning that focuses on the problem of how to select the most informative data points to label.
-Active Learning research is motivated by the fact that obtaining data can often be automated, while labeling is complex and time-consuming.
-Therefore, the objective of Active Learning research is to create techniques that optimize model performance while minimizing the amount of
-labeled data required. A typical Active Learning scenario comprises a learner, an oracle, unlabeled samples, and labeled data. The learner
-itself is then the Machine Learning model. Let $I$ be the instance space (i.e. the set of all possible data points), and $L$ be the label
-space (i.e. the set of all possible labels). The oracle $O$ represents the function
+\gls{al} is a subfield of machine learning that focuses on the problem of how to select the most informative data points to label.
+Research in \gls{al} is motivated by the contrast between low-effort data acquisition and resource-intensive labeling.
+Therefore, the objective of active learning research is to create techniques that optimize model performance while minimizing the amount of
+labeled data required. A typical \gls{al} scenario comprises a learner, an oracle, unlabeled samples, and labeled data. The learner
+itself is then the \gls{ml} model. Let $I$ be the instance space (i.e., the set of all possible data points), and $L$ be the label
+space (i.e., the set of all possible labels). The oracle $O$ represents the function
 \begin{equation}
     O: I \rightarrow L, x \mapsto y(x)
 \end{equation}
-where $y(x)$ is the true label of the data point $x$, often just referred to as $y$. The unlabeled data $U$ is a subset of $I$ just as the set
-of labeled data $L$. In the beginning, there are no labeled data points. Often a few labeled data points are randomly sampled from $U$ and labeled
-by the oracle to initialize the learning process. A detailed overview of research activities within the Active Learning Domain is presented in
-\cite{settles2009active}. Note however that more recent works are not contained in this literature survey because it was last updated in 2009.
-In general, Active Learning methods can be divided into three categories:
+where $y(x)$ is the true label of the data point $x$. In the following, we will use $y$ as a short form of $y(x)$. $U$, the set of unlabeled data,
+is a subset of $I$ just as the set of labeled data $L$. In the beginning, there are no labeled data points. Often a few labeled data points
+are randomly sampled from $U$ and labeled by the oracle to initialize the learning process. A detailed overview of research activities within
+the active learning domain is presented by Settles \cite{settles2009active}. Note, however, that more recent works are not contained in this
+literature survey because it was last updated in 2009. In general, \gls{al} methods can be divided into three categories:
 \begin{itemize}
     \item \textbf{Query Synthesis Active Learning}
     \item \textbf{Pool-based Active Learning}
     \item \textbf{Stream-based Active Learning}
 \end{itemize}
-While researchers generally agree on this data-centric taxonomy, it is worth noting that the type of Machine Learning Model used
-(e.g. (Convolutional) Neural Networks or Support Vector Machines) and the type of data used (such as images or text) play a decisive role in the
-effectiveness of an Active Learning strategy. An example of this is the pool-based Active Learning strategy CoreSet \cite{sener2017active}, which
+While researchers generally agree on this data-centric taxonomy, it is worth noting that the type of \gls{ml} model used
+(e.g. (convolutional) neural networks or support vector machines) and the type of data used (such as images or text) play a decisive role in the
+effectiveness of an \gls{al} strategy. An example of this is the pool-based \gls{al} strategy CoreSet \cite{sener2017active}, which
 was designed to suit the requirements of \glspl{cnn}.
 
 \subsection{Query Synthesis Active Learning}
 \label{sec:QuerySynthesisActiveLearning}
-Query Synthesis Active Learning, also known as Membership Query Synthesis Active Learning, was among the first active learning scenarios proposed
-\cite{angluin1988queries}. The idea behind this approach is to synthesize data points from the input space, rather than
-to sample real data points. Nowadays, this is done by training a generative model (e.g. a Generative Adversarial Network) \cite{zhu2017generative}
-which learns the distribution of unlabeled data. However, earlier works relied on statistical models such as Gaussian Mixture Models 
-\cite{cohn1996active}. The generated queries are then labeled by the oracle and can be used to train the Machine Learning Model. Note that
-Query Synthesis is not limited to classification tasks. For example, \cite{cohn1996active} proposed a method to predict the absolute coordinates
-of a robot hand when given the joint angles of its mechanical arms as inputs. When the oracle is a human annotator, Query Synthesis Active Learning
-researchers have encountered problems in labeling them. Because the generated queries do not show any class-discriminative features, human annotators
-struggled to assign any class to them in the survey of \cite{baum1992query}.
+Query synthesis active learning, also known as membership query synthesis active learning, was among the first \gls{al} scenarios proposed
+\cite{angluin1988queries}. Query synthesis methods synthesize data points from the input space instead of sampling real data points. Modern query
+synthesis methods train a generative model (e.g., a Generative Adversarial Network) \cite{zhu2017generative}
+which learns the distribution of unlabeled data. However, earlier works relied on statistical models such as Gaussian mixture models 
+\cite{cohn1996active}. The generated queries are then labeled by the oracle and can be used to train the machine learning Model. Note that
+query synthesis is not limited to classification tasks. For example, Cohn et al. \cite{cohn1996active} proposed a method to predict the absolute coordinates
+of a robot hand when given the joint angles of its mechanical arms as inputs. When the oracle is a human annotator, query synthesis active learning
+researchers have encountered problems in labeling them. Human annotators struggled to assign any class to them in the survey of Baum et al. \cite{baum1992query}
+because the generated queries do not show any class-discriminative features.
 
 % TODO: Hier ein Bild wie QS Active Learning funktioniert einfügen
 
 \subsection{Pool-based Active Learning}
 \label{sec:PoolBasedActiveLearning}
-Pool-based Active Learning is the most widely studied and used type of Active Learning. The idea behind pool-based Active Learning approaches
+Pool-based active learning is the most widely studied and used type of active learning. The idea behind pool-based active learning approaches
 is to iteratively select the most informative data points from the current unlabeled pool, query the oracle for their labels and add them to the
-labeled pool. Next, the \gls{ml} model is trained on the current labeled pool. This process is repeated until the query budget is exhausted. A more detailed
-explanation can be found in \ref{alg:PoolBasedActiveLearning}. More formally, the pool-based Active Learning problem can be defined as:
+labeled pool. Next, the \gls{ml} model is trained on the current labeled pool. This process repeats itself until the query budget is exhausted.
+A more detailed explanation can be found in algorithm \ref{alg:PoolBasedActiveLearning}. More formally, the pool-based active learning problem
+can be defined as:
 \begin{equation}
-    \min_{s^1 \subseteq U: |s^1| \leq b} E_{x,y \sim P_{(X,Y)}}[l(x,y;L \cup b)]
+    \min_{s^1 \subseteq U: |s^1| \leq b} E_{x,y \sim P_{(X,Y)}}[\mathcal{L}(x,y;L \cup b)],
 \end{equation}
-In other words, a pool-based Active Learning algorithm aims to select the points that minimize the expected loss of the model on the labeled pool when
-being added to it. As can be seen from  \ref{alg:PoolBasedActiveLearning}, the structure across Pool-based Active Learning strategies is very similar.
-The main difference between these is the informative measure, i.e. the criterion with which they select which data points to label next. Within the 
-Pool-based Active Learning category, there are two subcategories: \textbf{Uncertainty-based} sampling and \textbf{Diversity-based} sampling. 
+where $U$ is the unlabeled pool, $b$ is the query batch size and $L$ is the labeled pool.
+In other words, a pool-based active learning algorithm aims to select the points that minimize the expected loss of the model on the labeled pool when
+being added to it. As can be seen from  algorithm \ref{alg:PoolBasedActiveLearning}, the structure across pool-based active learning strategies is similar.
+The main difference between these is the informative measure, i.e., the criterion with which they select the data points to label next. Within 
+pool-based active learning, there are two subcategories: uncertainty-based sampling and diversity-based sampling. 
 Uncertainty-based sampling strategies select the data points that the model is most uncertain about. Diversity-based sampling strategies, on the other
-hand, aim to select data points that best represent the data distribution in the unlabeled pool. In our experiments, we will mainly use pool-based
-Active Learning Strategies, stemming from the Uncertainty-based and Diversity-based subcategories.
+hand, aim to select data points that best represent the data distribution in the unlabeled pool.
 
 \begin{algorithm}
     \caption{Pool-based Active Learning} \label{alg:PoolBasedActiveLearning}
@@ -93,41 +96,40 @@ Active Learning Strategies, stemming from the Uncertainty-based and Diversity-ba
 
 \subsection{Stream-based Active Learning}
 \label{sec:StreamBasedActiveLearning}
-Stream-based Active Learning, introduced by Cohn et al. \cite{cohn1994improving}, is closer to Pool-based Active Learning than Query Synthesis
-Active Learning. The main difference between Stream-based Active Learning and Pool-based Active Learning is that data arrives sequentially
-instead of having a batch of data points. In the stream-based Active Learning scenario, the learner draws a data point from the data source
+Stream-based active learning, introduced by Cohn et al. \cite{cohn1994improving}, is closer to pool-based active learning than query synthesis
+active learning. The main difference between stream-based active learning and pool-based active learning is that data arrives sequentially
+instead of having a batch of data points. In the stream-based active learning scenario, the learner draws a data point from the data source
 one at a time. For each data point, the learner can then decide to query the oracle for its label or to discard it. The decision whether to label a
 data point can either be made based on its informativeness \cite{dagan1995committee} or its location within the instance space \cite{cohn1994improving}.
 In the latter case, the learner would label the data point if it in a region of the instance space that the learner is not confident about.
 
 \section{Continual Learning}
 \label{sec:ContinualLearning}
-Continual Learning is a subfield of Machine Learning that aims to solve the problem of Catastrophic Forgetting. To elaborate further,
-it is important to remember that most Machine Learning services are deployed in an environment where constant changes occur. To adapt to their environment,
-Machine Learning Models need to learn new tasks without forgetting the knowledge they have acquired in the past. Contrarily, adapting to constant change is
-common for humans. For example, if a child has once learned to walk, it does not forget how to walk when learning to ride a bike.
-In contrast to human behavior, the performance of Machine Learning Models on old tasks rapidly decreases when they are trained on new tasks. This phenomenon
-is known as \enquote{Catastrophic Forgetting} and was already discovered in the early days of Machine Learning research \cite{mccloskey1989catastrophic}.
-Generally speaking, research in Continual Learning aims not only to alleviate Catastrophic Forgetting but to solve the 
-\enquote{stabiliy/plasticity dilemma} \cite{carpenter1988art}. The stability/plasticity dilemma refers to the fact that Machine Learning Models
-should ideally be stable enough to retain their performance on old tasks while simultaneously being plastic enough to adapt to new ones. This is a dilemma
-because both properties are desirable even though they conflict each other. In practice, Machine Learning Models tend to be more plastic than stable.
-This is especially true for Deep Neural Networks, but generally for all Machine Learning Models trained by greedily updating their parameters using
+Continual learning is a subfield of \gls{ml} that aims to solve the problem of catastrophic forgetting. Nowadays, most \gls{ml} services are deployed
+in an environment where constant changes occur. To adapt to their environment, machine learning models need to learn new tasks without forgetting the knowledge
+they have acquired in the past. In contrast to human behavior, the performance of \gls{mls} models on old tasks rapidly decreases when they are trained
+on new tasks. This phenomenon is known as catastrophic forgetting and was already discovered in the early days of \gls{ml} research \cite{mccloskey1989catastrophic}.
+Generally speaking, research in continual learning aims not only to alleviate catastrophic forgetting but to solve the 
+\enquote{stabiliy/plasticity dilemma} \cite{carpenter1988art}. The stability/plasticity dilemma refers to the fact that \gls{ml} models
+should be stable enough to retain their performance on old tasks while simultaneously being plastic enough to adapt to new ones. This is a dilemma
+because both properties are desirable even though they conflict with each other. In practice, \gls{ml} models tend to be more plastic than stable.
+This is especially true for Deep Neural Networks, but generally for all \gls{ml} models trained by greedily updating their parameters using
 gradient descent \cite{mundt2020wholistic}. \par
-Continual Learning is employed widely in scenarios where new tasks arrive or the data distribution changes over time. Despite being useful
-in these classic scenarios, Continual Learning approaches can also be used in cases where storing data is impossible for legal reasons or due to memory
-constraints, i.e. when batch learning cannot be applied. 
+Continual learning is employed widely in scenarios where new tasks arrive or the data distribution changes over time. Despite being useful
+in these classic scenarios, continual learning approaches can also be used in cases where storing data is impossible for legal reasons or due to memory
+constraints, i.e., when batch learning is inapplicable. 
 
 
 \subsection{Continual Learning Scenarios}
 \label{sec:ContinualLearningScenarios}
 Continual Learning is a rapidly evolving research field. Therefore, terminology as well as taxonomy are currently being established. Among the most
 important factors to distinguish is how new tasks arrive. In the following, we will introduce the three typical Continual Learning Scenarios as
-presented in \cite{van2022three}. 
+presented by van de Ven et al. \cite{van2022three}. These are Task-Incremental Continual Learning, Domain-Incremental Continual Learning and
+Class-Incremental Continual Learning.
 
 \subsubsection{Task-Incremental Continual Learning}
 \label{sec:TaskIncrementalContinualLearning}
-%TODO: Unter diesem Absatz weiter mit Grammarly verbesserungen machen
+%TODO: 7.5. 2:13 hier weiter machen mit polishin
 %TODO: Add a figure that shows the difference between the three scenarios. For Task-Incremental learning mention tuple with task id.
 In the Task-Incremental setting, a model is informed about which task it will be trained on or which task the data whose label it is supposed to predict belongs to.
 Task information is conveyed through an integer task identifier. Because the model does not have to infer the task it is supposed to predict
@@ -139,7 +141,7 @@ is used. Upon the arrival of the second task, the model is retrained with the se
 \begin{equation}
     f: X \times T \rightarrow Y
 \end{equation}
-Where $X = \mathbb{R}^{N x N x C}$ is the input space (i.e. all possible input images of size $N x N$ with $C$ channels), $T = \{1,2,\ldots\}$ is the task space (i.e. all possible
+Where $X = \mathbb{R}^{N x N x C}$ is the input space (i.e., all possible input images of size $N x N$ with $C$ channels), $T = \{1,2,\ldots\}$ is the task space (i.e., all possible
 tasks that the model can be trained on) and $Y = \mathbb{Z}_{k}$ is the label space with $k$ being the number of possible classes.
 % Figure with decision tree for the continual learning scenarios like in https://www.nature.com/articles/s42256-022-00568-3
 \subsubsection{Domain-Incremental Continual Learning}
@@ -150,7 +152,7 @@ between 0 and 9 (such as those in the MNIST \cite{mnist_web} dataset) where the 
 \begin{equation}
     f: X \rightarrow Y
 \end{equation}
-Where $X = \mathbb{R}^{N x N x C}$ is the input space (i.e. all possible input images of size $N x N$ with $C$ channels), and $Y = \mathbb{Z}_{k}$ is the label space with $k$ being the
+Where $X = \mathbb{R}^{N x N x C}$ is the input space (i.e., all possible input images of size $N x N$ with $C$ channels), and $Y = \mathbb{Z}_{k}$ is the label space with $k$ being the
 number of possible classes.
 
 \subsubsection{Class-Incremental Continual Learning}
@@ -163,7 +165,7 @@ The mapping learned is
 \begin{equation}
     f: X \rightarrow Y \times T
 \end{equation}
-Where $X = \mathbb{R}^{N x N x C}$ is the input space (i.e. all possible input images of size $N x N$ with $C$ channels), $T = \{1,2,\ldots\}$ is the task space (i.e. all possible
+Where $X = \mathbb{R}^{N x N x C}$ is the input space (i.e., all possible input images of size $N x N$ with $C$ channels), $T = \{1,2,\ldots\}$ is the task space (i.e., all possible
 tasks that the model can be trained on) and $Y = \mathbb{Z}_{k}$ is the label space with $k$ being the number of possible classes.
 
 \subsection{Continual Learning Approaches}
@@ -217,7 +219,7 @@ subcategories. Approaches falling into the first category are called \textbf{Fix
 Fixed Capacity methods do not change the number of model parameters but rather the parameters used for each task. They assume that parts of
 the model architecture are redundant and therefore can be reused for different tasks. When training on a new task $T_N$, those parameters that are
 important for the task (how importance is defined depends on the specific approach) are used to form a path through the model only used for
-$T_N$. All other parameters are frozen, i.e. their weight and bias are set to 0. \par
+$T_N$. All other parameters are frozen, i.e., their weight and bias are set to 0. \par
 Dynamic Growth approaches on the other hand allow adding new layers or single neurons to the model when training on a new task. The difference between
 approaches falling into this category is their decision on when to add new layers or neurons. A popular criterion for deciding when to add new model
 parameters is when the loss function plateaus \cite{ash1989dynamic}.
@@ -232,8 +234,8 @@ Providing public access to a Machine Learning model is a win-win situation. The 
 appropriate training data. The developer also chooses a proper model architecture, trains the model, and fine-tunes its hyperparameters. On the other hand,
 the user of the prediction \gls{api} can benefit from the model's predictions without having to train the model. \par
 Since the developed model is the intellectual property of the model developer, it is important that only the model's predictions are exposed to the public and
-not the model (i.e. its architecture and the model weights)itself. However, in the last years, numerous research papers have been published that demonstrate how
-several features of a machine learning model can be extracted, i.e. its functionality \cite{tramer2016stealing}, its architecture \cite{oh2019towards} and its
+not the model (i.e., its architecture and the model weights)itself. However, in the last years, numerous research papers have been published that demonstrate how
+several features of a machine learning model can be extracted, i.e., its functionality \cite{tramer2016stealing}, its architecture \cite{oh2019towards} and its
 training data \cite{shokri2017membership}. This newly created field of research is called \textbf{Model Stealing} or \textbf{Model Extraction}, and it is a subfield
 of \textbf{Adversarial Machine Learning} according to Oliynyk et al. \cite{oliynyk2022know}. Because Model Extraction attacks are so effective, further research
 concerning model stealing defense mechanisms has been published. In the following, we will use the taxonomy provided by Oliynyk et al. (see Figure 
@@ -251,7 +253,7 @@ Knockoff Model or Inferred Model. \cite{orekondy2019knockoff} have demonstrated 
 our findings.\par
 \textbf{Target Model Dataset}: The dataset that the target model has been trained on. The term Target Model Dataset has not been used in the literature before (to 
 the best of our knowledge). However, we choose this term over the synonymous term Secret Dataset because we believe it is more expressive. During Model Stealing Attacks,
-the attacker has no access to the target model's dataset, i.e. it is kept secret. For research purposes, however, a test set of the Target Model Dataset is
+the attacker has no access to the target model's dataset, i.e., it is kept secret. For research purposes, however, a test set of the Target Model Dataset is
 used to evaluate the performance of the Substitute Model. \par
 \textbf{Thief Dataset}: The dataset used by the attacker to train the Substitute Model. The Thief Dataset is also known as Fake dataset, Attacker Set or 
 Transfer Set. When constructing the Thief Dataset, the attacker can either use \textbf{Natural Non-Problem Domain} (\gls{nnpd}) or \textbf{Synthetic Non-Problem Domain} (\gls{snpd})
@@ -259,7 +261,7 @@ data. \gls{nnpd} data is data that is collected from the real world but does not
 usually by drawing from a given distribution such as a multidimensional Uniform Distribution \cite{pal2020activethief}. Empirical observations show that using \gls{nnpd} data
 yields significantly better results than using \gls{snpd} data. Even when using \gls{nnpd} data, significant differences between different datasets have been observed 
 \cite{pal2020activethief}. In general, it is wise to choose a dataset that is as diverse as possible. Regardless of using \gls{snpd} or \gls{nnpd} data, the adversary should keep the
-dimensions of the Target Model Dataset, i.e. image size and especially the number of channels for image datasets, in mind and adapt the Thief Dataset accordingly. \par
+dimensions of the Target Model Dataset, i.e., image size and especially the number of channels for image datasets, in mind and adapt the Thief Dataset accordingly. \par
 \textbf{Agreement}: The relative agreement between the predictions of the Substitute Model and the Target Model. The agreement is computed on a test set of the Target 
 Model dataset, meaning that it is not accessible by the attacker. The agreement is also known as Extraction accuracy, label prediction match, or similarity. More formally,
 the agreement between Target Model $f$ and Substitute Model $\tilde{f}$ is defined as follows:
@@ -282,7 +284,7 @@ is especially the case if the model architecture and/or training hyperparameters
 aforementioned attacks to extract them. It is important to note that different Model Stealing Attacks should not be seen as mutually exclusive but rather as a toolkit that,
 while often used individually, can be combined to extract a holistic view of the target model. So far, attacks have been proposed to extract the weights of a binary classifier
 \cite{lowd2005adversarial}, logistic regression \cite{tramer2016stealing}, simple Neural Networks \cite{tramer2016stealing} and support vector regression \cite{reith2019efficiently}. \par
-Many attackers are not interested in specific model features, such as architecture or (hyper-) parameters but rather in reproducing the target model's \textit{functionality}, i.e.
+Many attackers are not interested in specific model features, such as architecture or (hyper-) parameters but rather in reproducing the target model's \textit{functionality}, i.e.,
 its ability to predict a label for a given input. When stealing model functionality, attackers either aim to maximize the accuracy of the substitute model on the target model's
 test set or maximize the agreement between the predictions of the substitute model and the target model. While Oliynyk et al. list these as separate attacks, we believe it is
 rather a matter of the optimization objective. Regardless of whether the attacker aims to maximize the accuracy or agreement, the attacker has to train a substitute model
