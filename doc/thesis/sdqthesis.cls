@@ -218,7 +218,7 @@
 \RequirePackage{ifthen}
 
 % enumerate subsubsections
-\setcounter{secnumdepth}{3}
+\setcounter{secnumdepth}{2}
 
 % wallpaper for title page (KIT-Frame)
 \RequirePackage{wallpaper}
