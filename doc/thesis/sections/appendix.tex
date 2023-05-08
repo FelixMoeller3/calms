@@ -438,16 +438,16 @@ ActiveThiefConv4 on CIFAR-10. This shows that the complexity of the target model
     \centering
     \begin{tabular}{|c|| c | c | c|} 
         \hline
-        \diagbox[width=10em]{Dataset}{Architecture} &  ActiveThiefConv2 & ActiveThiefConv3 & ActiveThiefConv4 \\ 
+        & ActiveThiefConv2 & ActiveThiefConv3 & ActiveThiefConv4 \\ 
         \hline 
-        MNIST & 98.42\% & 98.91\% & 99.01\% \\
+        MNIST & 98.42 & 98.91 & 99.01 \\
         \hline
-        CIFAR-10 & 66.61\% & 80.67\% & 84.47\% \\
+        CIFAR-10 & 66.61 & 80.67 & 84.47 \\
         \hline
-        CIFAR-100 & - & 42.90\% & - \\
+        CIFAR-100 & - & 42.90 & - \\
         \hline
     \end{tabular}
-    \caption[Validation accuracies of our target model architectures]{Validation accuracies of our target model architectures on MNIST,CIFAR-10 and CIFA-100. 
+    \caption[Validation accuracies of our target model architectures]{Validation accuracies (in \%) of our target model architectures on MNIST, CIFAR-10 and CIFAR-100. 
     We omit the results for ActiveThiefConv2 and ActiveThiefConv4 on CIFAR-100 because they are not used in the experiments.}
     \label{fig:TargetModelAccuracies}
 \end{table}
@@ -459,7 +459,6 @@ and a substitute model of moderate to high complexity (i.e. ActiveThiefConv3 and
 accuracy after training on the full thief dataset. To study the behavior of model stealing attacks using different model architectures further, we conduct the same experiment using MNIST as the target model dataset. The results of this experiment can be found in table 
 \ref{fig:ModelStealingNNArchitecturesMNIST}. The results of this experiment are similar to the results of the experiment on CIFAR-10, however it is evident that the discrepancies between the target and substitute model combinations are larger. \par
 
-%TODO: Hier die plots noch einzeln einbinden
 \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.32\linewidth]{images/MSInsights/mnist_act2.png} \hfill

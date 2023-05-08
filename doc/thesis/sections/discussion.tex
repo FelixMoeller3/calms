@@ -38,21 +38,21 @@ the total number of points trained increases almost proportionally with decreasi
 we train on almost four times as many data points when using a batch size of 1000 compared to a batch size of 4000. Since the total number of training
 points is constant for Continual Active Learning with varying batch sizes, we do not observe the same phenomenon. \par
 
-\begin{table}[h]
-    \centering
-    \begin{tabular}{| c | c |} 
-        \hline
-        $b$ & Total number of training points \\
-        \hline 
-        1000 & 1275000 \\
-        2000 & 650000 \\
-        4000 & 362000 \\
-        \hline
-    \end{tabular}
-    \caption[Total number of data points trained on in the Continual Active Learning experiments]{Total number of training points for varying batch
-    sizes on the CIFAR-10 dataset, which has a train set of consisting of 50000 elements.}
-    \label{fig:NumberOfTrainingPoints}
-\end{table}
+% \begin{table}[h]
+%     \centering
+%     \begin{tabular}{| c | c |} 
+%         \hline
+%         $b$ & Total number of training points \\
+%         \hline 
+%         1000 & 1275000 \\
+%         2000 & 650000 \\
+%         4000 & 362000 \\
+%         \hline
+%     \end{tabular}
+%     \caption[Total number of data points trained on in the Continual Active Learning experiments]{Total number of training points for varying batch
+%     sizes on the CIFAR-10 dataset, which has a train set of consisting of 50000 elements.}
+%     \label{fig:NumberOfTrainingPoints}
+% \end{table}
 
 The total number of training points perfectly explains the execution time of the Active Learning strategies Random and \gls{lc}. In the experiments,
 the execution time of Random is at approximately 2500 Minutes for batch size 1000, 1300 for batch size 2000, and 700 for batch size 4000 with \gls{lc}
