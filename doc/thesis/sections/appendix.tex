@@ -53,18 +53,27 @@ information, see \cite{bwUniclusterHardware}
 \newpage
 
 \begin{table}[!htb]
-    \begin{tabularx}{\textwidth}{|X | X X X|} 
+    \begin{tabularx}{\textwidth}{|X || X | X | X|} 
         \hline
          & GPU x4 & GPU x8 & GPU x4 A100 \\ 
+        \hline
         \hline 
         Processors & Intel Xeon Gold 6230 & Intel Xeon Gold 6248 & Intel Xeon Platinum 8358  \\ 
+        \hline
         Number of sockets & 2 & 2 & 2  \\ 
+        \hline
         Processor frequency (GHz) & 2.1 & 2.6 & 2.5  \\ 
+        \hline
         Total number of cores & 40 & 40 & 64  \\ 
+        \hline
         Main memory & 384 GB & 768 GB & 512 GB  \\ 
+        \hline
         Local SSD & 3.2 TB NVMe & 15TB NVMe & 6.4 TB NVMe  \\ 
+        \hline
         GPUs & 4x NVIDIA Tesla V100 & 8x NVIDIA Tesla V100 & 4x NVIDIA A100  \\ 
+        \hline
         GPU Memory & 32 GB  & 32 GB & 80 GB  \\ 
+        \hline
         Interconnect & IB HDR & IB HDR & IB HDR200  \\ 
         \hline
     \end{tabularx}
@@ -80,17 +89,25 @@ and a link to their documentation.
 
 \begin{table}[!htb]
     \centering
-    \begin{tabular}{|l | l l |} 
+    \begin{tabular}{|l || l | l |} 
         \hline
         Library Name & Version & Link \\ 
         \hline 
+        \hline
         numpy & 1.23.0 & \url{https://numpy.org/} \\
+        \hline
         tqdm & 4.64.1 & \url{https://tqdm.github.io/}  \\
+        \hline
         torchvision & 0.14.1 & \url{https://pytorch.org/vision/stable/index.html} \\ 
+        \hline
         torch & 1.13.1 & \url{https://pytorch.org/} \\
+        \hline
         PyYAML & 6.0 & \url{https://pyyaml.org/} \\
+        \hline
         scipy & 1.10.1 & \url{https://scipy.org/} \\
+        \hline
         scikit-learn & 1.2.1 & \url{https://scikit-learn.org/stable/index.html} \\
+        \hline
         wget & 3.2 & \url{https://pypi.org/project/wget/} \\
         \hline
     \end{tabular}
@@ -109,6 +126,7 @@ used in the experiments.
         \hline
         Hyperparameter & Description & Value \\ 
         \hline 
+        \hline
         $\lambda$ & Balances between old and new tasks. A higher value indicates more focus 
         on preserving knowledge from the old task & 1.0  \\ 
         \hline
@@ -128,6 +146,7 @@ used in the experiments.
         \hline
         Hyperparameter & Description & Value \\ 
         \hline 
+        \hline
         $\lambda$ & Balances between old and new tasks. A higher value indicates more focus
         on preserving knowledge \newline from the old task & 1.0  \\ 
         \hline
@@ -144,6 +163,7 @@ used in the experiments.
         \hline
         Hyperparameter & Description & Value \\ 
         \hline 
+        \hline
         $\lambda$ & Balances between old and new tasks. A higher value indicates more focus
         on preserving knowledge from the old task & 1.0  \\ 
         \hline
@@ -163,6 +183,7 @@ used in the experiments.
         \hline
         Hyperparameter & Description & Value \\ 
         \hline 
+        \hline
         $a$ & Balances between old and new tasks. A higher value indicates more focus
         on preserving knowledge from the old task & 0.5  \\ 
         \hline
@@ -185,15 +206,21 @@ used in the experiments.
 
 \begin{table}[!htb]
     \centering
-    \begin{tabularx}{\textwidth}{|X | X X X X|} 
+    \begin{tabularx}{\textwidth}{|X || X | X | X | X|} 
         \hline
          & MNIST & CIFAR-10 & Tiny \newline ImageNet & Small \newline ImageNet \\ 
         \hline 
+        \hline
         Size of training set & 60000 & 50000 & 100000 & 128116 \\ 
+        \hline
         Size of validation set & 10000 & 10000 & 10000 & 50000\\
+        \hline
         Number of classes & 10 & 10 & 200 & 1000 \\
+        \hline
         Image Dimension & 28x28 & 32x32 & 64x64& 32x32\\
+        \hline
         Number of channels & 1 & 3 & 3 & 3 \\
+        \hline
         Source & torchvision & torchvision & {\small \url{http://cs231n.stanford.edu/tiny-imagenet-200.zip}} & {\small \url{http://www.image-net.org/data/downsample/Imagenet32_32.zip}} \\
         \hline
     \end{tabularx}
@@ -313,19 +340,38 @@ in the previous experiment with 1000 batch size. \gls{imm}, \gls{ewc} and Naive 
     \label{fig:Evaluation:Results:CAL:1000bAcc}
 \end{figure}
 
-\begin{figure}[h]
+% \begin{figure}[h]
+%     \centering
+%     \includegraphics[width=0.32\linewidth]{images/results_CAL/random_1000b_time.png} \hfill
+%     \includegraphics[width=0.32\linewidth]{images/results_CAL/lc_1000b_time.png} \hfill
+%     \includegraphics[width=0.32\linewidth]{images/results_CAL/bald_1000b_time.png}
+%     \\[\smallskipamount]
+%     \hfill 
+%     \includegraphics[width=0.32\linewidth]{images/results_CAL/coreset_1000b_time.png} \hfill
+%     \includegraphics[width=0.32\linewidth]{images/results_CAL/badge_1000b_time.png} \hfill
+%     \caption{Comparison of execution time of Continual Learning and Active Learning strategies
+%     with batch size 1000.}
+%     \label{fig:Evaluation:Results:CAL:1000bTime}
+% \end{figure}
+
+\begin{table}[h]
     \centering
-    \includegraphics[width=0.32\linewidth]{images/results_CAL/random_1000b_time.png} \hfill
-    \includegraphics[width=0.32\linewidth]{images/results_CAL/lc_1000b_time.png} \hfill
-    \includegraphics[width=0.32\linewidth]{images/results_CAL/bald_1000b_time.png}
-    \\[\smallskipamount]
-    \hfill 
-    \includegraphics[width=0.32\linewidth]{images/results_CAL/coreset_1000b_time.png} \hfill
-    \includegraphics[width=0.32\linewidth]{images/results_CAL/badge_1000b_time.png} \hfill
-    \caption[Continual Active Learning with \gls{badge} with varying batch size]{Comparison of execution time of Continual Learning and Active Learning strategies
+    \begin{tabular}{c | c c c c c } 
+         & Random & \gls{lc} & \gls{bald} & CoreSet & \gls{badge}\\ 
+        \hline 
+        Baseline & 2522 & 2536 & 2549 & 2650 & 3171 \\
+        \hline
+        Naive & 44 & 50 & 50 & 144 & 493 \\
+        \gls{ewc} & 44 & 53 & 51 & 140 & 486\\
+        \gls{imm} & 42 & 49 & 48 & 137 & 501\\
+        \gls{mas} & 48 & 55 & 53 & 147 & 505\\
+        \gls{alasso} & 68 & 75 & 75 & 168 & 509\\
+    \end{tabular}
+    \caption{Comparison of execution time of regularization-based continual learning strategies
     with batch size 1000.}
-    \label{fig:Evaluation:Results:CAL:1000bTime}
-\end{figure}
+    \label{fig:Evaluation:Results:CAL:1000bTimeTable}
+\end{table}
+
 
 \begin{figure}[h]
     \centering
@@ -341,19 +387,37 @@ in the previous experiment with 1000 batch size. \gls{imm}, \gls{ewc} and Naive 
     \label{fig:Evaluation:Results:CAL:2000bAcc}
 \end{figure}
 
-\begin{figure}[h]
+% \begin{figure}[h]
+%     \centering
+%     \includegraphics[width=0.32\linewidth]{images/results_CAL/random_2000b_time.png} \hfill
+%     \includegraphics[width=0.32\linewidth]{images/results_CAL/lc_2000b_time.png} \hfill
+%     \includegraphics[width=0.32\linewidth]{images/results_CAL/bald_2000b_time.png}
+%     \\[\smallskipamount]
+%     \hfill 
+%     \includegraphics[width=0.32\linewidth]{images/results_CAL/coreset_2000b_time.png} \hfill
+%     \includegraphics[width=0.32\linewidth]{images/results_CAL/badge_2000b_time.png} \hfill
+%     \caption[Continual Active Learning with \gls{badge} with varying batch size]{Comparison of execution time of Continual Learning and Active Learning strategies
+%     with batch size 2000.}
+%     \label{fig:Evaluation:Results:CAL:2000bTime}
+% \end{figure}
+
+\begin{table}[h]
     \centering
-    \includegraphics[width=0.32\linewidth]{images/results_CAL/random_2000b_time.png} \hfill
-    \includegraphics[width=0.32\linewidth]{images/results_CAL/lc_2000b_time.png} \hfill
-    \includegraphics[width=0.32\linewidth]{images/results_CAL/bald_2000b_time.png}
-    \\[\smallskipamount]
-    \hfill 
-    \includegraphics[width=0.32\linewidth]{images/results_CAL/coreset_2000b_time.png} \hfill
-    \includegraphics[width=0.32\linewidth]{images/results_CAL/badge_2000b_time.png} \hfill
-    \caption[Continual Active Learning with \gls{badge} with varying batch size]{Comparison of execution time of Continual Learning and Active Learning strategies
+    \begin{tabular}{c | c c c c c } 
+         & Random & \gls{lc} & \gls{bald} & CoreSet & \gls{badge}\\ 
+        \hline 
+        Baseline & 1290 & 1303 & 1315 & 1342 & 1935 \\
+        \hline
+        Naive & 76 & 80 & 78 & 162 & 523 \\
+        \gls{ewc} & 83 & 90 & 86 & 152 & 513\\
+        \gls{imm} & 77 & 76 & 78 & 145 & 500\\
+        \gls{mas} & 84 & 84 & 85 & 161 & 515\\
+        \gls{alasso} & 119 & 131 & 122 & 188 & 547\\
+    \end{tabular}
+    \caption{Comparison of execution time of regularization-based continual learning strategies
     with batch size 2000.}
-    \label{fig:Evaluation:Results:CAL:2000bTime}
-\end{figure}
+    \label{fig:Evaluation:Results:CAL:2000bTimeTable}
+\end{table}
 
 \section{Model Stealing}
 \label{sec:Appendix:MS}
@@ -372,12 +436,14 @@ ActiveThiefConv4 on CIFAR-10. This shows that the complexity of the target model
 
 \begin{table}[h]
     \centering
-    \begin{tabular}{c| c c c} 
+    \begin{tabular}{|c|| c | c | c|} 
         \hline
-        \diagbox[width=9em]{Dataset}{Architecture} &  ActiveThiefConv2 & ActiveThiefConv3 & ActiveThiefConv4 \\ 
+        \diagbox[width=10em]{Dataset}{Architecture} &  ActiveThiefConv2 & ActiveThiefConv3 & ActiveThiefConv4 \\ 
         \hline 
         MNIST & 98.42\% & 98.91\% & 99.01\% \\
+        \hline
         CIFAR-10 & 66.61\% & 80.67\% & 84.47\% \\
+        \hline
         CIFAR-100 & - & 42.90\% & - \\
         \hline
     \end{tabular}
@@ -393,36 +459,25 @@ and a substitute model of moderate to high complexity (i.e. ActiveThiefConv3 and
 accuracy after training on the full thief dataset. To study the behavior of model stealing attacks using different model architectures further, we conduct the same experiment using MNIST as the target model dataset. The results of this experiment can be found in table 
 \ref{fig:ModelStealingNNArchitecturesMNIST}. The results of this experiment are similar to the results of the experiment on CIFAR-10, however it is evident that the discrepancies between the target and substitute model combinations are larger. \par
 
-\begin{table}[h]
+%TODO: Hier die plots noch einzeln einbinden
+\begin{figure}[!htb]
     \centering
-    \begin{tabular}{c | c c c} 
-        \hline
-        \diagbox[width=12em]{Substitute Model}{Target Model} &  ActiveThiefConv2 & ActiveThiefConv3 & ActiveThiefConv4 \\ 
-        \hline 
-        ActiveThiefConv2 & 57.46 & 54.88 & 48.16 \\
-        ActiveThiefConv3 & 61.02 & 71.99 & 71.61 \\
-        ActiveThiefConv4 & 60.5 & 71.75 & 71.56 \\
-        \hline
-    \end{tabular}
-    \caption[Model agreement of the ActiveThiefConv family on CIFAR-10]{Model agreement different target and substitute models within the ActiveThiefConv Model family on CIFAR-10. We use the Active Learning strategy CoreSet with a batch size of 1000 to perform the attacks.}
-    \label{fig:ModelStealingNNArchitecturesCIFAR}
-\end{table}
+    \includegraphics[width=0.32\linewidth]{images/MSInsights/mnist_act2.png} \hfill
+    \includegraphics[width=0.32\linewidth]{images/MSInsights/mnist_act3.png} \hfill
+    \includegraphics[width=0.32\linewidth]{images/MSInsights/mnist_act4.png}
+    \caption{Agreement Progression for Model Stealing using MNIST as a target model dataset}
+    \label{fig:MNISTmodelComp}
+\end{figure}
 
-
-\begin{table}[h]
+\begin{figure}[!htb]
     \centering
-    \begin{tabular}{c | c c c} 
-        \hline
-        \diagbox[width=12em]{Substitute Model}{Target Model} &  ActiveThiefConv2 & ActiveThiefConv3 & ActiveThiefConv4 \\ 
-        \hline 
-        ActiveThiefConv2 & 48.65 & 63.16 & 55.95 \\
-        ActiveThiefConv3 & 67.71 & 90.65 & 71.16 \\
-        ActiveThiefConv4 & 75.38 & 82.56 & 89.40 \\
-        \hline
-    \end{tabular}
-    \caption[Model agreement of the ActiveThiefConv family on MNIST]{Model agreement of different target and substitute models within the ActiveThiefConv Model family on MNIST. We use the Active Learning strategy CoreSet with a batch size of 1000 to perform the attacks.}
-    \label{fig:ModelStealingNNArchitecturesMNIST}
-\end{table}
+    \includegraphics[width=0.32\linewidth]{images/MSInsights/cifar_act2.png} \hfill
+    \includegraphics[width=0.32\linewidth]{images/MSInsights/cifar_act3.png} \hfill
+    \includegraphics[width=0.32\linewidth]{images/MSInsights/cifar_act4.png}
+    \caption{Agreement progression for model stealing using CIFAR-10 as a target model dataset}
+    \label{fig:CIFAR10modelComp}
+\end{figure}
+
 
 After evaluating the influence of the target and substitute model architecture on the success of the model stealing attack, we now evaluate how the thief dataset effects Model Stealing Attacks. Our motivation for this experiment is that Pal et al. 
 mention having tested CIFAR-10 as a thief dataset with without success. We perform a model stealing attack using ActiveThiefConv3 as the target and substitute model and CoreSet with batch size 2000 as our Active Learning strategy. The total query budget
@@ -438,23 +493,6 @@ the thief dataset achieves a Model Agreement which is 5 percentage points higher
     \label{fig:Evaluation:Results:CAL:EffectDataset}
 \end{figure}
 
-\subsection{Target and Substitute Model Comparison}
-\label{sec:Appendix:TargetSubstituteComparison}
-Here we include the progression of Model Agreement for the experiments conducted in section \ref{sec:Evaluation:Results:MS:ActiveThief}.
-
-\begin{figure}[!htb]
-    \centering
-    \includegraphics[width=\linewidth]{images/results_CALMS/cifar10_model_comp.png}
-    \caption{Agreement Progression for Model Stealing on CIFAR-10 using different ActiveThief models}
-    \label{fig:CIFAR10modelComp}
-\end{figure}
-
-\begin{figure}[!htb]
-    \centering
-    \includegraphics[width=\linewidth]{images/results_CALMS/mnist_model_comp.png}
-    \caption{Agreement Progression for Model Stealing on MNIST using different ActiveThief models}
-    \label{fig:MNISTmodelComp}
-\end{figure}
 
 
 \subsection{Continual Active Learning for Model Stealing}
