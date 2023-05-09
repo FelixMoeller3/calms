@@ -655,26 +655,24 @@ In the following we list the full results for the experiments using \gls{vaal} a
 \subsection{Effect of Data Augmentation on Model Stealing Attacks}
 \label{sec:Appendix:EffectDataAugmentation}
 
-We close the evaluation section with a surprising finding regarding the effect of data augmentation on the success of Model Stealing Attacks. While
-we managed to reproduce the findings of Pal et al. for CIFAR-10, we failed to do so for MNIST. Since multiple training hyperparameters of the experiments
+While we managed to reproduce the findings of Pal et al. for CIFAR-10, we failed to do so for MNIST. Since multiple training hyperparameters of the experiments
 presented in ActiveThief were not disclosed by the authors, we experiment with different combinations of hyperparameters, including varying the optimizer,
-the learning rate, the number of training epochs, the batch size and switching between cold start and warm start for Active Learning. Sadly, we were still
-not able to reproduce the results of ActiveThief on MNIST. After conducting the experiments presented above, we decided to investigate another hyperparameter:
-training with or without data augmentation. For this set of experiments, we leave all hyperparameters equal to the previous experiments, apart from the data
-augmentation. It is important to note here that we do or do not use data augmentation on the thief dataset, not on the target model dataset. Training the
-target model is always done using data augmentation. We perform the same model stealing attacks as before, using MNIST and CIFAR-10 as target model dataset
-and present the results in figure \ref{fig:Evaluation:Results:CAL:EffectAugmentation}. When performing Model Stealing Attacks without data augmentation on
-CIFAR-10, we notice that Model Agreement, both for Active Learning and Continual Active Learning, is significantly lower than when using data augmentation.
-In this scenario, Continual Active Learning with data augmentation performs on par with Active Learning without data augmentation. However, when using MNIST
-as target model dataset, the results are reversed. Here, Model Agreement is significantly lower when using data augmentation. More importantly Continual
-Active Learning without data augmentation shows performance comparable to Active Learning with data augmentation. \par
+the learning rate, the number of training epochs, the batch size and switching between cold start and warm start for active learning. Sadly, we were still
+not able to reproduce the results of ActiveThief on MNIST. After conducting the experiments in section \ref{sec:Evaluation:MS}, we decided to investigate
+another hyperparameter: training with or without data augmentation. For this set of experiments, we leave all hyperparameters equal to the previous experiments,
+apart from the data augmentation. We underline that using or not using data augmentation for model stealing refers to the thief dataset, not on the target
+model dataset. Training the target model is always done using data augmentation. We perform the same model stealing attacks as before, using MNIST and
+CIFAR-10 as target model dataset and present the results in figure \ref{fig:Evaluation:Results:CAL:EffectAugmentation}. When performing model stealing attacks
+without data augmentation on CIFAR-10, we notice that model agreement, both for active learning and continual active learning, is significantly lower than
+when using data augmentation. In this scenario, continual active learning with data augmentation performs on par with active learning without data augmentation.
+However, when using MNISTas target model dataset, the results are reversed. Here, model agreement is significantly lower when using data augmentation.
+More importantly, continual active learning without data augmentation shows performance comparable to active learning with data augmentation. \par
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=\linewidth]{images/results_CALMS/effect_data_augmentation.png}
     \caption[Effect of Data Augmentation on the success of Model Stealing Attacks]{Comparison of Model Agreement when using different data augmentation
-    techniques. For Active Learning we use a batch size of 1000 and for Continual Active Learning we use a batch size of 2000. Left: Experiments with
-    the target model dataset CIFAR-10. Right: Experiments with the target model dataset MNIST.}
+    techniques. Left: Experiments with CIFAR-10. Right: Experiments with MNIST.}
     \label{fig:Evaluation:Results:CAL:EffectAugmentation}
 \end{figure}
 
