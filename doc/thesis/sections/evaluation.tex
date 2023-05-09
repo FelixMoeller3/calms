@@ -13,66 +13,70 @@
 \chapter{Evaluation}
 \label{ch:Evaluation}
 
-In this section we will present the results of our experiments. Our experiments are split into two parts. The first part is the evaluation of our novel
-Continual Active Learning Approach and the second part is evaluating the performance our the Continual Active Learning approach when applied to Model Stealing.
-In each of these respective subsections we will first describe the experiments schedule for each part and then present the results of the experiments.
+In this section, we present the results of our experiments. Our experiments are split into two parts. The first part is the evaluation of our novel
+continual active learning approach. In the second part, we evaluate the performance of our continual active learning approach when applied to model stealing.
+In each of these respective subsections, we will first describe the experiments schedule for each part and then present the results of the experiments.
 
 
 
 \section{Continual Active Learning}
 \label{sec:CAL}
-In this section we will evaluate the results of our experiments using continual active learning in its classic setting. First, we experiment with regularization-based
-continual learning strategies. Next, we evaluate the performance of our custom replay strategy from section \ref{sec:Methodology:ReplayStrategy}. Finally, we
+In this section, we evaluate the results of our experiments using continual active learning in its classic setting. First, we experiment with regularization-based
+continual learning strategies. Next, we analyze the performance of our custom replay strategy from section \ref{sec:Methodology:ReplayStrategy}. Finally, we
 test the combination of exemplar rehearsal continual learning and representation-based active learning.
 
 \subsection{Regularization-based Continual Learning}
 \label{sec:Evaluation:CAL:ALRegCL}
-We start our experiments by running each combination of the Active Learning strategies \gls{bald},\gls{badge},CoreSet,\gls{lc} and Random with the Continual Learning
-strategies Naive, \gls{ewc}, \gls{mas}, \gls{alasso} and \gls{imm}. We use the dataset CIFAR-10, the Neural Network Architecture ResNet18 and a batch size of 4000 for these experiments. For each experiment,
-we present the validation accuracy with increasing size of the labeled pool as well as the overall execution time of each experiment. The results by validation accuracy and by execution time are shown in 
-figure \ref{fig:Evaluation:CAL:4000bAcc} and table \ref{fig:Evaluation:CAL:4000bTime}, respectively.\par
+We start our experiments by running each combination of the active learning strategies \gls{bald},\gls{badge}, CoreSet, \gls{lc} and Random with the continual learning
+strategies Naive, \gls{ewc}, \gls{mas}, \gls{alasso} and \gls{imm}. We use the dataset CIFAR-10, the neural network architecture ResNet18 and a batch size of 4,000 for
+these experiments. For each experiment, we present the validation accuracy with the increasing size of the labeled pool and the overall execution time.
+The results by validation accuracy and execution time are shown in figure \ref{fig:Evaluation:CAL:4000bAcc} and table \ref{fig:Evaluation:CAL:4000bTime}, respectively.\par
 
-First, we evaluate the results for random sampling. In terms of execution time, there is a large gap between the baseline and the continual learning strategies. \gls{imm} is
-the fastest method, followed by \gls{mas}, \gls{ewc} and Naive who perform on the same level. \gls{alasso} is the slowest continual learning strategy, but is still about six times as fast as the baseline. 
-In terms of validation accuracy, the baseline outperforms all continual learning strategies by at least ten percentage points. Naive, \gls{ewc} and \gls{imm} demonstrate a similar accuracy
-progression, with \gls{ewc} and Naive marginally outperforming \gls{imm}. \gls{mas} has a higher validation accuracy than the three aforementioned strategies in the beginning, but fails to keep up with their
-continuous increase in validation accuracy. \gls{alasso} starts of with a higher validation accuracy than the other continual learning strategies, but falls behind at around 8,000 samples due to exploding
+First, we evaluate the results for random sampling. In terms of execution time, there is a large gap between the baseline and the continual learning strategies.
+\gls{imm} is the fastest method, followed by \gls{mas}, \gls{ewc} and Naive who perform on the same level. \gls{alasso} is the slowest continual learning strategy,
+albeit being approximately six times as fast as the baseline. In terms of validation accuracy, the baseline outperforms all continual learning strategies by at
+least ten percentage points. Naive, \gls{ewc} and \gls{imm} demonstrate a similar accuracy progression, with \gls{ewc} and Naive marginally outperforming \gls{imm}.
+\gls{mas} has a higher validation accuracy than the three aforementioned strategies at first but fails to keep up with their continuous increase in validation accuracy.
+\gls{alasso} starts with a higher validation accuracy than the other continual learning strategies but falls behind at around 8,000 samples due to exploding
 gradients. \par
  
 
-Next, we re-run the previous experiment using \gls{lc}. In terms of execution time, the results are similar to the experiment with random sampling. \gls{alasso} is again the slowest strategy,
-followed by \gls{mas}, \gls{ewc}, \gls{imm} and Naive. All continual learning strategies are significantly faster than the baseline, with \gls{alasso} being about six times as fast and Naive
-about ten times as fast. The gap in validation accuracy between the baseline and the continual learning strategies remains significant and increases during the last 25,000 samples. 
-\gls{imm}, \gls{ewc} and Naive perform almost identically across the experiment with \gls{mas} following closely and outperforming the remaining strategies within the last 5000 samples. The four aforementioned methods
-experience a decrease in validation accuracy caused by the inferior representativeness of the final batches. \gls{alasso} starts competitively, but suffers from a heavy decrease in validation accuracy at around 8000 samples,
-which is again caused by exploding gradients. \par
+Next, we re-run the previous experiment using \gls{lc}. In terms of execution time, the results are similar to the experiment with random sampling. \gls{alasso} is again
+the slowest strategy, followed by \gls{mas}, \gls{ewc}, \gls{imm} and Naive. All continual learning strategies are significantly faster than the baseline, with \gls{alasso}
+being about six times as fast, and Naive about ten times as fast. The gap in validation accuracy between the baseline and the continual learning strategies remains significant
+and increases during the last 25,000 samples. \gls{imm}, \gls{ewc}, and Naive perform almost identically across the experiment, with \gls{mas} following closely and outperforming
+the remaining strategies within the last 5000 samples. The four aforementioned methods experience a decrease in validation accuracy caused by the inferior representativeness
+of the final batches. \gls{alasso} starts competitively but suffers from a heavy decrease in validation accuracy at around 8000 samples, which is due to exploding gradients. \par
 
 
-The third experiment is run with the active learning strategy \gls{bald}. The ranking of execution time of the continual
-learning strategies and the baseline is similar to the previous experiments with Random and \gls{lc}. In terms of accuracy, the baseline outperforms the continual learning strategies significantly. The gap between
-in validation accuracy is most prominent at roughly 15,000 samples and in the final batch. Naive, \gls{imm} and \gls{ewc} perform similar, showing an
-s-shaped validation accuracy curve. The performance of \gls{mas} follows a similar curve, however \gls{mas} performs better in the first half of the experiment, and worse in the second half compared to the
-three former strategies. Since we use ResNet18, which does not contain dropout layers, we are unable to run Monte Carlo dropout to accurately estimate $\mathbb{E}_{\theta \sim p(\theta \mid L)} [H[y \mid x, \theta]]$.
-This leads to the inferior performance of \gls{bald} compared to the other active learning strategies. \gls{alasso} starts off as
-the best continual learning strategy, but its validation accuracy decreases steadily over the course of the experiment, which is again caused by exploding gradients. \par 
+The third experiment is run with the active learning strategy \gls{bald}. The ranking of the execution time of the continual learning strategies and the baseline is similar to
+the previous experiments with Random and \gls{lc}. In terms of accuracy, the baseline outperforms the continual learning strategies significantly. The gap between
+validation accuracy is most prominent at roughly 15,000 samples and in the final batch. Naive, \gls{imm} and \gls{ewc} perform similarly, showing an
+s-shaped validation accuracy curve. The performance of \gls{mas} follows a similar curve. However, \gls{mas} performs better in the first half of the experiment,
+and worse in the second half compared to the three former strategies. Since we use ResNet18, which does not contain dropout layers, we are unable to run Monte Carlo
+dropout to accurately estimate $\mathbb{E}_{\theta \sim p(\theta \mid L)} [H[y \mid x, \theta]]$. This leads to the inferior performance of \gls{bald} compared to the
+other active learning strategies. \gls{alasso} starts as the best continual learning strategy, but its validation accuracy decreases steadily throughout the
+experiment, which is again caused by exploding gradients. \par 
 
 
 
 We now run the experiment with the identical setup using CoreSet. The gap in execution time between the baseline and the continual learning 
-strategies remains significant. \gls{imm} is the fastest continual learning strategy, being about six times as fast as the baseline. On the other hand, \gls{alasso} is the slowest Continual Learning strategy,
-boasting around one fourth of the execution time of the baseline. In terms of validation accuracy, the accuracy progression closely resembles the experiment with \gls{lc}. Naive is the best performing method
-lacking ten percentage points to the baseline during the first 25,000 samples. \gls{imm}, \gls{ewc} and \gls{mas} follow in that order. \gls{alasso} starts with a similar validation accuracy
-as the other Continual Learning strategies, but falls behind after 8000 samples. All continual learning approaches have a declining validation accuracy in the final 10,000 samples because these are less representative
+strategies remains significant. \gls{imm} is the fastest continual learning strategy, being about six times as fast as the baseline. On the other hand, \gls{alasso}
+is the slowest continual learning strategy, boasting around one-fourth of the execution time of the baseline. In terms of validation accuracy, the accuracy progression
+closely resembles the experiment with \gls{lc}. Naive is the best-performing method lacking ten percentage points to the baseline during the first 25,000 samples. \gls{imm},
+\gls{ewc} and \gls{mas} follow in that order. \gls{alasso} starts with a similar validation accuracy as the other continual learning strategies but falls behind after 8,000 samples.
+All continual learning approaches have a declining validation accuracy in the final 10,000 samples because these are less representative
 than the previous samples. \par
 
 
 
-Our final experiment in this setting is run with \gls{badge}. Out of all experiments in this series, this one shows the
-smallest relative gap in execution time between the baseline and the continual learning strategies. This is because \gls{badge} exhibits a high query time, which is a bottleneck from a runtime perspective. 
-The ranking between the continual learning methods remains similar to previous experiments, with \gls{alasso} being the slowest and \gls{imm} being the fastest.
+Our final experiment in this setting is run with \gls{badge}. Out of all experiments in this series, this one shows the smallest relative gap in execution time between the
+baseline and the continual learning strategies. This is because \gls{badge} exhibits a high query time, which is a bottleneck from a runtime perspective. The ranking between
+the continual learning methods remains similar to previous experiments, with \gls{alasso} being the slowest and \gls{imm} being the fastest.
 The validation accuracy progression of the baseline and the continual learning strategies is similar to the experiments with \gls{lc} and CoreSet.
-\gls{alasso} is an exception to this, however. While \gls{alasso} experiences a decline in validation accuracy after 8,000 samples, it stalls at around 60\% validation accuracy until the penultimate batch.
-We assume this is because \gls{badge} selects more representative samples than the other active learning strategies, partially alleviating \gls{alasso}'s problem of exploding gradients. \par
+\gls{alasso} is an exception to this, however. While \gls{alasso} experiences a decline in validation accuracy after 8,000 samples, it stalls at around 60\% validation accuracy
+until the penultimate batch. We assume this is because \gls{badge} selects more representative samples than the other active learning strategies, partially alleviating
+\gls{alasso}'s exploding gradients problem. \par
 
 
 \begin{figure}[h]
@@ -114,22 +118,22 @@ We assume this is because \gls{badge} selects more representative samples than t
 \subsubsection{Influence of Batch Size}
 \label{sec:Evaluation::CAL:ALRegCL:BatchSize}
 Next, we study how the batch size of the selected active learning algorithm influences the results. To do so, we re-run each experiment from figure \ref{fig:Evaluation:CAL:4000bAcc}
-with batch size 1,000 and 2,000. In this section, we only show the results for \gls{badge}, since the results for the other active learning strategies are similar. For completeness, we
-present the results of the other active learning strategies in appendix \ref{sec:Appendix:ContinualActiveLearning}. \par
-In figure \ref{fig:Evaluation:Results:CAL:VaryBatchSizeAcc}, we present validation accuracy using \gls{badge} with batch size 1,000, 2,000 and 4,000. The execution times of these experiments
-are displayed in table \ref{fig:Evaluation:CAL:BadgeVaryBatchSizeTime}, respectively. When observing the results for varying batch size, we notice a positive correlation between batch size and
+with batch sizes 1,000 and 2,000. In this section, we only show the results for \gls{badge} since the results for the other active learning strategies are similar. For completeness, we
+present the results of the remaining active learning strategies in appendix \ref{sec:Appendix:ContinualActiveLearning}. \par
+In figure \ref{fig:Evaluation:Results:CAL:VaryBatchSizeAcc}, we present validation accuracy using \gls{badge} with batch sizes 1,000, 2,000, and 4,000. The execution times of these experiments
+are displayed in table \ref{fig:Evaluation:CAL:BadgeVaryBatchSizeTime}, respectively. We notice a positive correlation between batch size and
 validation accuracy. This correlation is caused by neural networks' tendency to overfit their training data. Since continual active learning methods only use the current batch as their training
-samples in a given iteration, the neural network is more likely to overfit the training data. A commonly known remedy for this problem is to increase the amount of training data
-\cite{ying2019overview}. Therefore, using a larger batch size yields better validation accuracy. Pure active learning algorithms, on the other hand, are not affected by overfitting because
+samples in a given iteration, the neural network is more likely to overfit the training data. A commonly known remedy for this problem is increasing the amount of training data
+\cite{ying2019overview}. Therefore, using a larger batch size yields better validation accuracy. Active learning algorithms, on the other hand, are not affected by overfitting because
 they use the entire labeled pool for training. We can see that overfitting is an issue for small batch sizes not only because of the lower validation accuracy, but also because the validation
 accuracy curve is more erratic. \par
-In terms of execution time, we observe minor differences between the batch sizes for continual active learning and large differences for pure active learning. This is because the continual
-active learning strategies will always use the same amount of training data across a full experiment, regardless of the batch size. Active learning methods, however, use the entire labeled pool
+In terms of execution time, we observe minor differences between the batch sizes for continual active learning and substantial differences for pure active learning. This is because the continual
+active learning strategies will always use the same number of training data across a complete experiment, regardless of the batch size. Active learning methods, however, use the entire labeled pool
 as their training data. In section \ref{sec:Methodology:CombiningCLandAL}, we mentioned that a model trained using active learning with a total budget of $n$ and a batch size of $b$ is trained
-on $\frac{n(n+b)}{2b}$ samples. To demonstrate the influence of the batch size in this setting, we calculate the total number of samples trained on in our setting. The results are given in table 
-\ref{fig:NumberOfTrainingPoints}. We can see that the number of training samples behaves anti-proportionally to the batch size. The total execution time is therefore higher for smaller batch sizes.
-It is important, however, that this not behavior is not anti-proportionally, because the total execution time is composed of training time and query time. The training time is anti-proportional
-to the batch size, whereas the query time remains constant because the batch size does not influence the total amount of queried points. \par
+on $\frac{n(n+b)}{2b}$ samples. To demonstrate the influence of the batch size in this setting, we calculate the total number of samples trained. The results are given in table 
+\ref{fig:NumberOfTrainingPoints}. We can see that the number of training samples behaves anti-proportionally to the batch size. Therefore, the total execution time is higher for smaller batch sizes.
+Note, however, that this behavior is not anti-proportional, because the total execution time is broken down into training and query time. The training time is anti-proportional
+to the batch size. The query time, however, remains constant because the batch size does not influence the total amount of queried points. \par
 
 \begin{figure}[h]
     \centering
@@ -174,13 +178,13 @@ to the batch size, whereas the query time remains constant because the batch siz
 \label{sec:Evaluation:CAL:ALRegCL:Hybrid}
 After running the experiments in figure \ref{fig:Evaluation:CAL:4000bAcc}, we notice that all of them demonstrate a significant discrepancy in validation accuracy
 between active learning and continual active learning. To further investigate this gap, we evaluate a hybrid approach where we run active learning for the first $i$
-iterations before switching to continual active learning. With these experiments we hope to decrease the gap in validation accuracy to active learning. We vary $i$
+iterations before switching to continual active learning. With these experiments, we hope to decrease the gap in validation accuracy to active learning. We vary $i$
 between 0 and 6, and perform two sets of experiments, one using the continual learning strategy \gls{mas} and the other using \gls{ewc}. In both experiments, we use
 the active learning strategy \gls{badge}. The results of the two sets of experiments can be found in figure  \ref{fig:Evaluation:Results:CAL:DelayedStart}. For \gls{mas}
 and \gls{ewc}, the validation accuracy drops immediately after switching from active learning to continual active learning. However, in the long run \gls{mas}
-retains validation accuracy better than \gls{ewc}. We also notice that while the validation accuracy does drop after switching to continual active Learning, the accuracy
+retains validation accuracy better than \gls{ewc}. We also notice that while the validation accuracy does drop after switching to continual active learning, the accuracy
 progression after the switch outperforms continual active learning. We attribute these two observations to the regularization effect of \gls{mas} and \gls{ewc}. 
-The reason why \gls{mas} performs better than \gls{ewc} in this setting is because it employs heavier regularization that \gls{ewc}, which we observed in previous
+The reason why \gls{mas} performs better than \gls{ewc} in this setting is because it employs heavier regularization than \gls{ewc}, which we observed in previous
 experiments. \par
 
 \begin{figure}[h]
@@ -193,12 +197,12 @@ experiments. \par
 
 \subsubsection{Varying the initialization of the labeled pool}
 \label{sec:Evaluation:CAL:Initialization}
-Motivated by the findings from the previous section, we wonder if the initialization of the labeled pool has an impact on the validation accuracy of the continual learning strategies.
+Motivated by the findings from the previous section, we wonder if the initialization of the labeled pool impacts the validation accuracy of the continual learning strategies.
 Beck et al. \cite{beck2021effective} show that using a facility location selection \cite{iyer2021submodular} yields better validation accuracy when training on the initial labeled pool.
-We therefore test the effect of an initialization using facility location selection compared to our random initialization. As our active learning strategy, we use \gls{badge} with
+We, therefore, test the effect of an initialization using facility location selection compared to our random initialization. As our active learning strategy, we use \gls{badge} with
 a batch size of 4000 and \gls{mas} as our continual learning method. The results of the experiment can be found in figure \ref{fig:Evaluation:Results:CAL:FLinit}. While the facility
 location approach performs better than random initialization, the difference is marginal. Interestingly, the validation accuracy of the facility location approach is lower than
-random initialization in the first iteration. The most significant drawback of the facility location initialization is its resource-intensity. Initialization with facility
+random initialization in the first iteration. The most significant drawback of the facility location initialization is its resource intensity. Initialization with facility
 location takes about 24 hours to complete and requires more than 100GB of memory (compared to <10 seconds and <2GB) for CIFAR-10 using the implementation provided by Beck et al.
 \cite{beck2021effective}. \par
 
@@ -212,18 +216,18 @@ location takes about 24 hours to complete and requires more than 100GB of memory
 
 \subsection{Replay Continual Learning}
 \label{sec:Evaluation:CAL:Replay}
-In section \ref{sec:Methodology:ReplayStrategy} we introduced a custom replay strategy for Continual Active Learning. The use of our replay strategy is motivated by the main
-finding of section \ref{sec:Evaluation:Results:CAL:BatchSize}: the validation accuracy increases with an increased batch size. In this set of experiments, we use the active
+In section \ref{sec:Methodology:ReplayStrategy}, we introduced a custom replay strategy for Continual Active Learning. Using our replay strategy is motivated by the main
+finding of section \ref{sec:Evaluation:Results:CAL:BatchSize}: the validation accuracy increases with increased batch size. In this set of experiments, we use the active
 learning strategy CoreSet and vary the batch size as well as the size of the replay buffer. Moreover, we investigate the effect of CoreSet selection in the replay buffer
 compared to random selection. We present our results in figure \ref{fig:Evaluation:CAL:Replay}. When varying the batch size and buffer size, we notice that increasing either
 or both of them yields a higher validation accuracy. However, our replay strategy does not outperform the naive approach when using the same amount of training data
-(i.e. batch size + replay buffer size for the replay strategy and batch size for the naive approach). This leads us to believe that the most important factor for the performance
-of continual active learning is the amount of training data. For further reasoning, we refer to section \ref{sec:Evaluation:Results:CAL:BatchSize}. \par
+(i.e., batch size + replay buffer size for the replay strategy and batch size for the naive approach). This leads us to believe that the most decisive factor for the performance
+of continuous active learning is the amount of training data. For further reasoning, we refer to section \ref{sec:Evaluation:Results:CAL:BatchSize}. \par
 To evaluate the importance of CoreSet selection in the buffer compression process, we compare the validation accuracy of our replay strategy when using CoreSet selection and
-random selection. We notice that the validation accuracy remains largely the same for both buffer compression methods, apart from the last 15000 samples, where CoreSet selection
-outperforms random selection. This is because the first 25,000 samples queried is informative enough to increase or maintain validation accuracy. Using random or CoreSet selection
-therefore does not influence the validation accuracy in the beginning of the experiment. In the end, however, CoreSet selection ensures that the buffer contains enough
-informative samples while random selection does not.  \par
+random selection. We notice that the validation accuracy remains mostly the same for both buffer compression methods, apart from the last 15000 samples, where CoreSet selection
+outperforms random selection. This is because the first 25,000 samples queried are informative enough to increase or maintain validation accuracy. Therefore, using random or
+CoreSet selection does not influence the validation accuracy at the beginning of the experiment. In the end, however, CoreSet selection ensures that the buffer contains
+enough informative samples while random selection does not.  \par
 
 
 \begin{figure}[h]
@@ -236,7 +240,7 @@ informative samples while random selection does not.  \par
 
 The execution time of our replay strategy is given in table \ref{fig:Evaluation:CAL:Replay_Time}. We notice that the buffer size is the main driver of execution time. This is because
 we replay the entire buffer in each iteration, meaning that we train on $\frac{n}{b} \cdot \text{buffer size}$ additional samples, where $n$ is the number of iterations and $b$ is
-the batch size. The batch size has no impact on execution time because it does not influence the total number of samples trained on. \par
+the batch size. The batch size does not execution time because it does not influence the total number of samples trained on. \par
 
 \begin{table}[h]
     \centering
@@ -254,21 +258,20 @@ the batch size. The batch size has no impact on execution time because it does n
 
 \subsection{Exemplar Rehearsal Continual Learning and Representation-based Active Learning}
 \label{sec:Evaluation:CAL:VAAL_AGEM}
-Unsatisfied with the results from previous experiments, we decide to implement further Continual and Active Learning strategies. We perform an extensive literature search,
+Unsatisfied with the results from previous experiments, we decide to implement additional continual and active learning strategies. We perform an extensive literature search,
 investigating the suitability of representation-based active learning strategies and continual learning strategies from the exemplar rehearsal category in the summary paper
-by Mundt et al. \cite{mundt2020wholistic}. The active learning strategy which we implement is \gls{vaal} \cite{sinha2019variational} and the continual learning strategy is
-\gls{a-gem} \cite{chaudhry2018efficient}. We decide to implement \gls{vaal} because it is the only representation-based active learning strategy which consistently performs
+by Mundt et al. \cite{mundt2020wholistic}. The active learning strategy which we implement is \gls{vaal} \cite{sinha2019variational}, and the continual learning strategy is
+\gls{a-gem} \cite{chaudhry2018efficient}. We decide to implement \gls{vaal} because it is the only representation-based active learning strategy that consistently performs
 better than random sampling (apart from CoreSet, which we have already implemented). We choose to implement \gls{a-gem} as our continual learning strategy as it
 is one of the few exemplar rehearsal strategies applicable to (semi-) supervised learning (many other strategies focus on reinforcement learning). Furthermore, \gls{a-gem}
 is computationally efficient and demonstrates strong performance in the experiments by Chaudhry et al. \cite{chaudhry2018efficient}. \par
 First, we analyze the performance of \gls{vaal} as an active learning strategy. We run \gls{vaal} with a batch size of 4,000 and compare it to Random and CoreSet. We choose
-Random because it is the baseline for active learning strategies and CoreSet because it is among the best performing active learning methods we used before. The results can be
-found in the left plot in figure \ref{fig:Evaluation:Results:CAL:VAAL}. While \gls{vaal} outperforms random sampling by a large margin, it is itself outperformed by about the
-same margin by Coreset. To ensure that the results are not due to a suboptimal hyperparameter choice, we run \gls{vaal} training \gls{vae} and discriminator for 20 epochs in
+Random because it is the baseline for active learning strategies and CoreSet because it is among the best performing active learning methods used before. The results are depicted in the left plot in figure \ref{fig:Evaluation:Results:CAL:VAAL}. While \gls{vaal} outperforms random sampling by a large margin, it is outperformed by about the
+same margin by CoreSet. To ensure that the results are not due to a suboptimal hyperparameter choice, we run \gls{vaal} training \gls{vae} and discriminator for 20 epochs in
 one run and 100 epochs in another. Because we are interested in the performance of \gls{vaal} in our continual active learning setting, we use continual active learning with
-a batch size of 4,000 and the continual learning strategy Naive. We present the results of the experiment in the right plot of figure \ref{fig:Evaluation:Results:CAL:VAAL}.
-Surprisingly, the validation accuracy is marginally impacted by the training time of discriminator and \gls{vae}. If anything, the validation accuracy is higher when training for
-20 epochs. We attribute the performance gap between CoreSet and \gls{vaal} to the fact that the samples from the labeled and the unlabeled pool are too similarly. This also
+a batch size of 4,000 and the continual learning strategy Naive. We present the results in the right plot of figure \ref{fig:Evaluation:Results:CAL:VAAL}.
+Surprisingly, the training time of the discriminator and \gls{vae} marginally impacts validation accuracy. If anything, the validation accuracy is higher when training for
+20 epochs. We attribute the performance gap between CoreSet and \gls{vaal} to the fact that the samples from the labeled and unlabeled pool are too similar. This also
 explains why training discriminator and \gls{vae} for more epochs does not increase validation accuracy. \par
 
 \begin{figure}[h]
@@ -280,14 +283,14 @@ explains why training discriminator and \gls{vae} for more epochs does not incre
     \label{fig:Evaluation:CAL:VAAL}
 \end{figure}
 
-Next, we experiment with \gls{a-gem}. \gls{a-gem} has two hyperparameters: $S$, which is the number of samples randomly drawn from the memory to compute the reference
-gradients and $P$ which is the number of data points stored to the memory from each task. We run \gls{a-gem} with the Active Learning strategy \gls{lc} and a batch size
+Next, we experiment with \gls{a-gem}. \gls{a-gem} has two hyperparameters: $S$,  the number of samples randomly drawn from the memory to compute the reference
+gradients, and $P$, the number of data points stored in the memory from each task. We run \gls{a-gem} with the Active Learning strategy \gls{lc} and a batch size
 of 2,000. To assess the performance of \gls{a-gem}, we compare its validation accuracy to the naive approach. We vary $S$ and $P$ and present our results in the right plot
 of figure \ref{fig:Evaluation:Results:CAL:AGEM}. The validation accuracy increases with increased $S$ and $P$ until about 12,000 samples, after which the validation 
-accuracy drops for all values of $S$ and $P$. \gls{a-gem} outperforms the naive approach for the first 15,000 samples, but is outperformed by Naive for the remainder of
+accuracy drops for all values of $S$ and $P$. \gls{a-gem} outperforms the naive approach for the first 15,000 samples but is outperformed by Naive for the remainder of
 the experiment. \par
 After investigating the influence of \gls{a-gem}'s hyperparameters, we compare the combination of \gls{vaal} and \gls{a-gem} to \gls{vaal} and Naive, using a batch size
-of 4000. The results are shown in the left plot of figure \ref{fig:Evaluation:Results:CAL:AGEM}. Although \gls{a-gem} performs worse than the Naive
+of 4,000. The results are shown in the left plot of figure \ref{fig:Evaluation:Results:CAL:AGEM}. Although \gls{a-gem} performs worse than the Naive
 approach when using \gls{lc}, it outperforms the naive approach when using \gls{vaal} as the active learning strategy. We believe that \gls{a-gem} profits from the 
 representation-based sampling of \gls{vaal} and the increased batch size, which explains the improved performance in this setting. \par
 
@@ -302,8 +305,8 @@ representation-based sampling of \gls{vaal} and the increased batch size, which 
 \end{figure}
 
 In table \ref{fig:Evaluation:CAL:VAAL_AGEM_Time} we present the execution time of \gls{vaal} with active learning (baseline), \gls{vaal} and Naive as well as \gls{vaal}
-and \gls{a-gem}. We notice that \gls{vaal} with \gls{a-gem} is significantly slower than using the naive approach because of the costly computation of the reference
-gradients. Overall, \gls{vaal} is among the slower active learning strategies which is caused by the extensive training of the \gls{vae} and the discriminator on the
+and \gls{a-gem}. We notice that \gls{vaal} with \gls{a-gem} is significantly slower than the naive approach because of the costly computation of the reference
+gradients. Overall, \gls{vaal} is among the slower active learning strategies due to the extensive training of the \gls{vae} and the discriminator on the
 entire dataset. \par
 
 \begin{table}[h]
@@ -325,10 +328,10 @@ entire dataset. \par
 After extensively studying continual active learning, we shift the focus of our experiments to model stealing. Since we build our work on the ActiveThief framework,
 we first evaluate the performance of the ActiveThief framework, including the influence of model architecture and thief dataset. For these experiments, we refer to
 section \ref{sec:Appendix:MS:ActiveThief} of the appendix. After experimenting with the ActiveThief framework, we evaluate the performance of continual active learning
-for model stealing attacks. We perform experiments on the datasets MNIST, CIFAR-10 and CIFAR-100. Initially, we planned to compute the same experiments using ImageNet
-as our target model dataset. In the end, we decided against running the experiments because our thief dataset is a subset of ImageNet, an unrealistic setting in 
+for model stealing attacks. We perform experiments on the datasets MNIST, CIFAR-10, and CIFAR-100. Initially, we planned to compute the same experiments using ImageNet
+as our target model dataset. We decided against running the experiments because our thief dataset is a subset of ImageNet, an unrealistic setting in 
 the real world. Furthermore, the validation accuracy of the target model would most likely be lower than for CIFAR-100, making it even more challenging to
-evaluate the different Continual Active Learning strategies because their performance would not differ significantly. In the beginning, we evaluate continual active
+evaluate the different Continual Active Learning strategies because their performance would not differ significantly. First, we analyze continual active
 learning using regularization-based continual learning strategies. Next, we move on to evaluate the combination of exemplar rehearsal continual learning and
 representation-based active learning. \par
 
@@ -337,15 +340,15 @@ representation-based active learning. \par
 \label{sec:Evaluation:MS:Regularization}
 
 In this section, we evaluate the success of model stealing attacks using continual active learning with regularization-based continual learning strategies. 
-We perform two sets of experiments: in the first set, the target model returns the predicted class label and in the second set, the target model returns the
-softmax probabilities for each class. The remaining setting for both sets of experiments is as follows: We use the target model datasets MNIST, CIFAR-10 and CIFAR-100,
+We perform two sets of experiments: in the first set, the target model returns the predicted class label, and in the second set, the target model returns the
+softmax probabilities for each class. The remaining setting for both sets of experiments is as follows: We use the target model datasets MNIST, CIFAR-10, and CIFAR-100,
 the active learning strategies Random, \gls{lc}, \gls{bald}, \gls{badge} and CoreSet and the continual learning approaches Naive, \gls{ewc}, \gls{imm}, \gls{mas} and
 \gls{alasso}. We use the ActiveThiefConv3 model as the target and substitute model and perform one model stealing attack for each combination of active learning,
-continual learning strategy and target model output. For the baseline runs, we use a batch size of 1,000 with a total query budget of 20,000. The query budget is kept
+continual learning strategy, and target model output. For the baseline runs, we use a batch size of 1,000 with a total query budget of 20,000. The query budget remains identical
 for the continual active learning runs, but we increase the batch size to 2,000. \par
 The numbers reported in the tables represent the model agreement at the end of each experiment, i.e., after using up the query budget of 20,000. Readers interested
-in the progression of the model agreement across the experiments can find the respective plots in appendix \ref{sec:Appendix:CALMS}. As a baseline we extract the models
-using active learning with the strategies mentioned before. To evaluate both the active learning strategies and the continual learning strategies, we compute the average
+in the progression of the model agreement across the experiments can find the respective plots in appendix \ref{sec:Appendix:CALMS}. As a baseline, we extract the models
+using active learning with the strategies mentioned before. To evaluate the active learning strategies and the continual learning strategies, we compute the average
 over the model agreement of all continual learning strategies combined with a fixed active learning strategy and the average of all active learning strategies combined
 with a fixed continual learning strategy. These numbers are given at the end of each column and row, respectively. The active learning strategy and the continual
 learning strategy with the highest average model agreement are highlighted in bold. \par
@@ -356,7 +359,7 @@ learning strategy with the highest average model agreement are highlighted in bo
 
 In the first set of experiments, we perform model stealing attacks using the predicted class labels of the target model. We start with the target model dataset MNIST. 
 The results of the experiments with MNIST are shown in table \ref{fig:ModelStealingMNISTLabel}. First, we observe a large margin between the model agreement
-of the active learning strategies and of the continual active learning strategies. However, the combination of \gls{bald} and Naive comes close to
+of the active learning strategies and the continual active learning strategies. However, the combination of \gls{bald} and Naive comes close to
 its baseline. It demonstrates a model agreement of 69.18\%, about seven percentage points lower than the respective baseline. Overall, the naive approach performs
 best with an average model agreement of 51.29\% across all active learning strategies. \gls{mas}, \gls{ewc} and \gls{imm} follow in that order, whereas \gls{alasso} 
 suffers from exploding gradient problems and performs worst. The best active learning strategy is \gls{bald} with an average model agreement of 55.73\%. \gls{bald}
@@ -384,12 +387,12 @@ of $\mathbb{E}_{\theta \sim p(\theta \mid L)} [H[y \mid x, \theta]]$. \par
 
 
 For the next set of experiments, we use the target model dataset CIFAR-10 and present our results in table \ref{fig:ModelStealingCIFAR10Label}. 
-Across the board, model agreement is lower than in the previous experiment because the CIFAR-10 dataset is more complex than MNIST. Interestingly, the ranking of
+Across the board, the model agreement is lower than in the previous experiment because the CIFAR-10 dataset is more complex than MNIST. Interestingly, the ranking of
 the continual learning strategies has changed significantly. \gls{ewc} is now the best performing strategy, followed by \gls{imm} and Naive. \gls{mas} and \gls{alasso}
 perform worst. The main reason for the large gap between the naive approach and \gls{ewc} as well as \gls{imm} is the poor performance of \gls{bald} and Naive.
-Surprised by the poor performance of this combination, we run it again and find that the results are consistent. We assume that the poor model agreement, initially
-caused by the complexity of the dataset, makes it difficult for \gls{bald} to find informative samples. The best active learning strategy is CoreSet with an average
-model agreement of 43.57\%. Random follows next, outperforming \gls{badge}, \gls{lc} and \gls{bald}. \par
+Surprised by the poor performance of this combination, we re-run the experiment and received similar results. We assume that the poor model agreement, initially
+caused by the complexity of the dataset, makes it difficult for \gls{bald} to find informative samples. The best active learning strategy is CoreSet, with an average
+model agreement of 43.57\%. Random follows next, outperforming \gls{badge}, \gls{lc}, and \gls{bald}. \par
 
 \begin{table}[h]
     \centering
@@ -411,17 +414,17 @@ model agreement of 43.57\%. Random follows next, outperforming \gls{badge}, \gls
 \end{table}
 
 
-Finally, we compute the model agreement using CIFAR-100 as our target model dataset. When starting experiments with \gls{badge}, we noticed that they were taking
-significantly longer than the other experiments. We investigated this further and found the estimated runtime to be in excess of 40 days on our hardware, which is
-why we were unable to deliver results for this combination. The reason for this is that \gls{badge}'s query time scales linearly with the number of classes. Since
-CIFAR-100 has 100 classes, the query time is ten times longer than the query time on CIFAR-10, which took 4 days. We present our results in table 
-\ref{fig:ModelStealingCIFAR100Label}. Across the board, model agreement has decreased compared to the previous experiment, which is again due to increased dataset
+Finally, we compute the model agreement using CIFAR-100 as our target model dataset. When starting experiments with \gls{badge}, we observed that they
+took significantly longer than the other experiments. We investigated this further and found the estimated runtime to be more than 40 days using our hardware
+This is why we could not deliver results for this combination.  \gls{badge} has a high runtime because its query time scales linearly with the number of classes. Since
+CIFAR-100 has 100 classes, the query time is ten times longer than the query time on CIFAR-10, which took four days. We present our results in table 
+\ref{fig:ModelStealingCIFAR100Label}. Across the board, the model agreement has decreased compared to the previous experiment, which is again due to increased dataset
 complexity. While the absolute gap between the continual learning methods and the baseline is smaller than in the previous experiments, the relative gap has increased
-significantly. The baseline strategies boast a Model Agreement of 20.42\% on average, whereas the best continual learning strategy, which is \gls{imm}, demonstrates a
+significantly. The baseline strategies boast a model agreement of 20.42\% on average, whereas the best continual learning strategy, which is \gls{imm}, demonstrates a
 model agreement of 8.07\% on average. \gls{imm} significantly outperforms both the naive approach and \gls{ewc}, which exhibit almost identical performance. We were surprised
-by the poor performance of \gls{ewc} and \gls{bald}, which is why we conducted this experiment one more time, however we achieved similar results. The remaining
+by the poor performance of \gls{ewc} and \gls{bald}, which is why we conducted this experiment one more time, however, we achieved similar results. The remaining
 continual learning strategies, \gls{mas} and \gls{alasso}, perform worse than the naive approach. Remarkably, \gls{alasso} outperforms \gls{mas}, making this the
-only set of experiments in which \gls{alasso} is not the worst performing continual learning strategy. Another surprise is the performance of the random sampling,
+only set of experiments in which \gls{alasso} is not the worst-performing continual learning strategy. Another surprise is the performance of the random sampling,
 which outperforms the remaining active learning strategies. CoreSet, which demonstrated strong performance in previous experiments, falls behind
 Random and \gls{lc}, outperforming only \gls{bald} by about one percentage point. CoreSet fails to perform in this setting because the uncertainty of its query
 selection increases with the number of classes \cite{sener2017active}. \par
@@ -452,12 +455,12 @@ selection increases with the number of classes \cite{sener2017active}. \par
 \label{sec:Evaluation:MS:Regularization:Softmax}
 
 We move on to the second set of experiments, in which we train the substitute model using the softmax probabilities of the target model. First, we compute model agreement
-on the MNIST dataset. The results of this experiment can be found in table \ref{fig:ModelStealingMNISTSoftmax}. In terms of model agreement, all Continual
-Active Learning attacks perform significantly worse than the baseline. The best performing attack is the combination of \gls{bald} with \gls{mas} which achieves a model
-agreement of 67.84\%. The best performing active learning strategy is \gls{bald} with an average model agreement of 52.52\% whereas the best Continual Learning strategy is
-\gls{mas}. \gls{mas} achieves an average model agreement of 57.73\%. While the continual learning strategies struggled to outperform the naive approach previous experiments,
+on the MNIST dataset. The results of this experiment can be found in table \ref{fig:ModelStealingMNISTSoftmax}. In terms of the model agreement, all continual
+active learning attacks perform significantly worse than the baseline. The best-performing attack \gls{bald} with \gls{mas}, achieving a model
+agreement of 67.84\%. The most performant active learning strategy is \gls{bald} with an average model agreement of 52.52\%, whereas the best continual learning strategy is
+\gls{mas}. \gls{mas} achieves an average model agreement of 57.73\%. While the continual learning strategies struggled to outperform the naive approach in previous experiments,
 most of them outperform the naive approach in the Model Stealing setting. The only exception to this is \gls{alasso} which experiences exploding gradient problems. Overall,
-model agreement is about ten percentage points higher compared to training with predicted label. This is because the softmax probabilities reveal more about the target model's
+the model agreement is about ten percentage points higher than training with the predicted label. This is because the softmax probabilities reveal more about the target model's
 learned prediction function than the predicted label. \par 
 
 \begin{table}[h]
@@ -480,11 +483,11 @@ learned prediction function than the predicted label. \par
 \end{table}
 
 
-We move on to the next dataset which is CIFAR-10. Our results can be found in  table \ref{fig:ModelStealingCIFAR10Softmax}. Similar to our findings from previous experiments,
-the continual active learning approaches are outperformed by the baseline. However, the difference in performance between them is marginal at a maximum of 12 percentage points.
+We move on to the dataset CIFAR-10. Our results are shown in table \ref{fig:ModelStealingCIFAR10Softmax}. Similar to our findings from previous experiments, the baseline outperforms 
+the continual active learning approaches. However, the difference in performance between them is marginal at a maximum of 12 percentage points.
 \gls{alasso} is an exception to this, performing significantly worse than the other continual learning strategies due to exploding gradient problems. The best continual active
 learning strategy is \gls{ewc} with an average model agreement of 60.14\%. At the same time, \gls{ewc} is the only continual learning strategy to outperform the naive approach,
-albeit the margin between the two is only 0.48 percentage points. Overall, CoreSet is the most performant active learning strategy with an average model agreement of 54.12\%. \par
+albeit the margin between the two is only 0.48 percentage points. Overall, CoreSet is the most performant active learning strategy, achieving an average model agreement of 54.12\%. \par
 
 \begin{table}[h]
     \centering
@@ -507,11 +510,11 @@ albeit the margin between the two is only 0.48 percentage points. Overall, CoreS
 
 
 Finally, we experiment with the CIFAR-100 dataset. As in section \ref{sec:Evaluation:MS:Regularization:Predicted}, we omit the results for \gls{badge} due to their high runtime.
-The results for the remaining combinations can be found in table \ref{fig:ModelStealingCIFAR100Softmax}. Across the board, model agreement is
+The results for the remaining combinations can be found in table \ref{fig:ModelStealingCIFAR100Softmax}. Across the board, the model agreement is
 significantly lower than for MNIST and CIFAR-10, caused by the complexity of this dataset. In this setting,
-\gls{ewc} outperforms the remaining continual learning strategies, and it is one of two continual learning strategies which outperform the naive approach.
+\gls{ewc} outperforms the remaining continual learning strategies, and it is one of two continual learning strategies, which outperform the naive approach.
 The other strategy is \gls{imm}, which puts on a performance in between \gls{ewc} and the naive approach. \gls{mas} follows behind the naive approach
-and \gls{alasso} is left behind. The best Active Learning strategy is CoreSet, which outperforms \gls{bald} by 0.57 percentage points.\par
+and \gls{alasso} is left behind. The best active learning strategy is CoreSet, which outperforms \gls{bald} by 0.57 percentage points.\par
 
 \begin{table}[h]
     \centering
@@ -539,11 +542,11 @@ and \gls{alasso} is left behind. The best Active Learning strategy is CoreSet, w
 
 After conducting our experiments with regularization-based continual learning strategies, we test the combination of the active learning strategy \gls{vaal}
 with the continual learning strategy \gls{a-gem}. We motivate this experiment by the performance of \gls{vaal} and \gls{a-gem} in the classic continual
-learning setup, given in figure \ref{fig:Evaluation:Results:CAL:AGEM}. The experiments are performed in the same manner as the experiments in section 
+learning setup, given in figure \ref{fig:Evaluation:Results:CAL:AGEM}. We conduct the experiments with the same hyperparameters as in section 
 \ref{sec:Evaluation:MS:Regularization}. To evaluate the performance of \gls{vaal} and \gls{a-gem}, we compare the results to the best performing active
 learning strategy from the experiments in section \ref{sec:Evaluation:MS:Regularization}, CoreSet, and the combination of the best
-performing continual learning strategy and the most performant active learning strategy, which are \gls{ewc} and CoreSet, respectively. The results of the
-comparison are given in Table \ref{fig:ModelStealingVAALAGEM}. We present the model agreement progression with \gls{vaal} and \gls{a-gem} in appendix
+performing continual learning strategy and the most performant active learning strategy, which are \gls{ewc} and CoreSet, respectively. The results are given
+in Table \ref{fig:ModelStealingVAALAGEM}. We present the model agreement progression with \gls{vaal} and \gls{a-gem} in appendix
 \ref{sec:Appendix:CALMS:VAALAGEM}. While \gls{vaal} and \gls{a-gem} cannot keep up with the performance of the baseline, it outperforms CoreSet and \gls{ewc}
 in three out of six experiments while being outperformed in the remaining three. \par
 
