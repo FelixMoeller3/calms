@@ -30,7 +30,7 @@ test the combination of exemplar rehearsal continual learning and representation
 We start our experiments by running each combination of the Active Learning strategies \gls{bald},\gls{badge},CoreSet,\gls{lc} and Random with the Continual Learning
 strategies Naive, \gls{ewc}, \gls{mas}, \gls{alasso} and \gls{imm}. We use the dataset CIFAR-10, the Neural Network Architecture ResNet18 and a batch size of 4000 for these experiments. For each experiment,
 we present the validation accuracy with increasing size of the labeled pool as well as the overall execution time of each experiment. The results by validation accuracy and by execution time are shown in 
-Figure \cite{fig:Evaluation:CAL:4000bAcc} and Table \ref{fig:Evaluation:CAL:4000bTime}, respectively.\par
+figure \ref{fig:Evaluation:CAL:4000bAcc} and table \ref{fig:Evaluation:CAL:4000bTime}, respectively.\par
 
 First, we evaluate the results for random sampling. In terms of execution time, there is a large gap between the baseline and the continual learning strategies. \gls{imm} is
 the fastest method, followed by \gls{mas}, \gls{ewc} and Naive who perform on the same level. \gls{alasso} is the slowest continual learning strategy, but is still about six times as fast as the baseline. 
@@ -133,7 +133,7 @@ to the batch size, whereas the query time remains constant because the batch siz
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.32\linewidth]{images/results_CAL/badge_1000b_acc.png} \hfill
+    \includegraphics[width=0.32\linewidth]{images/results_CAL/badge_1000b_Comp.png} \hfill
     \includegraphics[width=0.32\linewidth]{images/results_CAL/badge_2000b_acc.png} \hfill
     \includegraphics[width=0.32\linewidth]{images/results_CAL/badge_4000b_acc.png}
     \caption[Continual Active Learning with \gls{badge} with varying batch size]{Comparison of validation accuracy of Continual Learning strategies used with the Active Learning strategy
@@ -204,7 +204,7 @@ location takes about 24 hours to complete and requires more than 100GB of memory
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.7\linewidth]{images/results_CAL/Facility_location_init.png}
+    \includegraphics[width=0.6\linewidth]{images/results_CAL/Facility_location_init.png}
     \caption{Comparison of validation accuracy for facility location initialization and random initialization}
     \label{fig:Evaluation:CAL:FLinit}
 \end{figure}
@@ -275,8 +275,8 @@ explains why training discriminator and \gls{vae} for more epochs does not incre
     \centering
     \includegraphics[width=0.46\linewidth]{images/results_CAL/vaal_al.png} \hfill
     \includegraphics[width=0.46\linewidth]{images/results_CAL/vaal_disc_epochs.png}
-    \caption[Continual Active Learning Custom Replay strategy]{Left: Comparison of validation accuracy of \gls{vaal} to the Active Learning strategies Random and CoreSet.
-    Right: Comparison of validation accuracy when varying the training epochs for \gls{vae} and Discriminator.}
+    \caption[Continual Active Learning Custom Replay strategy]{Left: Comparing \gls{vaal} to Random and CoreSet.
+    Right: Comparison of validation accuracy when varying the training epochs for \gls{vae} and discriminator.}
     \label{fig:Evaluation:CAL:VAAL}
 \end{figure}
 
@@ -294,8 +294,9 @@ representation-based sampling of \gls{vaal} and the increased batch size, which 
 %TODO: Hier plots erneuern sodass sie nicht aus powerpoint kommen
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\linewidth]{images/results_CAL/AGEM_plots.png}
-    \caption[Continual Active Learning with \gls{a-gem}]{Left: Comparison of validation accuracy of \gls{a-gem} to Naive with \gls{vaal} as the \gls{al} strategy.
+    \includegraphics[width=0.48\linewidth]{images/results_CAL/vaal_agem_naive.png} \hfill
+    \includegraphics[width=0.48\linewidth]{images/results_CAL/agem_lc.png}
+    \caption[Continual Active Learning with \gls{a-gem}]{Left: Comparison of validation accuracy of \gls{a-gem} to Naive with \gls{vaal} as the active learning strategy.
     Right: Validation accuracy of \gls{a-gem} for different values of $S$ and $P$.}
     \label{fig:Evaluation:Results:CAL:AGEM}
 \end{figure}
@@ -482,7 +483,7 @@ learned prediction function than the predicted label. \par
 We move on to the next dataset which is CIFAR-10. Our results can be found in  table \ref{fig:ModelStealingCIFAR10Softmax}. Similar to our findings from previous experiments,
 the continual active learning approaches are outperformed by the baseline. However, the difference in performance between them is marginal at a maximum of 12 percentage points.
 \gls{alasso} is an exception to this, performing significantly worse than the other continual learning strategies due to exploding gradient problems. The best continual active
-learning strategy is \gls{ewc} with an average Model Agreement of 60.14\%. At the same time, \gls{ewc} is the only continual learning strategy to outperform the naive approach,
+learning strategy is \gls{ewc} with an average model agreement of 60.14\%. At the same time, \gls{ewc} is the only continual learning strategy to outperform the naive approach,
 albeit the margin between the two is only 0.48 percentage points. Overall, CoreSet is the most performant active learning strategy with an average model agreement of 54.12\%. \par
 
 \begin{table}[h]
@@ -506,8 +507,8 @@ albeit the margin between the two is only 0.48 percentage points. Overall, CoreS
 
 
 Finally, we experiment with the CIFAR-100 dataset. As in section \ref{sec:Evaluation:MS:Regularization:Predicted}, we omit the results for \gls{badge} due to their high runtime.
-The results for the remaining combinations from this set of experiments can be found in table \ref{fig:ModelStealingCIFAR100Softmax}. Across the board, model agreement is
-significantly lower than for MNIST and CIFAR-10, caused by the complexity of this dataset. Like in our previous experiments,
+The results for the remaining combinations can be found in table \ref{fig:ModelStealingCIFAR100Softmax}. Across the board, model agreement is
+significantly lower than for MNIST and CIFAR-10, caused by the complexity of this dataset. In this setting,
 \gls{ewc} outperforms the remaining continual learning strategies, and it is one of two continual learning strategies which outperform the naive approach.
 The other strategy is \gls{imm}, which puts on a performance in between \gls{ewc} and the naive approach. \gls{mas} follows behind the naive approach
 and \gls{alasso} is left behind. The best Active Learning strategy is CoreSet, which outperforms \gls{bald} by 0.57 percentage points.\par
@@ -539,17 +540,17 @@ and \gls{alasso} is left behind. The best Active Learning strategy is CoreSet, w
 After conducting our experiments with regularization-based continual learning strategies, we test the combination of the active learning strategy \gls{vaal}
 with the continual learning strategy \gls{a-gem}. We motivate this experiment by the performance of \gls{vaal} and \gls{a-gem} in the classic continual
 learning setup, given in figure \ref{fig:Evaluation:Results:CAL:AGEM}. The experiments are performed in the same manner as the experiments in section 
-\ref{sec:Evaluation:MS:Regularization}. To evaluate the performance of \gls{vaal} and \gls{a-gem}, we compare the results to the best performing active learning strategy
-from the experiments in section \ref{sec:Evaluation:MS:Regularization}, CoreSet, and the combination of the best
+\ref{sec:Evaluation:MS:Regularization}. To evaluate the performance of \gls{vaal} and \gls{a-gem}, we compare the results to the best performing active
+learning strategy from the experiments in section \ref{sec:Evaluation:MS:Regularization}, CoreSet, and the combination of the best
 performing continual learning strategy and the most performant active learning strategy, which are \gls{ewc} and CoreSet, respectively. The results of the
 comparison are given in Table \ref{fig:ModelStealingVAALAGEM}. We present the model agreement progression with \gls{vaal} and \gls{a-gem} in appendix
-\ref{sec:Appendix:CALMS:VAALAGEM}. While \gls{vaal} and \gls{a-gem} cannot keep up with the performance of the baseline, just as all continual active Learning approaches,
-it performs on par with CoreSet and \gls{ewc}, outperforming this combination in three out of six experiments while being outperformed in the remaining three experiments. \par
+\ref{sec:Appendix:CALMS:VAALAGEM}. While \gls{vaal} and \gls{a-gem} cannot keep up with the performance of the baseline, it outperforms CoreSet and \gls{ewc}
+in three out of six experiments while being outperformed in the remaining three. \par
 
 \begin{table}[h]
     \centering
     \begin{tabular}{c | c  c  | c  c | c  c } 
-        \multirow{2}*{Attack strategy}& \multicolumn{2}{c}{MNIST} & \multicolumn{2}{c}{CIFAR-10} & \multicolumn{2}{c}{CIFAR-100}  \\ 
+        \multirow{2}*{Attack strategy}& \multicolumn{2}{c |}{MNIST} & \multicolumn{2}{c |}{CIFAR-10} & \multicolumn{2}{c}{CIFAR-100}  \\ 
          & Softmax & Label & Softmax & Label & Softmax & Label \\
         \hline 
         \gls{vaal} \gls{a-gem} & 52.54 & 53.8 & 61.48 & 50.5 & 18.29 & 8.77\\

@@ -10,13 +10,14 @@
 %%
 %% Version 1.3.6, 2022-09-28
 \Abstract
-The advancement of \gls{ml} and especially \gls{dl} has paved the way for remarkable breakthroughs in the computer vision domain 
-\parencite*{goodfellow2020generative,he2016deep,lecun1989backpropagation}. Despite its benefits, \gls{dl} is a demanding task that requires significant resources due
-to the increasingly complex architecture of state-of-the-art models and the need for extensive training with labeled data. Technology companies like Google,
-Amazon and Microsoft, however, have access to a lot of computing power, which they monetize by offering \gls{mlaas}. \gls{mlaas} platforms allow customers to
-train their models in the cloud and make them publicly accessible via prediction \glspl{api}. While \gls{mlaas} makes machine learning more
-attainable, it poses a security risk. Previous works have shown that it is possible to infer numerous properties (e.g., training data \cite{shokri2017membership}
-and architecture \cite{oh2019towards}) of the model behind the prediction \gls{api} \parencite{papernot2017practical,tramer2016stealing}.
+The advancement of machine learning and especially deep learning has paved the way for remarkable breakthroughs in the computer vision domain 
+\parencite*{goodfellow2020generative,he2016deep,lecun1989backpropagation}. Despite its benefits, deep learning is a demanding task that requires
+significant resources due to the increasingly complex architecture of state-of-the-art models and the need for extensive training with labeled data.
+Technology companies like Google, Amazon and Microsoft, however, have access to a lot of computing power, which they monetize by offering \gls{mlaas}.
+\gls{mlaas} platforms allow customers to train their models in the cloud and make them publicly accessible via prediction \glspl{api}. 
+While \gls{mlaas} makes machine learning more attainable, it poses a security risk. Previous works have shown that it is possible to infer numerous
+properties (e.g., training data \cite{shokri2017membership} and architecture \cite{oh2019towards}) of the model behind the prediction \gls{api}
+\parencite{papernot2017practical,tramer2016stealing}.
 However, we purely focus on stealing the \textit{functionality} of the target model, i.e. its ability to predict the correct class of a given input image.
 In this thesis, we build upon ActiveThief \cite{pal2020activethief}, a model extraction framework using \gls{al} strategies to steal \glspl{dnn}. 
 First, we propose a novel approach named continual active learning, which combines \gls{al} and \gls{cl} to improve the trade-off between

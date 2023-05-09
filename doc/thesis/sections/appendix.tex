@@ -22,16 +22,16 @@
 \section{Proof of Data points trained using Active Learning}
 \label{sec:appendix:FirstSection}
 \begin{theorem}
-Let $X$ be a set of data points of size $n$, $b < n, n \mod b = 0$ be the batch size. Then a machine learning model trained
+Let $X$ be a set of data points of size $n$, and let $b < n, n \mod b = 0$ be the batch size. Then a machine learning model trained
 using pool-based Active Learning is trained $\frac{n}{b}$ times on the current labeled pool of data points. Overall, the model
-is trained on $\frac{n(n+b)}{2b}$ data points
+is trained on $\frac{n(n+b)}{2b}$ data points.
 \end{theorem}
 \begin{proof}
     The first part is trivial, given that the model is trained until the labeled pool is exhausted and in each iteration $b$
     points are queried for their label. To determine the total number of points used, we need to sum up the number of points
-    used in each iteration. 
+    used in each iteration. These are
     \begin{equation}
-        \sum_{i=1}^{\frac{n}{b}} i \cdot b
+        \sum_{i=1}^{\frac{n}{b}} i \cdot b.
     \end{equation}
     Using the formula for the sum of the first $n$ natural numbers, we get
     \begin{equation}
@@ -48,7 +48,7 @@ In this section, we will list tables and figures containing the specifications o
 \label{sec:Appendix:Hardware}
 Since we run our experiments on BwUnicluster2.0, we provide a detailed list of the hardware specifications of the nodes we used. Please
 note that this table only contains the nodes we used in our experiments. For a more detailed list of all nodes as well as all further
-information, see \cite{bwUniclusterHardware}
+information, see \cite{bwUniclusterHardware}.
 
 \newpage
 
@@ -117,8 +117,8 @@ and a link to their documentation.
 
 \subsection{Continual Learning strategies}
 \label{sec:Appendix:CLStrategies}
-In this section, we extend the parameter description of the Continual Learning strategies given in section 
-\ref{sec:ExperimentSetup:CLStrategies} by presenting a table for with the exact hyperparameter configuration
+In this section, we extend the parameter description of the continual learning strategies given in section 
+\ref{sec:ExperimentSetup:CLStrategies} by presenting tables with the exact hyperparameter configurations
 used in the experiments.
 
 \begin{table}[!htb]
@@ -131,10 +131,10 @@ used in the experiments.
         on preserving knowledge from the old task & 1.0  \\ 
         \hline
         Sample size & Relative size of the sample compared to the full training set that is used to 
-        compute the Fisher Matrix & 0.05  \\ 
+        compute the \gls{fim}. & 0.05  \\ 
         \hline
-        Gradient Clip & Maximum Value of the $l2$-Norm of the gradient. If the current norm is larger,
-        the gradient is clipped to that value & 20.0 \\ 
+        Gradient Clip & Maximum Value of the $l_2$-Norm of the gradient. If the current norm is larger,
+        the gradient is clipped to that value. & 20.0 \\ 
         \hline
     \end{tabularx}
     \caption{Hyperparameter configuration for \gls{ewc}.}
@@ -148,10 +148,10 @@ used in the experiments.
         \hline 
         \hline
         $\lambda$ & Balances between old and new tasks. A higher value indicates more focus
-        on preserving knowledge \newline from the old task & 1.0  \\ 
+        on preserving knowledge \newline from the old task. & 1.0  \\ 
         \hline
-        Gradient Clip & Maximum Value of the $l2$-Norm of the gradient. If the current norm is larger, the
-        gradient is clipped to that value & 2.0 \\ 
+        Gradient Clip & Maximum Value of the $l_2$-Norm of the gradient. If the current norm is larger, the
+        gradient is clipped to that value. & 2.0 \\ 
         \hline
     \end{tabularx}
     \caption{Hyperparameter configuration for \gls{mas}.}
@@ -167,10 +167,13 @@ used in the experiments.
         $\lambda$ & Balances between old and new tasks. A higher value indicates more focus
         on preserving knowledge from the old task & 1.0  \\ 
         \hline
-        Gradient Clip & Maximum Value of the $l2$-Norm of the gradient. If the current norm is larger, the
-        gradient is clipped to that value & 20.0 \\ 
+        Sample size & Relative size of the sample compared to the full training set that is used to 
+        compute the \gls{fim}. & 0.05  \\ 
         \hline
-        $\alpha$ & Weights the importance of the previous tasks. The sum of all $\alpha$ values must be 1.0 & 0.45,0.55 \\
+        Gradient Clip & Maximum Value of the $l_2$-Norm of the gradient. If the current norm is larger, the
+        gradient is clipped to that value. & 20.0 \\ 
+        \hline
+        $\alpha$ & Weights the importance of the previous tasks. The sum of all $\alpha$ values must be 1.0. & 0.45,0.55 \\
         \hline
     \end{tabularx}
     \caption{Hyperparameter configuration for \gls{imm}.}
@@ -185,16 +188,16 @@ used in the experiments.
         \hline 
         \hline
         $a$ & Balances between old and new tasks. A higher value indicates more focus
-        on preserving knowledge from the old task & 0.5  \\ 
+        on preserving knowledge from the old task. & 0.5  \\ 
         \hline
-        $a'$ & Used to update parameter importances in Equation \hyperref[eq:ALASSO_Small_Omega]{3.23} & 0.25  \\
+        $a'$ & Used to update parameter importances in Equation \hyperref[eq:ALASSO_Small_Omega]{3.23}. & 0.25  \\
         \hline
-        Gradient Clip & Maximum Value of the $l2$-Norm of the gradient. If the current norm is larger, the
-        gradient is clipped to that value & 2.0 \\ 
+        Gradient Clip & Maximum Value of the $l_2$-Norm of the gradient. If the current norm is larger, the
+        gradient is clipped to that value. & 2.0 \\ 
         \hline
-        $c$ & Determines the overestimation of the loss on the unobserved side & 3.0 \\
+        $c$ & Determines the overestimation of the loss on the unobserved side. & 3.0 \\
         \hline
-        $c'$ & Used to update parameter importances in Equation \hyperref[eq:ALASSO_Small_Omega]{3.23} & 1.5 \\
+        $c'$ & Used to update parameter importances in Equation \hyperref[eq:ALASSO_Small_Omega]{3.23}. & 1.5 \\
         \hline
     \end{tabularx}
     \caption{Hyperparameter configuration for \gls{alasso}.}
@@ -214,11 +217,11 @@ In our experiments, we use the datasets MNIST, CIFAR-10, CIFAR-100, Tiny ImageNe
          & MNIST & CIFAR-10 & CIFAR-100 & Tiny \newline ImageNet & Small \newline ImageNet \\ 
         \hline 
         \hline
-        Size of training set & 60000 & 60000& 50000 & 100000 & 128116 \\ 
+        Size of training set & 60,000 & 60,000& 50,000 & 100,000 & 128,116 \\ 
         \hline
-        Size of validation set & 10000 & 10000 & 10000 & 10000 & 50000\\
+        Size of validation set & 10,000 & 10,000 & 10,000 & 10,000 & 50,000\\
         \hline
-        Number of classes & 10 & 10 & 100 & 200 & 1000 \\
+        Number of classes & 10 & 10 & 100 & 200 & 1,000 \\
         \hline
         Image Dimension & 28x28 & 32x32 & 32x32 & 64x64& 32x32\\
         \hline
@@ -261,9 +264,9 @@ where $k=32 \cdot 2^{i-1}$ is the number of filters for block number $i \in \{1,
 \section{Continual Active Learning}
 \label{sec:Appendix:ContinualActiveLearning}
 In section \ref{sec:Evaluation:CAL:ALRegCL}, we evaluate the performance of regularization-based continual learning strategies combined with the active learning
-strategies Random, \gls{lc}, \gls{bald}, CoreSet and \gls{badge}. For space reasons, we omitted the results of our experiments for batch size 1,000 and 2,000 in 
-the main paper. Therefore, we list the results for these batch sizes in the following. The results in terms of validation accuracy can be found in figure
-\ref{fig:Appendix:CAL:1000bAcc} and figure \ref{fig:Appendix:CAL:2000bAcc}, respectively. The execution time of these experiments are presented in table 
+strategies Random, \gls{lc}, \gls{bald}, CoreSet and \gls{badge}. For space reasons, we omitted the results of our experiments for batch sizes 1,000 and 2,000 in 
+the main paper. Therefore, we list the results for these batch sizes in the following. The results by validation accuracy are shown in figure
+\ref{fig:Appendix:CAL:1000bAcc} and figure \ref{fig:Appendix:CAL:2000bAcc}, respectively. The execution time of these experiments is presented in table 
 \ref{fig:Appendix:CAL:1000bTimeTable} and table \ref{fig:Appendix:CAL:2000bTimeTable}, respectively. \par
 Overall, we observe similar patterns to the results presented in the main paper, regarding both the relative performance of the active learning strategies and
 the continual learning strategies. However, the results for batch size are volatile, which is caused by overfitting on the small training set. 
@@ -341,20 +344,20 @@ the continual learning strategies. However, the results for batch size are volat
 
 \subsection{Evaluation of ActiveThief}
 \label{sec:Appendix:MS:ActiveThief}
-Because we build our continual active learning approach upon the ActiveThief framework, we believe that it is important to rigorously evaluate it before we apply continual
+Because we build our continual active learning approach upon the ActiveThief framework, we believe it is important to rigorously evaluate it before we apply continual
 active learning to it. In the ActiveThief paper \cite{pal2020activethief}, Pal et al. evaluate active learning for model stealing for computer vision and natural language
 processing. Since this thesis focuses on computer vision tasks, we only investigate the part of the ActiveThief framework that deals with computer vision. For the ActiveThief
-framework, Pal et al. introduce a proprietary thief dataset, which we dubbed SmallImagenet, and three different target model architectures which we call ActiveThiefConv2,
-ActiveThiefConv3 and ActiveThiefConv4. In the following we will evaluate the influence of the thief dataset and the target model architecture on
+framework, Pal et al. introduce a proprietary thief dataset, which we dubbed Small ImageNet, and three different target model architectures, which we call ActiveThiefConv2,
+ActiveThiefConv3 and ActiveThiefConv4. In the following, we evaluate the influence of the thief dataset and the target model architecture on
 the success of the model stealing attack. \par
-We start off by computing the validation accuracies of the ActiveThiefConv model family which the ActiveThief framework and ours uses as target and substitute models. While
-these figures have not been given by the authors of ActiveThief in their paper, we believe that they are important to understand the performance of the ActiveThief framework
-and of our Continual Active Learning approach. Each model of the ActiveThiefConv family is trained on MNIST and CIFAR-10. Additionally, we train ActiveThiefConv3 on CIFAR-100,
+We start off by computing the validation accuracies of the ActiveThiefConv model family, which the ActiveThief framework and ours use as target and substitute models. 
+These numbers have not been given by the authors of ActiveThief in their paper. However, we believe they are crucial to understanding the performance of the ActiveThief framework
+and our continual active learning approach. Each model of the ActiveThiefConv family is trained on MNIST and CIFAR-10. Additionally, we train ActiveThiefConv3 on CIFAR-100,
 because we will conduct experiments with CIFAR-100 in section \ref{sec:Evaluation:MS}. We omit the results for ActiveThiefConv2 and ActiveThiefConv4 on CIFAR-100
-because they are not relevant to this thesis. The results can be found in table \ref{fig:TargetModelAccuracies}. They show that the most complex model ActiveThiefConv4
-achieves the highest validation accuracy on both MNIST and CIFAR-10. While the validation accuracy for MNIST is very high for all models, there is a difference in validation
+because they are not relevant to this thesis. The results are depicted in table \ref{fig:TargetModelAccuracies}. They show that ActiveThiefConv4, the most complex model,
+achieves the highest validation accuracy on both MNIST and CIFAR-10. While the validation accuracy for MNIST is above 98 \% for all models, there is a difference in validation
 accuracy of almost 20 percentage points between ActiveThiefConv2 and ActiveThiefConv4 on CIFAR-10. This shows that the complexity of the target model architecture has a
-significant influence on the validation accuracy. \par
+significant influence on validation accuracy. \par
 
 \begin{table}[h]
     \centering
@@ -370,14 +373,14 @@ significant influence on the validation accuracy. \par
 \end{table}
 
 Next, we evaluate the influence of the target model architecture and substitute model architecture on the success of the model stealing attack. We use the ActiveThiefConv model
-family as target and substitute models and perform one model stealing attack for each combination of target and substitute model. We use the Active Learning strategy CoreSet
-with a batch size of 1,000 and a total budget of 20,000 to perform the attacks. The results can be seen in figure \ref{fig:CIFAR10modelComp}. The plots in the figure represent
+family as target and substitute models and perform one model stealing attack for each combination of target and substitute model. We use the active learning strategy CoreSet
+with a batch size of 1,000 and a total budget of 20,000 to perform the attacks. The results are depicted in figure \ref{fig:CIFAR10modelComp}. The plots in the figure represent
 the progression of agreement between the target and substitute model on the validation set of the CIFAR-10 dataset at the end of each experiment. Overall, we observe that the
-agreement between the target and substitute model is highest when we use a target model of low complexity (i.e. ActiveThiefConv2) and a substitute model of moderate to high
-complexity (i.e., ActiveThiefConv3 and ActiveThiefConv4). This is in line with the results of the ActiveThief paper \cite{pal2020activethief}, however we report the accuracy
-after a budget of 20,000, whereas Pal et al. presumably report the accuracy after training on the full thief dataset. To further study the behavior of model stealing attacks using
-different model architectures, we conduct the same experiment using MNIST as the target model dataset. The results of this experiment can be found in figure 
-\ref{fig:MNISTmodelComp}. The results of this experiment are similar to the results of the experiment on CIFAR-10, however it is evident that the discrepancies between
+agreement between the target and substitute model is highest when we use a target model of low complexity (i.e., ActiveThiefConv2) and a substitute model of moderate to high
+complexity (i.e., ActiveThiefConv3 and ActiveThiefConv4). This is in line with the results of the ActiveThief paper \cite{pal2020activethief}. However, we report the accuracy
+after a budget of 20,000, whereas Pal et al. presumably report the accuracy after training on the full thief dataset. To further study the behavior of model stealing attacks
+using different model architectures, we conduct the same experiment using MNIST as the target model dataset. The results of this experiment can be found in figure 
+\ref{fig:MNISTmodelComp}. Overall, the results are similar to those on CIFAR-10. However, it is evident that the discrepancies between
 the target and substitute model combinations are larger. \par
 
 \begin{figure}[!htb]
@@ -385,7 +388,7 @@ the target and substitute model combinations are larger. \par
     \includegraphics[width=0.32\linewidth]{images/MSInsights/mnist_act2.png} \hfill
     \includegraphics[width=0.32\linewidth]{images/MSInsights/mnist_act3.png} \hfill
     \includegraphics[width=0.32\linewidth]{images/MSInsights/mnist_act4.png}
-    \caption{Agreement Progression for Model Stealing using MNIST as a target model dataset}
+    \caption{Agreement Progression with varying model architectures on MNIST}
     \label{fig:MNISTmodelComp}
 \end{figure}
 
@@ -394,23 +397,23 @@ the target and substitute model combinations are larger. \par
     \includegraphics[width=0.32\linewidth]{images/MSInsights/cifar_act2.png} \hfill
     \includegraphics[width=0.32\linewidth]{images/MSInsights/cifar_act3.png} \hfill
     \includegraphics[width=0.32\linewidth]{images/MSInsights/cifar_act4.png}
-    \caption{Agreement progression for model stealing using CIFAR-10 as a target model dataset}
+    \caption{Agreement Progression with varying model architectures on CIFAR-10}
     \label{fig:CIFAR10modelComp}
 \end{figure}
 
 
-After evaluating the influence of the target and substitute model architecture on the success of the model stealing attack, we now evaluate how the thief dataset effects
-model stealing attacks. Our motivation for this experiment is that Pal et al.  mention having tested CIFAR-10 as a thief dataset with without success. We perform a model
-stealing attack using ActiveThiefConv3 as the target and substitute model and CoreSet with batch size 2,000 as our active learning strategy. The total query budget is 20,000.
-We used MNIST as the target model dataset and change between Small ImageNet, Tiny ImageNet and CIFAR-10 as our thief datasets. The results of this experiment can be seen
-in figure \ref{fig:Appendix:MS:ActiveThief:EffectDataset}. While model agreement increases throughout the experiment when using Small ImageNet, the model agreement for
-Tiny ImageNet plateaus after just three iterations at 20\%. Model stealing with CIFAR-10 yields the best results, however. At the end of the experiment, the setup with
-CIFAR-10 as the thief dataset achieves a model agreement five percentage points higher than the setup with Small Imagenet. \par
+After evaluating the influence of the target and substitute model architecture on the success of the model stealing attack, we evaluate how the thief dataset effects
+model stealing attacks. Our motivation for this experiment is that Pal et al. mention having tested CIFAR-10 as a thief dataset without success. We perform a model
+stealing attack using ActiveThiefConv3 as the target and substitute model and CoreSet with batch size 2,000 as our active learning strategy. The total query budget is
+20,000. We use MNIST as the target model dataset and change between Small ImageNet, Tiny ImageNet, and CIFAR-10 as our thief datasets. The results of this experiment
+can be seen in figure \ref{fig:Appendix:MS:ActiveThief:EffectDataset}. While model agreement increases throughout the experiment when using Small ImageNet, the model
+agreement for Tiny ImageNet plateaus after just three iterations at 20\%. Model stealing with CIFAR-10 yields the best results, however. At the end of the experiment,
+the setup with CIFAR-10 as the thief dataset achieves a model agreement five percentage points higher than the setup with Small Imagenet. \par
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.8\linewidth]{images/results_CALMS/effect_dataset.png}
-    \caption{Comparison of Model Agreement when performing a model stealing attack using the datasets Tiny Imagenet, Small ImageNet and CIFAR-10.}
+    \caption{Comparison of model agreement when performing a model stealing attack with varying thief datasets.}
     \label{fig:Appendix:MS:ActiveThief:EffectDataset}
 \end{figure}
 
@@ -419,18 +422,17 @@ CIFAR-10 as the thief dataset achieves a model agreement five percentage points 
 
 \subsection{Continual Active Learning for Model Stealing}
 \label{sec:Appendix:CALMS}
-This section contains plots of the full runs of all experiments in section \ref{sec:Evaluation:MS}.
+This section contains plots of the complete runs of all experiments in section \ref{sec:Evaluation:MS}.
 
 \subsubsection{MNIST}
 \label{sec:Appendix:CALMS:MNIST}
-In this section, we present the full runs of all experiments which involve Continual Active Learning using MNIST as a Target Model Dataset.
+In this section, we present the complete runs of all experiments which involve continual active learning using MNIST as a target model dataset.
 
 \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.48\linewidth]{images/results_CALMS/mnist_label_random.png} \hfill
     \includegraphics[width=0.48\linewidth]{images/results_CALMS/mnist_softmax_random.png}
-    \caption{Agreement Comparison for Model Stealing on MNIST using the softmax output and the Active Learning strategy Random. Left: Training with predicted class label,
-    Right: Training with softmax output}
+    \caption{Agreement comparison for model stealing on MNIST using the active learning strategy Random.}
     \label{fig:CALMSMNISTRandom}
 \end{figure}
 
@@ -438,8 +440,7 @@ In this section, we present the full runs of all experiments which involve Conti
     \centering
     \includegraphics[width=0.48\linewidth]{images/results_CALMS/mnist_label_lc.png} \hfill
     \includegraphics[width=0.48\linewidth]{images/results_CALMS/mnist_softmax_lc.png}
-    \caption{Agreement Comparison for Model Stealing on MNIST using the softmax output and the Active Learning strategy \gls{lc}. Left: Training with predicted class label,
-    Right: Training with softmax output}
+    \caption{Agreement comparison for model stealing on MNIST using the active learning strategy \gls{lc}.}
     \label{fig:CALMSMNISTLC}
 \end{figure}
 
@@ -447,8 +448,7 @@ In this section, we present the full runs of all experiments which involve Conti
     \centering
     \includegraphics[width=0.48\linewidth]{images/results_CALMS/mnist_label_bald.png} \hfill
     \includegraphics[width=0.48\linewidth]{images/results_CALMS/mnist_softmax_bald.png}
-    \caption{Agreement Comparison for Model Stealing on MNIST using the softmax output and the Active Learning strategy \gls{bald}. Left: Training with predicted class label,
-    Right: Training with softmax output}
+    \caption{Agreement comparison for model stealing on MNIST using the active learning strategy \gls{bald}.}
     \label{fig:CALMSMNISTBALD}
 \end{figure}
 
@@ -456,17 +456,15 @@ In this section, we present the full runs of all experiments which involve Conti
     \centering
     \includegraphics[width=0.48\linewidth]{images/results_CALMS/mnist_label_coreset.png} \hfill
     \includegraphics[width=0.48\linewidth]{images/results_CALMS/mnist_softmax_coreset.png}
-    \caption{Agreement Comparison for Model Stealing on MNIST using the softmax output and the Active Learning strategy CoreSet. Left: Training with predicted class label,
-    Right: Training with softmax output}
+    \caption{Agreement comparison for model stealing on MNIST using the active learning strategy CoreSet.}
     \label{fig:CALMSMNISTCoreSet}
 \end{figure}
 
 \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.48\linewidth]{images/results_CALMS/mnist_label_badge.png} \hfill
-    \includegraphics[width=0.48\linewidth]{images/results_CALMS/cifar_softmax_badge.png}
-    \caption{Agreement Comparison for Model Stealing on MNIST using the softmax output and the Active Learning strategy \gls{badge}. Left: Training with predicted class label,
-    Right: Training with softmax output}
+    \includegraphics[width=0.48\linewidth]{images/results_CALMS/mnist_softmax_badge.png}
+    \caption{Agreement comparison for model stealing on MNIST using the active learning strategy \gls{badge}.}
     \label{fig:CALMSMNISTBadge}
 \end{figure}
 
@@ -474,41 +472,37 @@ In this section, we present the full runs of all experiments which involve Conti
 
 \subsubsection{CIFAR-10}
 \label{sec:Appendix:CALMS:CIFAR}
-In this section, we present the full runs of all experiments which involve Continual Active Learning using CIFAR-10 as a Target Model Dataset.
+In this section, we present the complete runs of all experiments which involve continual active learning using CIFAR-10 as a target model dataset.
 
 \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.48\linewidth]{images/results_CALMS/cifar_label_random.png} \hfill
-    \includegraphics[width=0.48\linewidth]{images/results_CALMS/cifar100_softmax_random.png}
-    \caption{Agreement Comparison for Model Stealing on CIFAR-10 using the Active Learning strategy Random. Left: Training with predicted class label,
-    Right: Training with softmax output}
+    \includegraphics[width=0.48\linewidth]{images/results_CALMS/cifar_softmax_random.png}
+    \caption{Agreement comparison for model stealing on CIFAR-10 using the active learning strategy Random.}
     \label{fig:CALMSCIFAR10Random}
 \end{figure}
 
 \begin{figure}[!htb]
     \centering
-    \includegraphics[width=0.48\linewidth]{images/results_CALMS/cifar100_label_lc.png} \hfill
-    \includegraphics[width=0.48\linewidth]{images/results_CALMS/cifar100_softmax_lc.png}
-    \caption{Agreement Comparison for Model Stealing on CIFAR10 using the Active Learning strategy \gls{lc}. Left: Training with predicted class label,
-    Right: Training with softmax output}
+    \includegraphics[width=0.48\linewidth]{images/results_CALMS/cifar_label_lc.png} \hfill
+    \includegraphics[width=0.48\linewidth]{images/results_CALMS/cifar_softmax_lc.png}
+    \caption{Agreement comparison for model stealing on CIFAR-10 using the active learning strategy \gls{lc}.}
     \label{fig:CALMSCIFAR10LC}
 \end{figure}
 
 \begin{figure}[!htb]
     \centering
-    \includegraphics[width=0.48\linewidth]{images/results_CALMS/cifar100_label_bald.png} \hfill
-    \includegraphics[width=0.48\linewidth]{images/results_CALMS/cifar100_softmax_bald.png}
-    \caption{Agreement Comparison for Model Stealing on CIFAR-10 using the Active Learning strategy \gls{bald}. Left: Training with predicted class label,
-    Right: Training with softmax output}
+    \includegraphics[width=0.48\linewidth]{images/results_CALMS/cifar_label_bald.png} \hfill
+    \includegraphics[width=0.48\linewidth]{images/results_CALMS/cifar_softmax_bald.png}
+    \caption{Agreement comparison for model stealing on CIFAR-10 using the active learning strategy \gls{bald}.}
     \label{fig:CALMSCIFAR10BALD}
 \end{figure}
 
 \begin{figure}[!htb]
     \centering
-    \includegraphics[width=0.48\linewidth]{images/results_CALMS/cifar100_label_coreset.png} \hfill
-    \includegraphics[width=0.48\linewidth]{images/results_CALMS/cifar100_softmax_coreset.png}
-    \caption{Agreement Comparison for Model Stealing on CIFAR-10 using the Active Learning strategy CoreSet. Left: Training with predicted class label,
-    Right: Training with softmax output}
+    \includegraphics[width=0.48\linewidth]{images/results_CALMS/cifar_label_coreset.png} \hfill
+    \includegraphics[width=0.48\linewidth]{images/results_CALMS/cifar_softmax_coreset.png}
+    \caption{Agreement comparison for model stealing on CIFAR-10 using the active learning strategy CoreSet.}
     \label{fig:CALMSCIFAR10CoreSet}
 \end{figure}
 
@@ -516,8 +510,7 @@ In this section, we present the full runs of all experiments which involve Conti
     \centering
     \includegraphics[width=0.48\linewidth]{images/results_CALMS/cifar_label_badge.png} \hfill
     \includegraphics[width=0.48\linewidth]{images/results_CALMS/cifar_softmax_badge.png}
-    \caption{Agreement Comparison for Model Stealing on CIFAR-10 using the Active Learning strategy \gls{badge}. Left: Training with predicted class label,
-    Right: Training with softmax output}
+    \caption{Agreement comparison for model stealing on CIFAR-10 using the active learning strategy \gls{badge}.}
     \label{fig:CALMSCIFAR10Badge}
 \end{figure}
 
@@ -525,14 +518,13 @@ In this section, we present the full runs of all experiments which involve Conti
 
 \subsubsection{CIFAR-100}
 \label{sec:Appendix:CALMS:CIFAR100}
-In this section, we present the full runs of all experiments which involve Continual Active Learning using CIFAR-100 as a Target Model Dataset.
+In this section, we present the complete runs of all experiments which involve continual active learning using CIFAR-100 as a target model dataset.
 
 \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.48\linewidth]{images/results_CALMS/cifar100_label_random.png} \hfill
     \includegraphics[width=0.48\linewidth]{images/results_CALMS/cifar100_softmax_random.png}
-    \caption{Agreement Comparison for Model Stealing on CIFAR-100 using the Active Learning strategy Random. Left: Training with predicted class label,
-    Right: Training with softmax output}
+    \caption{Agreement comparison for model stealing on CIFAR-100 using the active learning strategy Random.}
     \label{fig:CALMSCIFAR100Random}
 \end{figure}
 
@@ -540,8 +532,7 @@ In this section, we present the full runs of all experiments which involve Conti
     \centering
     \includegraphics[width=0.48\linewidth]{images/results_CALMS/cifar100_label_lc.png} \hfill
     \includegraphics[width=0.48\linewidth]{images/results_CALMS/cifar100_softmax_lc.png}
-    \caption{Agreement Comparison for Model Stealing on CIFAR-100 using the Active Learning strategy \gls{lc}. Left: Training with predicted class label,
-    Right: Training with softmax output}
+    \caption{Agreement comparison for model stealing on CIFAR-100 using the active learning strategy \gls{lc}.}
     \label{fig:CALMSCIFAR100LC}
 \end{figure}
 
@@ -549,8 +540,7 @@ In this section, we present the full runs of all experiments which involve Conti
     \centering
     \includegraphics[width=0.48\linewidth]{images/results_CALMS/cifar100_label_bald.png} \hfill
     \includegraphics[width=0.48\linewidth]{images/results_CALMS/cifar100_softmax_bald.png}
-    \caption{Agreement Comparison for Model Stealing on CIFAR-100 using the Active Learning strategy \gls{bald}. Left: Training with predicted class label,
-    Right: Training with softmax output}
+    \caption{Agreement comparison for model stealing on CIFAR-100 using the active learning strategy \gls{bald}.}
     \label{fig:CALMSCIFAR100BALD}
 \end{figure}
 
@@ -558,8 +548,7 @@ In this section, we present the full runs of all experiments which involve Conti
     \centering
     \includegraphics[width=0.48\linewidth]{images/results_CALMS/cifar100_label_coreset.png} \hfill
     \includegraphics[width=0.48\linewidth]{images/results_CALMS/cifar100_softmax_coreset.png}
-    \caption{Agreement Comparison for Model Stealing on CIFAR-100 using the active learning strategy CoreSet. Left: Training with predicted class lLabel,
-    Right: Training with softmax output}
+    \caption{Agreement comparison for model stealing on CIFAR-100 using the active learning strategy CoreSet.}
     \label{fig:CALMSCIFAR100CoreSet}
 \end{figure}
 
@@ -567,13 +556,13 @@ In this section, we present the full runs of all experiments which involve Conti
 
 \subsubsection{VAAL and A-GEM}
 \label{sec:Appendix:CALMS:VAALAGEM}
-In the following we list the full results for the experiments using \gls{vaal} and \gls{a-gem} on the dataset MNIST, CIFAR-10 and CIFAR-100.
+In the following we list the complete results for the experiments using \gls{vaal} and \gls{a-gem} on the datasets MNIST, CIFAR-10 and CIFAR-100.
 \begin{figure}[!htb]
     \centering
-    \includegraphics[width=0.32\linewidth]{images/results_CALMS/mnist_vaal_agem.png} 
+    \includegraphics[width=0.316\linewidth]{images/results_CALMS/mnist_vaal_agem.png} 
     \includegraphics[width=0.32\linewidth]{images/results_CALMS/cifar_vaal_agem.png}
-    \includegraphics[width=0.32\linewidth]{images/results_CALMS/cifar100_vaal_agem.png}
-    \caption{Agreement Comparison for Model Stealing using \gls{vaal} and \gls{a-gem}. Left: MNIST, Middle: CIFAR-10, Right: CIFAR-100}
+    \includegraphics[width=0.316\linewidth]{images/results_CALMS/cifar100_vaal_agem.png}
+    \caption{Agreement comparison for model stealing using \gls{vaal} and \gls{a-gem}.}
     \label{fig:CALMS_VAAL_AGEM}
 \end{figure}
 
@@ -582,22 +571,22 @@ In the following we list the full results for the experiments using \gls{vaal} a
 
 While we managed to reproduce the findings of Pal et al. for CIFAR-10, we failed to do so for MNIST. Since multiple training hyperparameters of the experiments
 presented in ActiveThief were not disclosed by the authors, we experiment with different combinations of hyperparameters, including varying the optimizer,
-the learning rate, the number of training epochs, the batch size and switching between cold start and warm start for active learning. Sadly, we were still
+the learning rate, the number of training epochs, the batch size, and switching between cold start and warm start for active learning. Sadly, we were still
 not able to reproduce the results of ActiveThief on MNIST. After conducting the experiments in section \ref{sec:Evaluation:MS}, we decided to investigate
 another hyperparameter: training with or without data augmentation. For this set of experiments, we leave all hyperparameters equal to the previous experiments,
-apart from the data augmentation. We underline that using or not using data augmentation for model stealing refers to the thief dataset, not on the target
+apart from data augmentation. We underline that using or not using data augmentation for model stealing refers to the thief dataset, not the target
 model dataset. Training the target model is always done using data augmentation. We perform the same model stealing attacks as before, using MNIST and
-CIFAR-10 as target model dataset and present the results in figure \ref{fig:Evaluation:Results:CAL:EffectAugmentation}. When performing model stealing attacks
+CIFAR-10 as the target model dataset and present the results in figure \ref{fig:Evaluation:Results:CAL:EffectAugmentation}. When performing model stealing attacks
 without data augmentation on CIFAR-10, we notice that model agreement, both for active learning and continual active learning, is significantly lower than
 when using data augmentation. In this scenario, continual active learning with data augmentation performs on par with active learning without data augmentation.
-However, when using MNISTas target model dataset, the results are reversed. Here, model agreement is significantly lower when using data augmentation.
+However, when using MNIST as the target model dataset, the results are reversed. Here, model agreement is significantly lower when using data augmentation.
 More importantly, continual active learning without data augmentation shows performance comparable to active learning with data augmentation. \par
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.48\linewidth]{images/results_CALMS/data_augmentation_cifar.png} \hfill
     \includegraphics[width=0.48\linewidth]{images/results_CALMS/data_augmentation_mnist.png}
-    \caption{Comparison of Model Agreement with and without data augmentation. Left: Experiments with CIFAR-10. Right: Experiments with MNIST.}
+    \caption{Comparison of Model Agreement with and without data augmentation.}
     \label{fig:Evaluation:Results:CAL:EffectAugmentation}
 \end{figure}
 
