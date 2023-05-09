@@ -26,7 +26,7 @@ original papers for any further details. \par
 
 \subsection{Least Confidence}
 \label{sec:Related_work:Active_Learning:Least_Confidence}
-Least confidence (\gls{lc}) is one of the earlier approaches to active learning. \gls{lc} is an uncertainty-based \gls{al}
+Least confidence (\gls{lc}) is one of the earlier approaches to active learning. \gls{lc} is an uncertainty-based active learning
 approach proposed by Lewis et al. \cite{lewis1995sequential} in 1994. The idea behind \gls{lc} is that the next points to label should be the 
 ones with the lowest prediction probability. More formally, the data queried will be the following:
 \begin{equation}
@@ -72,7 +72,7 @@ four times slower. Therefore, we omit the proposed algorithm in this section.
 
 \subsection{Bayesian Active Learning by Disagreement}
 \label{sec:Related_work:Active_Learning:BALD}
-Bayesian active learning by disagreement (\gls{bald}) is an uncertainty-based \gls{al} strategy proposed by Houlsby et al. 
+Bayesian active learning by disagreement (\gls{bald}) is an uncertainty-based active learning strategy proposed by Houlsby et al. 
 \cite{houlsby2011bayesian}. \gls{bald} uses Shannon's entropy \cite{cover1991information} to determine a model's prediction uncertainty for a given
 unlabeled data point. More precisely, a learner using \gls{bald} will query the sample(s) fulfilling the following condition
 \begin{equation}
@@ -168,7 +168,7 @@ a detailed explanation of these approaches, we refer to the original papers for 
 \label{sec:Related_work:Continual_Learning:EWC}
 Elastic weight consolidation (\gls{ewc}) \cite{kirkpatrick2017overcoming} is a structural regularization approach proposed by Kirkpatrick et al.
 \gls{ewc} was the first approach aiming to overcome catastrophic forgetting by regularizing model parameters. This is done by adding a regularization
-term to the loss function, which resembles $l_2$-regularization. The regularization loss is introduced to constrain important parameters for
+term to the loss function, which resembles $l_2$ regularization. The regularization loss is introduced to constrain important parameters for
 task $N-1$ to stay close to their previous values when training on task $N$. To come up with an importance measure for the parameters,
 Kirkpatrick et al. view neural network training from a probabilistic perspective, modeling the weight distribution using the Bayes rule:
 \begin{equation}
@@ -211,7 +211,7 @@ effect of small changes to the network parameters on the prediction can be appro
 \end{equation}
 where $g_i(x_k) = \frac{\partial(f(x_k;\theta))}{\partial \theta_i}$  is the gradient with respect to parameter $\theta_i$ when evaluating the model at
 input $x_k$. Since most classification models, like neural networks, for example, have a multi-dimensional output Aljundi et al. propose to use the gradient
-of the squared $l_2$-Norm in this setting, i.e. $g_i(x_k) =  \frac{\partial[l^2_2(f(x_k;\theta))]}{\partial \theta_i}$. With the approximation given by the
+of the squared $l_2$ norm in this setting, i.e. $g_i(x_k) =  \frac{\partial[l^2_2(f(x_k;\theta))]}{\partial \theta_i}$. With the approximation given by the
 equation above, the authors claim that the importance of a parameter $\theta_i$ can be computed as
 \begin{equation}
     \omega_i = \frac{1}{n} \sum_{k=1}^n \lVert g_i(x_k) \rVert
@@ -308,8 +308,8 @@ the model parameters are pairwise independent, making the covariance matrix diag
 Apart from moment matching methods, \gls{imm} also includes approaches to transfer model parameters from previous tasks. The first approach is called
 weight transfer. When using continual learning with weight transfer, the parameters of the previous task are used as initialization for the
 current task. This approach is very similar to the term warm start commonly used in active learning. $l_2$-transfer, which is a special form of 
-$l_2$-regularization, is the next transfer technique. $l_2$-transfer can be seen as a special form of \gls{ewc} where all the $F_i$s are set to 1. 
-With $l_2$ transfer, the loss function is altered to
+$l_2$ regularization, is the next transfer technique. $l_2$-transfer can be seen as a special form of \gls{ewc} where all the $F_i$s are set to 1. 
+With $l_2$-transfer, the loss function is altered to
 \begin{equation}
     \log p(y_N \mid X_N, \mu_N) - \lambda \cdot {\lVert \mu_N - \mu_{N-1} \rVert}^2_2
 \end{equation}
@@ -375,7 +375,7 @@ active learning.
 \subsection{ActiveThief}
 \label{sec:Related_work:Model_Stealing:ActiveThief}
 ActiveThief is a novel model stealing approach proposed by Pal et al. \cite{pal2020activethief}. Inspired by prior theoretical \cite{chandrasekaran2020exploring}
-and practical work \cite{shi2018active}, they use \gls{al} to choose which samples to query the target model. Using \gls{al} in the model stealing
+and practical work \cite{shi2018active}, they use active learning to choose which samples to query the target model. Using active learning in the model stealing
 domain provides three major benefits: First, it makes it easier for the attacker to create a thief dataset. Data is abundant nowadays, whereas labeling large amounts
 of data remains a time-intensive task. By using active learning, which works on unlabeled data, creating a thief dataset is sped up immensely.
 Second, active learning aims to query the most informative samples, yielding the most performant model with as little data as possible. Third, by using samples selected

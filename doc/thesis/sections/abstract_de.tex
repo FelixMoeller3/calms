@@ -16,7 +16,7 @@ Der Fortschritt von Maschinellem Lernen und insbesondere von Deep Learning hat d
 die Architektur moderner Modelle immer komplexer wird und diese Modelle auf großen Mengen annotierter Daten trainiert werden müssen. Technologieunternehmen wie Google,
 Amazon und Microsoft haben jedoch Zugang zu einer großen Menge an Rechenleistung, die sie monetarisieren, indem sie Machine Learning as a Service (\gls{mlaas}) anbieten.
 \gls{mlaas}-Plattformen ermöglichen es Kunden, ihre Modelle in der Cloud zu trainieren und über Vorhersage-\glspl{api} öffentlich zugänglich zu machen.
-Während \gls{mlaas} Machine Learning zugänglicher macht, birgt es auch ein Sicherheitsrisiko. Vorangegangene Forschungsarbeiten haben gezeigt, dass es möglich ist,
+Während \gls{mlaas} Machine Learning zugänglicher macht, birgt es zugleich Sicherheitsrisiken. Vorangegangene Forschungsarbeiten haben gezeigt, dass es möglich ist,
 eine Vielzahl an Eigenschaften (z.B. Trainingsdaten \cite{shokri2017membership} und Architektur \cite{oh2019towards}) des Modells hinter der Vorhersage-\gls{api}
 \parencite{papernot2017practical,tramer2016stealing} zu inferieren. Wir konzentrieren uns jedoch ausschließlich auf das Stehlen der \textit{Funktionalität} des Zielmodells,
 also seine Fähigkeit, die richtige Klasse eines gegebenen Eingabebildes vorherzusagen. In dieser Arbeit bauen wir auf ActiveThief \cite{pal2020activethief} auf. ActiveThief
@@ -27,5 +27,3 @@ das ActiveThief Framework und untersuchen, ob unsere Erkenntnisse aus dem tradit
 dass Continual Active Learning nicht die Genauigkeit von ActiveThief erreicht, insbesondere wenn mit dem vorhergesagten Label des Zielmodells trainiert wird. Zuletzt zeigen wir,
 dass Continual Learning davon profitiert, wenn mit den Vorhersagewahrscheinlichkeiten des Zielsmodells trainiert wird, was bereits bei vorherigen Model-Stealing-Angriffen
 beobachtet wurde \parencite{orekondy2019knockoff,pal2020activethief}.
-
-%TODO: Redo abstract to fit english version

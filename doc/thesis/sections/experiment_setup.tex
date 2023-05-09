@@ -60,7 +60,7 @@ We tried setting $c$ to 1.0. However, we noticed that this led to divergence dur
 stronger gradient clipping was not a viable solution, because it impedes model convergence, we decided to relax the regularization parameter $c$ to 0.5. \par
 As mentioned, we employ gradient clipping to ensure convergence of gradient descent. Not only is gradient clipping a viable remedy against the exploding
 gradient problem, but Zhang et al. have demonstrated, that it can accelerate the training process \cite{zhang2019gradient}. In our implementation, we clip gradients by their
-$l_2$-norm. Across all continual learning procedures, including Naive, we clip the gradients to a maximum $l_2$-norm of 20.0 to accelerate the training process.
+$l_2$ norm. Across all continual learning procedures, including Naive, we clip the gradients to a maximum $l_2$ norm of 20.0 to accelerate the training process.
 When conducting experiments with \gls{mas} and \gls{alasso} we encountered exploding gradient problems, which we further investigated for \gls{mas} and \gls{alasso}
 separately. While we aimed to eliminate the exploding gradient problem, which is mitigated more by clipping smaller gradients, we did not want to restrict the
 model too much to hinder model convergence. After carefully exploring different values to clip at, we found setting the threshold for the $l_2$-Norm to 2.0
@@ -113,7 +113,7 @@ layout of the three ActiveThiefConv architectures in appendix \ref{sec:Appendix:
 We use PyTorch's \gls{sgd} optimizer with a learning rate of 0.1 across all experiments. Furthermore, we schedule the learning rate by a factor of 0.1. The number of
 epochs after which we schedule the learning rate differs between experiments. Furthermore, we re-instantiate the \gls{sgd} optimizer after each active learning
 iteration. We will go into detail on this in the description of the respective experiments. Apart from scheduling the learning rate, we use momentum \cite{cutkosky2020momentum}
-of 0.9 and $l_2$-regularization of 0.0005. For all experiments, we use a batch size of 128 and shuffle the entire training set before each epoch.
+of 0.9 and $l_2$ regularization of 0.0005. For all experiments, we use a batch size of 128 and shuffle the entire training set before each epoch.
 
 
 \section{Special Setup for Continual Active Learning}
@@ -132,14 +132,14 @@ When transferring continual active learning to the model stealing domain, we cha
 model architecture, we use the \gls{cnn} architecture from the ActiveThief paper \cite{pal2020activethief}, mainly because we want to compare our continual active learning approach to
 the framework proposed by the authors of ActiveThief. For most of our experiments, we use ActiveThiefConv3 apart from experiments investigating the effect of the model 
 architecture on model stealing attacks. We train the target models on the datasets CIFAR-10, CIFAR-100, and MNIST. We train the target models on CIFAR-10 and CIFAR-100 for
-150 epochs using a momentum of 0.9 and $l_2$-regularization of 0.0005 without learning rate decay. When training the target models on MNIST, we change the number of epochs to 50.
+150 epochs using a momentum of 0.9 and $l_2$ regularization of 0.0005 without learning rate decay. When training the target models on MNIST, we change the number of epochs to 50.
 We omit to retrain the target model for all model stealing attacks. Instead, we train one target model per dataset, save them to the disk and load them for all model stealing
 attacks. This way, we reduce the uncertainty in our experiments introduced by different weight initializations of the target model. We use Small ImageNet as our thief dataset for all model stealing attacks. \par
 Similar to the classic continual learning setting, we compute a baseline with active learning for model stealing. For this baseline, we use active learning with a batch size of 1,000
 and a total budget of 20,000 points. The models are trained using cold start for 200 epochs per iteration. We decay the learning rate by ten after 100 and 150 epochs. \par
 For continual active learning for model stealing, we use a batch size of 2,000 and a total budget of 20,000. We decided to increase the batch size for continual active learning compared
 to pure active learning because we noticed a clear correlation between batch size and model performance when training using continual active learning. We train the substitute model for
-150 epochs per iteration and decay the learning rate by ten after 80 and 120 epochs with a momentum of and $l_2$-regularization of 0.0005.
+150 epochs per iteration and decay the learning rate by ten after 80 and 120 epochs with a momentum of and $l_2$ regularization of 0.0005.
 
 \section{Evaluation Metrics}
 \label{sec:Methodology:Metrics}
