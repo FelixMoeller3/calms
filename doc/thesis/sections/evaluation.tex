@@ -26,7 +26,7 @@ continual learning strategies. Next, we evaluate the performance of our custom r
 test the combination of exemplar rehearsal continual learning and representation-based active learning.
 
 \subsection{Regularization-based Continual Learning}
-\label{sec:Evaluation:Results:CAL:ALRegCL}
+\label{sec:Evaluation:CAL:ALRegCL}
 We start our experiments by running each combination of the Active Learning strategies \gls{bald},\gls{badge},CoreSet,\gls{lc} and Random with the Continual Learning
 strategies Naive, \gls{ewc}, \gls{mas}, \gls{alasso} and \gls{imm}. We use the dataset CIFAR-10, the Neural Network Architecture ResNet18 and a batch size of 4000 for these experiments. For each experiment,
 we present the validation accuracy with increasing size of the labeled pool as well as the overall execution time of each experiment. The results by validation accuracy and by execution time are shown in 
@@ -112,7 +112,7 @@ We assume this is because \gls{badge} selects more representative samples than t
 
 
 \subsubsection{Influence of Batch Size}
-\label{sec:Evaluation:Results:CAL:BatchSize}
+\label{sec:Evaluation::CAL:ALRegCL:BatchSize}
 Next, we study how the batch size of the selected active learning algorithm influences the results. To do so, we re-run each experiment from figure \ref{fig:Evaluation:CAL:4000bAcc}
 with batch size 1,000 and 2,000. In this section, we only show the results for \gls{badge}, since the results for the other active learning strategies are similar. For completeness, we
 present the results of the other active learning strategies in appendix \ref{sec:Appendix:ContinualActiveLearning}. \par
@@ -138,7 +138,7 @@ to the batch size, whereas the query time remains constant because the batch siz
     \includegraphics[width=0.32\linewidth]{images/results_CAL/badge_4000b_acc.png}
     \caption[Continual Active Learning with \gls{badge} with varying batch size]{Comparison of validation accuracy of Continual Learning strategies used with the Active Learning strategy
     \gls{badge}.}
-    \label{fig:Evaluation:Results:CAL:VaryBatchSizeAcc}
+    \label{fig:Evaluation:CAL:VaryBatchSizeAcc}
 \end{figure}
 
 
@@ -166,12 +166,12 @@ to the batch size, whereas the query time remains constant because the batch siz
         4000 & 362000 \\
     \end{tabular}
     \caption{Total number of training points for varying batch sizes on the CIFAR-10 dataset}
-    \label{fig:NumberOfTrainingPoints}
+    \label{fig:Evaluation:CAL:NumberOfTrainingPoints}
 \end{table}
 
 
 \subsubsection{Delaying the Start of Continual Learning}
-\label{sec:Evaluation:Results:CAL:Hybrid}
+\label{sec:Evaluation:CAL:ALRegCL:Hybrid}
 After running the experiments in figure \ref{fig:Evaluation:CAL:4000bAcc}, we notice that all of them demonstrate a significant discrepancy in validation accuracy
 between active learning and continual active learning. To further investigate this gap, we evaluate a hybrid approach where we run active learning for the first $i$
 iterations before switching to continual active learning. With these experiments we hope to decrease the gap in validation accuracy to active learning. We vary $i$
@@ -188,11 +188,11 @@ experiments. \par
     \includegraphics[width=0.45\linewidth]{images/results_CAL/delayed_start_badge_ewc.png} \hfill
     \includegraphics[width=0.45\linewidth]{images/results_CAL/delayed_start_badge_mas.png}
     \caption{Comparison of validation accuracy for a delayed start of Continual Learning.}
-    \label{fig:Evaluation:Results:CAL:DelayedStart}
+    \label{fig:Evaluation:CAL:DelayedStart}
 \end{figure}
 
 \subsubsection{Varying the initialization of the labeled pool}
-\label{sec:Evaluation:Results:CAL:Initialization}
+\label{sec:Evaluation:CAL:Initialization}
 Motivated by the findings from the previous section, we wonder if the initialization of the labeled pool has an impact on the validation accuracy of the continual learning strategies.
 Beck et al. \cite{beck2021effective} show that using a facility location selection \cite{iyer2021submodular} yields better validation accuracy when training on the initial labeled pool.
 We therefore test the effect of an initialization using facility location selection compared to our random initialization. As our active learning strategy, we use \gls{badge} with
@@ -206,12 +206,12 @@ location takes about 24 hours to complete and requires more than 100GB of memory
     \centering
     \includegraphics[width=0.7\linewidth]{images/results_CAL/Facility_location_init.png}
     \caption{Comparison of validation accuracy for facility location initialization and random initialization}
-    \label{fig:Evaluation:Results:CAL:FLinit}
+    \label{fig:Evaluation:CAL:FLinit}
 \end{figure}
 
 
 \subsection{Replay Continual Learning}
-\label{sec:Evaluation:Results:CAL:Replay}
+\label{sec:Evaluation:CAL:Replay}
 In section \ref{sec:Methodology:ReplayStrategy} we introduced a custom replay strategy for Continual Active Learning. The use of our replay strategy is motivated by the main
 finding of section \ref{sec:Evaluation:Results:CAL:BatchSize}: the validation accuracy increases with an increased batch size. In this set of experiments, we use the active
 learning strategy CoreSet and vary the batch size as well as the size of the replay buffer. Moreover, we investigate the effect of CoreSet selection in the replay buffer
@@ -253,7 +253,7 @@ the batch size. The batch size has no impact on execution time because it does n
 
 
 \subsection{Exemplar Rehearsal Continual Learning and Representation-based Active Learning}
-\label{sec:Evaluation:Results:CAL:VAAL_AGEM}
+\label{sec:Evaluation:CAL:VAAL_AGEM}
 Unsatisfied with the results from previous experiments, we decide to implement further Continual and Active Learning strategies. We perform an extensive literature search,
 investigating the suitability of representation-based active learning strategies and continual learning strategies from the exemplar rehearsal category in the summary paper
 by Mundt et al. \cite{mundt2020wholistic}. The active learning strategy which we implement is \gls{vaal} \cite{sinha2019variational} and the continual learning strategy is
@@ -277,7 +277,7 @@ explains why training discriminator and \gls{vae} for more epochs does not incre
     \includegraphics[width=0.46\linewidth]{images/results_CAL/vaal_disc_epochs.png}
     \caption[Continual Active Learning Custom Replay strategy]{Left: Comparison of validation accuracy of \gls{vaal} to the Active Learning strategies Random and CoreSet.
     Right: Comparison of validation accuracy when varying the training epochs for \gls{vae} and Discriminator.}
-    \label{fig:Evaluation:Results:CAL:VAAL}
+    \label{fig:Evaluation:CAL:VAAL}
 \end{figure}
 
 Next, we experiment with \gls{a-gem}. \gls{a-gem} has two hyperparameters: $S$, which is the number of samples randomly drawn from the memory to compute the reference
