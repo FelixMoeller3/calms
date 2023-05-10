@@ -468,3 +468,4 @@ TSWLatexianTemp*
 data/*
 experiments/temp/*
 *.ist
+!doc/thesis/thesis.pdf
