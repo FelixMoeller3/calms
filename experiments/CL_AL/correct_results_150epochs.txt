@@ -7743,3 +7743,243 @@ Continual Learning Strategy: MAS
 Active Learning Strategy: Badge
 Accuracy results at the end of each cycle: [0.6609, 0.674, 0.7005, 0.7105, 0.7193, 0.7231, 0.7247, 0.731, 0.7422, 0.7441, 0.7472, 0.7407, 0.7507, 0.7346, 0.7617, 0.7589, 0.7676, 0.7549, 0.7626, 0.7601, 0.7624, 0.7462, 0.7555, 0.741, 0.6986]
 ----------------------------------------------------------------------
+Run completed at 2023-04-29 16:16:12 after 08h:07m:25s
+Config File: BATCH_SIZE: 128
+CYCLES: 12
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: correct_results_150epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SAVE_STATE: false
+STATE_DIR: ./experiments/temp/badge_imm/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 4000
+    COLD_START: false
+    INIT_BUDGET: 4000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: Badge
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    ALPHAS:
+    - 0.45
+    - 0.55
+    NAME: IMM
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 80
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+    WEIGHT: 1.0
+  CONTINUAL: -1
+  DATASET: CIFAR-10
+  NAME: Resnet18
+  USE_AUGMENTATION: true
+  USE_LABEL: true
+TARGET_MODEL:
+  DATASET: CIFAR-10
+  EPOCHS: 150
+  MODEL: ActiveThiefConv3
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: active_thief_conv3.pt
+  TARGET_MODEL_FOLDER: ./data/models/cifar10/
+  TRAIN_MODEL: false
+  USE_AUGMENTATION: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: IMM
+Active Learning Strategy: Badge
+Accuracy results at the end of each cycle: [0.6855, 0.7789, 0.8198, 0.8353, 0.8331, 0.8335, 0.8444, 0.8427, 0.8389, 0.8158, 0.7959, 0.659, 0.649]
+----------------------------------------------------------------------
+Run completed at 2023-04-29 16:21:23 after 08h:12m:36s
+Config File: BATCH_SIZE: 128
+CYCLES: 12
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: correct_results_150epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SAVE_STATE: false
+STATE_DIR: ./experiments/temp/badge_ewc/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 4000
+    COLD_START: false
+    INIT_BUDGET: 4000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: Badge
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: EWC
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 80
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    SCHEDULE: false
+    USE_GPU: true
+    WEIGHT: 1.0
+  CONTINUAL: -1
+  DATASET: CIFAR-10
+  NAME: Resnet18
+  USE_AUGMENTATION: true
+  USE_LABEL: true
+TARGET_MODEL:
+  DATASET: CIFAR-10
+  EPOCHS: 150
+  MODEL: ActiveThiefConv3
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: active_thief_conv3.pt
+  TARGET_MODEL_FOLDER: ./data/models/cifar10/
+  TRAIN_MODEL: false
+  USE_AUGMENTATION: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: EWC
+Active Learning Strategy: Badge
+Accuracy results at the end of each cycle: [0.7153, 0.8076, 0.8245, 0.8433, 0.8433, 0.8515, 0.8446, 0.8425, 0.841, 0.8136, 0.7856, 0.7488, 0.7379]
+----------------------------------------------------------------------
+Run completed at 2023-04-29 16:26:01 after 08h:17m:14s
+Config File: BATCH_SIZE: 128
+CYCLES: 12
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: correct_results_150epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SAVE_STATE: false
+STATE_DIR: ./experiments/temp/al_badge_naive/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 4000
+    COLD_START: true
+    INIT_BUDGET: 4000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: Badge
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: Naive
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 80
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    USE_GPU: true
+  CONTINUAL: -1
+  DATASET: CIFAR-10
+  NAME: Resnet18
+  USE_AUGMENTATION: true
+  USE_LABEL: true
+TARGET_MODEL:
+  DATASET: CIFAR-10
+  EPOCHS: 150
+  MODEL: ActiveThiefConv3
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: active_thief_conv3.pt
+  TARGET_MODEL_FOLDER: ./data/models/cifar10/
+  TRAIN_MODEL: false
+  USE_AUGMENTATION: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: Naive
+Active Learning Strategy: Badge
+Accuracy results at the end of each cycle: [0.7125, 0.8077, 0.8292, 0.8304, 0.8343, 0.8442, 0.8468, 0.8425, 0.839, 0.8203, 0.7925, 0.7516, 0.7445]
+----------------------------------------------------------------------
+Run completed at 2023-04-29 16:29:47 after 08h:21m:00s
+Config File: BATCH_SIZE: 128
+CYCLES: 12
+EPOCHS: 150
+RECOVER_STATE: false
+RESULTS_FILE: correct_results_150epochs.txt
+RESULTS_FOLDER: ./experiments/CL_AL/
+SAVE_STATE: false
+STATE_DIR: ./experiments/temp/badge_mas/
+SUBSTITUTE_MODEL:
+  AL_METHOD:
+    BATCH: 128
+    BUDGET: 4000
+    COLD_START: false
+    INIT_BUDGET: 4000
+    INIT_MODE: random
+    LOOKBACK: 1
+    NAME: Badge
+    NO_CLASSES: 10
+    USE_GPU: true
+  CL_METHOD:
+    NAME: MAS
+    OPTIMIZER:
+      LR: 0.1
+      MILESTONES:
+      - 80
+      - 120
+      MOMENTUM: 0.9
+      NAME: SGD
+      WDECAY: 0.0005
+    SCHEDULE: false
+    USE_GPU: true
+    WEIGHT: 1.0
+  CONTINUAL: -1
+  DATASET: CIFAR-10
+  NAME: Resnet18
+  USE_AUGMENTATION: true
+  USE_LABEL: true
+TARGET_MODEL:
+  DATASET: CIFAR-10
+  EPOCHS: 150
+  MODEL: ActiveThiefConv3
+  OPTIMIZER:
+    LR: 0.001
+    MILESTONES:
+    - 160
+    - 240
+    MOMENTUM: 0.9
+    NAME: SGD
+    WDECAY: 0.0005
+  TARGET_MODEL_FILE: active_thief_conv3.pt
+  TARGET_MODEL_FOLDER: ./data/models/cifar10/
+  TRAIN_MODEL: false
+  USE_AUGMENTATION: true
+
+Model: Resnet18, trained on CIFAR-10
+Continual Learning Strategy: MAS
+Active Learning Strategy: Badge
+Accuracy results at the end of each cycle: [0.7603, 0.7895, 0.8071, 0.8131, 0.8219, 0.8241, 0.8194, 0.8184, 0.8204, 0.8175, 0.8157, 0.7942, 0.7856]
+----------------------------------------------------------------------

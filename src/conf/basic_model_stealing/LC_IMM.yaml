@@ -2,7 +2,7 @@ SUBSTITUTE_MODEL:
   NAME: 'ActiveThiefConv3' # Possible values: Resnet18,Resnext50,TestConv
   DATASET: 'SmallImageNet1'
   CONTINUAL: -1
-  USE_LABEL: True
+  USE_LABEL: False
   USE_AUGMENTATION: True
   AL_METHOD: 
     NAME: 'LC' # Possible values: LC,BALD,Badge,CoreSet,Random
