@@ -186,7 +186,7 @@ There are structural approaches that regularize based on weight changes to the m
 approaches that regularize based on model output. Structural approaches determine an importance weight for each
 model parameter. Popular approaches either use Fisher information \parencite{kirkpatrick2017overcoming,lee2017overcoming} or
 gradient information \parencite{aljundi2018memory,zenke2017continual}. The idea of structural regularization approaches is visualized in
-figure \ref{fig:ContinualLearning:ReulgarizationIdea}. \par
+figure \ref{fig:ContinualLearning:RegularizationIdea}. \par
 Functional regularization approaches are inspired by knowledge distillation \cite{hinton2015distilling}. They add a distillation
 loss to the objective function, which is computed based on the prediction of a data sample stored for future use. These data samples
 are called soft targets. Li et al. \cite{li2017learning} compute the distillation loss by using the output of the newly arrived task
@@ -196,12 +196,12 @@ compute the distillation loss \cite{rannen2017encoder}.
 
 \begin{figure} [ht]
     \centering
-    \label{fig:ContinualLearning:ReulgarizationIdea}
     \includegraphics[width=.9\linewidth]{images/regularization_idea.png}
     \caption[Idea of regularization-based continual learning]{Idea of regularization-based continual learning. Compared to $l_2$ regularization,
     regularization-based continual learning strategies apply dynamic regularization to the model's parameters with the aim of finding model
     weights which perform well on multiple tasks. The figure was inspired by Kirkpatrick et al. \cite{kirkpatrick2017overcoming}.}
-  \end{figure}
+    \label{fig:ContinualLearning:RegularizationIdea}
+\end{figure}
 
 \subsubsection{Rehearsal Approaches}
 \label{sec:RehearsalApproaches}

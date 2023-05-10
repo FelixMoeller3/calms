@@ -12,14 +12,14 @@
 
 \chapter{Related Work}
 \label{ch:Related_work}
-We present related work for this thesis in this chapter. First, we will outline the basic idea of each active learning strategy we
-use in our experiments. Next, we give an overview of the continual learning approaches we use. Finally, we will introduce ActiveThief, the
+We present related work for this thesis in this chapter. First, we outline the basic idea of each active learning strategy we
+use in our experiments. Next, we give an overview of the continual learning approaches we use. Finally, we introduce ActiveThief, the
 model stealing framework we extend in this thesis.
 
 
 \section{Active Learning}
 \label{sec:Related_work:Active_Learning}
-In this section, we will present the active learning strategies we will use in our experiments. These are least confidence
+In this section, we present the active learning strategies we used in our experiments. These are least confidence
 (\gls{lc}), CoreSet, bayesian active learning by disagreement (\gls{bald}), batch active learning by diverse gradient embeddings (\gls{badge}), and 
 variational adversarial active learning (\gls{vaal}). While we aim to give a detailed explanation of these approaches, we refer to the
 original papers for any further details. \par
@@ -27,7 +27,7 @@ original papers for any further details. \par
 \subsection{Least Confidence}
 \label{sec:Related_work:Active_Learning:Least_Confidence}
 Least confidence (\gls{lc}) is one of the earlier approaches to active learning. \gls{lc} is an uncertainty-based active learning
-approach proposed by Lewis et al. \cite{lewis1995sequential} in 1994. The idea behind \gls{lc} is that the next points to label should be the 
+approach proposed by Lewis et al. \cite{lewis1995sequential}. The idea behind \gls{lc} is that the next points to label should be the 
 ones with the lowest prediction probability. More formally, the data queried will be the following:
 \begin{equation}
     \argmin_{x \in U} \max_{y \in Y} p(y|x)
@@ -45,20 +45,20 @@ section \ref{sec:PoolBasedActiveLearning}) as
 \end{equation}
 where $L$ is the labeled set, $U$ is the unlabeled set and $b$ is the batch size.
 Informally, we select the data points to add to the labeled pool, which ensure the best loss approximation
-of a model trained on the labeled set compared to a model trained on the whole dataset. The authors assume zero training error, which
+of a model trained on the labeled set compared to a model trained on the whole dataset. The authors assume zero training error for the core-set, which
 simplifies the equation above to
 \begin{equation}
-    \frac{1}{|L \cup U|} \sum_{x_i,y_i \in L \cup U} \mathcal{L}(x_i,y_i;L \cup s^1)
+    \min_{s^1 \subseteq U: |s^1| \leq b } \frac{1}{|L \cup U|} \sum_{x_i,y_i \in L \cup U} \mathcal{L}(x_i,y_i;L \cup s^1).
 \end{equation}
-Sener and Savarese show that minimizing this equation is equivalent to solving the $k$-Center problem \cite{wolf2011facility}, i.e.
+Sener and Savarese show that minimizing this equation is equivalent to solving the $k$-Center problem \cite{wolf2011facility}, i.e.,
 \begin{equation}
-    \min_{s^1: |s^1| \leq b} \max_i \min_{j \in s^1 \cup L}  \Delta (x_i,x_j)
+    \min_{s^1: |s^1| \leq b} \max_i \min_{j \in s^1 \cup L}  \Delta (x_i,x_j).
 \end{equation}
 This problem is NP-hard but can be solved by the 2-OPT greedy algorithm presented in algorithm \ref{alg:kCenterGreedy}.
 \begin{algorithm}
     \caption{$k$-Center-Greedy} \label{alg:kCenterGreedy}
     \begin{algorithmic}
-        \Require data $x_i$, labeled pool $L$ and budget $b$
+        \Require Data $x_i$, labeled pool $L$ and budget $b$
         \State Initialize s = $L$
         \Repeat
         \State $u = \argmax_{x_i \in U \setminus s} \min_{x_j \in s} \Delta(x_i,x_j)$
@@ -93,12 +93,12 @@ active learning strategies perform well in the first few iterations, while uncer
 gradient with respect to the output layer as a measure of model uncertainty, similar to the ideas of Zhang et al. \cite{zhang2017active} and Settles et al. \cite{settles2007multiple}.
 Since \gls{badge} works on unlabeled data points, the gradient cannot be computed analytically because the label is unknown. Therefore, \gls{badge} uses the hypothetical
 label $\hat{y}(x)$ as a proxy for the true label and computes the gradient of the cross-entropy loss on the hypothetical label as an approximation of the
-actual gradient. To incorporate diversity, \gls{badge} uses $k$-means++ initialization \cite{arthur2007k} for the gradient embeddings to sample the next batch of data
+actual gradient. To incorporate diversity, \gls{badge} uses $k$-means++ seeding \cite{arthur2007k} for the gradient embeddings to sample the next batch of data
 points to label. The authors demonstrate \gls{badge}'s agnosticism towards model architecture, training hyperparameters, and datasets in mutliple experiments.
 \begin{algorithm}
     \caption{\gls{badge}} \label{alg:Badge}
     \begin{algorithmic}[1]
-        \Require Neural network $f(x;\theta)$, unlabeled pool $U$, labeled pool $L=\emptyset$, number of iterations $T$, bath size $b$
+        \Require Neural network $f(x;\theta)$, unlabeled pool $U$, labeled pool $L=\emptyset$, number of iterations $T$, batch size $b$
         \State Labeled dataset $L \leftarrow k$ random samples from $U$ together with their labels
         \State Train initial model $\theta_1$ on $L$
         \For{$t = 1,2,\ldots,T$}
@@ -120,7 +120,7 @@ points to label. The authors demonstrate \gls{badge}'s agnosticism towards model
 \subsection{Variational Adversarial Active Learning}
 \label{sec:Related_work:Active_Learning:VAAL}
 Variational adversarial active learning (\gls{vaal}) is a representation-based active learning strategy proposed by Sinha et al. \cite{sinha2019variational}. 
-\gls{vaal} uses a $\beta$-variational autoencoder (\gls{vae}) \cite{higgins2017beta} and a discriminator to select the most informative samples to query.
+\gls{vaal} uses a $\beta$-\gls{vae} \cite{higgins2017beta} and a discriminator to select the most informative samples to query.
 Thereby, the encoder learns a low-dimensional space for the distribution of the labeled and the unlabeled data reconstructed by the decoder. 
 The discriminator is trained to distinguish between the labeled and the unlabeled data and given the encoder's latent representation of a data point as an
 input. We provide a visual summary of the approach in figure \ref{fig:VAAL}. \par
@@ -159,10 +159,10 @@ pool or, in other words, least confident about their belonging to the labeled po
 
 \section{Continual Learning}
 \label{sec:Related_work:Continual_Learning}
-In this section, we will present the continual learning algorithms used in our experiments. These are elastic weight
-consolidation (\gls{ewc}) \cite{kirkpatrick2017overcoming}, memory aware synapses (\gls{mas}), asymmetric loss approximation by single-side overestimation
-(\gls{alasso}), incremental moment matching (\gls{imm}) and averaged gradient episodic memory (\gls{a-gem}) \cite{lopez2017gradient}. While we aim to give
-a detailed explanation of these approaches, we refer to the original papers for any further details. \par
+In this section, we present the continual learning algorithms used in our experiments. These are elastic weight
+consolidation (\gls{ewc}) \cite{kirkpatrick2017overcoming}, memory aware synapses (\gls{mas}) \cite{aljundi2018memory}, asymmetric loss approximation by single-side overestimation
+(\gls{alasso}) \cite{park2019continual}, incremental moment matching (\gls{imm}) \cite{lee2017overcoming} and averaged gradient episodic memory (\gls{a-gem}) \cite{lopez2017gradient}.
+While we aim to give a detailed explanation of these approaches, we refer to the original papers for any further details. \par
 
 \subsection{Elastic Weight Consolidation}
 \label{sec:Related_work:Continual_Learning:EWC}
@@ -176,7 +176,7 @@ Kirkpatrick et al. view neural network training from a probabilistic perspective
 \end{equation}
 When applying the logarithm, this can be rewritten as
 \begin{equation}
-    \log p(\theta \mid D) = \log p(D \mid \theta) + \log p(\theta) - \log p(D)
+    \log p(\theta \mid D) = \log p(D \mid \theta) + \log p(\theta) - \log p(D),
 \end{equation}
 and when splitting the whole dataset $D$ into $D_{1:N-1}$ and $D_N$, this equates to
 \begin{equation}
@@ -189,9 +189,9 @@ where
 \begin{equation}
     \mathbb{I}_{D_{1:N-1}} = \mathbb{E} [- \frac{\partial^2 \theta (\log (p(\theta \mid D_{1:N-1})))}{\partial^2 \theta} \mid_{\theta^*_{D_{1:N-1}}}]
 \end{equation} 
-which is the Fisher information matrix (\gls{fim}) as shown by Aich \cite{aich2021elastic}. A large value of $F_i$, the $i^{th}$ diagonal of the \gls{fim},
+which is the \gls{fim}, as shown by Aich \cite{aich2021elastic}. A large value of $F_i$, the $i^{th}$ diagonal of the \gls{fim},
 indicates a small variance in the posterior distribution of the parameter, meaning that it is important for previous tasks. Therefore, $F_i$, is used as an
-importance measure for the $i^{th}$ parameter. To conclude, the loss function for a Task $N$ is altered to
+importance measure for the $i^{th}$ parameter. To conclude, the loss function for a task $N$ is altered to
 \begin{equation}
     \mathcal{L}(\theta) = \mathcal{L}_B(\theta) + \sum_i \frac{\lambda}{2} F_i \cdot (\theta_i - \theta^*_{N-1,i})^2,
 \end{equation}
@@ -211,16 +211,16 @@ effect of small changes to the network parameters on the prediction can be appro
 \end{equation}
 where $g_i(x_k) = \frac{\partial(f(x_k;\theta))}{\partial \theta_i}$  is the gradient with respect to parameter $\theta_i$ when evaluating the model at
 input $x_k$. Since most classification models, like neural networks, for example, have a multi-dimensional output Aljundi et al. propose to use the gradient
-of the squared $l_2$ norm in this setting, i.e. $g_i(x_k) =  \frac{\partial[l^2_2(f(x_k;\theta))]}{\partial \theta_i}$. With the approximation given by the
+of the squared $l_2$ norm in this setting, i.e., $g_i(x_k) =  \frac{\partial[l^2_2(f(x_k;\theta))]}{\partial \theta_i}$. With the approximation given by the
 equation above, the authors claim that the importance of a parameter $\theta_i$ can be computed as
 \begin{equation}
-    \omega_i = \frac{1}{n} \sum_{k=1}^n \lVert g_i(x_k) \rVert
+    \Omega_i = \frac{1}{n} \sum_{k=1}^n \lVert g_i(x_k) \rVert
 \end{equation}
 where $n$ is the number of data points observed so far. The advantage of computing the importance measure as stated above is that it can be updated when-
-ever a new data point is observed. However, it is more efficient to update the $\omega$s batch-wise. The overall loss function for a task $N$ is
+ever a new data point is observed. However, it is more efficient to update the $\Omega$s batch-wise. The overall loss function for a task $N$ is
 then altered for the standard setting as follows
 \begin{equation}
-    \mathcal{L}(\theta) = \mathcal{L}_N(\theta) + \lambda \sum_i \omega_i \cdot (\theta_i - \theta^*_{N-1,i})^2
+    \mathcal{L}(\theta) = \mathcal{L}_N(\theta) + \lambda \sum_i \Omega_i \cdot (\theta_i - \theta^*_{N-1,i})^2
 \end{equation}
 where $\lambda$ again is the hyperparameter used to trade-off between learning new tasks and retaining the knowledge of previous tasks.
 
@@ -231,7 +231,7 @@ Asymmetric loss approximation by single-side overestimation (\gls{alasso}) is a 
 The main observation they made about \gls{si} is that it underestimates the true loss on the unobserved side of the loss
 function because it assumes that the loss function is symmetric. Park et al. first show that this assumption is not always correct through empirical observation
 and then present a new approach to approximate the loss function on the unobserved side. We present the fundamental observation and idea of \gls{alasso} in figure
-\ref{fig:Alasso}. Since \gls{alasso} extends the \gls{si} framework, we strongly recommend the reader familiarize themselves with \gls{si} before
+\ref{fig:Alasso}. Since \gls{alasso} extends the \gls{si} framework, we strongly recommend familiarizing with \gls{si} before
 trying to understand \gls{alasso}. In the following, we will assume that the reader is familiar with \gls{si} and only explain the extension that \gls{alasso}
 brings to \gls{si}. \par
 Since \gls{alasso} is a structural regularization method like \gls{mas} and \gls{ewc}, it alters the loss function as follows
@@ -249,8 +249,8 @@ $\alpha(\theta_k)$ is defined as follows
 The surrogate loss $\mathcal{L}^N_s(\theta_k,a)$ is then defined as follows
 % Loss estimation equation
 \begin{equation}
-    \mathcal{L}_s^n(\theta_k,a) = \begin{cases} \hat{\Omega}^N_k (\theta_k - \hat{\theta}_k)^2 & \text{if} \alpha(\theta_k) > 0 \\
-    (a \hat{\Omega}^N_k + \epsilon)(\theta_k - \hat{\theta}_k)^2 & \text{if} \alpha(\theta_k) \leq 0 \end{cases}.
+    \mathcal{L}_s^n(\theta_k,a) = \begin{cases} \hat{\Omega}^N_k (\theta_k - \hat{\theta}_k)^2 & \text{if } \alpha(\theta_k) > 0 \\
+    (a \hat{\Omega}^N_k + \epsilon)(\theta_k - \hat{\theta}_k)^2 & \text{if } \alpha(\theta_k) \leq 0 \end{cases}.
 \end{equation}
 Again, the variable $a (>1)$ is a hyperparameter used to control the amount of overestimation if the parameter is on the unobserved side of the loss function.
 The constant $\epsilon$ is used to make sure that the loss on the unobserved side is always overestimated, i.e., $(a \hat{\Omega}^N_k + \epsilon) > \hat{\Omega}^N_k$.
@@ -304,16 +304,16 @@ The mean and covariance update for mode-\gls{imm} is given by
     \Sigma^*_{1:N} = (\sum_{i=N-k}^N \alpha_i  \Sigma_i^{-1})^{-1}
 \end{gather}
 To approximate the covariance matrix, mode-\gls{imm} uses the inverse of the \gls{fim} like \gls{ewc}. Furthermore, the authors assume that
-the model parameters are pairwise independent, making the covariance matrix diagonal and therefore save computation. \par
+the model parameters are pairwise independent, making the covariance matrix diagonal and therefore saving computation. \par
 Apart from moment matching methods, \gls{imm} also includes approaches to transfer model parameters from previous tasks. The first approach is called
 weight transfer. When using continual learning with weight transfer, the parameters of the previous task are used as initialization for the
 current task. This approach is very similar to the term warm start commonly used in active learning. $l_2$-transfer, which is a special form of 
-$l_2$ regularization, is the next transfer technique. $l_2$-transfer can be seen as a special form of \gls{ewc} where all the $F_i$s are set to 1. 
+$l_2$ regularization, is the next transfer technique. $l_2$-transfer can be seen as a special form of \gls{ewc} where all the $F_i$ are set to one. 
 With $l_2$-transfer, the loss function is altered to
 \begin{equation}
     \log p(y_N \mid X_N, \mu_N) - \lambda \cdot {\lVert \mu_N - \mu_{N-1} \rVert}^2_2
 \end{equation}
-with $\lambda$ being a hyperparameter. The third transfer technique is \textbf{Drop-transfer}. Drop-transfer
+with $\lambda$ being a hyperparameter. The third transfer technique is drop-transfer. Drop-transfer
 \begin{equation}
     \hat{\mu}_{N,i} = \begin{cases} \mu_{N,i}, & \text{if the }i \text{th node is turned off} \\
     \frac{1}{1-p} \cdot \mu_{N,i} - \frac{p}{1-p} \cdot \mu_{N-1,i}, & \text{otherwise}  \end{cases}
@@ -346,21 +346,21 @@ being orthogonal to it. In algorithm \ref{alg:IMM}, we show the pseudocode for \
 \subsection{Averaged Gradient Episodic Memory}
 \label{sec:Related_work:Continual_Learning:AGEM}
 Averaged gradient episodic memory (\gls{a-gem}) is an exemplar rehearsal approach to continual learning, proposed by Chaudhry et al. \cite{chaudhry2018efficient}.
-\gls{a-gem} is based on gradient episodic memory (\gls{gem}) \cite{lopez2017gradient}, aiming to make it more efficient than \gls{gem} while maintaining similar or
+\gls{a-gem} is based on \gls{gem} \cite{lopez2017gradient}, aiming to make it more efficient while maintaining similar or
 even better performance. We recommend reading the original paper for a more detailed explanation of \gls{gem}. \par
 Like \gls{gem}, \gls{a-gem} uses a so-called episodic memory $M$ for all previous tasks $M_k (k<N)$. \gls{a-gem} aims to avoid catastrophic forgetting by ensuring
 that the average loss for the previous tasks does not increase while simultaneously aiming to minimize the loss on the current task. Formally, \gls{a-gem} proposes
 a solution to the following objective 
 \begin{equation}
-    \text{minimize}_\theta \hspace{0.2cm} \mathcal{L}(f_\theta,T_N) \text{ s.t. } \mathcal{L}(f_\theta,T) \leq l(f_\theta^{N-1},T) \text{ where } T = \bigcup_{i<N} T_i
+    \text{minimize}_\theta \hspace{0.2cm} \mathcal{L}(f_\theta,T_N) \text{ s.t. } \mathcal{L}(f_\theta,T) \leq l(f_\theta^{N-1},T) \text{ where } T = \bigcup_{i<N} T_i,
 \end{equation}
 where $f_\theta^{N-1}$ is the model trained for the previous task. The optimization problem for this objective is given as
 \begin{equation}
-    \text{minimize}_{\tilde{g}} \hspace{0.2cm} \frac{1}{2} {\lVert g - \tilde{g} \rVert}^2_2 \text{ s.t. } \tilde{g}^T g_{ref} \geq 0 \forall k < N
+    \text{minimize}_{\tilde{g}} \hspace{0.2cm} \frac{1}{2} {\lVert g - \tilde{g} \rVert}^2_2 \text{ s.t. } \tilde{g}^T g_{ref} \geq 0 \text{ } \forall k < N,
 \end{equation}
 where $g_{ref}$ is a gradient computed by randomly sampling from the episodic memory of all past tasks. The optimization problem has the solution 
 \begin{equation}
-    \tilde{g} = g - \frac{g^T g_{ref}}{g^T_{ref} g_{ref}} g_{ref}
+    \tilde{g} = g - \frac{g^T g_{ref}}{g^T_{ref} g_{ref}} g_{ref},
 \end{equation}
 which is the gradient update used by \gls{a-gem}. \par
 When running \gls{a-gem}, we need to decide on two hyperparameters: The first one is $S$, the number of samples from the episodic memory $M$ to compute $g_{ref}$. The second
@@ -378,12 +378,12 @@ ActiveThief is a novel model stealing approach proposed by Pal et al. \cite{pal2
 and practical work \cite{shi2018active}, they use active learning to choose which samples to query the target model. Using active learning in the model stealing
 domain provides three major benefits: First, it makes it easier for the attacker to create a thief dataset. Data is abundant nowadays, whereas labeling large amounts
 of data remains a time-intensive task. By using active learning, which works on unlabeled data, creating a thief dataset is sped up immensely.
-Second, active learning aims to query the most informative samples, yielding the most performant model with as little data as possible. Third, by using samples selected
-by active learning to query the target model, the model stealing attack can successfully be disguised as a benign query process. Pal et al. demonstrate this by showing 
+Second, active learning aims to query the most informative samples, yielding the most performant model with as little data as possible. Third, by querying the target model
+with samples selected by active learning, the model stealing attack can successfully be disguised as a benign query process. Pal et al. demonstrate this by showing 
 that ActiveThief successfully evades \gls{prada} \cite{juuti2019prada}, a state-of-the-art model stealing defense which detects attacks by analyzing the distribution of distances
 between queries. \par
 The authors of ActiveThief evaluate their framework using the active learning strategies Random, Uncertainty \cite{lewis1995sequential}, CoreSet \cite{sener2017active},
-DeepFool-based active learning (\gls{dfal}) \cite{ducoffe2018adversarial} and a custom combination of \gls{dfal} and CoreSet. They use a custom \gls{cnn} architecture
+\gls{dfal}\cite{ducoffe2018adversarial} and a custom combination of \gls{dfal} and CoreSet. They use a custom \gls{cnn} architecture
 for both the target and substitute model and show that ActiveThief can successfully steal the target model for multiple benchmark datasets such as MNIST and CIFAR-10.
 A visualization of the model stealing workflow proposed by Pal et al. is shown in figure \ref{fig:ActiveThief}.
 

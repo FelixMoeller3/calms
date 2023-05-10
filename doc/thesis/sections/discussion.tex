@@ -36,18 +36,18 @@ query time since the amount of data queried is the same for active learning and 
 execution time is by reducing the training time. \par
 \textbf{The main reason for the reduced training time is that continual active learning trains the model on significantly fewer data points than active learning.}
 In section \ref{sec:Methodology:CombiningCLandAL}, we derived that an active learning algorithm with a total budget of $n$ and a batch size of $b$ is
-trained on $\frac{n(n+b)}{2b}$ data points. We investigated this using the dataset CIFAR-10 in section \ref{sec:Evaluation:Results:CAL:BatchSize}.
+trained on $\frac{n(n+b)}{2b}$ data points. We investigated this using the dataset CIFAR-10 in section \ref{sec:Evaluation::CAL:ALRegCL:BatchSize}.
 Furthermore, we found that the total number of training points behaves anti-proportional to the batch size. Therefore, in order to decrease execution
 time as much as possible, we should set the batch size as large as possible. \par
 For active learning strategies such as Random and \gls{lc}, the query time is marginal compared to the training time. Therefore, continual active learning
-strategies using Random and \gls{lc} achieve the best results in terms of execution time. \gls{bald} behaves similarly when training a model where Monte
-Carlo dropout is not applicable. If Monte Carlo dropout is appplicable, the query time of \gls{bald} is determined by the number of dropout iterations,
-and how much of a bottleneck it is depends on the number of dropout iterations. The query time of \gls{vaal} also depends on a hyperparameter.
+strategies using Random and \gls{lc} achieve the highest speed-up. \gls{bald} behaves similarly when training a model where Monte
+Carlo dropout is not applicable. If Monte Carlo dropout is applicable, the query time of \gls{bald} is determined by the number of dropout iterations,
+and how much of a bottleneck it is depends on this number. The query time of \gls{vaal} also depends on a hyperparameter.
 \gls{vaal} uses a \gls{vae} and a discriminator to determine informative samples. These models need to be trained for a number of iterations, and training
 them is computationally expensive, especially because they are trained on the total dataset in each iteration. Therefore, it is important not to train
 them for too many iterations. The query time of \gls{badge} and CoreSet largely depends on the model, the size of the dataset, and, in the case of
 \gls{badge}, the number of classes in the dataset. In most cases, at least one of the previously mentioned parameters is so large that the query time
-becomes a bottleneck. Therefore, the speedup of continual active learning using \gls{badge} and CoreSet is not as significant as the speedup of other
+becomes a bottleneck. Therefore, the speed-up of continual active learning using \gls{badge} and CoreSet is not as significant as the speed-up of other
 continual learning strategies. \par
 
 Next, we investigate the contribution of the continual learning strategies in terms of runtime. Overall, we observe that the overhead introduced by the
@@ -65,11 +65,11 @@ unregularized gradients. \par
 Apart from the overhead introduced by backpropagation, the continual learning strategies introduce overhead by estimating weights for the parameters of
 the neural network at the end of each task. \gls{alasso} computes its weights by using equation \ref{eq:ALASSO_Omega}, \gls{mas} uses the gradients of
 the validation step whereas \gls{ewc} and \gls{imm} compute the diagonals of the \gls{fim}. This overhead is marginal, however, as can be seen from the
-execution times presented in section \ref{sec:Evaluation:Results:CAL:ALRegCL}. Surprisingly, \gls{imm} and \gls{ewc} demonstrate minimally lower runtime
+execution times presented in section \ref{sec:Evaluation:CAL:ALRegCL}. Surprisingly, \gls{imm} and \gls{ewc} demonstrate minimally lower runtime
 than the Naive approach in a few experiments. While this is not possible in theory, we believe that the superior performance of \gls{imm} and \gls{ewc}
 can be explained by implementation details. Additionally, factors beyond our control, such as operating system overhead or disk access speed, influence execution time.
 At this stage, we would like to point out that we do not intend to give a perfect ranking of the continual learning strategies in terms of execution time.
-Instead, we aim to give an estimation of the speedup introduced by using continual active learning over active learning. \par
+Instead, we aim to give an estimation of the speed-up introduced by using continual active learning over active learning. \par
 
 
 
@@ -94,7 +94,7 @@ Nevertheless, the validation accuracy does not experience a sharp decline becaus
 the beginning. \par
 The validation accuracy curves of the continual learning strategies are more diverse than the ones of the active learning strategies. When analyzing these
 validation accuracy curves, one should remember that a single continual active learning strategy consists of an active learning
-strategy and a continual learning strategy. Therefore, we need to analyze the contribution of both the active Learning strategy and the continual learning
+strategy and a continual learning strategy. Therefore, we need to analyze the contribution of both the active learning strategy and the continual learning
 strategy to the validation accuracy. Since we used more than 25 combinations of continual and active learning strategies in our experiments, we will not
 analyze each combination in detail. However, the contribution of active learning and continual learning to the validation
 accuracy can be isolated in most cases, making an analysis of each combination redundant. \par
@@ -105,17 +105,17 @@ variance in its validation accuracy. For smaller batch sizes, \gls{alasso} perfo
 unusable after about 20\% of all samples for larger batch sizes. We believe that overestimating the loss on a single side of the loss function creates an uneven loss function,
 causing \gls{alasso}'s substandard performance. The problem is that overestimation is done for each parameter individually, meaning that the loss could be
 overestimated for one parameter and correctly estimated for another. The exploding gradient problem we observe in our experiments supports the thesis that
-parameter optimization using gradient descent is hard when the loss is estimated as is done with \gls{alasso}. While using gradient clipping did mitigate the
+parameter optimization using gradient descent is challenging when the loss is estimated as is done with \gls{alasso}. While using gradient clipping did mitigate the
 exploding gradient problem, it did not solve it completely. When observing the loss progression for \gls{alasso}, we notice that the loss dramatically increases
 for the first epoch of each active learning iteration. Subsequently, the loss decreases but does not recover from the gradient update performed in the first epoch.
 We tried clipping the gradient at even smaller values of the $l_2$ norm to eradicate the loss increase in the first epoch. However, this impeded model convergence. \par
 Next, we analyze \gls{imm} and \gls{ewc}. Overall, \gls{imm} and \gls{ewc} demonstrate a similar validation accuracy to the naive approach. We believe this is
 because they employ regularization less stringently than \gls{alasso} and \gls{mas}. The experiments where the validation accuracy for Naive, \gls{imm} and \gls{ewc}
 drops off similarly while \gls{mas} manages to maintain its validation accuracy support this hypothesis. Our experiment with the delayed start of continual active
-learning in figure \ref{fig:Evaluation:Results:CAL:DelayedStart} provides further evidence for this thesis. \par
+learning in figure \ref{fig:Evaluation:CAL:DelayedStart} provides further evidence for this hypothesis. \par
 Third, we investigate the behavior of \gls{mas}. \gls{mas} performs significantly better than \gls{alasso} but is outperformed by \gls{imm}, \gls{ewc} and Naive.
 We believe that this is because \gls{mas} restricts parameter updates more than \gls{ewc} and \gls{imm}. When observing the validation accuracy progression of
-\gls{mas}, we note that \gls{mas} does not exhibit the steady increase in validation accuracy that \gls{ewc}, \gls{imm}, and Naive do. On the other hand,
+\gls{mas}, we note that \gls{mas} does not exhibit the steady increase in validation accuracy \gls{ewc}, \gls{imm}, and Naive do. On the other hand,
 it also does not experience a sharp decline in validation accuracy within the final 10,000 samples. While it is desirable that \gls{mas} effectively manages
 to preserve previously learned knowledge, we argue that it cannot adapt to new tasks. \par
 
@@ -138,8 +138,8 @@ iterations is sufficiently large (we recommend using at least 25) to ensure an a
 not using Monte Carlo dropout in figure \ref{fig:Evaluation:CAL:4000bAcc} where \gls{bald} performs significantly worse than the remaining active learning
 strategies. By contrast, Monte Carlo dropout is used for the experiments in table \ref{fig:ModelStealingMNISTLabel}, where \gls{bald} outperforms all remaining
 active learning strategies. \par
-Regarding \gls{badge} and CoreSet, we notice that their show matching performance, similar to \gls{ewc} and \gls{imm} in the continual learning setting. \gls{badge}
-and CoreSet follow the typical Continual Active Learning curve, described above, the most. This is because they incorporate diversity into their
+Regarding \gls{badge} and CoreSet, we notice that they show matching performance, similar to \gls{ewc} and \gls{imm} in the continual learning setting. \gls{badge}
+and CoreSet follow the typical continual active learning curve, described above, the most. This is because they incorporate diversity into their
 sampling strategies which smooths the validation accuracy curve except for the final ten percent of samples and experiments with small batch sizes. We believe the
 final ten percent of samples generally do not represent the task the model is trained for well. Therefore, even a representative subset of these samples cannot
 improve the validation accuracy. For the setting with small batch sizes, i.e., small $b$, the issue is rather that $b$ points are insufficient to represent
@@ -151,12 +151,12 @@ of samples but suffered from a heavy drop in validation accuracy thereafter. It 
 their informativeness changes rapidly. Ironically, the fact that \gls{vaal} is not as performant as the other active learning strategies helps \gls{a-gem} increase its
 validation accuracy when combined with \gls{vaal}. \par
 
-We close this section by aiming to answer the most decisive question: \textbf{Why does continual active learning fail to outperform active learning?} We believe this is \textbf{mainly
-due to the number of training points used in each iteration}. While active learning strategies use the complete labeled pool in each iteration ($i \cdot b$ data
+We close this section by aiming to answer the most decisive question: \textbf{Why does continual active learning fail to outperform active learning?} We believe this is mainly
+\textbf{due to the number of training points used in each iteration}. While active learning strategies use the complete labeled pool in each iteration ($i \cdot b$ data
 points where $i$ is the number of iterations), continual active learning strategies only use the data points labeled in the current task, i.e., $b$ points.
 It is worth pointing out that the correlation between data points trained on, and validation accuracy achieved is not perfect. However, especially if the
 number of data points trained on is less than 20\% of the total size of the training set, just one or two percentage points can make a big difference in validation
-accuracy. The observation that the validation accuracy increases with increasing batch size in section \ref{sec:Evaluation:Results:CAL:BatchSize} supports this.
+accuracy. The observation that the validation accuracy increases with increasing batch size in section \ref{sec:Evaluation::CAL:ALRegCL:BatchSize} supports this.
 Our Replay strategy further demonstrates this behavior. We observe identical performance for various sizes of the replay buffer and the batch size as long as the sum
 of replay buffer size and batch size is identical. Analysis of the second experiment with our Replay strategy shows that for the first 50\% of samples, it is irrelevant
 how we select the data we replay, which further supports the thesis. \par
@@ -175,7 +175,7 @@ prediction probabilities yields better model agreement than using the predicted 
 \cite{orekondy2019knockoff} and Pal et al. \cite{pal2020activethief}. The superior performance of learning with softmax probabilities is due to their increased
 informativeness compared to the predicted class label. When using the predicted class label, the only information conveyed is which label the target model would 
 most likely assign to the given sample. However, when using the softmax probabilities, the substitute model can profit from the target model's prediction certainty
-(i.e. how high is the top 1 probability ?) and a comprehensive ranking of the most likely labels. \par
+(i.e., how high is the top 1 probability?) and a comprehensive ranking of the most likely labels. \par
 Overall, we observe that continual active learning attacks are outperformed by active learning attacks in terms of the model agreement. However, we note that the
 difference in model agreement heavily depends on the target model dataset. For less complex datasets, such as MNIST, the performance gap is negligible. While
 we do not observe this behavior in our experiments in section \ref{sec:Evaluation:MS}, we found that renouncing data augmentation during the model stealing attack
@@ -188,7 +188,7 @@ attack strategy for model stealing attacks}. \par
 Next, we analyze a unique phenomenon we only observe when using continual active learning for model stealing.
 In many of our experiments, we observe that model agreement stalls at $\frac{1}{c}$ where $c$ is the number of classes, meaning that the model has not learned the task at all, and its
 predictions are equal to random guessing. In some experiments, the model agreement recovers from this state and increases after a few iterations. There are experiments,
-however, in which the model agreement remains at $\frac{1}{c}$ for the entire duration of the attack. Furthermore, we observe this phenomenon is more likely to occur
+however, in which the model agreement remains at $\frac{1}{c}$ for the entire duration of the attack. Furthermore, this phenomenon is more likely to occur
 for more complex datasets and when using the predicted class label instead of the target model's prediction probabilities. We assume the
 following vicious cycle causes this phenomenon: First, the model is initialized with random weights and trained using a random subset of the thief dataset. Depending on the initialization and 
 the informativeness of the selected samples, the model might have low model agreement from this first iteration. If the model agreement is as low as $\frac{1}{c}$, the

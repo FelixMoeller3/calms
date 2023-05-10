@@ -128,12 +128,12 @@ used in the experiments.
         \hline 
         \hline
         $\lambda$ & Balances between old and new tasks. A higher value indicates more focus 
-        on preserving knowledge from the old task & 1.0  \\ 
+        on preserving knowledge from the old task. & 1.0  \\ 
         \hline
         Sample size & Relative size of the sample compared to the full training set that is used to 
         compute the \gls{fim}. & 0.05  \\ 
         \hline
-        Gradient Clip & Maximum Value of the $l_2$-Norm of the gradient. If the current norm is larger,
+        Gradient clip & Maximum value of the $l_2$ norm of the gradient. If the current norm is larger,
         the gradient is clipped to that value. & 20.0 \\ 
         \hline
     \end{tabularx}
@@ -150,7 +150,7 @@ used in the experiments.
         $\lambda$ & Balances between old and new tasks. A higher value indicates more focus
         on preserving knowledge \newline from the old task. & 1.0  \\ 
         \hline
-        Gradient Clip & Maximum Value of the $l_2$-Norm of the gradient. If the current norm is larger, the
+        Gradient clip & Maximum value of the $l_2$ norm of the gradient. If the current norm is larger, the
         gradient is clipped to that value. & 2.0 \\ 
         \hline
     \end{tabularx}
@@ -165,12 +165,12 @@ used in the experiments.
         \hline 
         \hline
         $\lambda$ & Balances between old and new tasks. A higher value indicates more focus
-        on preserving knowledge from the old task & 1.0  \\ 
+        on preserving knowledge from the old task. & 1.0  \\ 
         \hline
         Sample size & Relative size of the sample compared to the full training set that is used to 
         compute the \gls{fim}. & 0.05  \\ 
         \hline
-        Gradient Clip & Maximum Value of the $l_2$-Norm of the gradient. If the current norm is larger, the
+        Gradient clip & Maximum value of the $l_2$ norm of the gradient. If the current norm is larger, the
         gradient is clipped to that value. & 20.0 \\ 
         \hline
         $\alpha$ & Weights the importance of the previous tasks. The sum of all $\alpha$ values must be 1.0. & 0.45,0.55 \\
@@ -187,24 +187,24 @@ used in the experiments.
         Hyperparameter & Description & Value \\ 
         \hline 
         \hline
-        $a$ & Balances between old and new tasks. A higher value indicates more focus
+        $c$ & Balances between old and new tasks. A higher value indicates more focus
         on preserving knowledge from the old task. & 0.5  \\ 
         \hline
-        $a'$ & Used to update parameter importances in Equation \hyperref[eq:ALASSO_Small_Omega]{3.23}. & 0.25  \\
+        $c'$ & Used to update parameter importances in equation \hyperref[eq:ALASSO_Small_Omega]{3.23}. & 0.25  \\
         \hline
-        Gradient Clip & Maximum Value of the $l_2$-Norm of the gradient. If the current norm is larger, the
+        Gradient clip & Maximum Value of the $l_2$-Norm of the gradient. If the current norm is larger, the
         gradient is clipped to that value. & 2.0 \\ 
         \hline
-        $c$ & Determines the overestimation of the loss on the unobserved side. & 3.0 \\
+        $a$ & Determines the overestimation of the loss on the unobserved side. & 3.0 \\
         \hline
-        $c'$ & Used to update parameter importances in Equation \hyperref[eq:ALASSO_Small_Omega]{3.23}. & 1.5 \\
+        $a'$ & Used to update parameter importances in equation \hyperref[eq:ALASSO_Small_Omega]{3.23}. & 1.5 \\
         \hline
     \end{tabularx}
     \caption{Hyperparameter configuration for \gls{alasso}.}
     \label{fig:AlassoParams}
 \end{table}
 
-\newpage
+\clearpage
 
 \subsection{Datasets}
 \label{sec:Appendix:Datasets}
@@ -234,16 +234,18 @@ In our experiments, we use the datasets MNIST, CIFAR-10, CIFAR-100, Tiny ImageNe
     \label{fig:DatasetInformtion}
 \end{table}
 
+
+
 \subsection{Neural Network Architectures}
 \label{sec:Appendix:Architectures}
-In our experiments with Model Stealing, we use the same architectures as proposed in \cite{pal2020activethief}. Pal et al. propose a proprietary
+In our experiments with model stealing, we use the same architectures as proposed by Pal et al. \cite{pal2020activethief}. They introduce a proprietary
 \gls{cnn} architecture family which consists of $l$ convolution blocks followed by a single fully connected layer. Each convolution block consists
 of 
 \begin{enumerate}
-    \item a convolutional layer with $k$ filters size $3 \times 3$,
+    \item a convolutional layer with $k$ filters of size $3 \times 3$,
     \item a ReLU activation layer,
     \item a batch normalization layer,
-    \item a convolutional layer with $k$ filters size $3 \times 3$,
+    \item a convolutional layer with $k$ filters of size $3 \times 3$,
     \item a ReLU activation layer,
     \item a batch normalization layer,
     \item a max pooling layer with kernel size $2 \times 2$,
@@ -269,7 +271,7 @@ the main paper. Therefore, we list the results for these batch sizes in the foll
 \ref{fig:Appendix:CAL:1000bAcc} and figure \ref{fig:Appendix:CAL:2000bAcc}, respectively. The execution time of these experiments is presented in table 
 \ref{fig:Appendix:CAL:1000bTimeTable} and table \ref{fig:Appendix:CAL:2000bTimeTable}, respectively. \par
 Overall, we observe similar patterns to the results presented in the main paper, regarding both the relative performance of the active learning strategies and
-the continual learning strategies. However, the results for batch size are volatile, which is caused by overfitting on the small training set. 
+the continual learning strategies. However, the results for batch size 1,000 exhibit high variance, which is caused by overfitting on the small training set. 
 
 
 \begin{figure}[h]
@@ -291,7 +293,7 @@ the continual learning strategies. However, the results for batch size are volat
     \begin{tabular}{c | c c c c c } 
          & Random & \gls{lc} & \gls{bald} & CoreSet & \gls{badge}\\ 
         \hline 
-        Baseline & 2522 & 2536 & 2549 & 2650 & 3171 \\
+        Baseline & 2,522 & 2,536 & 2,549 & 2,650 & 3,171 \\
         \hline
         Naive & 44 & 50 & 50 & 144 & 493 \\
         \gls{ewc} & 44 & 53 & 51 & 140 & 486\\
@@ -324,7 +326,7 @@ the continual learning strategies. However, the results for batch size are volat
     \begin{tabular}{c | c c c c c } 
          & Random & \gls{lc} & \gls{bald} & CoreSet & \gls{badge}\\ 
         \hline 
-        Baseline & 1290 & 1303 & 1315 & 1342 & 1935 \\
+        Baseline & 1,290 & 1,303 & 1,315 & 1,342 & 1,935 \\
         \hline
         Naive & 76 & 80 & 78 & 162 & 523 \\
         \gls{ewc} & 83 & 90 & 86 & 152 & 513\\
@@ -410,7 +412,7 @@ can be seen in figure \ref{fig:Appendix:MS:ActiveThief:EffectDataset}. While mod
 agreement for Tiny ImageNet plateaus after just three iterations at 20\%. Model stealing with CIFAR-10 yields the best results, however. At the end of the experiment,
 the setup with CIFAR-10 as the thief dataset achieves a model agreement five percentage points higher than the setup with Small Imagenet. \par
 
-\begin{figure}[h]
+\begin{figure}[!htb]
     \centering
     \includegraphics[width=0.8\linewidth]{images/results_CALMS/effect_dataset.png}
     \caption{Comparison of model agreement for various thief datasets.}
@@ -582,7 +584,7 @@ when using data augmentation. In this scenario, continual active learning with d
 However, when using MNIST as the target model dataset, the results are reversed. Here, model agreement is significantly lower when using data augmentation.
 More importantly, continual active learning without data augmentation shows performance comparable to active learning with data augmentation. \par
 
-\begin{figure}[h]
+\begin{figure}[!htb]
     \centering
     \includegraphics[width=0.48\linewidth]{images/results_CALMS/data_augmentation_cifar.png} \hfill
     \includegraphics[width=0.48\linewidth]{images/results_CALMS/data_augmentation_mnist.png}
