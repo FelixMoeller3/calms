@@ -4,11 +4,5 @@ Acknowledgement für Unicluster?
 Abgrenzung hinzufügen? (Sprich was wird in der Thesis nicht gemacht)
 Falls es ein Problem mit \openbox gibt: Das habe ich in amsthm.sty geändert, dass renewcommand statt newcommand verwendet wird
 Liegt in usr/local/texlive/2022/texmf-dist/tex/amscls/amsthm.sty und die änderung ist in Zeile 422.
-Das hier (oder vllt etwas anderes?) verwenden, um die NN Architekturen zu zeichnen: https://github.com/HarisIqbal88/PlotNeuralNet
-Citations im Glossary zu haben wird schwierig (von der Compilation-Reihenfolge). Hier steht wie es geht: https://tex.stackexchange.com/questions/111410/compile-sequence-citing-in-the-glossary
-Tabellen für Hyperparameter kapitel erstellen
-Deep Generative Replay einfügen? Weglassen
-Einige Grafiken neu erstellen 
-Bei allen quellen schauen den Archive Pre-print durch das Conference paper ersetzen
-Bei CALMS die baseline anpassen auf budget 20k statt 21k
-Bei manchen Plots die Font-Size der Legende ändern damit die Legende nicht die Graphen überdeckt
+
+

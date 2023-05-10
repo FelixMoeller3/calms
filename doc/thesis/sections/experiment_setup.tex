@@ -91,9 +91,9 @@ of the active learning algorithm, as the batch size.
 
 \subsection{Datasets}
 \label{sec:ExperimentSetup:Datasets}
-In our experiments, we use the datasets MNIST \cite{mnist_web}, Fashion-MNIST \cite{xiao2017fashion}, CIFAR-10 \cite{cifar},
+In our experiments, we use the datasets MNIST \cite{mnist_web}, CIFAR-10 \cite{cifar},
 CIFAR-100 \cite{cifar}, Tiny ImageNet \cite{le2015tiny}, and a subset of the ILSVRC2012-14 dataset \cite{imagenet}. The subset of the ILSVRC2012-14 dataset we
-use is the first of 10 training batches downloaded from \cite{imageNetDataset}. From now on, we will refer to this subset
+use is the first of ten training batches downloaded from \cite{imageNetDataset}. From now on, we will refer to this subset
 of the ILSVRC2012-14 dataset as \enquote{Small ImageNet}. For all datasets, we use the standard train test split, as proposed by PyTorch. We rescale all images to 32x32
 pixels, because for the success of a model stealing attack, the image shape of the thief dataset has to match the image shape accepted by the target model. We will cover
 this in more detail in section \ref{sec:Methodology:CALMSsetup}. Moreover, we normalize the train and test split of all datasets by using the mean and standard deviation
@@ -122,7 +122,7 @@ We experiment with continual active learning using ResNet18 as our neural networ
 2,000 and 4,000, respectively. Regardless of the batch size, we conduct active learning until the unlabeled pool is exhausted. This means that we perform active learning for
 49, 24, and 12 iterations, respectively. For batch sizes 1,000 and 2,000, each query consists of 2,000 points, while the last query for batch size 4,000 consists of 2,000 points.
 For batch sizes 2,000 and 4,000, we train for 150 epochs per iteration, decaying the learning rate by ten after 80 and 120 epochs, respectively. For batch size 1,000, we
-train for 80 epochs and decay the learning rate by ten after 60 epochs. To compare the performance of Continual Active Learning with active learning, we computed the results
+train for 80 epochs and decay the learning rate by ten after 60 epochs. To compare the performance of continual active learning with active learning, we computed the results
 for active learning with identical batch sizes. In this experiment setup, we use warm start and train for 200 epochs in each iteration. Here, we
 decay the learning rate by ten after 100 and 150 epochs, respectively.
 

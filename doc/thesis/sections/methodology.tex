@@ -46,7 +46,7 @@ not retrained once after deployment. In the continual learning setting, however,
 \begin{figure}[ht]
     \centering
     \includegraphics[width=.9\linewidth]{images/CL_workflow.png}
-    \caption[Continual learning Workflow]{Example for the classic Continual Learning Workflow. In this example, the model is first trained on different species of
+    \caption[Continual learning workflow]{Example for the classic continual learning workflow. In this example, the model is first trained on different species of
     birds. It is then deployed to differentiate these species. Next, the model is trained on planes. After being deployed again, the model should now differentiate
     the planes as well as the birds.}
     \label{fig:CLWorkflow}
@@ -92,7 +92,7 @@ choice. This process repeats until the unlabeled pool is empty. The full algorit
 the difference between classic pool-based active learning and our new continual active learning approach in bold. \par
 
 \begin{algorithm}
-    \caption{Pool-based Continual Active Learning} \label{alg:PoolBasedContinualActiveLearning}
+    \caption{Pool-based continual active learning} \label{alg:PoolBasedContinualActiveLearning}
     \begin{algorithmic}[1]
         \Require Unlabeled data $U$, Labeled data $L = \emptyset$, Oracle $O$, Model $M$, budget $B$
         \State Select $k$ data points from $U$ at random, obtain labels by querying $O$ and set $L=\{x_1,\ldots,x_1\}$
@@ -153,10 +153,10 @@ process is repeated until the unlabeled pool is empty. A visual example of the c
 \begin{figure}[ht]
     \centering
     \includegraphics[width=.7\linewidth]{images/Calms_workflow.png}
-    \caption[Continual active Learning for model stealing workflow]{Example of continual active learning for model stealing Workflow. In this example, the thief
-    dataset consists of birds while the target model was trained to classify planes. In each iteration, a batch of informative samples is selected by the active learning
-    strategy first. Next, the target model is queried for the labels of the selected samples. Since our thief dataset is composed of \gls{nnpd} data, the associated labels have
-    an incorrect semantic meaning. The thief model is then trained only on the selected samples from the current batch. This process is repeated iteratively.}
+    \caption[Continual active learning for model stealing workflow]{Example of continual active learning for model stealing workflow. In this example, the thief
+    dataset consists of birds, while the target model was trained to classify planes. In each iteration, a batch of informative samples is selected by the active learning
+    strategy. Next, the target model is queried for the labels of the selected samples. Since our thief dataset is composed of \gls{nnpd} data, the associated labels have
+    an incorrect semantic meaning. The thief model is then trained on the selected samples from the current batch. This process is repeated iteratively.}
     \label{fig:CalmsWorkflow}
 \end{figure}
 

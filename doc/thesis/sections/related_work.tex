@@ -189,14 +189,14 @@ where
 \begin{equation}
     \mathbb{I}_{D_{1:N-1}} = \mathbb{E} [- \frac{\partial^2 \theta (\log (p(\theta \mid D_{1:N-1})))}{\partial^2 \theta} \mid_{\theta^*_{D_{1:N-1}}}]
 \end{equation} 
-which is the Fisher information matrix (\gls{fim}) as shown by Aich \cite{aich2021elastic}. A large value of $F_i$, the $i$-th diagonal of the \gls{fim},
+which is the Fisher information matrix (\gls{fim}) as shown by Aich \cite{aich2021elastic}. A large value of $F_i$, the $i^{th}$ diagonal of the \gls{fim},
 indicates a small variance in the posterior distribution of the parameter, meaning that it is important for previous tasks. Therefore, $F_i$, is used as an
-importance measure for the $i$-th parameter. To conclude, the loss function for a Task $N$ is altered to
+importance measure for the $i^{th}$ parameter. To conclude, the loss function for a Task $N$ is altered to
 \begin{equation}
     \mathcal{L}(\theta) = \mathcal{L}_B(\theta) + \sum_i \frac{\lambda}{2} F_i \cdot (\theta_i - \theta^*_{N-1,i})^2,
 \end{equation}
-where $\mathcal{L}_B(\theta)$ is the loss function of the model on the current task (e.g. cross-entropy loss), $\theta_i$ is the $i$-th parameter of the model,
-and $\theta^*_{N-1,i}$ is the $i$-th parameter of the model trained on the previous task. The hyperparameter $\lambda$ is used to trade-off between
+where $\mathcal{L}_B(\theta)$ is the loss function of the model on the current task (e.g. cross-entropy loss), $\theta_i$ is the $i^{th}$ parameter of the model,
+and $\theta^*_{N-1,i}$ is the $i^{th}$ parameter of the model trained on the previous task. The hyperparameter $\lambda$ is used to trade-off between
 learning new tasks and retaining knowledge of previous tasks.
 
 \subsection{Memory Aware Synapses}
@@ -390,8 +390,8 @@ A visualization of the model stealing workflow proposed by Pal et al. is shown i
 \begin{figure} [ht]
     \centering
     \includegraphics[width=.9\linewidth]{images/ActiveThief_Idea.png}
-    \caption[Visualization of ActiveThief]{Illustration of the model stealing workflow proposed by \cite{pal2020activethief}. Inspired by
-    \cite{chandrasekaran2020exploring}, Pal et al. use Active Learning to select the next samples to query the target model.}
+    \caption[Visualization of ActiveThief]{Illustration of the model stealing workflow proposed by Pal et al. \cite{pal2020activethief}. Inspired by
+    Chandrasekaran et al. \cite{chandrasekaran2020exploring}, Pal et al. use active learning to select the next samples to query the target model.}
     \label{fig:ActiveThief}
 \end{figure}
 

@@ -18,11 +18,11 @@ Technology companies like Google, Amazon and Microsoft, however, have access to 
 While \gls{mlaas} makes machine learning more attainable, it poses a security risk. Previous works have shown that it is possible to infer numerous
 properties (e.g., training data \cite{shokri2017membership} and architecture \cite{oh2019towards}) of the model behind the prediction \gls{api}
 \parencite{papernot2017practical,tramer2016stealing}.
-However, we purely focus on stealing the \textit{functionality} of the target model, i.e. its ability to predict the correct class of a given input image.
-In this thesis, we build upon ActiveThief \cite{pal2020activethief}, a model extraction framework using active learning strategies to steal \glspl{dnn}. 
+However, we purely focus on stealing the \textit{functionality} of the target model, i.e., its ability to predict the correct class of a given input image.
+In this thesis, we build upon ActiveThief \cite{pal2020activethief}, a model extraction framework using active learning strategies to steal deep neural networks. 
 First, we propose a novel approach named continual active learning, which combines active learning and continual learning to improve the trade-off between
 accuracy and efficiency in the active learning process. Our evaluation demonstrates that continual active learning reduces validation accuracy by 10-30\%
 while reducing execution time by 60-98\%. Next, we incorporate continual active learning into the ActiveThief framework and investigate whether our findings
-from traditional active learning are transferable to model stealing. We find that continual active learning falls short of the performance achieved by ActiveThief,
-specifically when training with the predicted label of the target model. Furthermore, we show that continual learning benefits from training with the softmax
-output of the target model, which has been observed for previous model stealing attacks \parencite{orekondy2019knockoff,pal2020activethief}.
+from traditional continual active learning are transferable to model stealing. We find that continual active learning falls short of the performance achieved by ActiveThief,
+specifically when training with the predicted label of the target model. Furthermore, we show that continual active learning benefits from training with the softmax
+output of the target model, which has been observed for previous model stealing attacks \parencite{pal2020activethief,orekondy2019knockoff}.

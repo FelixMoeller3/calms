@@ -21,8 +21,8 @@ being used in real-world applications. To profit from this, many technology
 enterprises offer services to ease training, development, and deployment of machine learning applications. These services can
 be grouped under the term \gls{mlaas}. \par
 While \gls{mlaas} is crucial to increase the accessibility of machine learning, it also poses a security threat. In recent years, numerous research papers
-have been published that demonstrate how easily machine learning models can be extracted from \gls{mlaas} services \parencite{tramer2016stealing,
-reith2019efficiently,papernot2017practical}. The standard procedure to steal such a machine learning model is to train a local
+have been published that demonstrate how easily machine learning models can be extracted from \gls{mlaas} services \parencite{papernot2017practical,tramer2016stealing,
+reith2019efficiently}. The standard procedure to steal such a machine learning model is to train a local
 clone (also called substitute model) of the model hosted on the \gls{mlaas} service (also called target model). The substitute model is trained
 using a dataset collected by the attacker. This dataset is also called the thief dataset. Labels for the thief dataset are obtained by querying the target
 model on the thief dataset. The process of extracting machine learning models from \gls{mlaas} services is also called model stealing. \par
@@ -45,12 +45,12 @@ with \glspl{cnn}. Therefore, our findings only apply to deep learning within the
 with approaches in the active learning domain. More specifically, we focus on regularization-based continual learning methods,
 whereas we use uncertainty-based and diversity-based active learning methods. The continual learning methods we use are \gls{ewc} \cite{kirkpatrick2017overcoming},
 \gls{mas} \cite{aljundi2018memory}, \gls{imm} \cite{lee2017overcoming} and \gls{alasso} \cite{park2019continual}.
-Concerning active learning, we compare random sampling, \gls{lc} \cite{lewis1995sequential} sampling, \gls{badge} \cite{ash2019deep}, \gls{bald} \cite{houlsby2011bayesian} and
+Concerning active learning, we compare random sampling, \gls{lc} \cite{lewis1995sequential}, \gls{badge} \cite{ash2019deep}, \gls{bald} \cite{houlsby2011bayesian} and
 CoreSet \cite{sener2017active}.
 We analyze how the continual learning methods can speed up the active learning process, which combinations of continual learning and active learning methods
 are most effective, and the trade-off between accuracy and speed up. While the focus of this thesis is on regularization-based continual
-earning methods, we briefly explore the effectiveness of exemplar rehearsal continual earning using the \gls{a-gem} approach \cite{chaudhry2018efficient}
-combined with representation-based active learning in form of \gls{vaal} \cite{sinha2019variational}. Furthermore, we evaluate the performance of a custom replay strategy.\par
+earning methods, we briefly explore the effectiveness of exemplar rehearsal continual earning using \gls{a-gem} \cite{chaudhry2018efficient}
+combined with representation-based active learning in form of \gls{vaal} \cite{sinha2019variational}. Furthermore, we evaluate the performance of a custom Replay strategy.\par
 After exploring the effectiveness of the different combinations of continual and active learning methods, we apply these combinations in the model stealing
 domain. More specifically, we build upon the model extraction framework ActiveThief \cite{pal2020activethief} and investigate the performance of continual
 active learning methods in the model stealing domain.

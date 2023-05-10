@@ -13,7 +13,7 @@
 \chapter{Background}
 \label{ch:Background}
 
-We provide an overview of the background knowledge necessary to understand the following chapters in this chapter. We start with
+In this chaper, we provide an overview of the background knowledge necessary to understand the following chapters. We start with
 active learning, describing common active learning settings. Next, we cover continual learning, including conventional continual learning
 scenarios and a taxonomy of continual learning methods. Finally, we describe model stealing attacks, introduce the most relevant terminology,
 and outline model stealing defenses.
@@ -26,33 +26,31 @@ Active learning is a subfield of machine learning that focuses on the problem of
 Research in active learning is motivated by the contrast between low-effort data acquisition and resource-intensive labeling.
 Therefore, the aim of active learning research is to create techniques that optimize model performance while minimizing the amount of
 labeled data required. A typical active learning scenario comprises a learner, an oracle, unlabeled samples, and labeled data. The learner
-itself is then the machine learning model. Let $I$ be the instance space (i.e., the set of all possible data points), and $L$ be the label
-space (i.e., the set of all possible labels). The oracle $O$ represents the function
+itself is then the machine learning model. Let $I$ be the instance space, i.e., the set of all possible data points, and $L$ be the label
+space, i.e., the set of all possible labels. The oracle $O$ represents the function
 \begin{equation}
-    O: I \rightarrow L, x \mapsto y(x)
+    O: I \rightarrow L, x \mapsto y(x),
 \end{equation}
 where $y(x)$ is the true label of the data point $x$. In the following, we will use $y$ as a short form of $y(x)$. $U$, the set of unlabeled data,
 is a subset of $I$ just as the set of labeled data $L$. In the beginning, there are no labeled data points. Often a few labeled data points
 are randomly sampled from $U$ and labeled by the oracle to initialize the learning process. A detailed overview of research activities within
-the active learning domain is presented by Settles \cite{settles2009active}. Note, however, that more recent works are not contained in this
-literature survey because it was last updated in 2009. In general, active learning methods can be divided into three categories:
+the active learning domain is presented by Settles \cite{settles2009active}. According to Settles, active learning methods can be divided into three categories:
 \begin{itemize}
-    \item \textbf{Query Synthesis Active Learning}
-    \item \textbf{Pool-based Active Learning}
-    \item \textbf{Stream-based Active Learning}
+    \item Query synthesis active learning
+    \item Pool-based active learning
+    \item Stream-based active learning
 \end{itemize}
-While researchers generally agree on this data-centric taxonomy, it is worth noting that the type of machine learning model used
-(e.g. (convolutional) neural networks or support vector machines) and the type of data used (such as images or text) plays a decisive role in the
-effectiveness of an active learning strategy. An example of this is the pool-based active learning strategy CoreSet \cite{sener2017active}, which
-was designed to suit the requirements of \glspl{cnn}.
+While this taxonomy is data-centric, it is worth noting that the type of machine learning model used, e.g., (convolutional) neural networks or support vector machines,
+and the type of data used, e.g., images or text, plays a decisive role in the
+effectiveness of an active learning strategy.
 
 \subsection{Query Synthesis Active Learning}
 \label{sec:QuerySynthesisActiveLearning}
 Query synthesis active learning, also known as membership query synthesis active learning, was among the first active learning scenarios proposed
 \cite{angluin1988queries}. Query synthesis methods synthesize data points from the input space instead of sampling real data points. Modern query
-synthesis methods train a generative model (e.g., a \gls{gan}) \cite{zhu2017generative}
+synthesis methods train a generative model, e.g., a \gls{gan} \cite{zhu2017generative},
 which learns the distribution of unlabeled data. However, earlier works relied on statistical models such as Gaussian mixture models 
-\cite{cohn1996active}. The generated queries are then labeled by the oracle and can be used to train the machine learning Model. Note that
+\cite{cohn1996active}. The generated queries are labeled by the oracle and can be used to train the machine learning model. Note that
 query synthesis is not limited to classification tasks. For example, Cohn et al. \cite{cohn1996active} proposed a method to predict the absolute coordinates
 of a robot hand when given the joint angles of its mechanical arms as inputs. When the oracle is a human annotator, query synthesis active learning
 researchers have encountered problems in labeling them. Human annotators struggled to assign any class to them in the survey of Baum et al. \cite{baum1992query}
@@ -80,11 +78,11 @@ hand, aim to select data points that best represent the data distribution in the
 \begin{algorithm}
     \caption{Pool-based active learning} \label{alg:PoolBasedActiveLearning}
     \begin{algorithmic}[1]
-        \Require Unlabeled data $U$,Labeled data $L = \emptyset$:, Oracle $O$, Model $M$, budget $B$
+        \Require unlabeled data $U$, labeled data $L = \emptyset$, oracle $O$, model $M$, budget $B$
         \State Select $k$ data points from $U$ at random, obtain labels by querying $O$ and set $L=\{x_1,\ldots,x_1\}$
         and $U = U \setminus \{x_1,\ldots,x_1\}$ \Comment{Initialization}
         \State Train $M$ on initial labeled set $L$
-        \While{label budget $B$ not exhausted}
+        \While{Label budget $B$ not exhausted}
             \State Select $l$ data points from $U$ predicted to be the most informative by the active learning strategy
             \State Obtain labels by querying $O$ for $x_i,\ldots,x_l$
             \State Set $L= L \cup \{x_i,\ldots,x_l\}$ and $U = U \setminus \{x_i,\ldots,x_l\}$
@@ -96,18 +94,20 @@ hand, aim to select data points that best represent the data distribution in the
 \subsection{Stream-based Active Learning}
 \label{sec:StreamBasedActiveLearning}
 Stream-based active learning, introduced by Cohn et al. \cite{cohn1994improving}, is closer to pool-based active learning than query synthesis
-active learning. The main difference between stream-based active learning and pool-based active learning is that data arrives sequentially
-instead of having a batch of data points. In the stream-based active learning scenario, the learner draws a data point from the data source
+active learning. The main difference between stream-based active learning and pool-based active learning is that data arrives sequentially.
+In the stream-based active learning scenario, the learner draws a data point from the data source
 one at a time. For each data point, the learner can then decide to query the oracle for its label or to discard it. The decision whether to label a
-data point can either be made based on its informativeness \cite{dagan1995committee} or its location within the instance space \cite{cohn1994improving}.
-In the latter case, the learner would label the data point if it in a region of the instance space that the learner is not confident about.
+data point can either be made based on its location within the instance space \cite{cohn1994improving} or its informativeness \cite{dagan1995committee}.
+In the former case, the learner would label the data point if it in a region of the instance space that the learner is not confident about.
+
+
 
 \section{Continual Learning}
 \label{sec:ContinualLearning}
 Continual learning is a subfield of machine learning that aims to solve the problem of catastrophic forgetting. Nowadays, most machine learning services are deployed
 in an environment where constant changes occur. To adapt to their environment, machine learning models need to learn new tasks without forgetting the knowledge
-they have acquired in the past. In contrast to human behavior, the performance of machine learning models on old tasks rapidly decreases when they are trained
-on new tasks. This phenomenon is known as catastrophic forgetting and was already discovered in the early days of machine learning research \cite{mccloskey1989catastrophic}.
+they have acquired in the past. In contrast to human behavior, machine learning models rapidly decrease their performance on old task when trained on new ones.
+This phenomenon is known as catastrophic forgetting and was already discovered in the early days of machine learning research \cite{mccloskey1989catastrophic}.
 Generally speaking, research in continual learning aims not only to alleviate catastrophic forgetting but to solve the 
 \enquote{stabiliy/plasticity dilemma} \cite{carpenter1988art}. The stability/plasticity dilemma refers to the fact that machine learning models
 should be stable enough to retain their performance on old tasks while simultaneously being plastic enough to adapt to new ones. This is a dilemma
@@ -130,8 +130,8 @@ class-incremental continual learning.
 \label{sec:TaskIncrementalContinualLearning}
 In the task-incremental setting, a model is informed about the task it will be trained on or the task the data whose label it is supposed to predict belongs to.
 Task information is delivered through an integer task identifier. Because the model does not have to infer the task it is supposed to predict
-or learn, it is possible to have task-specific components in the model. For neural networks, this entails one output layer per task, whereby the corresponding
-output layer is utilized for each task, while the remaining layers are shared among all tasks. These classifiers are known as \enquote{multi-head} classifiers
+or learn, it is possible to have task-specific components in the model. For neural networks, this entails one output layer per task. The corresponding
+output layer is utilized for each task, while the remaining layers are shared among all tasks. These classifiers are known as multi-head classifiers
 \cite{vandeven2019generative}. An example would be the following: The first task is to classify images of cats and dogs. The second task is to classify cows and sheep.
 The model would have one output layer to classify cats and dogs and a second to classify cows and sheep. When training the first task, only the first output layer
 is used. Upon the arrival of the second task, the model is retrained with the second output layer. The mapping learned is 
@@ -144,13 +144,13 @@ tasks that the model can be trained on) and $Y = \mathbb{Z}_{k}$ is the label sp
 
 \subsubsection{Domain-Incremental Continual Learning}
 \label{sec:DomainIncrementalContinualLearning}
-In the domain-incremental setting, task identities are not passed to the classifier during evaluation. Since the underlying task does not change, this is also not necessary.
+In the domain-incremental setting, task identities are not passed to the classifier during evaluation. Since the underlying task does not change, this is not necessary either.
 While the structure of the task stays the same, the distribution of the data changes. An example of domain-incremental continual learning would be the classification of digits
 between zero and nine (such as those in the MNIST \cite{mnist_web} dataset), where the digits for one subtask are green and blue for the other. The mapping learned is
 \begin{equation}
     f: X \rightarrow Y
 \end{equation}
-Where $X = \mathbb{R}^{N x N x C}$ is the input space (i.e., all possible input images of size $N x N$ with $C$ channels), and $Y = \mathbb{Z}_{k}$ is the label space with $k$ being the
+Where $X = \mathbb{R}^{N x N x C}$ is the input space, and $Y = \mathbb{Z}_{k}$ is the label space with $k$ being the
 number of possible classes.
 
 \subsubsection{Class-Incremental Continual Learning}
@@ -163,13 +163,13 @@ The mapping learned is
 \begin{equation}
     f: X \rightarrow Y \times T
 \end{equation}
-Where $X = \mathbb{R}^{N x N x C}$ is the input space (i.e., all possible input images of size $N x N$ with $C$ channels), $T = \{1,2,\ldots\}$ is the task space (i.e., all possible
+Where $X = \mathbb{R}^{N x N x C}$ is the input space, $T = \{1,2,\ldots\}$ is the task space (i.e., all possible
 tasks that the model can be trained on) and $Y = \mathbb{Z}_{k}$ is the label space with $k$ being the number of possible classes.
 
 \subsection{Continual Learning Approaches}
 \label{sec:ContinualLearningApproaches}
-The continual learning approaches proposed so far can be grouped into three categories according to Parisi et al. \cite{parisi2019continual}, Mundt et al. \cite{mundt2020wholistic}
-and Zenke et al.\cite{zenke2017continual}. Parisi et al. \cite{parisi2019continual} propose to group continual learning approaches into regularization, rehearsal,
+The continual learning approaches proposed so far can be grouped into three categories according to Mundt et al. \cite{mundt2020wholistic}, Parisi et al. \cite{parisi2019continual}
+and Zenke et al. \cite{zenke2017continual}. Parisi et al. propose to group continual learning approaches into regularization, rehearsal,
 and architectural approaches whereas Zenke et al.
 \cite{zenke2017continual} group continual learning approaches into architectural, functional and structural approaches. In the following, we will stick to the
 categorization proposed by Parisi et al. because it is broader and fully encompasses the categorization by Zenke et al. Furthermore, Parisi et al.'s classification has been adopted by
@@ -196,11 +196,11 @@ compute the distillation loss \cite{rannen2017encoder}.
 
 \begin{figure} [ht]
     \centering
+    \label{fig:ContinualLearning:ReulgarizationIdea}
     \includegraphics[width=.9\linewidth]{images/regularization_idea.png}
     \caption[Idea of regularization-based continual learning]{Idea of regularization-based continual learning. Compared to $l_2$ regularization,
     regularization-based continual learning strategies apply dynamic regularization to the model's parameters with the aim of finding model
-    weights which perform well on multiple tasks. The figure was inspired by Kirkpatrick et al. \cite{kirkpatrick2017overcoming}}
-    \label{fig:ContinualLearning:ReulgarizationIdea}
+    weights which perform well on multiple tasks. The figure was inspired by Kirkpatrick et al. \cite{kirkpatrick2017overcoming}.}
   \end{figure}
 
 \subsubsection{Rehearsal Approaches}
@@ -213,10 +213,10 @@ The amount of training data can be increased by replaying stored data from previ
 retraining on generated data drawn from the distribution of previous tasks. Continual learning methods that rely on the former idea are
 categorized as exemplar rehearsal approaches, while those relying on the latter idea are generative replay
 approaches. \par
-Exemplar rehearsal techniques store data from previous tasks in a so-called replay buffer. When training on a new task $T_N$, samples
+Exemplar rehearsal techniques store data from previous tasks in a so-called replay buffer \cite{chaudhry2018efficient}. When training on a new task $T_N$, samples
 from the replay buffer are drawn and fed to the model while training on $T_N$. Approaches falling in this category vary by replay buffer
 construction and by the way samples are replayed during training of a new task. \par
-Generative replay approaches use generative models to generate artificial samples from previous tasks. These samples are then replayed to
+Generative replay approaches use generative models to generate artificial samples from previous tasks \cite{shin2017continual}. These samples are then replayed to
 the model when training on a new task $T_N$. Contrary to exemplar rehearsal approaches, generative replay approaches do not require a replay buffer.
 However, the generative model itself needs to be stored. 
 
@@ -244,24 +244,25 @@ appropriate training data. The developer also chooses a proper model architectur
 the user of the prediction \gls{api} can benefit from the model's predictions without having to train the model. \par
 Since the developed model is the intellectual property of the model developer, it is crucial that only the model's predictions are exposed to the public and
 not the model (i.e., its architecture and the model weights) itself. However, in the last years, numerous research papers have been published that demonstrate how
-to extract multiple features of a machine learning model, i.e., its functionality \cite{tramer2016stealing}, its architecture \cite{oh2019towards} and its
-training data \cite{shokri2017membership}. This newly created field of research is called model stealing or model extraction, and it is a subfield
+to extract multiple features of a machine learning model, i.e., its
+training data \cite{shokri2017membership}, its architecture \cite{oh2019towards} and its functionality \cite{tramer2016stealing}. This newly created field of
+research is called model stealing or model extraction, and it is a subfield
 of adversarial machine learning according to Oliynyk et al. \cite{oliynyk2022know}. Because model extraction attacks are so effective, further research
-concerning model stealing defense mechanisms has been published. In the following, we will use the taxonomy provided by Oliynyk et al. (see figure 
-\ref{fig:ModelStealing:Taxonomy}) \cite{oliynyk2022know} as a basis for our categorization of model stealing attacks and defenses.
+concerning model stealing defense mechanisms has been published. In the following, we will use the taxonomy provided by Oliynyk et al. \cite{oliynyk2022know}
+as a basis for our categorization of model stealing attacks and defenses. We present an overview of this taxonomy in figure \ref{fig:ModelStealing:Taxonomy}.
 
 \subsection{Terminology}
 \label{sec:ModelStealing:Terminology}
 Since model stealing is a fairly new field it comes with numerous terms that are not commonly used in other fields of machine learning and others that are used 
-synonymously. To avoid confusion, we will define and explain the terms we use in this section and. \par
+synonymously. To avoid confusion, we will define and explain the terms we use in this thesis. \par
 \textbf{Model Stealing Attack}: The process of maliciously querying a machine learning model to extract some or all of the model's features, such as its
-architecture, its weights or its training data. Model stealing attacks are also known as model extraction Attacks or model inference attacks among others. \par
+architecture, its weights or its training data. Model stealing attacks are also known as model extraction attacks or model inference attacks among others. \par
 \textbf{Target Model}: The model queried via the prediction \gls{api} and whose features the attacker aims to extract. The target model is also referred to as oracle, victim model, or secret model. \par
 \textbf{Substitute Model}: The model used by the attacker to extract the target model's features. Synonyms for substitute model are adversarial classifier,
 knockoff model or inferred model. \par
 \textbf{Target Model Dataset}: The dataset that the target model has been trained on. The term target model dataset has not been used in the literature before (to 
 the best of our knowledge). However, we choose this term over the synonymous term secret dataset because we believe it is more expressive. During model stealing attacks,
-the attacker has no access to the target model's dataset, i.e., it is kept secret. For research purposes, however, a test set of the target model dataset is
+the attacker has no access to the target model's dataset. For research purposes, however, a test set of the target model dataset is
 used to evaluate the performance of the substitute model. \par
 \textbf{Thief Dataset}: The dataset used by the attacker to train the substitute model. The thief dataset is also known as fake dataset, attacker set or 
 transfer set. When constructing the thief dataset, the attacker can either use \gls{nnpd} or \gls{snpd}
@@ -283,7 +284,7 @@ where $X_{tm}^{test}$ is the test set of the target model dataset and $\mathds{1
 
 \subsection{Model Stealing Attacks}
 \label{sec:ModelStealing:Attacks}
-Model stealing attacks can be performed in a variety of ways. The used to execute such an attack depends on the attacker's goal. If the attacker
+Model stealing attacks can be performed in a variety of ways. The method used to execute such an attack depends on the attacker's goal. If the attacker
 aims to extract training hyperparameters, they can use an equation-solving approach \cite{wang2018stealing} or train a meta-model to predict the hyperparameters
 \cite{oh2019towards}. Oh et al. 's meta-model approach can also be used to extract the model architecture. It is the only approach that does not rely on either
 software or hardware access to the target model. Other methods, such as the one proposed by Yan et al. \cite{yan2020cache}, use side-channel attacks to extract
@@ -291,20 +292,20 @@ the architecture of the target model and therefore require software or hardware 
 Apart from extracting training hyperparameters or model architecture, the attacker might also be interested in the target model's weights, especially if the model
 architecture and/or training hyperparameters are already known. These can be apparent because they are not hidden but also by using the 
 aforementioned attacks to extract them. We highlight that different model stealing attacks are not mutually exclusive but rather a toolkit that,
-while often used individually, can be combined to extract a holistic view of the target model. So far, attacks have been proposed to extract the weights of a binary classifier
-\cite{lowd2005adversarial}, logistic regression \cite{tramer2016stealing}, simple neural networks \cite{tramer2016stealing}, and support vector regression \cite{reith2019efficiently}. \par
-Many attackers are not interested in specific model features, such as architecture or (hyper-) parameters, but rather in reproducing the target model's \textit{functionality}, i.e.,
+while often used individually, can be combined to extract a holistic view of the target model. So far, attacks have been proposed to extract the weights of simple
+neural networks \cite{tramer2016stealing}, logistic regression \cite{tramer2016stealing}, support vector regression \cite{reith2019efficiently} and a binary classifier \cite{lowd2005adversarial}. \par
+Many attackers are not interested in specific model features, such as architecture or (hyper-) parameters, but rather in reproducing the target model's functionality, i.e.,
 its ability to predict a label for a given input. When stealing model functionality, attackers either aim to maximize the accuracy of the substitute model on the target model's
 test set or maximize the agreement between the predictions of the substitute model and the target model. While Oliynyk et al. list these as separate attacks, we believe it is
-rather a matter of the optimization objective. Regardless of whether the attacker aims to maximize the accuracy or agreement, the attacker has to train a substitute model
+rather a matter of the optimization objective. Regardless of whether the attacker aims to maximize the accuracy or agreement, he has to train a substitute model
 and choose an appropriate thief dataset. Empirical observations have shown that choosing a rather complex model architecture for the substitute model yields better results if the
 model architecture is unknown, whereas choosing a model architecture that is as similar to the target model's architecture as possible yields better results if the model architecture
-is known \parencite{orekondy2019knockoff,pal2020activethief}. \par
+is known \parencite{pal2020activethief,orekondy2019knockoff}. \par
 
 \begin{figure} [ht]
   \centering
-  \includegraphics[width=.9\linewidth]{images/MS_Taxonomy.png}
-  \caption[Model Stealing Taxonomy]{Taxonomy of Model Stealing Attacks by Oliynyk et al. \cite{oliynyk2022know}.}
+  \includegraphics[width=\linewidth]{images/MS_Taxonomy.png}
+  \caption[Taxonomy of model stealing attacks]{Taxonomy of model stealing attacks by Oliynyk et al. \cite{oliynyk2022know}.}
   \label{fig:ModelStealing:Taxonomy}
 \end{figure}
 
@@ -316,7 +317,7 @@ reactive defenses. While proactive defenses actively aim to prevent or at least 
 
 \subsubsection{Reactive Model Stealing Defenses (Detection)}
 \label{sec:ModelStealing:Defenses:Detection}
-Reactive model stealing defenses aim to detect model stealing attacks, not prevent them from happening. So far, model stealing detection approaches
+Reactive model stealing defenses aim to detect model stealing attacks, not prevent them. So far, model stealing detection approaches
 rely either on watermarking or monitoring. Watermarking is a way to prove ownership of a machine learning model. This is usually achieved by \enquote{hiding} information
 in the model which can only be restored by the original owner. A watermark can be a predefined prediction value for outlier samples that are unlikely to be part of the
 thief dataset. Watermarking can be applied during training \cite{zhang2018protecting} or afterward \cite{szyller2021dawn}. Monitoring is a way to detect model stealing
@@ -327,14 +328,14 @@ a normal distribution. Consequently, any user whose query distances are not norm
 
 \begin{figure} [ht]
     \centering
-    \includegraphics[width=.9\linewidth]{images/MS_defenses_Taxonomy.png}
-    \caption[Model Stealing Defenses Taxonomy]{Taxonomy of Model Stealing Defenses by Oliynyk et al. \cite{oliynyk2022know}.}
+    \includegraphics[width=\linewidth]{images/MS_defenses_Taxonomy.png}
+    \caption[Taxonomy of model stealing defenses]{Taxonomy of model stealing defenses by Oliynyk et al. \cite{oliynyk2022know}.}
     \label{fig:ModelStealingDefenses:Taxonomy}
   \end{figure}
 
 \subsubsection{Proactive Model Stealing Defenses (Prevention)}
 \label{sec:ModelStealing:Defenses:Prevention}
-Proactive model stealing defenses aim to complicate or prevent model stealing attacks from happening. We highlight that, compared to breaking into a house,
+Proactive model stealing defenses aim to complicate or prevent model stealing attacks. We highlight that, compared to breaking into a house,
 the success of a model stealing attack is not binary. Model stealing attacks will always be successful to some degree. However, their success mainly depends on the accuracy the substitute model
 can achieve (or the achieved model agreement in case the attacker tries to optimize for that). So the quality of a proactive model stealing defense should be measured by how much it can 
 decrease the accuracy of the substitute model compared to a model stealing attack with no defense. A key challenge in developing proactive model stealing defenses is that
@@ -348,7 +349,7 @@ Input perturbation can be performed by adding noise to unimportant pixels determ
 the developer of the target model can either use \gls{mad} \cite{orekondy2019prediction} or flip a few labels to obfuscate the model's decision boundary
 \cite{shi2017evasion}. \par
 Furthermore, a few approaches which bring differential privacy into the model stealing domain have been proposed. Differential privacy is a way to protect the privacy of a dataset so that 
-it is impossible for an adversary to determine if a particular individual is part of the dataset. One of these approaches was proposed by Zheng et al. \cite{zheng2019bdpl}, who add a so-
-called boundary differential privacy layer to the target model. \par
+it is impossible for an adversary to determine if a particular individual is part of the dataset. One of these approaches was proposed by Zheng et al. \cite{zheng2019bdpl}, who add a 
+so-called boundary differential privacy layer to the target model. \par
 The final type of proactive model stealing defense is modifying the target model's architecture. Approaches falling into this category add redundant layers to the target model 
 \cite{chabanne2020protection}, propose novel model layers \cite{xu2018deepobfuscation}, or increase model sensitivity \cite{szentannai2020preventing}.

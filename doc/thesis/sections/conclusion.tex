@@ -12,12 +12,6 @@
 
 \chapter{Conclusion}
 \label{ch:Conclusion}
-% Mention drops in accuracy due to Continual Active Learning. Regarding model stealing
-% mention that there are cases where the CAL works a lot better than for normal continual
-% active learning. Mention correlation with batch size to support the thesis that CAL fails
-% because batch size is not large enough. Mention small difference between different active
-% learning approaches for CIFAR-10 at least, which are inline with the findings from Yilins
-% paper.
 n this thesis, we proposed a novel approach named continual active learning, which combines active learning and continual learning. 
 We implement multiple active learning strategies, namely \gls{bald}, \gls{lc}, \gls{badge} as well as CoreSet, and combine them with
 the regularization-based continual learning strategies \gls{ewc}, \gls{imm}, \gls{alasso} and \gls{mas}, to create continual active
@@ -42,13 +36,6 @@ approach with one neural network architecture and one dataset in the classic con
 plus three datasets in the model stealing setting.
 \section{Future Work}
 \label{sec:Conclusion:FutureWork}
-% Future work could be to use the same approach in other types of continual learning settings,
-% i.e. task-incremental settings, or class-incremental settings 
-% Another approach is to use data distillation for replay to minimize the data overhead of active learning
-% One could also use different Active Learning and Continual Learning approaches to see if the results are similar
-% Another way is to combine the Active Learning and Continual Learning approaches, i.e. to combine the gradients used
-% in AGEM for the selection by gradients using Badge
-% Look if CAL is relevant to any security problem like e.g. malware analysis
 The approach we proposed in this thesis is not limited to the settings we evaluated it in. While the most straightforward extension would
 be to evaluate the method on new datasets and neural network architectures, we believe that, from a research
 perspective, it would be more interesting to apply continual active learning to unrelated settings. In our methodology, we had an active-learning
