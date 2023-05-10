@@ -108,14 +108,20 @@ def get_min_max(dataloader):
     
 
 if __name__ == "__main__":
+    from models import activeThief_models
+    from torchsummary import summary
     #from utils import config
     #config.run_config("./src/conf/basic_model_stealing/LC_Naive.yaml")
-    from models import WGAN
-    import torchvision.utils as vutils
-    import torch
-    wgan = WGAN(32,3)
-    wgan.generator.load_state_dict(torch.load("./data/generator.pth",map_location=torch.device('cpu')))
-    sampled_imgs = wgan.sample(1)
-    p = transforms.Resize((64,64))
-    sampled_imgs = p(sampled_imgs)
-    vutils.save_image(sampled_imgs,"./data/sample.png",normalize=True)
+    # from models import WGAN
+    # import torchvision.utils as vutils
+    # import torch
+    # wgan = WGAN(32,3)
+    # wgan.generator.load_state_dict(torch.load("./data/generator.pth",map_location=torch.device('cpu')))
+    # sampled_imgs = wgan.sample(1)
+    # p = transforms.Resize((64,64))
+    # sampled_imgs = p(sampled_imgs)
+    # vutils.save_image(sampled_imgs,"./data/sample.png",normalize=True)
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    a = activeThief_models.ThiefConvNet(2,3,10,32)
+    a = a.to(device)
+    summary(a,(3,32,32))

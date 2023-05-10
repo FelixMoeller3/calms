@@ -1,0 +1,26 @@
+\chapter{Notation}
+\label{ch:notation}
+
+In this chapter, we introduce the notation used throughout this thesis. The variables introduced in
+the table below are used in the following chapters to describe the algorithms and experiments. They have
+the meaning assigned to them in the table below unless explicitly stated otherwise.
+
+\begin{tabularx}{\textwidth}{l X}
+    \toprule
+    Symbol & Definition \\
+    \midrule
+    $x_i$ & The $i^{th}$ data point in a dataset \\ \addlinespace
+    $y_i$ & The label of the given data point $x_i$, also known as $y(x_i)$ \\ \addlinespace
+    $X$ & The set of data points in a dataset \\ \addlinespace
+    $Y$ & The set of labels in a dataset \\ \addlinespace
+    $b$ & The number of samples within a batch in active learning \\ \addlinespace
+    $U$ & The unlabeled pool in pool-based active learning\\ \addlinespace
+    $L$ & The labeled pool in pool-based active learning\\ \addlinespace
+    $\mathcal{L}$ & The loss function \\ \addlinespace
+    $P$ & Patterns per experience, a hyperparameter of the \gls{a-gem} algorithm \\ \addlinespace
+    $S$ & Samples drawn from memory to compute the reference gradients in \gls{a-gem} \\ \addlinespace
+    $\theta$ & The parameters of a neural network \\ \addlinespace
+    $O$ & The oracle in active learning \\ \addlinespace
+    \bottomrule
+\end{tabularx}
+\label{tab:notation}

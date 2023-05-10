@@ -9,20 +9,20 @@
 %% burger@kit.edu
 %%
 %% Version 1.3.6, 2022-09-28
-
 \Abstract
-The advancement of Machine Learning and especially Deep Learning has paved the way for remarkable breakthroughs in the Computer Vision domain \cite{he2016deep}
- \cite{goodfellow2020generative} \cite{lecun1989backpropagation}. Despite its benefits, Deep Learning is a resource-intensive task because the architecture
-  of state-of-the-art models is becoming increasingly complex and these models need to be trained on vast amounts of labeled data. Big-tech companies like Google,
- Amazon and Microsoft however have access to a lot of computing power which they monetize by offering Machine-Learning as a Service (MLaaS). MLaaS-Plattforms
-allow customers to train their models in the cloud and make them publicly accessible via prediction APIs. While MLaaS makes Machine Learning more attainable
- it also poses a security risk. Previous works have shown that it is possible to infer numerous properties (e.g, training data \cite{shokri2017membership}
-and architecture \cite{oh2019towards}) of the target model, i.e. the model behind the prediction API \cite{tramer2016stealing} \cite{papernot2017practical}.
-However, we purely focus on stealing the \textit{functionality} of the target model, i.e. its ability to predict the correct class of a given input image.
-Because stealing Machine Learning models is such a pressing issue, there has been ongoing research on how to defend against model stealing attacks
-\cite{orekondy2019prediction} \cite{juuti2019prada}. Surprisingly, recent research has shown that not all the proposed defenses are effective.
-ActiveThief \cite{pal2020activethief}, a model extraction framework proposed by Pal et al. demonstrated state-of-the-art performance when stealing deep neural
-networks. They use active learning strategies to determine which samples to query the target model for and evade the PRADA \cite{juuti2019prada} defense strategy. \\
-The contribution of this thesis is two-fold. First, we combine continual learning and active learning to see if we can improve the trade-off between accuracy and 
-efficiency in the active learning process. Second, we incorporate the combination of continual and active learning into the ActiveThief framework and investigate
-whether our findings from the classic active learning process are transferable to the model stealing domain.
+The advancement of machine learning and especially deep learning has paved the way for remarkable breakthroughs in the computer vision domain 
+\parencite*{goodfellow2020generative,he2016deep,lecun1989backpropagation}. Despite its benefits, deep learning is a demanding task that requires
+significant resources due to the increasingly complex architecture of state-of-the-art models and the need for extensive training with labeled data.
+Technology companies like Google, Amazon and Microsoft, however, have access to a lot of computing power, which they monetize by offering \gls{mlaas}.
+\gls{mlaas} platforms allow customers to train their models in the cloud and make them publicly accessible via prediction \glspl{api}. 
+While \gls{mlaas} makes machine learning more attainable, it poses a security risk. Previous works have shown that it is possible to infer numerous
+properties (e.g., training data \cite{shokri2017membership} and architecture \cite{oh2019towards}) of the model behind the prediction \gls{api}
+\parencite{papernot2017practical,tramer2016stealing}.
+However, we purely focus on stealing the \textit{functionality} of the target model, i.e., its ability to predict the correct class of a given input image.
+In this thesis, we build upon ActiveThief \cite{pal2020activethief}, a model extraction framework using active learning strategies to steal deep neural networks. 
+First, we propose a novel approach named continual active learning, which combines active learning and continual learning to improve the trade-off between
+accuracy and efficiency in the active learning process. Our evaluation demonstrates that continual active learning reduces validation accuracy by 10-30\%
+while reducing execution time by 60-98\%. Next, we incorporate continual active learning into the ActiveThief framework and investigate whether our findings
+from traditional continual active learning are transferable to model stealing. We find that continual active learning falls short of the performance achieved by ActiveThief,
+specifically when training with the predicted label of the target model. Furthermore, we show that continual active learning benefits from training with the softmax
+output of the target model, which has been observed for previous model stealing attacks \parencite{pal2020activethief,orekondy2019knockoff}.

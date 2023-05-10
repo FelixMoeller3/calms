@@ -25,7 +25,7 @@
 \author{Felix Möller}
 
 %% Title (and possibly subtitle) of the thesis
-\title{Continual Active Learning for effective Model Stealing Attacks}
+\title{Continual Active Learning for Effective Model Stealing Attacks}
 
 %% Type of the thesis 
 \thesistype{Bachelor's Thesis}
@@ -58,11 +58,38 @@
 %% --------------------------------
 
 %% Use biber instead of BibTeX, see README
-\usepackage[citestyle=numeric,style=numeric,backend=biber]{biblatex}
+%\usepackage[nonumberlist,toc]{glossaries} 
+\usepackage[nonumberlist,nopostdot]{glossaries} 
+\include{glossary}
+\usepackage{dsfont}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{ltablex}
+\usepackage[
+    natbib=true,
+    %citestyle=numeric,
+    style=numeric,
+    backend=biber,
+    sorting=none
+]{biblatex}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+%\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\newcommand{\algorithmicoutput}{\textbf{return}}
+\newcommand{\return}{\item[\algorithmicoutput]}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{makecell}
+\newtheorem{theorem}{Theorem}
+\usepackage{commath}
+\usepackage{diagbox}
+\usepackage{multirow}
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+\DeclareMathOperator*{\argmin}{\arg\!\min}
 \addbibresource{thesis.bib}
-
+\renewcommand{\autodot}{}% Remove all end-of-counter dots
+\setcounter{tocdepth}{1}
 %% ====================================
 %% ====================================
 %% ||                                ||
@@ -107,6 +134,8 @@
 
 \listoffigures
 \listoftables
+\printglossaries
+\input{sections/notation.tex}
 
 %% -----------------
 %% |   Main part   |
@@ -116,9 +145,11 @@
 
 \input{sections/introduction.tex}
 \input{sections/background.tex}
-\input{sections/content.tex}
 \input{sections/related_work.tex}
+\input{sections/methodology.tex}
+\input{sections/experiment_setup.tex}
 \input{sections/evaluation.tex}
+\input{sections/discussion.tex}
 \input{sections/conclusion.tex}
 
 %% --------------------

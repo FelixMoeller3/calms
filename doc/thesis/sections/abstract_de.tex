@@ -11,4 +11,19 @@
 %% Version 1.3.6, 2022-09-28
 
 \Abstract
-Deutsche Zusammenfassung
+Der Fortschritt von Maschinellem Lernen und insbesondere von Deep Learning hat den Weg für bemerkenswerte Durchbrüche im Bereich der Bilderkennung geebnet
+\parencite{goodfellow2020generative,he2016deep,lecun1989backpropagation}. Trotz seiner offensichtlichen Vorteile ist Deep Learning ressourcenintensiv, da
+die Architektur moderner Modelle immer komplexer wird und diese Modelle auf großen Mengen annotierter Daten trainiert werden müssen. Technologieunternehmen wie Google,
+Amazon und Microsoft haben jedoch Zugang zu einer großen Menge an Rechenleistung, die sie monetarisieren, indem sie Machine Learning as a Service (\gls{mlaas}) anbieten.
+\gls{mlaas}-Plattformen ermöglichen es Kunden, ihre Modelle in der Cloud zu trainieren und über Vorhersage-\glspl{api} öffentlich zugänglich zu machen.
+Während \gls{mlaas} Machine Learning zugänglicher macht, birgt es zugleich Sicherheitsrisiken. Vorangegangene Forschungsarbeiten haben gezeigt, dass es möglich ist,
+eine Vielzahl an Eigenschaften (z.B. Trainingsdaten \cite{shokri2017membership} und Architektur \cite{oh2019towards}) des Modells hinter der Vorhersage-\gls{api}
+zu inferieren \parencite{papernot2017practical,tramer2016stealing}. Wir konzentrieren uns jedoch ausschließlich auf das Stehlen der \textit{Funktionalität} des Zielmodells,
+also seine Fähigkeit, die richtige Klasse eines gegebenen Eingabebildes vorherzusagen. In dieser Arbeit bauen wir auf ActiveThief \cite{pal2020activethief} auf. ActiveThief
+ist ein Framework zum Stehlen von Deep Neural Networks mittels Active Learning. Zunächst schlagen wir einen neuen Ansatz namens Continual Active Learning vor, der Active Learning
+und Continual Learning kombiniert, um den Trade-off zwischen Genauigkeit und Effizienz im Active-Learning-Prozess zu verbessern. Unsere Evaluation ergibt, dass Continual
+Active Learning die Validierungsgenauigkeit um 10-30\% und zugleich die Ausführungszeit um 60-98\% reduziert. Darüber hinaus integrieren wir Continual Active Learning in
+das ActiveThief Framework und untersuchen, ob unsere Erkenntnisse aus dem traditionellen Continual Active Learning auf die Model-Stealing-Domäne übertragbar sind. Wir stellen fest,
+dass Continual Active Learning nicht die Genauigkeit von ActiveThief erreicht, insbesondere wenn mit dem vorhergesagten Label des Zielmodells trainiert wird. Zuletzt zeigen wir,
+dass Continual Active Learning davon profitiert, wenn mit den Vorhersagewahrscheinlichkeiten des Zielsmodells trainiert wird, was bereits bei vorherigen Model-Stealing-Angriffen
+beobachtet wurde \parencite{pal2020activethief,orekondy2019knockoff}.
