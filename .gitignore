@@ -469,3 +469,4 @@ data/*
 experiments/temp/*
 *.ist
 !doc/thesis/thesis.pdf
+!thesis.pdf
