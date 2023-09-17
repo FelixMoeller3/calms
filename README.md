@@ -27,6 +27,6 @@ python src/main.py -c path-to-your-config-file.yaml -m selected-mode
 For information on the command line arguements run
 ```console
 python src/main.py --help
-``````
+```
 ## Documentation
 There code itself is documented. For documentation regarding the thesis, please have a look at the `thesis.pdf`` file in the main directory. If you want to build it from source, run the file `doc/thesis/thesis.tex` with the latex compiler of your choice.
